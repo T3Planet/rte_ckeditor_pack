@@ -1,0 +1,98 @@
+.ck_emoji.ck.ck-character-grid {
+  max-width: 100%;
+}
+
+.ck_emoji.ck.ck-character-grid .ck-character-grid__tiles {
+  display: grid;
+}
+
+@media screen and (min-width: 500px) {
+  .ck_emoji.ck.ck-character-grid .ck-character-grid__tiles {
+    font-size: 1.3rem;
+  }
+}
+
+.ck_emoji.ck.ck-character-grid {
+  max-height: 200px;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  width: 450px;
+}
+
+@media screen and (max-width: 600px) {
+  .ck_emoji.ck.ck-character-grid {
+    width: 190px;
+  }
+}
+
+.ck_emoji.ck.ck-character-grid .ck-character-grid__tiles {
+  grid-gap: var(--ck-spacing-standard);
+  grid-template-columns: repeat(10, 1fr);
+  margin: var(--ck-spacing-standard) var(--ck-spacing-large);
+}
+
+@media screen and (max-width: 600px) {
+  .ck_emoji.ck.ck-character-grid .ck-character-grid__tiles {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.ck_emoji.ck.ck-character-grid .ck-character-grid__tile {
+  border: 0;
+  font-size: 1.2em;
+  height: 30px;
+  min-height: 30px;
+  min-width: 30px;
+  padding: 0;
+  padding-top: 0.2rem;
+  transition: box-shadow 0.2s ease;
+  width: var(--ck-character-grid-tile-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ck_emoji.ck.ck-character-grid .ck-character-grid__tile:focus:not(.ck-disabled),
+.ck_emoji.ck.ck-character-grid
+  .ck-character-grid__tile:hover:not(.ck-disabled) {
+  border: 0;
+  box-shadow: inset 0 0 0 1px var(--ck-color-base-background),
+    0 0 0 2px var(--ck-color-focus-border);
+}
+
+.ck_emoji.ck.ck-character-grid .ck-character-grid__tile .ck-button__label {
+  line-height: 30px;
+  text-align: center;
+  width: 100%;
+  font-family: apple color emoji, segoe ui emoji, noto color emoji,
+    android emoji, emojisymbols, emojione mozilla, twemoji mozilla,
+    segoe ui symbol;
+}
+
+.ck_emoji.ck.ck-character-info {
+  border-top: 1px solid var(--ck-color-base-border);
+  display: flex;
+  justify-content: space-between;
+  padding: var(--ck-spacing-small) var(--ck-spacing-large);
+}
+
+.ck_emoji.ck.ck-character-info > * {
+  font-size: var(--ck-font-size-small);
+  text-transform: uppercase;
+}
+
+.ck_emoji.ck.ck-character-info .ck-character-info__name {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ck_emoji.ck.ck-character-info .ck-character-info__code {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 600px) {
+  .ck_emoji.ck.ck-character-info {
+    max-width: 190px;
+  }
+}

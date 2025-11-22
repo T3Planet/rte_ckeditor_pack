@@ -1,0 +1,95 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/Core/Core/ViewHelpers"
+    xmlns:ckit="http://typo3.org/ns/T3Planet/RteCkeditorPack/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Modals" />
+<f:section name="content">
+<f:be.pageRenderer includeJavaScriptModules="{0: '@t3planet/RteCkeditorPack/script.js'}"/>
+    <form action="{ckit:uriAction(route: 'toolbar_groups')}" method="post">
+        <div id="ckeditor-modal" class="ckeditor modal d-block">
+            <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
+                <div class="t3js-modal-body modal-body">
+                    <div class="form-section-custom">
+                        <div class="row">
+                            <div class="col-12">
+                                <button class="btn btn-notice add insert-group" type="button" id="addGroupButton">
+                                    <f:translate key="toolbar.create_group" extensionName="rte_ckeditor_pack"/>
+                                </button>
+                                <input type="hidden" name="activeItems" value="{activeItems}" />
+                                <input type="hidden" name="toolBarItems" value="{toolBarIcons}" />
+                                <div class="panel-group mt-3 t3-ckeditor-form-item" role="tablist" aria-multiselectable="true" id="groupWrapper">
+                                    <f:if condition="{groups}">
+                                        <f:for each="{groups}" as="group" iteration="i">
+                                            <div class="panel panel-default searchhit">
+                                                <div class="mb-0 d-flex" id="flush-heading{i.index}">
+                                                    <a class="panel-heading flex-grow-1 d-block collapsed" type="button" data-bs-toggle="collapse" href="#flush-collapse-{i.index}"
+                                                        aria-expanded="false" aria-controls="flush-collapse-{i.index}">
+                                                        <span class="caret"></span>
+                                                        <strong>{group.label}</strong>
+                                                    </a>
+                                                    <div class="btn-group p-1">
+                                                        <button class="btn btn-danger delete t3js-modal-trigger" 
+                                                            href="{be:moduleLink(route:'tce_db', query:'cmd[tx_rteckeditorpack_domain_model_toolbargroups][{group.uid}][delete]=1', arguments:'{redirect: returnUrl}')}"
+                                                            title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete')}"
+                                                            data-severity="warning"
+                                                            data-title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:label.confirm.delete_record.title')}"
+                                                            data-bs-content="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:deleteWarning')}"
+                                                            data-button-close-text="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.no')}">
+                                                            <core:icon identifier="actions-delete" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div id="flush-collapse-{i.index}" class="panel-collapse search-item collapse" aria-labelledby="flush-heading{i.index}">
+                                                    <div class="form-section">
+                                                        <input type="hidden" name="group[{i.index}][uid]" value="{group.uid}">
+                                                        <div class="form-group">
+                                                            <label for="label{i.index}" class="form-label"><f:translate key="toolbar.label" extensionName="rte_ckeditor_pack"/></label>
+                                                            <input type="text" id="label{i.index}" class="form-control" name="group[{i.index}][label]" value="{group.label}" required />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="tooltip{i.index}" class="form-label"><f:translate key="toolbar.tooltip" extensionName="rte_ckeditor_pack"/></label>
+                                                            <input type="text" id="tooltip{i.index}" class="form-control" name="group[{i.index}][tooltip]" value="{group.tooltip}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="icon{i.index}" class="form-label"><f:translate key="toolbar.icon" extensionName="rte_ckeditor_pack"/></label>
+                                                            <select id="icon{i.index}" name="group[{i.index}][icon]" class="form-control form-select icon-selector"  data-id="customIconDiv{i.index}">
+                                                                <f:for each="{group.toolBarIcon}" as="toolBarValue">
+                                                                    <option value="{toolBarValue}" {f:if(condition: '{toolBarValue} == {group.icon}' ,then: 'selected' )}>
+                                                                        {toolBarValue}
+                                                                    </option>
+                                                                </f:for>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group {f:if(condition: '{group.icon} != other' ,then: 'd-none')}" id="customIconDiv{i.index}">
+                                                            <label for="customIcon{i.index}" class="form-label"><f:translate key="toolbar.custom_icon" extensionName="rte_ckeditor_pack"/></label>
+                                                            <textarea rows="4" id="customIcon{i.index}"  class="form-control" name="group[{i.index}][customIcon]">{group.customIcon}</textarea>  
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="items{i.index}" class="form-label"><f:translate key="toolbar.item" extensionName="rte_ckeditor_pack"/></label>
+                                                            <select id="items{i.index}" name="group[{i.index}][items][]" class="form-control form-select" multiple="" required>
+                                                                <f:for each="{toolBarItems}" as="item">
+                                                                    <option value="{item}" {f:if(condition: '{item} == {x}', then: 'selected') -> f:for(each: '{group.itemValues}', as: 'x')}>
+                                                                        {item}
+                                                                    </option>
+                                                                </f:for>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="toolBarItems" value="{group.toolBarIconValues}" />
+                                        </f:for>
+                                    </f:if>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="t3js-modal-footer modal-footer">
+                    <button type="submit" class="btn btn-primary"><f:translate key="feature_form.submit" extensionName="RteCkeditorPack"/></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</f:section>
+</html>

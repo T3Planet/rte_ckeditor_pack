@@ -1,0 +1,279 @@
+<div class="row">
+    <f:for each="{fields}" as="customFields" key="mainKey">
+        <f:for each="{customFields}" as="field">
+            <f:if condition="{field.type.name} == ARRAY">
+                <f:then>
+                    <f:render section="arrayItem"
+                        arguments="{array:field.value,mainKey:mainKey,field:field,record:record}" />
+                </f:then>
+                <f:else if="{field.type.name} == MULTIFIELD">
+                    <f:for each="{field.value}" as="multiFields" key="multiFieldKey">
+                        <f:for each="{multiFields}" as="multiField">
+                            <f:variable name="fieldName">config[{multiFieldKey}]<f:if condition="{multiField.key}">[{multiField.key}]</f:if></f:variable>
+                            <div class="col-12">
+                                <f:render section="Field" arguments="{field:multiField, fieldName:fieldName,origValue: '{record.{multiFieldKey}.{multiField.key}}'}" />
+                            </div>
+                        </f:for>
+                    </f:for>
+                </f:else>
+                <f:else>
+                    <f:variable name="fieldName">config[{mainKey}]<f:if condition="{field.key}">[{field.key}]</f:if></f:variable>
+                    <div class="col-12">
+                        <f:render section="Field"
+                            arguments="{field:field, fieldName:fieldName,origValue: '{record.{mainKey}.{field.key}}'}" />
+                    </div>
+                </f:else>
+            </f:if>
+        </f:for>
+    </f:for>
+</div>
+
+<f:section name="arrayItem">
+    <f:for each="{array}" as="arrayField">
+        <f:if condition="{arrayField.type.name} == ARRAY">
+            <f:then>
+                <f:variable name="parentPath">{parentPath}[{field.key}]</f:variable>
+                <f:variable name="parentValue">{parentValue}.{field.key}</f:variable>
+
+                <f:render section="arrayItem"
+                    arguments="{array:arrayField.value,mainKey:mainKey,field:arrayField,parent:field,parentPath:parentPath,record:record,parentValue:parentValue}" />
+            </f:then>
+            <f:else>
+                <f:variable name="fieldName">config[{mainKey}]{parentPath}[{field.key}][{arrayField.key}]</f:variable>
+                <f:if condition="{parentValue}">
+                    <f:then>
+                        <div class="col">
+                            <f:render section="Field"
+                            arguments="{field:arrayField, fieldName:fieldName, origValue: '{record.{mainKey}{parentValue}.{field.key}.{arrayField.key}}'}" />
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <div class="col-12">
+                            <f:render section="Field"
+                            arguments="{field:arrayField, fieldName:fieldName, origValue: '{record.{mainKey}.{field.key}.{arrayField.key}}'}" />
+                        </div>
+                    </f:else>
+                </f:if>
+            </f:else>
+        </f:if>
+    </f:for>
+</f:section>
+<f:section name="Field">
+    <f:switch expression="{field.type.name}">
+        <f:case value="INPUT">
+            <div class="form-group form-group-custom">
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <input type="text" id="{field.key}" class="form-control" name="{fieldName}" placeholder="{field.placeholder}"
+                    value="{f:if(condition: '{origValue}', then:origValue, else:field.value)}" data-default="{field.value}"/>
+            </div>
+        </f:case>
+        <f:case value="NUMBER">
+            <div class="form-group form-group-custom {field.class}">
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <input type="number" id="{field.key}" class="form-control" name="{fieldName}" placeholder="{field.placeholder}"
+                    value="{f:if(condition: '{origValue}', then:origValue, else:field.value)}" min="1"/>
+            </div>
+        </f:case>
+        <f:case value="SELECT">
+            <div class="form-group form-group-custom {field.class}">
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <f:if condition="{field.value}">
+                    <select name="{fieldName}{f:if(condition: '{field.multiple}' , then: '[]' )}" id="{field.key}" class="form-control form-select" {f:if(condition: '{field.multiple}' , then: 'multiple' )}>
+                        <f:for each="{field.value}" as="selectOptions" key="optLabel">
+                            <f:if condition="{field.multiple} && {origValue}">
+                                <f:then>
+                                    <option value="{selectOptions}" {f:if(condition: '{x} == {selectOptions}', then: 'selected') -> f:for(each: origValue, as: 'x',)}>
+                                        {optLabel}
+                                    </option>
+                                </f:then>
+                                <f:else>
+                                    <option value="{selectOptions}" {f:if(condition: '{origValue} == {selectOptions}' , then: 'selected' )}>{optLabel}</option>
+                                </f:else>
+                            </f:if>
+                        </f:for>
+                    </select>
+                </f:if>
+            </div>
+        </f:case>
+        <f:case value="BOOLEAN">
+            <div class="form-group form-check form-switch">
+                <f:if condition="{origValue} == 0 || {origValue} == 1">
+                    <f:then><f:variable name="fieldValue">{origValue}</f:variable></f:then>
+                    <f:else><f:variable name="fieldValue">{field.value}</f:variable></f:else>
+                </f:if>
+                <input type="hidden" name="{fieldName}" value="0" />
+                <input class="form-check-input {field.class}" id="{field.key}" type="checkbox" name="{fieldName}" value="1"
+                    {f:if(condition: '{fieldValue}' , then: 'checked' )} />
+                <label for="{field.key}" class="form-check-label form-label">{field.name}</label>
+            </div>
+        </f:case>
+        <f:case value="TEXTAREA">
+            <div class="form-group form-group-textarea-custom">
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <textarea id="{field.key}" class="form-control" rows="4" cols="1000"
+                    name="{fieldName}">{f:if(condition: '{origValue}', then:origValue, else:field.value)}</textarea>
+            </div>
+        </f:case>
+        <f:case value="ITERATIVE">
+            <f:if condition="{origValue}">
+                <f:then>
+                    <div class="panel-group-wrap">
+                        <div class="panel-group t3-ckeditor-form-item" role="tablist" aria-multiselectable="true">
+                            <f:for each="{origValue}" as="origFieldValue" key="origFieldKey" iteration="z">
+                                <div class="panel panel-default searchhit{f:if(condition: '{z.isFirst}', then: ' origin-section')}">
+                                    <div class="mb-0 panel-heading" id="flush-heading{origFieldKey}{z.cycle}">
+                                        <a class="{f:if(condition: '{z.isFirst}', else: 'collapsed')} d-block" type="button" data-bs-toggle="collapse" 
+                                            href="#flush-collapse-{field.key -> f:format.trim()}-{origFieldKey}{z.cycle}" 
+                                            aria-expanded="{f:if(condition: '{z.isFirst}', then: 'true', else: 'false')}" 
+                                            aria-controls="flush-collapse-{field.key -> f:format.trim()}-{origFieldKey}{z.cycle}">
+                                            <span class="caret"></span>
+                                            <f:variable name="panelTitle">{origFieldValue.{field.value.0.0.key}}</f:variable>
+                                            <strong>{f:if(condition: '{panelTitle}',then:'{panelTitle}', else: '{field.name}  {z.cycle}')}</strong>
+                                        </a>
+                                        <div class="btn-group {f:if(condition: '{z.isFirst}', then: 'd-none')}">
+                                            <button class="btn btn-notice delete remove-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                        </div>
+                                    </div>
+                                    <f:variable name="iterativeFieldRaw" value="{field.value.0}"></f:variable>
+                                    <div id="flush-collapse-{field.key -> f:format.trim()}-{origFieldKey}{z.cycle}" class="panel-collapse search-item collapse {f:if(condition: '{z.isFirst}', then: 'show')}" 
+                                        aria-labelledby="flush-heading{origFieldKey}{z.cycle}">
+                                        <div class="form-section">
+                                            <f:for each="{iterativeFieldRaw}" as="iterativeField">
+                                                <f:variable name="iterativeFieldName">{fieldName}[{z.index}][{iterativeField.key}]</f:variable>
+                                                <f:variable name="currentOrigValue">{origFieldValue.{iterativeField.key}}</f:variable>
+                                                <f:render section="Field"
+                                                    arguments="{field:iterativeField, fieldName:iterativeFieldName,origValue: '{currentOrigValue}'}" />
+                                            </f:for>
+                                        </div>
+                                    </div>
+                                </div>
+                            </f:for>
+                        </div>
+                        <button class="btn btn-primary add insert-section ms-auto mb-2 d-block" type="button">
+                            <core:icon identifier="actions-placeholder-add" size="small" />
+                        </button>
+                    </div>
+                </f:then>
+                <f:else>
+                    <div class="panel-group-wrap">
+                        <div class="panel-group t3-ckeditor-form-item" role="tablist" aria-multiselectable="true">
+                            <f:for each="{field.value}" as="iterativeFieldRaw" key="iterativeFieldKey" iteration="y">
+                                <div class="panel panel-default searchhit{f:if(condition: '{y.isFirst}', then: ' origin-section')}">
+                                    <div class="mb-0 panel-heading" id="flush-heading{iterativeFieldKey}{y.cycle}">
+                                        <a class="{f:if(condition: '{y.isFirst}', else: 'collapsed')} d-block" type="button" data-bs-toggle="collapse" 
+                                        href="#flush-collapse-{field.key -> f:format.trim()}-{iterativeFieldKey}{y.cycle}" 
+                                        aria-expanded="{f:if(condition: '{y.isFirst}', then: 'true', else: 'false')}" 
+                                        aria-controls="flush-collapse-{field.key -> f:format.trim()}-{iterativeFieldKey}{y.cycle}">
+                                            <span class="caret"></span> 
+                                            <strong>{f:if(condition: '{iterativeFieldRaw.0.value}',then:'{iterativeFieldRaw.0.value}', else: '{field.name} {y.cycle}')}</strong>
+                                        </a>
+                                        <div class="btn-group {f:if(condition: '{y.isFirst}', then: 'd-none')}">
+                                            <button class="btn btn-notice delete remove-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                        </div>
+                                    </div>
+                                    <div id="flush-collapse-{field.key -> f:format.trim()}-{iterativeFieldKey}{y.cycle}" class="panel-collapse search-item collapse {f:if(condition: '{y.isFirst}', then: 'show')}" aria-labelledby="flush-heading{iterativeFieldKey}{y.cycle}">
+                                        <div class="form-section">
+                                            <f:for each="{iterativeFieldRaw}" as="iterativeField">
+                                                <f:variable name="iterativeFieldName">{fieldName}[{y.index}][{iterativeField.key}]</f:variable>
+                                                <f:render section="Field"
+                                                    arguments="{field:iterativeField, fieldName:iterativeFieldName,origValue: '{record.{mainKey}.{field.key}}'}" />
+                                            </f:for>
+                                        </div>
+                                    </div>
+                                </div>
+                            </f:for>
+                        </div>
+                        <button class="btn btn-primary add insert-section ms-auto mb-2 d-block" type="button">
+                            <core:icon identifier="actions-placeholder-add" size="small" />
+                        </button>
+                    </div>
+                </f:else>
+            </f:if>
+        </f:case>
+        <f:case value="INNERITERATIVE">
+            <f:if condition="{origValue}">
+                <f:then>
+                    <div class="panel-group-wrap">
+                        <div class="panel-group t3-ckeditor-form-item panel-child-group" role="tablist" aria-multiselectable="true">
+                            <f:for each="{origValue}" as="origFieldValue" key="origFieldKey" iteration="z">
+                                <div class="panel panel-default child-section {f:if(condition: '{z.isFirst}', then: ' origin-child-section')}">
+                                    <div class="mb-0 panel-heading" id="inner-heading{origFieldKey}{z.cycle}">
+                                        <a class="{f:if(condition: '{z.isFirst}', else: 'collapsed')} d-block" type="button" data-bs-toggle="collapse" href="#inner-collapse{origFieldKey}{z.cycle}" 
+                                            aria-expanded="{f:if(condition: '{z.isFirst}', then: 'true', else: 'false')}" 
+                                            aria-controls="inner-collapse{origFieldKey}{z.cycle}">
+                                            <span class="caret"></span> <strong>Sub {field.name}  {z.cycle}</strong>
+                                        </a>
+                                        <div class="btn-group  {f:if(condition: '{z.isFirst}', then: 'd-none')}">
+                                            <button class="btn btn-notice delete remove-inner-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                        </div>
+                                    </div>
+                                   
+                                    <f:variable name="iterativeFieldRaw" value="{field.value.0}"></f:variable>
+                                    <div id="inner-collapse{origFieldKey}{z.cycle}" class="panel-collapse search-item collapse {f:if(condition: '{z.isFirst}', then: 'show')}" 
+                                        aria-labelledby="inner-heading{origFieldKey}{z.cycle}">
+                                        <div class="form-section">
+                                            <f:for each="{iterativeFieldRaw}" as="iterativeField">
+                                                <f:variable name="iterativeFieldName">{fieldName}[{z.index}][{iterativeField.key}]</f:variable>
+                                                <f:variable name="currentOrigValue">{origFieldValue.{iterativeField.key}}</f:variable>
+                                                <f:render section="Field"
+                                                    arguments="{field:iterativeField, fieldName:iterativeFieldName,origValue: '{currentOrigValue}'}" />
+                                            </f:for>
+                                        </div>
+                                    </div>
+                                </div>
+                            </f:for>
+                        </div>
+                        <button class="btn btn-primary add insert-inner-section ms-auto mb-2 d-block" type="button">
+                            <core:icon identifier="actions-placeholder-add" size="small" />
+                        </button>
+                    </div>
+                </f:then>
+                <f:else>
+                    <div class="panel-group-wrap">
+                        <div class="panel-group t3-ckeditor-form-item panel-child-group" role="tablist" aria-multiselectable="true">
+                            <f:for each="{field.value}" as="iterativeFieldRaw" key="iterativeFieldKey" iteration="y">
+                                <div class="panel panel-default child-section {f:if(condition: '{y.isFirst}', then: ' origin-child-section')}">
+                                    <div class="mb-0 panel-heading" id="inner-heading{iterativeFieldKey}{y.cycle}">
+                                        <a class="{f:if(condition: '{y.isFirst}', else: 'collapsed')} d-block" type="button" data-bs-toggle="collapse" 
+                                            href="#inner-collapse{iterativeFieldKey}{y.cycle}" aria-expanded="{f:if(condition: '{y.isFirst}', then: 'true', else: 'false')}" 
+                                            aria-controls="inner-collapse{iterativeFieldKey}{y.cycle}">
+                                            <span class="caret"></span> <strong>{field.name} {y.cycle}</strong>
+                                        </a>
+                                        <div class="btn-group {f:if(condition: '{y.isFirst}', then: 'd-none')}">
+                                            <button class="btn btn-notice delete remove-inner-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                        </div>
+                                    </div>
+                                    <div id="inner-collapse{iterativeFieldKey}{y.cycle}" class="panel-collapse search-item collapse {f:if(condition: '{y.isFirst}', then: 'show')}" aria-labelledby="flush-heading{iterativeFieldKey}{y.cycle}">
+                                        <div class="form-section">
+                                            <f:for each="{iterativeFieldRaw}" as="iterativeField">
+                                                <f:variable name="iterativeFieldName">{fieldName}[{y.index}][{iterativeField.key}]</f:variable>
+                                                <f:render section="Field"
+                                                    arguments="{field:iterativeField, fieldName:iterativeFieldName,origValue: '{record.{mainKey}.{field.key}}'}" />
+                                            </f:for>
+                                        </div>
+                                    </div>
+                                </div>
+                            </f:for>
+                        </div>
+                        <button class="btn btn-primary add insert-inner-section ms-auto mb-2 d-block" type="button">
+                            <core:icon identifier="actions-placeholder-add" size="small" />
+                        </button>
+                    </div>
+                </f:else>
+            </f:if>
+        </f:case>
+        <f:case value="VALUE_LIST">
+            <div class="form-group form-group-custom {field.class}">
+                <f:variable name="formattedValue">{ckit:formatValue(input: field.value)}</f:variable>
+                <f:if condition="{origValue}">
+                    <f:variable name="formattedValue">{ckit:formatValue(input: origValue)}</f:variable>
+                </f:if>
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <input type="text" id="{field.key}" class="form-control" name="{fieldName}"
+                    value="{formattedValue}" />
+            </div>
+        </f:case>
+        <f:defaultCase>
+        </f:defaultCase>
+    </f:switch>
+</f:section>

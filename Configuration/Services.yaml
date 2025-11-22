@@ -1,0 +1,74 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  T3Planet\RteCkeditorPack\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
+
+  T3Planet\RteCkeditorPack\Controller\CommentsController:
+    public: true
+    arguments:
+      - '@T3Planet\RteCkeditorPack\Domain\Repository\CommentsRepository'
+      - '@TYPO3\CMS\Core\Context\Context'
+  T3Planet\RteCkeditorPack\Domain\Repository\CommentsRepository:
+    public: true
+    arguments:
+      - '@TYPO3\CMS\Core\Database\ConnectionPool'
+
+  T3Planet\RteCkeditorPack\Event\AppDataEvent:
+    tags:
+      - name: event.listener
+        identifier: 'app-data-generate'
+        event: TYPO3\CMS\Backend\Controller\Event\AfterFormEnginePageInitializedEvent
+
+  T3Planet\RteCkeditorPack\Controller\RteModuleController:
+    public: true
+
+  T3Planet\RteCkeditorPack\DataHandling\SoftReference\RteImageSoftReferenceParser:
+    public: true
+    tags:
+      - name: softreference.parser
+        parserKey: rtehtmlarea_images
+
+  T3Planet\RteCkeditorPack\Database\RteImagesDbHook:
+    public: true
+
+  T3Planet\RteCkeditorPack\EventListener\RteConfigurationListener:
+    tags:
+      - name: event.listener
+        identifier: 'rte_configuration_listener'
+        event: TYPO3\CMS\RteCKEditor\Form\Element\Event\AfterPrepareConfigurationForEditorEvent
+        arguments:
+          - '@T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler'
+
+  T3Planet\RteCkeditorPack\EventListener\RteConfigurationModifier:
+    tags:
+      - name: event.listener
+        identifier: 'rte_configuration_modifier'
+        event: TYPO3\CMS\RteCKEditor\Form\Element\Event\BeforePrepareConfigurationForEditorEvent
+        arguments:
+          - '@T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler'
+
+
+  T3Planet\RteCkeditorPack\Controller\SelectImageController:
+    tags: ['backend.controller']
+
+
+  T3Planet\RteCkeditorPack\Domain\Repository\SuggestionRepository:
+    public: true
+    arguments:
+      - '@TYPO3\CMS\Core\Database\ConnectionPool'
+
+
+  T3Planet\RteCkeditorPack\EventListener\InstallationListener:
+    tags:
+      - name: event.listener
+        identifier: 'rte_configuration_activated'
+
+  T3Planet\RteCkeditorPack\Domain\Repository\RevisionHistoryRepository:
+    public: true
+    arguments:
+      - '@TYPO3\CMS\Core\Database\ConnectionPool'

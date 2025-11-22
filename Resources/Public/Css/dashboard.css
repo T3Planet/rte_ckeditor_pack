@@ -1,0 +1,254 @@
+.t3-ckeditor {
+    --bs-blue:#1f5aad;
+    --bs-purple: #771bff;
+    --module-docheader-height:67px;
+    --module-docheader-zindex:300;
+    --module-docheader-padding-y:5px;
+    --module-docheader-padding-x:24px;
+    --module-docheader-padding:var(--module-docheader-padding-y) var(--module-docheader-padding-x);
+    --module-docheader-spacing-y:4px;
+    --module-docheader-spacing-x:8px;
+    --module-docheader-spacing:var(--module-docheader-spacing-y) var(--module-docheader-spacing-x);
+    --module-docheader-bar-height:26px;
+    --module-docheader-scroll-offset:calc(-1 * (var(--module-docheader-bar-height) + var(--module-docheader-padding-y)));
+    --module-body-padding-y:24px;
+    --module-body-padding-x:24px;
+    --module-body-padding:var(--module-body-padding-y) var(--module-body-padding-x);
+    display: grid;
+    grid-template-areas:
+        "moduleDocHeader"
+        "moduleBody";
+    grid-template-rows: auto 1fr;
+    height: 100dvh;
+    position: relative;
+    width: 100%;
+}
+
+.t3-ckeditor .card,
+.ckeditor .card {
+    --typo3-card-bg: light-dark(#fff, #222);
+    background: var(--typo3-card-bg);
+}
+
+.t3-ckeditor .module-body {
+    grid-area: moduleBody;
+    overflow: auto;
+    padding: var(--module-body-padding);
+    position: relative;
+}
+
+.t3-ckeditor .dashboard-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:calc(-1 * var(--module-body-padding-y)) calc(-1 * var(--module-body-padding-x)) var(--module-body-padding-y);padding:var(--module-body-padding-y) var(--module-body-padding-x) 0;background:light-dark(#dadada, #262626);border-bottom:1px solid light-dark(#cdcdcd, #262626)}
+.t3-ckeditor .dashboard-tabs {display:flex;flex-wrap:wrap;align-items:center}
+.t3-ckeditor .dashboard-tab{padding:12px 15px;margin-right: 3px;}
+
+/*Dashboard*/
+
+#dashboardTab h2 {
+    margin-top: 0;
+}
+
+.footer-links li {
+    padding-left: 20px;
+    position: relative;
+}
+.footer-links li:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 1px;
+    height: 80%;
+    transform: translateY(-50%);
+    background-color: light-dark(#262626, #cdcdcd);
+}
+
+.dashboard-tab.active {
+    background: var(--bs-blue);
+    color: #fff;
+}
+
+.dashboard-tab {
+    border-width: 1px;
+}
+
+.dashboard-tab.active:focus,
+.dashboard-tab.active:hover {
+    text-decoration: none;
+    background: var(--bs-blue);
+    color: #f2f2f2;
+}
+
+.card.card--active {
+    background-color: light-dark(#f3f7fd, #062541);
+}
+
+.ckeditor .card.card--active .btn-default,
+.t3-ckeditor .card.card--active .btn-default {
+    --dark-blue: #1c4f98;
+    --typo3-btn-color: #fff;
+    --typo3-state-default-bg: light-dark(#1f5aad, #164484);
+    --typo3-state-default-border-color: #1f5aad;
+    --typo3-btn-hover-bg: var(--dark-blue);
+    --typo3-btn-hover-border-color: var(--dark-blue);
+    --typo3-btn-focus-bg: var(--dark-blue);
+    --typo3-btn-focus-border-color: var(--dark-blue);
+    
+    /* TYPO3 12 */
+    --bs-btn-color: var(--typo3-btn-color);
+    --bs-btn-bg: var(--typo3-state-default-bg);
+    --bs-btn-border-color: var(--typo3-state-default-border-color);
+
+    --bs-btn-active-color: var(--typo3-btn-color);
+    --bs-btn-active-bg: var(--typo3-state-default-bg);
+    --bs-btn-active-border-color: var(--typo3-state-default-border-color);
+
+    --bs-btn-hover-color: var(--typo3-btn-color);
+    --bs-btn-hover-bg: var(--typo3-btn-hover-bg);
+    --bs-btn-hover-border-color: var(--typo3-btn-hover-border-color);
+    
+    box-shadow: none !important;
+}
+
+.ckeditor .card.card--active .btn-default:hover,
+.t3-ckeditor .card.card--active .btn-default:hover {
+    --bs-btn-hover-bg: #1c4f98;
+    --bs-btn-hover-border-color: #1c4f98;
+    --bs-btn-active-bg: var(--typo3-btn-hover-bg);
+    --bs-btn-active-border-color: var(--typo3-btn-hover-border-color);
+}
+
+.t3-ckeditor .card-header {
+    position: relative;
+}
+.t3-ckeditor .widget-actions {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+.card.selected .widget-actions {
+    opacity: 1;
+}
+
+.card.selected .widget-actions .icon-actions-heart-alt {
+    display: block;
+}
+
+.widget-action-wishlist *,
+.dashboard-modal-item-block * {
+    pointer-events: none;
+}
+
+.card.selected .widget-actions .icon-actions-heart,
+.widget-action-wishlist .icon-actions-heart-alt {
+    display: none;
+}
+
+.dashboard-tab-favorite,
+.dashboard-tab.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+.dashboard-tab-favorite.selected {
+    pointer-events: all;
+    opacity: 1;
+}
+
+.widget.disabled {
+    opacity: 0.7;
+    box-shadow: none;
+}
+
+.card--active .icon-actions-check-circle,
+.card .btn .icon-actions-check-circle-alt {
+    display: none;
+}
+
+.card--active .btn .icon-actions-check-circle-alt {
+  display: block;
+}
+
+.card--active .btn-check:checked + .btn,
+.card--active .btn.active,
+.card--active .btn.show,
+.card--active .btn:first-child:active,
+.card--active :not(.btn-check) + .btn:active {
+    --bs-btn-active-color: #fff;
+    --typo3-state-default-bg: light-dark(#1f5aad, #164484);
+    --typo3-state-default-border-color: #1f5aad;
+    --typo3-btn-hover-bg: #1c4f98;
+    --typo3-btn-hover-border-color: #1c4f98;
+}
+
+[data-identifier="ckeditorGlobalWizardButton"] * {
+    pointer-events: none;
+}
+
+.drag-drop-items {
+    height: 42px;
+    flex: 0 0 42px;
+}
+
+
+/*Loader*/
+#rte-ckeditor__loader {
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+#rte-ckeditor__loader.ns-show-overlay {
+    display: block;
+    z-index: 99999;
+}
+
+#rte-ckeditor__loader.ns-show-overlay::after {
+    background-color: light-dark(#fff, #262626);
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+#rte-ckeditor__loader.ns-show-overlay .icon-t3ai-loading {
+    --icon-size: 100px;
+    height: var(--icon-size);
+    width: var(--icon-size);
+}
+
+#rte-ckeditor__loader .icon {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+}
+
+#rte-ckeditor__loader .loader-text {
+    font-size: 15px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, calc(-50% + 65px));
+    z-index: 9;
+}
+
+.icon-ckeditor_module_dark {
+    color: #1f5aad;
+}
+
+.ckeditor .icon-actions-heart-alt,
+.t3-ckeditor .icon-actions-heart-alt {
+    --bs-purple: #771bff;
+    color: var(--bs-purple);
+}
+
+.btn-link--purple {
+  --bs-purple: #771bff;
+  color: var(--bs-purple) !important;
+}

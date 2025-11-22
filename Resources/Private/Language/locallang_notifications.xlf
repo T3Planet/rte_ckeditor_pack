@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2"
+    xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_notifications.xlf.xlf" date="2025-10-15T18:03:32Z" product-name="rte-ckeditor-pack">
+        <header/>
+        <body>
+            <trans-unit id="errorNotifications.header.oops">
+                <source>Oops...</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.oops">
+                <source>It seems that the editor encountered an error. Save your content and refresh the page. If the error persists, contact your site administrator.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.trialExceeded">
+                <source>Trial limit exceeded</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.trialExceeded">
+                <source>You have reached the usage limit of your trial license key. Restart the editor - you can reload the page or save edited content.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.usageLimit">
+                <source>Usage limit reached</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.usageLimit">
+                <source>You have reached the usage limit of your license key. Please contact our customer support to extend the limit at https://ckeditor.com/contact/.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.wproofreaderAuth">
+                <source>WProofreader Authorization Error</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.wproofreaderAuth">
+                <source>Some problems occurred during WProofreader initialization. Check the WProofreader plugin configuration.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.wproofreaderLimit">
+                <source>WProofreader usage limit exceeded</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.wproofreaderLimit">
+                <source>The daily limit for the number of words checked using the WProofreader grammar and spell checker has been reached. Please contact your site administrator for help. Access to the service will resume at 00:00 UTC.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.wproofreaderError">
+                <source>WProofreader Error</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.wproofreaderError">
+                <source>You have no permission to access the WProofreader proxy.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.accessDenied">
+                <source>Access denied</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.accessDenied">
+                <source>You don't have enough permissions for this action.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.invalidLicenseKey">
+                <source>Invalid license key</source>
+            </trans-unit>
+            <trans-unit id="errorNotifications.description.invalidLicenseKey">
+                <source>The provided license key is invalid. Please check your license key configuration and contact your site administrator.</source>
+            </trans-unit>
+
+            <trans-unit id="errorNotifications.header.websocketMissingToken">
+                <source>WebSocket connection error. The WebSocket gateway token is missing, Please check your configuration and contact your site administrator.</source>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

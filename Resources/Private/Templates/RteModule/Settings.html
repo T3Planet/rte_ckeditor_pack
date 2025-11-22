@@ -1,0 +1,49 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/Core/Core/ViewHelpers"
+    xmlns:ckit="http://typo3.org/ns/T3Planet/RteCkeditorPack/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Modals" />
+<f:section name="content">
+<f:be.pageRenderer includeJavaScriptModules="{0: '@t3planet/RteCkeditorPack/script.js'}"/>
+    <form action="" method="post">
+        <div id="ckeditor-modal" class="ckeditor modal d-block">
+            <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
+                <div class="t3js-modal-body modal-body">
+                    <div class="form-section-custom">
+                        <f:variable name="title">{f:if(condition: '{record}' , then: '{record.configKey}', else: '{configuration.config_key}' )}</f:variable>
+                        <f:render section="enableModule" arguments="{isEnable:record.enable,title:title}" />
+                        <f:if condition="{fields}">
+                            <f:render partial="Fields/Fields" arguments="{_all}"/>
+                        </f:if>
+                    </div>
+                    <f:if condition="{record.configKey} == 'RealTimeCollaboration'">
+                        <div class="callout callout-warning mt-4">
+                            <div class="callout-content">
+                                <div class="callout-title">
+                                    <h5><f:translate key="ckeditorKit.plugin.realtime_collaboration.warning.title" extensionName="RteCkeditorPack"/></h5>
+                                </div>
+                                <div class="callout-body">
+                                    <p><f:format.raw><f:translate key="ckeditorKit.plugin.realtime_collaboration.warning1" extensionName="RteCkeditorPack"/></f:format.raw></p>
+                                    <p><f:format.raw><f:translate key="ckeditorKit.plugin.realtime_collaboration.warning2" extensionName="RteCkeditorPack"/></f:format.raw></p>
+                                </div>
+                            </div>
+                        </div>    
+                    </f:if>
+                </div>
+                <input type="hidden" name="configKey" value="{title}" />
+                <div class="t3js-modal-footer modal-footer">
+                    <button type="submit" class="btn btn-primary feature-configuration"><f:translate key="features.settings.save" extensionName="RteCkeditorPack"/></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</f:section>
+<f:section name="enableModule">
+    <div class="form-group form-check form-switch">
+        <input type="hidden" name="enable" value="0" />
+        <input class="form-check-input" id="module-{title}" type="checkbox" name="enable" value="1"
+            {f:if(condition: '{isEnable}' , then: 'checked' )} />
+        <label for="module-{title}" class="form-check-label form-label"><f:translate key="feature.enable" extensionName="RteCkeditorPack"/> {title}</label>
+    </div>
+</f:section>
+</html>

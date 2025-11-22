@@ -1,0 +1,23 @@
+<f:if condition="{availableModules}">
+    <f:for each="{availableModules}" as="item" iteration="i">
+        <div class="wishlist-teaser mb-4">
+            <h3>{item.label}</h3>
+            <div class="card-container {item.key}-favorites" data-not-found="Data Not Found"></div>
+            <button class="clearLocalStorage btn btn-danger btn-sm" data-category="{item.key}-favorites" style="display: none;"><f:translate key="favorite.remove" extensionName="rte_ckeditor_pack" /></button>
+        </div>
+    </f:for>
+</f:if>
+<div id="dataNotFound" class="d-none">
+    <div class="typo3-messages">
+        <div class="alert alert-info">
+            <div class="media">
+                <div class="media-left">
+                    <core:icon identifier="actions-info-circle" size="medium" alternativeMarkupIdentifier="inline" />
+                </div>
+                <div class="media-body">
+                    <h5 class="alert-title mb-0"><f:translate key="favorite.DataNotFound" extensionName="rte_ckeditor_pack" /></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

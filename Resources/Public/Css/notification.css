@@ -1,0 +1,153 @@
+/* Optimized CKEditor Notification Styles */
+:root {
+  --ck-notification-bg: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  --ck-notification-border: #dc3545;
+  --ck-notification-text: #991b1b;
+  --ck-notification-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --ck-notification-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ck-notification {
+  min-width: 320px;
+  max-width: 480px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 1rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--ck-notification-border);
+  border-left: 4px solid var(--ck-notification-border);
+  border-radius: 12px;
+  background: var(--ck-notification-bg);
+  color: var(--ck-notification-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: var(--ck-notification-shadow);
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: right center;
+}
+
+.ck-notification__error::before {
+  content: '⚠';
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  font-size: 1.4em;
+  color: var(--ck-notification-border);
+  font-weight: bold;
+  z-index: 1;
+}
+
+.ck-notification__header {
+  font-weight: 700;
+  padding: 0 0 0.75rem 0;
+  margin: 0 0 0 2rem;
+  font-size: 1.125rem;
+  line-height: 1.3;
+  color: var(--ck-notification-text);
+  letter-spacing: -0.01em;
+}
+
+.ck-notification__description {
+  font-weight: 400;
+  color: var(--ck-notification-text);
+  padding: 0;
+  margin: 0 0 0 2rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.ck-notification__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--ck-notification-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: var(--ck-notification-transition);
+  font-weight: 600;
+  z-index: 2;
+}
+
+.ck-notification__close:hover {
+  background: rgba(153, 27, 27, 0.1);
+  color: var(--ck-notification-border);
+  transform: scale(1.1);
+}
+
+.ck-notification__close:focus {
+  outline: 2px solid var(--ck-notification-border);
+  outline-offset: 2px;
+}
+
+.ck-notification__close:active {
+  transform: scale(0.95);
+}
+
+.ck-notification.ck-hidden {
+  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%) scale(0.95); opacity: 0; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0) scale(1); opacity: 1; }
+  to { transform: translateX(100%) scale(0.95); opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .ck-notification {
+    min-width: 280px;
+    max-width: calc(100vw - 2rem);
+    margin: 0 1rem 1rem 1rem;
+    padding: 1rem;
+  }
+  .ck-notification__header,
+  .ck-notification__description {
+    margin-left: 1.5rem;
+  }
+  .ck-notification__header { font-size: 1rem; }
+  .ck-notification__description { font-size: 0.8rem; }
+  .ck-notification__error::before {
+    left: 1rem;
+    font-size: 1.2em;
+  }
+}
+
+/* Accessibility */
+@media (prefers-contrast: high) {
+  .ck-notification { border-width: 2px; box-shadow: 0 0 0 2px currentColor; }
+  .ck-notification__close:focus { outline-width: 3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ck-notification,
+  .ck-notification.ck-hidden { animation: none; }
+  .ck-notification__close { transition: none; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ck-notification-bg: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    --ck-notification-border: #ef4444;
+    --ck-notification-text: #fca5a5;
+  }
+  .ck-notification__close:hover {
+    background: rgba(252, 165, 165, 0.1);
+    color: var(--ck-notification-border);
+  }
+}

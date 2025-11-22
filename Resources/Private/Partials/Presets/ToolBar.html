@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col">
+        <div class="drag-grid-wrap h-100">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 drag-drop-items">
+                <h3 class="mb-0"><f:translate key="features.drag.inactive" /></h3>
+            </div>
+            <div class="drag-grid grid-1">
+                <f:for each="{toolBarConfiguration.activeFeaturItems}" as="activeFeature" iteration="d">
+                    <div class="drag-item">
+                        <button class="btn btn-default toggle-btn w-100 text-start justify-content-start"  data-id="{activeFeature.toolBar}"
+                            data-items="{activeFeature.toolBar}" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" 
+                            data-bs-placement="top" data-bs-content="{activeFeature.items}" data-bs-title="{f:if(condition: '{activeFeature.label}' , then: '{activeFeature.label}', else:'{activeFeature.toolBar}')}">
+                            <f:if condition="{activeFeature.icon}">
+                                <core:icon identifier="{activeFeature.icon}" size="small" alternativeMarkupIdentifier="inline"/>
+                            </f:if>
+                            <span class="label-show toggle-label">{f:if(condition: '{activeFeature.label}' , then: '{activeFeature.label}', else:'{activeFeature.toolBar}')}</span>
+                        </button>
+                    </div>
+                </f:for>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="drag-grid-wrap h-100">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 drag-drop-items">
+                <h3 class="my-0"><f:translate key="features.drag.active" /></h3>
+                <div class="separator-buttons">
+                    <div class="position-relative grid-3 drag-grid">
+                        <div class="drag-item drag-separator-item">
+                            <button title="Divider (|)" class="btn border btn-bg-white" data-items="|" data-id="PipeLine"><core:icon identifier="actions-viewmode-compare" size="small" alternativeMarkupIdentifier="inline" /></button>
+                        </div>
+                        <div class="drag-item drag-separator-item">
+                            <button title="Break (-)" class="btn border btn-bg-white" data-items="-" data-id="NewLine"><core:icon identifier="actions-arrow-right-down-alt" size="small" alternativeMarkupIdentifier="inline" /></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="drag-grid grid-2">
+                <f:if condition="{toolBarConfiguration.visibleToolBarItems}">
+                    <f:for each="{toolBarConfiguration.visibleToolBarItems}" as="item" iteration="k">
+                        <div class="drag-item {f:if(condition: '{item.toolBar} == | || {item.toolBar} == -' , then: 'drag-separator-item')}">
+                            <button class="toggle-btn w-100 text-start justify-content-start 
+                            {f:if(condition: '{item.toolBar} == | || {item.toolBar} == -' , then: 'btn border btn-bg-white', else: 'btn btn-default')}" 
+                                data-id="{k.cycle}" data-items="{item.toolBar}" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" 
+                                data-bs-placement="top" data-bs-content="{item.items}" data-bs-title="{f:if(condition: '{item.label}' , then: '{item.label}', else:'{item.toolBar}')}">
+                                <f:if condition="{item.toolBar} == '|'">
+                                    <f:then><core:icon identifier="actions-viewmode-compare" size="small" alternativeMarkupIdentifier="inline" /></f:then>
+                                    <f:else if="{item.toolBar} == '-'"><core:icon identifier="actions-arrow-right-down-alt" size="small" alternativeMarkupIdentifier="inline" /></f:else>
+                                    <f:else if="{item.icon}"><core:icon identifier="{item.icon}" size="small" alternativeMarkupIdentifier="inline" /></f:else>
+                                    <f:else><core:icon identifier="actions-document" size="small" alternativeMarkupIdentifier="inline" /></f:else>
+                                </f:if>
+                                <span class="label-show toggle-label">{f:if(condition: '{item.label}' , then: '{item.label}', else:'{item.toolBar}')}</span>
+                            </button>
+                        </div>
+                    </f:for>
+                </f:if>
+            </div>
+        </div>
+    </div>
+</div>

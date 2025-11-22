@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf" date="2024-09-19T12:27:21Z" product-name="rte_ckeditor_pack">
+		<header/>
+		<body>
+			<trans-unit id="tx_rteckeditorpack_domain_model_modules">
+				<source>Modules</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_configuration">
+				<source>Configuration</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_configuration.description">
+				<source>Configuration</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_configuration.config_key">
+				<source>Config Key</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_configuration.fields">
+				<source>Fields</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
+				<source>Label</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
+				<source>Label</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.tooltip">
+				<source>Tooltip</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.icon">
+				<source>Icon</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.custom_icon">
+				<source>Custom Icon</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.items">
+				<source>Items</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.items">
+				<source>Items</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.preset">
+				<source>Preset</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems">
+				<source>ToolBar Items</source>
+			</trans-unit>
+			<trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups">
+				<source>ToolBarItem Groups</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

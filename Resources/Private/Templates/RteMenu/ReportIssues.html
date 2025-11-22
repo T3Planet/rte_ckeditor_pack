@@ -1,0 +1,58 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:core="http://typo3.org/ns/TYPO3/Core/Core/ViewHelpers" xmlns:ckit="http://typo3.org/ns/T3Planet/RteCkeditorPack/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Modals" />
+<f:section name="content">
+    <div id="ckeditor-modal" class="ckeditor modal d-block">
+        <form method="POST" enctype="multipart/form-data" class="report-form ckeditor-modal-content modal-content ckeditor__action-wrapper">
+            <div class="t3js-modal-body modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="name"><f:translate key="t3editor.form.name" extensionName="rte_ckeditor_pack" /></label>
+                            <input class="form-control" type="text" id="name" name="name" required>
+                            <input type="hidden" name="source" value="{title}">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="email"><f:translate key="t3editor.form.email" extensionName="rte_ckeditor_pack" /></label>
+                            <input class="form-control" type="email" required id="email" name="email">
+                        </div>
+                    </div>
+                </div>
+
+                <fieldset>
+                    <div class="form-group">
+                        <label class="form-label" for="issue-type"><f:translate key="t3editor.form.issuetype" extensionName="rte_ckeditor_pack" /></label>
+                        <select class="form-select" id="issue-type" name="type">
+                            <option value="bug"><f:translate key="t3editor.form.feature.bug" extensionName="rte_ckeditor_pack" /></option>
+                            <option value="feature-request"><f:translate key="t3editor.form.feature.request" extensionName="rte_ckeditor_pack" /></option>
+                            <option value="technical-problem"><f:translate key="t3editor.form.technical.problem" extensionName="rte_ckeditor_pack" /></option>
+                            <option value="other"><f:translate key="t3editor.form.other" extensionName="rte_ckeditor_pack"/></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="description"><f:translate key="t3editor.form.description" extensionName="rte_ckeditor_pack" /></label>
+                        <textarea class="form-control" id="description" name="description" rows="12" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="attachments"><f:translate key="t3editor.form.attachments" extensionName="rte_ckeditor_pack" /></label>
+                        <input class="form-control" type="file" accept="audio/*,video/*,image/*,application/*" id="attachments" name="attachments">
+                        <span class="small"><f:translate key="t3editor.form.allowExt" extensionName="rte_ckeditor_pack" /> <strong><f:translate key="t3editor.form.Ext" extensionName="rte_ckeditor_pack" /></strong></span>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="t3js-modal-footer modal-footer">
+                <button class="btn btn-default" type="button" data-confirmation="false" t3editor-modal="close">
+                    <core:icon identifier="actions-close" size="small" /> <f:translate key="t3editor.form.cancel" extensionName="rte_ckeditor_pack" />
+                </button>
+                <button class="btn btn-primary report-issue-btn" type="submit">
+                    <core:icon identifier="actions-save" size="small" /> <f:translate key="t3editor.form.submit" extensionName="rte_ckeditor_pack" />
+                </button>
+            </div>
+        </form>
+    </div>
+</f:section>
+</html>

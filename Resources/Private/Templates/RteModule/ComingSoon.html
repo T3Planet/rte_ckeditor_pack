@@ -1,0 +1,18 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:core="http://typo3.org/ns/TYPO3/Core/Core/ViewHelpers" xmlns:ckit="http://typo3.org/ns/T3Planet/RteCkeditorPack/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Modals" />
+<f:section name="content">
+    <div id="ckeditor-modal" class="ckeditor modal d-block">
+        <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
+            <div class="t3js-modal-body modal-body">
+                <div class="py-2">
+                    <div class="alert alert-primary alert-dismissible" role="alert"><strong>This feature is currently under development</strong><br>Our team is working to deliver a reliable and well-integrated solution.<br>Thank you for your patience.</div>
+                </div>
+            </div>
+            <div class="t3js-modal-footer modal-footer">
+                <button class="btn btn-default" t3editor-modal="close"><core:icon identifier="actions-close" size="small" />Cancel</button>
+            </div>
+        </div>
+    </div>
+</f:section>
+</html>

@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2"
+    xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang.xlf" date="2023-02-15T18:03:32Z">
+        <header/>
+        <body>
+
+            <trans-unit id="mlang_tabs_tab">
+                <source>CKEditor Pack</source>
+            </trans-unit>
+            <!-- Main Module Tabs-->
+            <trans-unit id="ckeditorKit.module.standalone">
+                <source>Features</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.module.collaboration">
+                <source>Collaboration</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.module.productivity">
+                <source>Productivity</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.module.file_management">
+                <source>File Management</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.module.settings">
+                <source>Settings</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.module.plugins">
+                <source>Free Packages</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.module.feature">
+                <source>Toolbar</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.file_management">
+                <source>Files</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.layout">
+                <source>Presets</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.settings">
+                <source>Premium Settings</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.card.btn_title">
+                <source>Configuration</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.card.checkbox.enable">
+                <source>Enable</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.card.coming-soon">
+                <source>Coming Soon</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.track_changes">
+                <source>Track Changes</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.Favorites">
+                <source>Favorites</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.track_changes.description">
+                <source>Suggest edits without changing the main text. Each suggestion is clearly marked, and users can review, accept, or reject them as needed.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.comments">
+                <source>Comments</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.comments.description">
+                <source>Add, edit, or delete comments anywhere in the editor. Start discussions with threads or limit users to comments-only mode for focused feedback.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.revision_history">
+                <source>Revision History</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.revision_history.description">
+                <source>View, compare, restore, or rename older document versions. Keep track of changes over time and easily bring back earlier content when needed.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration">
+                <source>Real-time Collaboration</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration.description">
+                <source> Allow multiple users to work on the same content at once. They can edit, comment, suggest changes, and review document history for a smooth Google Docs-style experience.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.import_from_word">
+                <source>Import from Word</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.import_from_word.description">
+                <source>Convert Word documents into clean HTML inside CKEditor 5. All formatting, comments, and tracked changes are kept, making importing quick and error-free.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.export_to_pdf">
+                <source>Export to PDF</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.export_to_pdf.description">
+                <source>Create a polished PDF version of your content directly from the editor with one click. Formatting and layout are preserved accurately.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.ai_assistant">
+                <source>CKEditor AI</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.ai_assistant.description">
+                <source>Add a built-in AI Assistant to write, rephrase, translate, or summarize your text. Get instant help directly inside the editor.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.footnotes">
+                <source>Footnotes</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.footnotes.description">
+                <source>Insert inline footnotes with automatic numbering. Keep notes and references clear and consistent across the entire document.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check">
+                <source>Spell and Grammar Check</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check.description">
+                <source>Use an AI-based tool to check spelling, grammar, and punctuation in many languages. See suggestions as you type or review them later.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.pagination">
+                <source>Pagination</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.pagination.description">
+                <source>Preview page breaks while editing to see how your document will look when exported to PDF or Word.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.math_equations">
+                <source>Math Equations</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.math_equations.description">
+                <source>Easily add properly formatted mathematical notation and chemical formulas to your content.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.multi_level_list">
+                <source>Multi-level List</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.multi_level_list.description">
+                <source>Create and edit advanced numbered lists like 1, 1.1, and 1.1.1. Keep your structure organized and easy to follow.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.notifications">
+                <source>Notifications</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.notifications.description">
+                <source>Notification system for collaboration features automatically sends email notifications to other users taking part in collaboration.
+                        It notifies team members about comments, mentions, and suggestion updates.
+                        It also displays a part of the content that the notification is about so it's easy to see what other user's activity is about.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.slash_commands">
+                <source>Slash Commands</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.slash_commands.description">
+                <source>Use the / key to quickly insert block elements, styles, or content without using the mouse. You can also create and manage your own custom commands.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.templates">
+                <source>Templates</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.templates.description">
+                <source>Use templates to add ready-made content blocks like tables or create complete document layouts such as letters or reports quickly and easily.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.paste_from_office_enhanced">
+                <source>Paste from Office Enhanced</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.paste_from_office_enhanced.description">
+                <source>Copy and paste from Word or Excel without errors. All formatting and styles are preserved, giving you a clean and accurate HTML output.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.format_painter">
+                <source>Format Painter</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.format_painter.description">
+                <source>Copy formatting from one section and apply it to others. Keep text styles and layouts consistent across your entire document easily.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.document_outline">
+                <source>Document Outline</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.document_outline.description">
+                <source>Automatically list document headings in a sidebar. Use it to navigate long content faster and adjust the position of the outline when needed.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.table_contents">
+                <source>Table of Contents</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.table_contents.description">
+                <source>Insert a table of contents that updates automatically when your document changes. All headings are linked for quick navigation.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.case_change">
+                <source>Case Change</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.case_change.description">
+                <source>Toggle text between UPPERCASE, lowercase, and Title Case with a single click.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode">
+                <source>Full Screen Mode</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode.description">
+                <source>Use the editor in full screen for a larger workspace. This feature is part of the free CKEditor 5 Plugin Pack. See the Plugin Pack Feature Guide for setup details.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.merge_fields">
+                <source>Merge Fields</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.productivity.merge_fields.description">
+                <source>Add placeholders that can be replaced with text, blocks, or images. Perfect for creating personalized documents or automating bulk emails.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.file_management.ckbox">
+                <source>CKBox</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.file_management.ckbox.description">
+                <source> Securely upload, store, and organize your files and images. For use in CKEditor 5. Simplify media discovery with the media browser, alongside an intuitive Image Editor for image adjustments.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation">
+                <source>Block Indentation</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation.description">
+                <source>Set indentation for text blocks like paragraphs, headings, or lists. This helps visually separate different sections of your content.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace">
+                <source>Find and Replace</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace.description">
+                <source>Search for words or phrases in your document and replace them with alternate text. </source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts">
+                <source>Fonts</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts.description">
+                <source>Change font family, size, and color, including background color. Adjust the text style to match your brand or document design.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight">
+                <source>Highlight</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight.description">
+                <source>Mark text with different colors. Use it to change background or text color for emphasis or quick visual reference.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break">
+                <source>Page Break</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break.description">
+                <source>Insert page breaks to define where new pages start. Control your document’s layout when printing or exporting to PDF or Word.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all">
+                <source>Select All</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all.description">
+                <source>The select all feature lets you select the entire content using a toolbar button.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation">
+                <source>Text Transformation</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation.description">
+                <source>Automatically correct or replace certain text fragments. It helps maintain consistent spelling and formatting while typing.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list">
+                <source>To-do Document List</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list.description">
+                <source>Create interactive checklists with labels. Add, check off, or reorder tasks to manage content more efficiently.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count">
+                <source>Word count</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count.description">
+                <source>Track words and characters as you write. Monitor content length and progress easily within the editor.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.operation.success">
+                <source>Success</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.operation.error">
+                <source>Error Occured</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.setting_save.success.message">
+                <source>Configuration updated successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.setting_save.error.message">
+                <source>Configuration is not updated, please try again</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.premium.export_to_word">
+                <source>Export to Word</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.export_to_word.description">
+                <source>Generate a .docx file instantly from the editor. Keep your document’s original formatting for easy sharing and further editing.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.key_missing">
+                <source>To unlock premium features, kindly provide a license key.</source>
+            </trans-unit>
+
+            <trans-unit id="features.settings.save">
+                <source>Save Changes</source>
+            </trans-unit>
+            <trans-unit id="features.settings.group">
+                <source>Create Groups</source>
+            </trans-unit>
+            <trans-unit id="features.settings.dragDrop">
+                <source>Drag N Drop Features</source>
+            </trans-unit>
+            <trans-unit id="features.drag.inactive">
+                <source>Toolbar InActive Items</source>
+            </trans-unit>
+            <trans-unit id="features.drag.active">
+                <source>Toolbar Active Items</source>
+            </trans-unit>
+            <trans-unit id="features.visible">
+                <source>Visible Feature</source>
+            </trans-unit>
+            <trans-unit id="features.hidden">
+                <source>Hidden Feature</source>
+            </trans-unit>
+            <trans-unit id="features.ToggleLabel">
+                <source>Toggle Label</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.module_update.success.message">
+                <source>Feature setting is updated successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.module_update.error.message">
+                <source>Configuration is not updated, please try again</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed">
+                <source>Html Embed</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed.description">
+                <source>Embed custom HTML snippets inside your document. Ideal for adding widgets, iframes, or other HTML elements directly.</source>
+            </trans-unit>
+
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.code">
+                <source>Code</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.code.description">
+                <source>Display inline code snippets instead of full blocks. Keep code readable while maintaining the natural document flow.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock">
+                <source>Code Block</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock.description">
+                <source>Insert preformatted code blocks with language labels. Perfect for displaying code samples in a clean, readable format.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar">
+                <source>Block Toolbar</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar.description">
+                <source>Access the main toolbar with dropdowns and buttons. It provides easy access to all editor features in a familiar interface.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.balloonToolbar">
+                <source>Balloon Toolbar</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.balloonToolbar.description">
+                <source>Use a floating toolbar that appears when you select text. It offers quick formatting tools exactly where you need them.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.file_management.typo3Image">
+                <source>TYPO3 Image</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.file_management.typo3Image.description">
+                <source>Modern image and file uploads, image editing, and native integration with CKEditor.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing">
+                <source>Restricted Editing</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description">
+                <source>Control which part of a document users can edit by designating certain sections of a document as non-editable.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown">
+                <source>Markdown</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown.description">
+                <source>Switch from HTML to Markdown output. With autoformatting, it turns CKEditor into a simple yet powerful Markdown editor.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.mediaEmbed">
+                <source>Media Embed</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.mediaEmbed.description">
+                <source>Insert videos, social posts, or maps into your document. Add multimedia content easily and keep everything within the editor.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images">
+                <source>Image Configuration</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images.description">
+                <source>CKEditor 5 includes built-in tools to insert, upload, resize, style, and caption images. All features work smoothly with block, inline, and responsive images right away.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave">
+                <source>Autosave</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave.description">
+                <source>Make sure nothing gets lost by automatically saving your document every time a change is made.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.showBlocks">
+                <source>ShowBlocks</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.showBlocks.description">
+                <source>Visualize all block-level elements in your content. Great for identifying structure and layout during editing.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.textPartLanguage">
+                <source>Textpart language</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.textPartLanguage.description">
+                <source>Mark parts of text in different languages so browsers and screen readers can interpret them correctly for accessibility.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.layout.CollaborativeDocumentEditor">
+                <source>Collaborative Document Editor</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.layout.CollaborativeDocumentEditor.description">
+                <source>Perfect for reports and academic papers with advanced document features and supports all available Collaboration Features.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.layout.CollaborativeArticleEditor">
+                <source>Collaborative Article Editor</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.layout.CollaborativeArticleEditor.description">
+                <source>General purpose, feature-rich editor perfect for CMS and semantic document creation.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.layout.FeatureRichEditor">
+                <source>Feature-rich Editor</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.layout.FeatureRichEditor.description">
+                <source>An editor packed with features to help you easily test most of the functionalities available in CKEditor 5.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.layout.DocumentEditor">
+                <source>Document Editor</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.layout.DocumentEditor.description">
+                <source>A Document editor with some preselected choice of plugins to match some common usage scenarios.</source>
+            </trans-unit>
+
+            <trans-unit id="favorite.DataNotFound" resname="favorite.DataNotFound">
+                <source>No favorites found! Click on "heart icon" to set as your favorite.</source>
+            </trans-unit>
+            <trans-unit id="card.DataNotFound" resname="card.DataNotFound">
+                <source>No Card found!</source>
+            </trans-unit>
+            <trans-unit id="favorite.remove" resname="favorite.remove">
+                <source>Remove All</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.general_settings.success.message">
+                <source>Settings saved successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.general_settings.error">
+                <source>Error</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.general_settings.error.message">
+                <source>Settings are not saved, please try again</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.menuBar">
+                <source>MenuBar</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.menuBar.description">
+                <source>Organize editor tools into a clean menu bar. Customize it to include quick access to standard or custom plugin buttons.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.emoji">
+                <source>Emoji</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.emoji.description">
+                <source>Insert emojis directly from the toolbar or while typing. Add a friendly and expressive touch to your content.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight">
+                <source>Line Height</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight.description">
+                <source>Change the line height of selected blocks. Adjust spacing for better readability and a cleaner document layout.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.special_characters">
+                <source>Special Characters</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.special_characters.description">
+                <source>Insert unique symbols and characters into your document such as mathematical operators, currency symbols, punctuation, graphic symbols, Emojis, and Unicode letters.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.plugin.realtime_collaboration">
+                <source>Warning</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.realtime_collaboration.message">
+                <source>The Source editing plugin is not compatible with real-time collaboration, so it has been disabled</source>
+            </trans-unit>
+            <trans-unit id="realtime.adapter.loader.title">
+                <source>Connecting to collaboration…</source>
+            </trans-unit>
+            <trans-unit id="realtime.adapter.loader.description">
+                <source>Preparing editor and syncing realtime session.</source>
+            </trans-unit>
+            <trans-unit id="realtime.adapter.loader.status.initializing">
+                <source>Establishing connection…</source>
+            </trans-unit>
+            <trans-unit id="realtime.adapter.loader.status.connected">
+                <source>Connected. Loading document…</source>
+            </trans-unit>
+            <trans-unit id="realtime.adapter.loader.status.reconnecting">
+                <source>Connection lost. Reconnecting…</source>
+            </trans-unit>
+            <trans-unit id="realtime.adapter.loader.status.error">
+                <source>Connection error. Retrying…</source>
+            </trans-unit>
+
+            <trans-unit id="feature_form.submit">
+                <source>Submit</source>
+            </trans-unit>
+            <trans-unit id="feature_form.create">
+                <source>Create Preset</source>
+            </trans-unit>
+            <trans-unit id="feature.enable">
+                <source>Enable</source>
+            </trans-unit>
+            <trans-unit id="features.presets">
+                <source>Available Presets</source>
+            </trans-unit>
+
+            <trans-unit id="collapse.featureConfiguration">
+                <source>Feature Configuration</source>
+            </trans-unit>
+            <trans-unit id="collapse.advancedSettings">
+                <source>Advanced Settings</source>
+            </trans-unit>
+
+            <trans-unit id="authorization.none">
+                <source>Not set</source>
+            </trans-unit>
+            <trans-unit id="authorization.key">
+                <source>Access key</source>
+            </trans-unit>
+            <trans-unit id="authorization.dev_token">
+                <source>Development token</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.heading">
+                <source>Heading</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.heading.description">
+                <source>Add headings to structure your document clearly. Headings make your text easier to read and improve accessibility and SEO.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment">
+                <source>Text alignment</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment.description">
+                <source>Align your content to the left, right, center, or justify it. Keep your document layout clean and professional.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style">
+                <source>Styles</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style.description">
+                <source>Apply predefined styles to text or elements. These styles add CSS classes to improve appearance or provide semantic meaning.</source>
+            </trans-unit>
+
+            <trans-unit id="field.placeholder.licenseKey">
+                <source>License key</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.authType">
+                <source>Authorization type</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.environmentId">
+                <source>Environment ID</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.accessKey">
+                <source>Access Key</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.tokenUrl">
+                <source>Token URL</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.organizationId">
+                <source>Organization ID</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.apiKey">
+                <source>API key</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.webSocketUrl">
+                <source>Web Socket URL i.e(wss://ORGANIZATION_ID.cke-cs.com/ws)</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.apiBaseUrl">
+                <source>API base URL i.e(https://ORGANIZATION_ID.cke-cs.com/api/v5/ENVIRONMENT_ID/)</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.exportPdf.fileName">
+                <source>Name of the file (i.e sample.pdf)</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.converterUrl">
+                <source>Converter URL</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.exportWord.fileName">
+                <source>Name of the file (i.e export-word-demo.docx)</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.trialLicenseKey">
+                <source>Trial license key</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.premium.mention">
+                <source>Mentions</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.premium.mention.description">
+                <source>Use “@” to tag users, groups, or topics inside your document. Get smart suggestions while typing to improve teamwork.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.no_module_update">
+                <source>No Changes</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.no_module_update.no_changes">
+                <source>Nothing to modify</source>
+            </trans-unit>
+
+            <trans-unit id="field.note.licenseKey">
+                <source>The license key is required for Feature Pack, Collaboration Pack, as well as the Productivity Pack.</source>
+            </trans-unit>
+            <trans-unit id="field.note.authType">
+                <source>Select the authorization suitable type for your features. The access key-based authorization is highly recommended and the best option in a production environment. The development token should rather be used for testing purposes.
+The authorization credentials are required for Real-time collaboration or Import from Word, and optional for Export to Word/PDF to generate documents without the watermark.</source>
+            </trans-unit>
+            <trans-unit id="field.note.environmentId">
+                <source>The environment management panel can be found in &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;.</source>
+            </trans-unit>
+            <trans-unit id="field.note.accessKey">
+                <source>The access key for the environment can be found in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;.</source>
+            </trans-unit>
+            <trans-unit id="field.note.tokenUrl">
+                <source>Use the development token URL only for testing purposes. It does not provide full permission validation.&lt;/br&gt;For production environments, it is strongly recommended to use the Environment ID and Access Key instead.</source>
+            </trans-unit>
+            <trans-unit id="field.note.organizationId">
+                <source>The Organization ID is available in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;. &lt;/br&gt; Required for Real-time collaboration and API requests.</source>
+            </trans-unit>
+            <trans-unit id="field.note.apiKey">
+                <source>The API key is also available in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt; and is required for real-time collaboration and API requests</source>
+            </trans-unit>
+            <trans-unit id="field.note.webSocketUrl">
+                <source>The web socket url can be found in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;. &lt;/br&gt; You can leave this field empty - the system will automatically generate this URL using Organization ID field</source>
+            </trans-unit>
+            <trans-unit id="field.note.apiBaseUrl">
+                <source>The API base URL can be found in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;. &lt;/br&gt; If left empty, the system automatically creates it using the Organization ID and Environment ID.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_style">
+                <source>Basic text styles</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_style.description">
+                <source>The basic styles feature lets you apply the most essential formatting such as bold, italic, underline, strikethrough, subscript, superscript, and code. Coupled with more formatting features, these serve as a base for any WYSIWYG editor toolset.</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditing">
+                <source>Source editing</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditing.description">
+                <source>The source editing feature lets you view and edit the source of your document.</source>
+            </trans-unit>
+
+            <trans-unit id="toolbar.create_group">
+                <source>Create New Group</source>
+            </trans-unit>
+            <trans-unit id="toolbar.label">
+                <source>Label</source>
+            </trans-unit>
+            <trans-unit id="toolbar.tooltip">
+                <source>ToolTip</source>
+            </trans-unit>
+            <trans-unit id="toolbar.icon">
+                <source>Icon</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item">
+                <source>Items</source>
+            </trans-unit>
+
+            <trans-unit id="ckeditorKit.toolbar.group.success.message">
+                <source>Toolbar Group Configuration Saved Successfully</source>
+            </trans-unit>
+            <trans-unit id="toolbar.custom_icon">
+                <source>Custom Icon</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.bookmark">
+                <source>Bookmarks</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.bookmark.description">
+                <source>Add and manage bookmarks to move easily through long documents. Improve navigation and create internal links quickly.</source>
+            </trans-unit>
+
+            <trans-unit id="toolbar.item.fullScreen">
+                <source>Full Screen</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.ImportWord">
+                <source>Import Word</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.ExportPdf">
+                <source>Export Pdf</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.ExportWord">
+                <source>Export Word</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.aiAssistant">
+                <source>AI Assistant</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.aiCommands">
+                <source>AI Commands</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.previousPage">
+                <source>Previous Page</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.nextPage">
+                <source>Next Page</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.pageNavigation">
+                <source>Page Navigation</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.multiLevelList">
+                <source>MultiLevel List</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.comment">
+                <source>Comment</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.revisionHistory">
+                <source>Revision History</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.trackChanges">
+                <source>Track Changes</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.insertTemplate">
+                <source>Insert Template</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.caseChange">
+                <source>CaseChange</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.insertMergeField">
+                <source>Insert MergeField</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.previewMergeFields">
+                <source>Preview MergeFields</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.FormatPainter">
+                <source>Format Painter</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.TableOfContents">
+                <source>Table Of Contents</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.insertImage">
+                <source>Insert Image</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.outdent">
+                <source>Outdent</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.indent">
+                <source>Indent</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.fontFamily">
+                <source>Font Family</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.fontSize">
+                <source>Font Size</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.fontColor">
+                <source>Font Color</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.fontBackgroundColor">
+                <source>Font BackgroundColor</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.Highlight">
+                <source>Highlight</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.heading">
+                <source>Heading</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.alignment">
+                <source>Alignment</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.alignment_left">
+                <source>Alignment Left</source>
+            </trans-unit>
+             <trans-unit id="toolbar.item.alignment_center">
+                <source>Alignment Center</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.alignment_right">
+                <source>Alignment Right</source>
+            </trans-unit>
+             <trans-unit id="toolbar.item.alignment_justify">
+                <source>Alignment Justify</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.style">
+                <source>Style</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.codeBlock">
+                <source>Code Block</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.textPartLanguage">
+                <source>TextPart Language</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.mediaEmbed">
+                <source>Media Embed</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.TodoList">
+                <source>Todo List</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.code">
+                <source>Code</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.findAndReplace">
+                <source>Find And Replace</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.pageBreak">
+                <source>Page Break</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.htmlEmbed">
+                <source>HTML Embed</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.SelectAll">
+                <source>Select All</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.showBlocks">
+                <source>Show Blocks</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.emoji">
+                <source>Emoji</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.lineHeight">
+                <source>Line Height</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.sourceEditing">
+                <source>Source Editing</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.bookmark">
+                <source>Bookmark</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.bold">
+                <source>Bold</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.italic">
+                <source>Italic</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.subscript">
+                <source>Subscript</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.superscript">
+                <source>Superscript</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.underline">
+                <source>Underline</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.strikethrough">
+                <source>Strike through</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.specialCharacters">
+                <source>Special Characters</source>
+            </trans-unit>
+            <trans-unit id="new.presets">
+                <source>Manage Presets</source>
+            </trans-unit>
+            <trans-unit id="form.preset_name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="form.preset_name.description">
+                <source>It must be unique,do not use spaces</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.presert.success.message">
+                <source>New Preset is inserted successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.presert.error.message">
+                <source>It is already in use, please use unique value</source>
+            </trans-unit>
+            <!-- Permission module in BE usergroups -->
+            <trans-unit id="feature.permissions_header">
+                <source>RTE Premium Features</source>
+            </trans-unit>
+            <trans-unit id="header.preset_title">
+                <source>Preset Name</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.marginSuffix">
+                <source>Enter a value followed by a unit (e.g., 10mm or 20px).</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder.authorization">
+                <source>Enter your OpenAI API key, prefixed with 'Bearer' (e.g., 'Bearer YOUR_API_KEY')</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.report_issues">
+                <source>Report Issues</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.premiumtrial">
+                <source>Premium Trial</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.support">
+                <source>Support</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.email">
+                <source>Email</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.issuetype">
+                <source>Issue Type</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.description">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.attachments">
+                <source>Attachments (Optional)</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.feature.bug">
+                <source>Bug</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.feature.request">
+                <source>Feature Request</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.technical.problem">
+                <source>Technical Problem</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.other">
+                <source>Other</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.allowExt">
+                <source>Allow File Extension </source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.Ext">
+                <source>audio/*,video/*,image/*,application/*</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.guide">
+                <source>Guide</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.cancel">
+                <source>Cancel</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.submit">
+                <source>Submit</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.docs">
+                <source>Docs</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.demos">
+                <source>Demos</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.operation.error.invalid_token">
+                <source>Invalid token URL</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.operation.error.invalid_token.message">
+                <source>Please enter a valid token URL to continue</source>
+            </trans-unit>
+             <trans-unit id="t3editor.form.feedback">
+                <source>Feedback</source>
+            </trans-unit>
+             <trans-unit id="t3editor.form.contribute">
+                <source>Contribute</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.community">
+                <source>Community</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.github">
+                <source>Github</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning.title">
+                <source>Real-time Collaboration Note</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning1">
+                <source>To use real-time collaboration features—such as &lt;code&gt;comments&lt;/code&gt;, &lt;code&gt;track changes&lt;/code&gt;, and &lt;code&gt;revision history&lt;/code&gt; — you must disable the Source Editing plugin, as raw HTML editing is not compatible with the collaboration engine</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning2">
+                <source>Additionally, you must save the RTE content at least once before making any edits. Without this initial save, &lt;code&gt;comments&lt;/code&gt;, &lt;code&gt;track changes&lt;/code&gt;, or &lt;code&gt;revision history&lt;/code&gt; data may be lost.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.presets.warning">
+                <source>The toolbar configuration from your YAML preset is now managed by the CKEditor Pack extension's drag-and-drop toolbar interface. This means that, at runtime, the CKEditor Pack configuration takes precedence and defines the active toolbar — your YAML file remains intact but is no longer the source for toolbar rendering.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

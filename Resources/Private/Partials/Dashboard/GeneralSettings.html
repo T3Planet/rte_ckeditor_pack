@@ -1,0 +1,98 @@
+<form action="" method="post" id="ckEditorSettings">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="mb-3"><f:translate key="ckeditorKit.tab.settings" /></h2>
+        </div>
+        <div class="col">
+            <div class="form-group text-end mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <core:icon identifier="actions-document-save" size="small" alternativeMarkupIdentifier="inline" />
+                    <f:translate key="features.settings.save" />
+                </button>
+            </div>
+        </div>
+    </div>
+    <f:if condition="{settingFields}">
+        <div class="panel-body">
+            <div role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist">
+                    <f:for each="{settingFields}" as="configurationFields" key="collapseName" iteration="tabIteration">
+                        <li class="nav-item" role="presentation">
+                            <button
+                                type="button"
+                                class="nav-link {f:if(condition: tabIteration.isFirst, then: 'active')}"
+                                data-bs-toggle="tab"
+                                data-bs-target="#settings-{collapseName}"
+                                aria-controls="settings-{collapseName}"
+                                role="tab"
+                                aria-selected="{f:if(condition: tabIteration.isFirst, then: 'true', else: 'false')}"
+                                {f:if(condition: '!tabIteration.isFirst', then: 'tabindex="-1"')}
+                            >
+                                <f:translate key="collapse.{collapseName}" extensionName="rte_ckeditor_pack" />
+                            </button>
+                        </li>
+                    </f:for>
+                </ul>
+                <div class="tab-content">
+                    <f:for each="{settingFields}" as="configurationFields" key="collapseName" iteration="tabIteration">
+                        <div
+                            role="tabpanel"
+                            class="tab-pane {f:if(condition: tabIteration.isFirst, then: 'active show')}"
+                            id="settings-{collapseName}"
+                        >
+                            <div class="form-section">
+                                <f:for each="{configurationFields}" as="configurationField">
+                                    <f:render section="Field" arguments="{field:configurationField,authType:extSettings.authType ,origValue: '{extSettings.{configurationField.key}}'}" />
+                                </f:for>
+                            </div>
+                        </div>
+                    </f:for>
+                </div>
+            </div>
+        </div>
+    </f:if>
+</form> 
+
+<f:section name="Field">
+    <f:switch expression="{field.type.name}">
+        <f:case value="TEXTAREA">
+            <div class="form-group form-group-textarea-custom">
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <textarea id="{field.key}" class="form-control" rows="3" cols="1000"
+                    name="{field.key}">{f:if(condition: '{origValue}', then:origValue, else:field.value)}</textarea>
+                <f:if condition="{field.note}"><small><f:format.raw>{field.note}</f:format.raw></small></f:if>
+            </div>
+        </f:case>
+        <f:case value="INPUT">
+            <div class="form-group {field.class} {f:if(condition: '({authType} != key && {field.class} == form-item-key-type) || ({authType} != dev_token && {field.class} == form-item-dev-token-type)', then: 'd-none')}">
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <input type="text" id="{field.key}" class="form-control" name="{field.key}" placeholder="{field.placeholder}"
+                    value="{f:if(condition: '{origValue}', then:origValue, else:field.value)}" />
+                <f:if condition="{field.note}"><small><f:format.raw>{field.note}</f:format.raw></small></f:if>
+            </div>
+        </f:case>
+        <f:case value="SELECT">
+            <div class="form-group {field.class}">
+                <label for="{field.key}" class="form-label">{field.name}</label>
+                <f:if condition="{field.value}">
+                    <select name="{field.key}" id="{field.key}" class="form-control form-select">
+                        <f:for each="{field.value}" as="selectOptions">
+                            <option value="{selectOptions}"  {f:if(condition: '({selectOptions} == {origValue}) ' , then: 'selected' )}>
+                                <f:translate key="authorization.{selectOptions}" extensionName="rte_ckeditor_pack"/>
+                            </option>
+                        </f:for>
+                    </select>
+                </f:if>
+            </div>
+        </f:case>
+        <f:case value="BOOLEAN">
+            <div class="form-group form-check form-switch {field.class}">
+                <input type="hidden" name="{fieldName}" value="0" />
+                <input class="form-check-input" id="{field.key}" type="checkbox" name="{field.key}" value="1"
+                    {f:if(condition: '{origValue} == 1 || (!{origValue} && {field.value}) ' , then: 'checked' )} />
+                <label for="{field.key}" class="form-check-label form-label">{field.name}</label>
+            </div>
+        </f:case>
+        <f:defaultCase></f:defaultCase>
+    </f:switch>
+</f:section>

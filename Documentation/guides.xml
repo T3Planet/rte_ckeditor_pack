@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides xmlns="https://www.phpdoc.org/guides"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+        links-are-relative="true"
+        default-code-language="php"
+>
+    <extension class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+               project-home="https://t3planet.com/t3planet-typo3-rte-ckeditor-pack"
+               project-contact="https://t3planet.com/t3planet-typo3-rte-ckeditor-pack"
+               project-repository="https://github.com/t3planet-technologies/rte_ckeditor_pack"
+               project-issues="https://github.com/t3planet-technologies/rte_ckeditor_pack/issues"
+               edit-on-github-branch="main"
+               edit-on-github="t3planet-technologies/rte_ckeditor_pack"
+               typo3-core-preferred="13.4"
+               interlink-shortcode="t3planet/rte_ckeditor_pack"
+    />
+    <project title="Richtext Collaborators" release="1.0.0 (beta)" version="1.0.0"
+             copyright="since 2024 by T3Planet // T3Planet"/>
+</guides>
+

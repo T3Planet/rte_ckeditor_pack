@@ -1,0 +1,210 @@
+/**
+ * @license Copyright (c) 2003-2024, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+/*
+ * What you're currently looking at is the source code of a legally protected, proprietary software.
+ * CKEditor 5 Collaboration is licensed under a commercial license and protected by copyright law. Where not otherwise indicated,
+ * all CKEditor 5 Collaboration content is authored by CKSource engineers and consists of CKSource-owned intellectual property.
+ *
+ * Copyright (c) 2003-2024, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+:root {
+	--ck-document-outline-padding: var(--ck-spacing-large);
+	--ck-document-outline-base-font-size: .875em;
+	--ck-document-outline-placeholder-color: var(--ck-color-engine-placeholder-text);
+
+	--ck-document-outline-indent-level-1: 0;
+	--ck-document-outline-indent-level-2: 1.5em;
+	--ck-document-outline-indent-level-3: 3em;
+	--ck-document-outline-indent-level-4: 4.5em;
+	--ck-document-outline-indent-level-5: 6em;
+	--ck-document-outline-indent-level-6: 7.5em;
+
+	--ck-document-outline-item-padding: var(--ck-spacing-small);
+	--ck-document-outline-item-active-color: var(--ck-color-base-active);
+	--ck-document-outline-item-default-color: hsl(0, 0%, 26%);
+	--ck-document-outline-item-hover-state-color: var(--ck-color-base-text);
+}
+
+typo3-rte-ckeditor-ckeditor5 {
+	display: none;
+}
+
+.ck.ck-document-outline {
+	padding: var(--ck-document-outline-padding);
+	font-size: var(--ck-document-outline-base-font-size);
+	user-select: none;
+}
+
+.ck.ck-document-outline:empty::before {
+		content: attr(data-document-outline-empty-placeholder);
+		display: inline-block;
+		color: var(--ck-document-outline-placeholder-color);
+	}
+
+.ck.ck-document-outline .ck-document-outline__item {
+		padding: var(--ck-document-outline-item-padding);
+		color: var(--ck-document-outline-item-default-color);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		cursor: pointer;
+	}
+
+.ck.ck-document-outline .ck-document-outline__item.ck-document-outline__item_empty {
+			font-style: italic;
+		}
+
+.ck.ck-document-outline .ck-document-outline__item.ck-document-outline__item_empty:hover,
+		.ck.ck-document-outline .ck-document-outline__item:hover {
+			color: var(--ck-document-outline-item-hover-state-color);
+			text-decoration: underline;
+		}
+
+.ck.ck-document-outline .ck-document-outline__item.ck-document-outline__item_active {
+			color: var(--ck-document-outline-item-active-color);
+		}
+
+.ck.ck-document-outline .ck-document-outline__item.ck-document-outline__item_level-1 {
+			font-size: 1.1em;
+			font-weight: bold;
+		}
+
+.ck.ck-document-outline[dir="ltr"] .ck-document-outline__item.ck-document-outline__item_level-1 {
+		padding-left: var(--ck-document-outline-indent-level-1);
+	}
+
+.ck.ck-document-outline[dir="ltr"] .ck-document-outline__item.ck-document-outline__item_level-2 {
+		padding-left: var(--ck-document-outline-indent-level-2);
+	}
+
+.ck.ck-document-outline[dir="ltr"] .ck-document-outline__item.ck-document-outline__item_level-3 {
+		padding-left: var(--ck-document-outline-indent-level-3);
+	}
+
+.ck.ck-document-outline[dir="ltr"] .ck-document-outline__item.ck-document-outline__item_level-4 {
+		padding-left: var(--ck-document-outline-indent-level-4);
+	}
+
+.ck.ck-document-outline[dir="ltr"] .ck-document-outline__item.ck-document-outline__item_level-5 {
+		padding-left: var(--ck-document-outline-indent-level-5);
+	}
+
+.ck.ck-document-outline[dir="ltr"] .ck-document-outline__item.ck-document-outline__item_level-6 {
+		padding-left: var(--ck-document-outline-indent-level-6);
+	}
+
+.ck.ck-document-outline[dir="rtl"] .ck-document-outline__item.ck-document-outline__item_level-1 {
+		padding-right: var(--ck-document-outline-indent-level-1);
+	}
+
+.ck.ck-document-outline[dir="rtl"] .ck-document-outline__item.ck-document-outline__item_level-2 {
+		padding-right: var(--ck-document-outline-indent-level-2);
+	}
+
+.ck.ck-document-outline[dir="rtl"] .ck-document-outline__item.ck-document-outline__item_level-3 {
+		padding-right: var(--ck-document-outline-indent-level-3);
+	}
+
+.ck.ck-document-outline[dir="rtl"] .ck-document-outline__item.ck-document-outline__item_level-4 {
+		padding-right: var(--ck-document-outline-indent-level-4);
+	}
+
+.ck.ck-document-outline[dir="rtl"] .ck-document-outline__item.ck-document-outline__item_level-5 {
+		padding-right: var(--ck-document-outline-indent-level-5);
+	}
+
+.ck.ck-document-outline[dir="rtl"] .ck-document-outline__item.ck-document-outline__item_level-6 {
+		padding-right: var(--ck-document-outline-indent-level-6);
+	}
+
+/*
+ * What you're currently looking at is the source code of a legally protected, proprietary software.
+ * CKEditor 5 Collaboration is licensed under a commercial license and protected by copyright law. Where not otherwise indicated,
+ * all CKEditor 5 Collaboration content is authored by CKSource engineers and consists of CKSource-owned intellectual property.
+ *
+ * Copyright (c) 2003-2024, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+/*
+ * Copyright (c) 2003-2024, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+:root {
+	--ck-table-of-contents-padding: 1em;
+	--ck-table-of-contents-line-height: 1.5;
+	--ck-table-of-contents-items-start-padding: 24px;
+	--ck-table-of-contents-border-color: var(--ck-color-base-border);
+	--ck-table-of-contents-label-background-color: hsl(0, 0%, 46%);
+	--ck-table-of-contents-background-color: var(--ck-color-base-foreground);
+}
+
+.ck-content .table-of-contents {
+		margin: 0.9em auto;
+	}
+
+.ck-content .table-of-contents.table-of-contents_empty {
+			display: none;
+		}
+
+.ck-content .table-of-contents .table-of-contents__placeholder {
+			margin: 0;
+			padding: var(--ck-table-of-contents-padding);
+			font-style: italic;
+		}
+
+.ck-content .table-of-contents > ol {
+			padding: var(--ck-table-of-contents-padding);
+		}
+
+.ck-content .table-of-contents ol {
+			margin: 0;
+			line-height: var(--ck-table-of-contents-line-height);
+			list-style-type: none;
+		}
+
+.ck-content .table-of-contents ol ol {
+				padding-inline-start: var(--ck-table-of-contents-items-start-padding);
+			}
+
+.ck-content .table-of-contents ol li {
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				cursor: default;
+			}
+
+.ck-editor__editable .ck-widget.table-of-contents {
+	position: relative;
+	background-color: var(--ck-table-of-contents-background-color);
+	border: 1px solid var(--ck-table-of-contents-border-color);
+	/* Necessary to render properly next to floated objects, e.g. side image case. */
+	display: flow-root;
+	min-width: 15em;
+}
+
+.ck-editor__editable .ck-widget.table-of-contents[data-table-of-contents-label]::after {
+		content: attr(data-table-of-contents-label);
+
+		position: absolute;
+		top: -1px;
+		right: 10px;
+		padding: var(--ck-spacing-tiny) var(--ck-spacing-medium);
+		background-color: var(--ck-table-of-contents-label-background-color);
+
+		font-size: 10px;
+		font-family: var(--ck-font-face);
+		line-height: 16px;
+		color: hsl(0, 0%, 100%);
+		white-space: nowrap;
+	}
+
+[dir="rtl"] .ck-editor__editable .ck-widget.table-of-contents[data-table-of-contents-label]::after {
+			left: 10px;
+			right: auto;
+	}

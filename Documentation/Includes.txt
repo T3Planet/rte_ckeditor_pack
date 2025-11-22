@@ -1,0 +1,21 @@
+.. include defaults for TYPO3 documentation
+
+.. default-role:: literal
+
+.. highlight:: php
+
+.. |extension_name| replace:: Richtext Collaborators
+.. |extension_key| replace:: rte_ckeditor_pack
+.. |package_name| replace:: t3planet/rte-ckeditor-pack
+.. |extension_version| replace:: 1.0.0
+.. |extension_state| replace:: beta
+.. |extension_license| replace:: GPL-2.0-or-later
+.. |extension_author| replace:: Team T3Planet // T3Planet
+.. |extension_author_url| replace:: https://t3planet.com
+.. |extension_homepage| replace:: https://t3planet.com/t3planet-typo3-rte-ckeditor-pack
+.. |github_repository| replace:: https://github.com/t3planet-technologies/rte_ckeditor_pack
+.. |support_url| replace:: https://t3planet.com/t3planet-typo3-rte-ckeditor-pack
+
+.. role:: typoscript(code)
+   :language: typoscript
+

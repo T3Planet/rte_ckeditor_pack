@@ -1,0 +1,116 @@
+    <div class="row align-items-end">
+        <div class="col-auto">
+            <h2 class="mb-3"><f:translate key="ckeditorKit.module.feature" /></h2>
+            <form action="" method="post" id="presetForm">
+                <f:if condition="{availablePresets}">
+                    <div class="form-group" style="min-width: 300px;">
+                        <label for="presets" class="form-label"><f:translate key="features.presets" /></label>
+                        <div class="input-group">
+                            <select name="activePresets" id="rtePresets" class="form-control form-select me-2">
+                                <f:for each="{availablePresets}" as="" key="preset">
+                                    <option value="{preset}"  {f:if(condition: '{preset} == {activePreset}' , then: 'selected' )}><f:format.case mode="capital">{preset}</f:format.case></option>
+                                </f:for>
+                            </select>
+                            <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="small" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
+                                <core:icon identifier="actions-variable-add" size="small" alternativeMarkupIdentifier="inline" /> <span class="ms-1"><f:translate key="new.presets" /></span>
+                            </button>
+                        </div>
+                    </div>
+                </f:if>
+            </form>
+        </div>
+        <div class="col">
+            <div class="form-group text-end">
+                <form action="" method="post" id="ckEditorModules">
+                    <button type="button" id="toggleLabel" class="btn btn-primary"><f:translate key="features.ToggleLabel" /></button>
+                    <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'features.settings.group')}"
+                        data-key="toolbar_configuration">
+                        <core:icon identifier="actions-variable-add" size="small" alternativeMarkupIdentifier="inline" />
+                        <f:translate key="features.settings.group" />
+                    </button>
+                    
+                    <input type="hidden" name="activePreset" value="{activePreset}"/>
+                    <input type="hidden" name="enable" />
+                    <input type="hidden" name="disabled" />
+                    <input type="hidden" name="position" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card feature-toggle-card">
+        <div class="card-header position-relative widget-content-title">
+            <h2><f:translate key="features.visible" /></h2>
+        </div>
+        <div class="card-body">
+            <f:if condition="{availablePresets}">
+                <f:render partial="Presets/ToolBar" arguments="{_all}" />
+            </f:if>
+        </div>
+    </div>
+    <div class="card feature-toggle-card">
+        <div class="card-header py-2 widget-content-title">
+            <h2><f:translate key="features.hidden" /></h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <div class="drag-grid-wrap h-100">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 drag-drop-items">
+                            <h3 class="mb-0"><f:translate key="features.drag.inactive" /></h3>
+                        </div>
+                        <div class="drag-grid grid-4">
+                            <f:for each="{availableModules}" as="module" key="moduleKey">
+                                <f:if condition="{module.cards}">
+                                    <f:for each="{module.cards}" as="card">
+                                        <f:if condition="{card.configuration.config_key} && {card.details}&& !{card.configuration.toolBarItems} && !{card.details.coming_soon}">
+                                            <f:if condition="{ckit:module(key: card.configuration.config_key,preset:activePreset, isToolbar:1)}">
+                                                <div class="drag-item">
+                                                    <button class="btn btn-default toggle-btn w-100 text-start justify-content-start" 
+                                                        data-id="{card.configuration.config_key}" data-items="{card.configuration.toolBarItems}"
+                                                        data-bs-title="{card.details.title}"
+                                                        data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" 
+                                                        data-bs-placement="top">
+                                                        <core:icon identifier="{card.details.icon}" size="small" alternativeMarkupIdentifier="inline" />
+                                                        <span class="label-show toggle-label">{card.details.title}</span>
+                                                    </button>
+                                                </div>
+                                            </f:if>
+                                        </f:if>
+                                    </f:for>
+                                </f:if>
+                            </f:for>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="drag-grid-wrap h-100">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 drag-drop-items">
+                            <h3 class="mb-0"><f:translate key="features.drag.active" /></h3>
+                        </div>
+                        <div class="drag-grid grid-5">
+                            <f:for each="{availableModules}" as="module" key="moduleKey">
+                                <f:if condition="{module.cards}">
+                                    <f:for each="{module.cards}" as="card">
+                                        <f:if condition="{card.configuration.config_key} && {card.details} && !{card.configuration.toolBarItems}">
+                                            <f:if condition="{ckit:module(key: card.configuration.config_key,preset:activePreset)}">
+                                                <div class="drag-item">
+                                                    <button class="btn btn-default toggle-btn w-100 text-start justify-content-start" data-bs-title="{card.details.title}"
+                                                        data-id="{card.configuration.config_key}" data-items="{card.configuration.toolBarItems}"
+                                                        data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" 
+                                                        data-bs-placement="top">
+                                                        <core:icon identifier="{card.details.icon}" size="small" alternativeMarkupIdentifier="inline" />
+                                                        <span class="label-show toggle-label">{card.details.title}</span>
+                                                    </button>
+                                                </div>
+                                            </f:if>
+                                        </f:if>
+                                    </f:for>
+                                </f:if>
+                            </f:for>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
