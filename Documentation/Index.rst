@@ -77,7 +77,7 @@ CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many 
 **Table of Contents**
 
 ..  toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :titlesonly:
 
    Introduction/Index
