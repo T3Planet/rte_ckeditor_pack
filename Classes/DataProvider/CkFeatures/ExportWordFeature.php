@@ -110,6 +110,20 @@ class ExportWordFeature implements FeatureInterface
         ];
     }
 
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-cloud-services',
+                'exports' => 'CloudServices',
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-export-word',
+                'exports' => 'ExportWord',
+            ],
+        ];
+    }
+
     private function translateLabel(string $key): string
     {
         return LocalizationUtility::translate($key, 'RteCkeditorPack') ?? '';

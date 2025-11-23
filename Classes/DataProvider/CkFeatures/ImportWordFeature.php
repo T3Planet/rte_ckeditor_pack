@@ -62,4 +62,18 @@ class ImportWordFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-cloud-services',
+                'exports' => 'CloudServices',
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-import-word',
+                'exports' => 'ImportWord',
+            ],
+        ];
+    }
 }

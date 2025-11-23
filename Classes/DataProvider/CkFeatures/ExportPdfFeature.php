@@ -108,6 +108,20 @@ class ExportPdfFeature implements FeatureInterface
         ];
     }
 
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-cloud-services',
+                'exports' => 'CloudServices',
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-export-pdf',
+                'exports' => 'ExportPdf',
+            ],
+        ];
+    }
+
     private function translateLabel(string $key): string
     {
         return LocalizationUtility::translate($key, 'RteCkeditorPack') ?? '';

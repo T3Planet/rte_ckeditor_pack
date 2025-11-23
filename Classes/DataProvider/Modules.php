@@ -75,16 +75,7 @@ class Modules
                     'default' => false,
                     'is_preminum' => true,
                     'config_key' => 'ImportWord',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-cloud-services',
-                            'exports' => 'CloudServices',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-import-word',
-                            'exports' => 'ImportWord',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(ImportWordFeature::class),
                     'toolBarItems' => 'ImportWord',
                 ],
                 'fields' => $this->getFieldsFromFeature(ImportWordFeature::class),
@@ -96,16 +87,7 @@ class Modules
                     'default' => false,
                     'is_preminum' => true,
                     'config_key' => 'ExportPdf',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-cloud-services',
-                            'exports' => 'CloudServices',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-export-pdf',
-                            'exports' => 'ExportPdf',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(ExportPdfFeature::class),
                     'toolBarItems' => 'ExportPdf',
                 ],
                 'fields' => $this->getFieldsFromFeature(ExportPdfFeature::class),
@@ -117,16 +99,7 @@ class Modules
                     'config_key' => 'ExportWord',
                     'default' => false,
                     'is_preminum' => true,
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-cloud-services',
-                            'exports' => 'CloudServices',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-export-word',
-                            'exports' => 'ExportWord',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(ExportWordFeature::class),
                     'toolBarItems' => 'ExportWord',
                 ],
                 'fields' => $this->getFieldsFromFeature(ExportWordFeature::class),
@@ -138,12 +111,7 @@ class Modules
                     'default' => false,
                     'is_preminum' => true,
                     'config_key' => 'AIAssistant',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-ai',
-                            'exports' => 'AIAssistant,OpenAITextAdapter',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(AIFeature::class),
                     'toolBarItems' => 'aiAssistant,aiCommands',
                 ],
                 'fields' => $this->getFieldsFromFeature(AIFeature::class),
@@ -155,12 +123,7 @@ class Modules
                     'default' => false,
                     'is_preminum' => true,
                     'config_key' => 'Footnotes',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-footnotes',
-                            'exports' => 'Footnotes, FootnotesProperties',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(FootnotesFeature::class),
                     'toolBarItems' => 'insertFootnote,footnotesStyle',
                 ],
                 'fields' => $this->getFieldsFromFeature(FootnotesFeature::class),
@@ -171,12 +134,7 @@ class Modules
                 'configuration' => [
                     'default' => false,
                     'config_key' => 'WProofreader',
-                    'module' => [
-                        [
-                            'library' => '@t3planet/RteCkeditorPack/spell-check',
-                            'exports' => 'WProofreader',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(WProofreaderFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(WProofreaderFeature::class),
             ],
@@ -187,12 +145,7 @@ class Modules
                     'default' => false,
                     'is_preminum' => true,
                     'config_key' => 'Pagination',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-pagination',
-                            'exports' => 'Pagination',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(PaginationFeature::class),
                     'toolBarItems' => 'previousPage,nextPage,pageNavigation',
                 ],
                 'fields' => $this->getFieldsFromFeature(PaginationFeature::class),
@@ -203,12 +156,7 @@ class Modules
                 'configuration' => [
                     'default' => false,
                     'config_key' => 'Mention',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-mention',
-                            'exports' => 'Mention',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(MentionFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(MentionFeature::class),
             ],
@@ -395,16 +343,7 @@ class Modules
                     'config_key' => 'SlashCommand',
                     'default' => false,
                     'hidden_preminum' => true,
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-mention',
-                            'exports' => 'Mention',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-slash-command',
-                            'exports' => 'SlashCommand,SlashCommandConfig,SlashCommandEditing,SlashCommandUI',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(SlashCommandFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(SlashCommandFeature::class),
             ],
@@ -415,12 +354,7 @@ class Modules
                     'default' => false,
                     'is_preminum' => true,
                     'config_key' => 'Template',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-template',
-                            'exports' => 'Template',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(TemplateFeature::class),
                     'toolBarItems' => 'insertTemplate',
                 ],
                 'fields' => $this->getFieldsFromFeature(TemplateFeature::class),
@@ -432,12 +366,7 @@ class Modules
                     'config_key' => 'CaseChange',
                     'default' => false,
                     'is_preminum' => true,
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-case-change',
-                            'exports' => 'CaseChange',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(CaseChangeFeature::class),
                     'toolBarItems' => 'caseChange',
                 ],
                 'fields' => $this->getFieldsFromFeature(CaseChangeFeature::class),
@@ -449,20 +378,7 @@ class Modules
                     'default' => false,
                     'is_preminum' => true,
                     'config_key' => 'MergeFields',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-image',
-                            'exports' => 'ImageUtils, ImageEditing',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-mention',
-                            'exports' => 'Mention',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-merge-fields',
-                            'exports' => 'MergeFields',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(MergeFieldsFeature::class),
                     'toolBarItems' => 'insertMergeField,previewMergeFields',
                 ],
                 'fields' => $this->getFieldsFromFeature(MergeFieldsFeature::class),
@@ -559,12 +475,7 @@ class Modules
                 'configuration' => [
                     'default' => true,
                     'config_key' => 'Indentation',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-indent',
-                            'exports' => 'Indent,IndentBlock',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(IndentFeature::class),
                     'toolBarItems' => 'outdent,indent',
                 ],
                 'fields' => $this->getFieldsFromFeature(IndentFeature::class),
@@ -575,12 +486,7 @@ class Modules
                 'configuration' => [
                     'default' => true,
                     'config_key' => 'Font',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-font',
-                            'exports' => 'Font',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(FontFeature::class),
                     'toolBarItems' => 'fontFamily,fontSize,fontColor,fontBackgroundColor',
                 ],
                 'fields' => [
@@ -593,12 +499,7 @@ class Modules
                 'configuration' => [
                     'config_key' => 'HighLight',
                     'default' => true,
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-highlight',
-                            'exports' => 'Highlight',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(HighlightFeature::class),
                     'toolBarItems' => 'Highlight',
                 ],
                 'fields' => $this->getFieldsFromFeature(HighlightFeature::class),
@@ -638,12 +539,7 @@ class Modules
                 'details' => $cardDetails->getDetailsByKey('TextTransformation'),
                 'configuration' => [
                     'config_key' => 'TextTransformation',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-typing',
-                            'exports' => 'TextTransformation',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(TransformationsFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(TransformationsFeature::class),
             ],
@@ -653,12 +549,7 @@ class Modules
                 'configuration' => [
                     'default' => true,
                     'config_key' => 'CodeBlock',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-code-block',
-                            'exports' => 'CodeBlock',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(CodeBlockFeature::class),
                     'toolBarItems' => 'codeBlock',
                 ],
                 'fields' => $this->getFieldsFromFeature(CodeBlockFeature::class),
@@ -668,12 +559,7 @@ class Modules
                 'details' => $cardDetails->getDetailsByKey('BlockToolbar'),
                 'configuration' => [
                     'config_key' => 'BlockToolbar',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-ui',
-                            'exports' => 'BlockToolbar',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(BlockToolbarFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(BlockToolbarFeature::class),
             ],
@@ -682,12 +568,7 @@ class Modules
                 'details' => $cardDetails->getDetailsByKey('BalloonToolbar'),
                 'configuration' => [
                     'config_key' => 'BalloonToolbar',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-ui',
-                            'exports' => 'BalloonToolbar',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(BalloonToolbarFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(BalloonToolbarFeature::class),
             ],
@@ -697,12 +578,7 @@ class Modules
                 'configuration' => [
                     'default' => true,
                     'config_key' => 'TextPartLanguage',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-language',
-                            'exports' => 'TextPartLanguage',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(LanguageFeature::class),
                     'toolBarItems' => 'textPartLanguage',
                 ],
                 'fields' => $this->getFieldsFromFeature(LanguageFeature::class),
@@ -818,12 +694,7 @@ class Modules
                 'is_toggle' => 0,
                 'configuration' => [
                     'config_key' => 'WordCount',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-word-count',
-                            'exports' => 'WordCount',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(WordCountFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(WordCountFeature::class),
             ],
@@ -907,15 +778,7 @@ class Modules
                 'configuration' => [
                     'config_key' => 'Images',
                     'default' => true,
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-image',
-                            'exports' => 'Image, ImageUpload, ImageToolbar, ImageCaption, ImageStyle',
-                        ],
-                        [
-                            'library' => '@t3planet/RteCkeditorPack/typo3-image',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(ImageFeature::class),
                     'toolBarItems' => 'insertImage',
                 ],
                 'fields' => $this->getFieldsFromFeature(ImageFeature::class),
@@ -993,4 +856,32 @@ class Modules
         }
     }
 
+    /**
+     * Get modules from feature class if it exists and has getModules method
+     *
+     * @param string $featureClass
+     * @return array
+     */
+    private function getModulesFromFeature(string $featureClass): array
+    {
+        if (!class_exists($featureClass)) {
+            return [];
+        }
+
+        try {
+            /** @var FeatureInterface $feature */
+            $feature = GeneralUtility::makeInstance($featureClass);
+            
+            // Check if feature has getModules method
+            if (method_exists($feature, 'getModules')) {
+                return $feature->getModules();
+            }
+            
+            return [];
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
 }
+

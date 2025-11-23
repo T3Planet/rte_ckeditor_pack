@@ -49,4 +49,14 @@ class WProofreaderFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@t3planet/RteCkeditorPack/spell-check',
+                'exports' => 'WProofreader',
+            ],
+        ];
+    }
 }

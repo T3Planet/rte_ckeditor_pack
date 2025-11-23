@@ -45,6 +45,16 @@ class AIFeature implements FeatureInterface
         ];
     }
 
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-ai',
+                'exports' => 'AIAssistant,OpenAITextAdapter',
+            ],
+        ];
+    }
+
     private function translateLabel(string $key): string
     {
         return LocalizationUtility::translate($key, 'RteCkeditorPack') ?? '';
