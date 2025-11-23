@@ -89,17 +89,21 @@ CREATE TABLE tx_rteckeditorpack_domain_model_feature (
     uid int(11) NOT NULL auto_increment,
     pid int(11) DEFAULT '0' NOT NULL,
     enable smallint(1) unsigned NOT NULL DEFAULT '0',
-    config_key varchar(255) NOT NULL UNIQUE DEFAULT '',
+    config_key varchar(255) NOT NULL DEFAULT '',
     fields text NOT NULL DEFAULT '',
     toolbar_items text NOT NULL DEFAULT '',
+    preset_uid int(11) DEFAULT '0' NOT NULL,
+    sorting int(11) unsigned DEFAULT '0' NOT NULL,
     deleted smallint(1) unsigned DEFAULT '0' NOT NULL,
     hidden smallint(1) unsigned DEFAULT '0' NOT NULL,
     tstamp int(11) unsigned DEFAULT '0' NOT NULL,
     crdate int(11) unsigned DEFAULT '0' NOT NULL,
     cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
     PRIMARY KEY (uid),
+    UNIQUE KEY preset_config_key (preset_uid, config_key),
     KEY parent (pid),
     KEY deleted (deleted),
     KEY hidden (hidden),
-    KEY enable (enable)
+    KEY enable (enable),
+    KEY preset_uid (preset_uid)
 );

@@ -43,6 +43,16 @@ return [
                 'type' => 'check',
             ],
         ],
+        'preset_uid' => [
+            'config' => [
+                'type' => 'passthrough',
+            ],
+        ],
+        'sorting' => [
+            'config' => [
+                'type' => 'passthrough',
+            ],
+        ],
         'enable' => [
             'exclude' => true,
             'label' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_feature.enable',

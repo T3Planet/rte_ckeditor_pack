@@ -9,8 +9,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use T3Planet\RteCkeditorPack\DataProvider\BaseToolBar;
 use T3Planet\RteCkeditorPack\DataProvider\Modules;
 use T3Planet\RteCkeditorPack\Domain\Model\Configuration;
+use T3Planet\RteCkeditorPack\Domain\Model\Feature;
+use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
 use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
 use T3Planet\RteCkeditorPack\Utility\FlashUtility;
@@ -35,6 +39,10 @@ class RteModuleController extends ActionController
 
     protected ConfigurationRepository $configurationRepository;
 
+    protected FeatureRepository $featureRepository;
+
+    protected PresetRepository $presetRepository;
+
     protected $dependencyRepository;
 
     protected $modulesRepository;
@@ -52,10 +60,14 @@ class RteModuleController extends ActionController
         protected readonly PageRenderer $pageRenderer,
         protected readonly BaseToolBar $baseToolBar,
         ConfigurationRepository $configurationRepository,
+        FeatureRepository $featureRepository,
+        PresetRepository $presetRepository,
         PersistenceManager $persistenceManager,
         ToolbarGroupsRepository $groupsRepository,
     ) {
         $this->configurationRepository = $configurationRepository;
+        $this->featureRepository = $featureRepository;
+        $this->presetRepository = $presetRepository;
         $this->persistenceManager = $persistenceManager;
         $this->groupsRepository = $groupsRepository;
         $this->urlBuilder = GeneralUtility::makeInstance(UriBuilderUtility::class);
@@ -126,23 +138,51 @@ class RteModuleController extends ActionController
         $data = $request->getQueryParams();
         $assign = [];
         $moduleKey = $data['moduleKey'] ?? '';
-
+        $selectedPreset = $data['selectedPreset'] ?? 'default';
+        
         if (isset($data['additionalParams'])) {
             $configuration = $data['additionalParams'] ? json_decode($data['additionalParams'], true) : '';
             $assign['additionalParams'] = $data['additionalParams'] ?? '';
-            $moduleKey = $configuration['config_key'];
+            if (isset($configuration['config_key'])) {
+                $moduleKey = $configuration['config_key'];
+            }
             $assign['configuration'] = $configuration;
         }
-
-        if ($moduleKey) {
-            $record = $this->configurationRepository->findByConfigKey($moduleKey)->getFirst();
-            if ($record) {
-                $assign['record'] = json_decode($record->getFields(), true);
-                $assign['record']['enable'] = $record->getEnable();
-                $assign['record']['configKey'] = $record->getConfigKey();
+        
+        if ($moduleKey && $selectedPreset) {
+            // Get preset by preset key
+            $preset = $this->presetRepository->findByPresetKey($selectedPreset);
+            if (!$preset) {
+                $preset = $this->createPresetIfNotExists($selectedPreset);
             }
+
+            if ($preset) {
+                $presetUid = $preset->getUid();
+                
+                // Find feature record where config_key = moduleKey AND preset_uid = presetUid
+                $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $moduleKey);
+                
+                if ($feature) {
+                    $assign['record'] = json_decode($feature->getFields(), true) ?: [];
+                    $assign['record']['enable'] = $feature->isEnable();
+                    $assign['record']['configKey'] = $feature->getConfigKey();
+                } else {
+                    // Fallback to old Configuration table for backward compatibility
+                    $record = $this->configurationRepository->findByConfigKey($moduleKey)->getFirst();
+                    if ($record) {
+                        $assign['record'] = json_decode($record->getFields(), true) ?: [];
+                        $assign['record']['enable'] = $record->getEnable();
+                        $assign['record']['configKey'] = $record->getConfigKey();
+                    }
+                }
+            }
+            
             $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($moduleKey);
             $assign['fields'] = $moduleConfiguration['fields'] ?? [];
+        }
+
+        if ($selectedPreset) {
+            $assign['selectedPreset'] = $selectedPreset;
         }
 
         $this->moduleTemplate = $this->initializeModuleTemplate($request);
@@ -183,21 +223,38 @@ class RteModuleController extends ActionController
         $configKey = $data['configKey'] ?? '';
         $enable = $data['enable'] === '1' ? true : false;
         $notification = [];
+        $presetKey = $data['preset'] ?? $data['selectedPreset'] ?? 'default';
 
         try {
             if ($configKey) {
+                // Get or create preset
+                $preset = $this->presetRepository->findByPresetKey($presetKey);
+                if (!$preset) {
+                    $preset = $this->createPresetIfNotExists($presetKey);
+                }
+
+                if (!$preset) {
+                    throw new \Exception('Failed to get or create preset');
+                }
+
+                $presetUid = $preset->getUid();
+
                 if ($configKey === 'AIAssistant') {
                     if (isset($data['config']['ai']['openAI']['apiUrl']) && $data['config']['ai']['openAI']['apiUrl'] === '') {
                         unset($data['config']['ai']['openAI']['apiUrl']);
                     }
                 }
                 $fieldData = isset($data['config']) ? json_encode($data['config']) : '';
-                $record = $this->configurationRepository->findByConfigKey($configKey)->getFirst();
 
-                if (!$record) {
-                    $record = GeneralUtility::makeInstance(Configuration::class);
-                    $record->setConfigKey($configKey);
-                    $this->configurationRepository->add($record);
+                // Get feature from new feature table
+                $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
+                
+                if (!$feature) {
+                    // Create new feature
+                    $feature = GeneralUtility::makeInstance(Feature::class);
+                    $feature->setPresetUid($presetUid);
+                    $feature->setConfigKey($configKey);
+                    $this->featureRepository->add($feature);
                     $this->persistenceManager->persistAll();
                 }
 
@@ -244,9 +301,11 @@ class RteModuleController extends ActionController
                         'severity' => 1,
                     ];
                 }
-                $record->setEnable($enable);
-                $record->setFields($fieldData);
-                $this->configurationRepository->update($record);
+
+                // Update feature in new table
+                $feature->setEnable($enable);
+                $feature->setFields($fieldData);
+                $this->featureRepository->update($feature);
                 $this->cache->flush();
                 $this->persistenceManager->persistAll();
             }
@@ -261,6 +320,8 @@ class RteModuleController extends ActionController
                 'severity' => 0,
             ];
         } catch (\Exception $e) {
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($e);die();
+            
             $notification[] = [
                 'title' => 'ckeditorKit.operation.error',
                 'message' => 'ckeditorKit.plugin.setting_save.error.message',
@@ -580,6 +641,31 @@ class RteModuleController extends ActionController
             }
         }
         return $configArray;
+    }
+
+    /**
+     * Create preset if it doesn't exist
+     *
+     * @param string $presetKey
+     * @return Preset|null
+     */
+    private function createPresetIfNotExists(string $presetKey): ?Preset
+    {
+        try {
+            $preset = $this->presetRepository->findByPresetKey($presetKey);
+            
+            if (!$preset) {
+                $preset = GeneralUtility::makeInstance(Preset::class);
+                $preset->setPresetKey($presetKey);
+                $this->presetRepository->add($preset);
+                $this->persistenceManager->persistAll();
+            }
+            
+            return $preset;
+        } catch (\Exception $e) {
+            // Log error or handle exception
+            return null;
+        }
     }
 
     private function manageIndent(array $indentBlock, string $key): array

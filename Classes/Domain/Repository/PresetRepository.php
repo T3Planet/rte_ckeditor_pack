@@ -11,9 +11,48 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Domain\Repository;
 
+use T3Planet\RteCkeditorPack\Domain\Model\Preset;
+use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class PresetRepository extends Repository
 {
+    protected ?QuerySettingsInterface $querySettings = null;
+
+    public function injectQuerySettings(QuerySettingsInterface $querySettings): void
+    {
+        $this->querySettings = $querySettings;
+    }
+
+    public function initializeObject(): void
+    {
+        $this->setDefaultQuerySettings($this->querySettings->setRespectStoragePage(false));
+    }
+
+    /**
+     * Find preset by preset key
+     *
+     * @param string $presetKey
+     * @return Preset|null
+     */
+    public function findByPresetKey(string $presetKey): ?Preset
+    {
+        $query = $this->createQuery();
+        $query->matching($query->equals('presetKey', $presetKey));
+        $query->setLimit(1);
+        return $query->execute()->getFirst();
+    }
+
+    /**
+     * Find all presets
+     *
+     * @return array
+     */
+    public function findAll(): array
+    {
+        $query = $this->createQuery();
+        $query->setOrderings(['presetKey' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING]);
+        return $query->execute()->toArray();
+    }
 }
 
