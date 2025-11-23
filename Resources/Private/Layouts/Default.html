@@ -3,8 +3,26 @@
 <f:be.pageRenderer includeJavaScriptModules="{
         1: '@t3planet/RteCkeditorPack/drag-and-drop.js',
     }" />
+<form action="" method="post" id="presetForm">
+    <f:if condition="{availablePresets}">
+        <div class="form-group" style="min-width: 300px;">
+            <label for="presets" class="form-label"><f:translate key="features.presets" /></label>
+            <div class="input-group">
+                <select name="activePresets" id="rtePresets" class="form-control form-select me-2">
+                    <f:for each="{availablePresets}" as="" key="preset">
+                        <option value="{preset}"  {f:if(condition: '{preset} == {activePreset}' , then: 'selected' )}><f:format.case mode="capital">{preset}</f:format.case></option>
+                    </f:for>
+                </select>
+                <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="small" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
+                    <core:icon identifier="actions-variable-add" size="small" alternativeMarkupIdentifier="inline" /> <span class="ms-1"><f:translate key="new.presets" /></span>
+                </button>
+            </div>
+        </div>
+    </f:if>
+</form>
 <div class="module t3-ckeditor">
     <div class="module-docheader t3js-module-docheader flex-row align-items-end justify-content-between pb-0">
+        
         <div class="dashboard-tabs" role="tablist">
             <div class="me-3">
                 <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />

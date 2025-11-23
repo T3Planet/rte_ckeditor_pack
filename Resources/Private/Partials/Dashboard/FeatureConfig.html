@@ -1,7 +1,7 @@
     <div class="row align-items-end">
         <div class="col-auto">
             <h2 class="mb-3"><f:translate key="ckeditorKit.module.feature" /></h2>
-            <form action="" method="post" id="presetForm">
+            <f:comment><form action="" method="post" id="presetForm">
                 <f:if condition="{availablePresets}">
                     <div class="form-group" style="min-width: 300px;">
                         <label for="presets" class="form-label"><f:translate key="features.presets" /></label>
@@ -17,7 +17,7 @@
                         </div>
                     </div>
                 </f:if>
-            </form>
+            </form></f:comment>
         </div>
         <div class="col">
             <div class="form-group text-end">

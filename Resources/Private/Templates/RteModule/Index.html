@@ -12,7 +12,7 @@
                         <f:for each="{module.cards}" as="card" iteration="j">
                             <f:if condition="{card.details}">
                                 <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: ' disabled')} 
-                                {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'card--active')}" style="">
+                                {f:if(condition: '{ckit:module(key: card.configuration.config_key, preset:activePreset)}', then: 'card--active')}" style="">
                                     <div class="card-header">
                                         <div class="card-icon">
                                             <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />

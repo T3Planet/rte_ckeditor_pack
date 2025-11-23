@@ -9,7 +9,8 @@ class globalButtonBar {
     }
 
     init(event) {
-
+        let selectedPreset = 'default';
+        
         if (event.target.hasAttribute('data-key') && event.target.hasAttribute('data-identifier', 'ckeditorGlobalWizardButton')) {
             if (event.target.getAttribute('data-feature') === '0') {
                 let label = event.target.getAttribute('data-key') ?? 'API key is missing';
@@ -21,6 +22,10 @@ class globalButtonBar {
 
                 let params = new URL(location.href).searchParams;
                 let id = params.get('id');
+                let presetSelector = document.querySelector('#rtePresets');
+                if(presetSelector){
+                    selectedPreset = presetSelector.value;
+                }
                 let additionalParams = event.target.getAttribute('data-additionalParams');
                 let moduleKey = event.target.getAttribute('data-module-key');
                 let buttonFor = event.target.getAttribute('data-key');
@@ -59,6 +64,9 @@ class globalButtonBar {
                 let url = TYPO3.settings.ajaxUrls[buttonFor] + '&pageId=' + id;
                 if (additionalParams) {
                     url += '&additionalParams=' + additionalParams;
+                }
+                if (selectedPreset) {
+                    url += '&selectedPreset=' + selectedPreset;
                 }
                 if (moduleKey) {
                     url += '&moduleKey=' + moduleKey;
