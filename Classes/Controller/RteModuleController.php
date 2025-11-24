@@ -159,7 +159,6 @@ class RteModuleController extends ActionController
         }
 
         $extSettings = ExtensionConfigurationUtility::getAll();
-        $settingsArray = GeneralUtility::makeInstance(Modules::class)->getSettings();
         
         // Group presets by is_custom for optgroups
         $groupedPresets = [
@@ -170,7 +169,6 @@ class RteModuleController extends ActionController
         $this->moduleTemplate->assignMultiple([
             'availableModules' => $availableModules,
             'currentModule' => $currentModule,
-            'settingFields' => $settingsArray,
             'toolBarConfiguration' => $this->baseToolBar->findEnableToolbarItems($activePresetUid),
             'availablePresets' => $availablePresets, // Keep for backward compatibility
             'groupedPresets' => $groupedPresets, // New grouped structure
@@ -517,46 +515,49 @@ class RteModuleController extends ActionController
 
     private function generalSettings(array $data): bool
     {
-        return false;
-        // $record = $this->configurationRepository->findByConfigKey('FeatureConfiguration')->getFirst();
+        $notification = [];
+        
+        // Validate tokenUrl if provided
+        if (isset($data['tokenUrl']) && !empty($data['tokenUrl'])) {
+            $status = $this->validator->validateUrl($data['tokenUrl']);
+            if (!$status) {
+                $notification['title'] = 'ckeditorKit.operation.error.invalid_token';
+                $notification['message'] = 'ckeditorKit.operation.error.invalid_token.message';
+                $notification['severity'] = 2;
+                $this->notification->addFlashNotification($notification);
+                return false;
+            }
+        }
 
-        // if (isset($data['tokenUrl']) && $data['tokenUrl']) {
-        //     $status = $this->validator->validateUrl($data['tokenUrl']);
-        //     if (!$status) {
-        //         $notification['title'] = 'ckeditorKit.operation.error.invalid_token';
-        //         $notification['message'] = 'ckeditorKit.operation.error.invalid_token.message';
-        //         $notification['severity'] = 2;
-        //         $this->notification->addFlashNotification($notification);
-        //         return false;
-        //     }
-        // }
-
-        // try {
-        //     if ($record) {
-        //         $record->setEnable(true);
-        //         $record->setFields(json_encode($data));
-        //         $this->configurationRepository->update($record);
-        //     } else {
-        //         $configuration = GeneralUtility::makeInstance(Configuration::class);
-        //         $configuration->setConfigKey('FeatureConfiguration');
-        //         $configuration->setFields(json_encode($data));
-        //         $configuration->setEnable(true);
-        //         $this->configurationRepository->add($configuration);
-        //     }
-        //     $this->cache->flush();
-        //     $this->persistenceManager->persistAll();
-        //     $notification['title'] =  'ckeditorKit.operation.success';
-        //     $notification['message'] = 'ckeditorKit.general_settings.success.message';
-        //     $notification['severity'] = 0;
-        //     $this->notification->addFlashNotification($notification);
-        //     return true;
-        // } catch (\Exception) {
-        //     $notification['title'] = 'ckeditorKit.operation.error';
-        //     $notification['message'] = 'ckeditorKit.general_settings.error.message';
-        //     $notification['severity'] = 2;
-        //     $this->notification->addFlashNotification($notification);
-        //     return false;
-        // }
+        try {
+            // Prepare configuration array - only include allowed fields from form data
+            $allowedFields = [
+                'licenseKey', 'authType', 'environmentId', 'accessKey', 'apiKey',
+                'organizationId', 'tokenUrl', 'webSocketUrl', 'apiBaseUrl'
+            ];
+            
+            $configuration = array_intersect_key($data, array_flip($allowedFields));
+            
+            // Save configuration using ExtensionConfigurationUtility
+            $success = ExtensionConfigurationUtility::set($configuration);
+            
+            if ($success) {
+                $this->cache->flush();
+                $notification['title'] = 'ckeditorKit.operation.success';
+                $notification['message'] = 'ckeditorKit.general_settings.success.message';
+                $notification['severity'] = 0;
+                $this->notification->addFlashNotification($notification);
+                return true;
+            } else {
+                throw new \Exception('Failed to save extension configuration');
+            }
+        } catch (\Exception $e) {
+            $notification['title'] = 'ckeditorKit.operation.error';
+            $notification['message'] = 'ckeditorKit.general_settings.error.message';
+            $notification['severity'] = 2;
+            $this->notification->addFlashNotification($notification);
+            return false;
+        }
     }
 
    

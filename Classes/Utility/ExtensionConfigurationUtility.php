@@ -57,10 +57,12 @@ class ExtensionConfigurationUtility
     {
         try {
             $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
-            $currentConfig = $configurationManager->getConfigurationValueByPath('EXTENSIONS/' . self::EXTENSION_KEY);
             
-            // Merge with existing configuration
-            $newConfig = array_merge($currentConfig ?? [], $configuration);
+            // Get current configuration
+            $currentConfig = $configurationManager->getConfigurationValueByPath('EXTENSIONS/' . self::EXTENSION_KEY) ?? [];
+            
+            // Merge with new configuration
+            $newConfig = array_merge($currentConfig, $configuration);
             
             // Set the configuration
             $configurationManager->setLocalConfigurationValueByPath(
