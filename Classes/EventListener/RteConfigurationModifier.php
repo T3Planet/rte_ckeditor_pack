@@ -99,7 +99,7 @@ class RteConfigurationModifier
             $moduleConfiguration = isset($rec['configuration']) ? $rec['configuration'] : $rec;
 
             $toolBarItem = isset($moduleConfiguration['toolBarItems']) ? $moduleConfiguration['toolBarItems'] : '';
-            if (isset($moduleConfiguration['is_preminum']) && $moduleConfiguration['is_preminum']) {
+            if (isset($moduleConfiguration['is_premium']) && $moduleConfiguration['is_premium']) {
 
                 $toolBarItemArray = GeneralUtility::trimExplode(',', $toolBarItem);
                 $availbleItems = array_filter($availbleItems, 'is_string');
@@ -432,7 +432,7 @@ class RteConfigurationModifier
         } elseif ($recordConfigKey === 'Images') {
             $configuration = $this->addImageModules($configuration, $moduleConfiguration, $record);
         } else {
-            if (isset($moduleConfiguration['hidden_preminum']) && $moduleConfiguration['hidden_preminum']) {
+            if (isset($moduleConfiguration['hidden_premium']) && $moduleConfiguration['hidden_premium']) {
                 if ($this->checkPermission($recordConfigKey)) {
                     $this->premium = true;
                     $configuration = $this->addImportModules($configuration, $moduleConfiguration);

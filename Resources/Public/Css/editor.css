@@ -383,7 +383,6 @@
 
 .separator-buttons {
   margin-left: auto;
-  width: 97px;
 }
 
 .btn.btn-light {
@@ -476,6 +475,30 @@
 
 .icon-ckeditor_module_logo {
   max-width: 20px;
+}
+
+.card .card-header .badge--premium {
+    font-weight: 700;
+    padding-block: 2px;
+    margin-top: -6px;
+    margin-right: -7px;
+    font-size: 10px;
+    background-color: #fff7eb;
+    color: #d28041;
+    border: 1px solid #d28041;
+}
+
+.icon-actions-star svg {
+  max-width: 22px;
+  max-height: 100%;
+  margin: auto;
+}
+
+/* Search highlight styles */
+.drag-item.search-highlight .toggle-btn.search-highlight-btn {
+  background-color: #fff3cd !important;
+  border-color: #ffc107 !important;
+  transition: all 0.2s ease;
 }
 
 /* Respect reduced motion */

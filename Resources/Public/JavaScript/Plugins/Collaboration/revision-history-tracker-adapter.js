@@ -105,11 +105,9 @@ class RevisionHistoryTrackerAdapter extends Core.Plugin {
             .catch((error) => {
                 console.log(error, "Error");
             });
-        console.log(window.revisionSaved);
         if (!window.revisionSaved) {
             evt.preventDefault();
             window.revisionSaved = true;
-            console.log(window.revisionSaved, "ta")
             this.cms.attemptFormSubmission();
         }
     }

@@ -530,7 +530,7 @@ export default class Typo3Image extends Plugin {
         editor.model.change(writer => {
             const range = writer.createRangeIn(editor.model.document.getRoot());
             for (const value of range.getWalker({ ignoreElementEnd: true })) {
-                console.log(value);
+                console.warn(value);
             }
         });
 

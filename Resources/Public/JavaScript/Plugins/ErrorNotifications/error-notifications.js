@@ -173,7 +173,7 @@ export default class ErrorNotifications extends Plugin {
     if(this.editor.ui.view.element){
       this.editor.ui.view.main.add(this.activeNotification);
     }else{
-      alert((msg || 'Something went wrong'));
+      console.warn((msg || 'Something went wrong'));
     }
     
   }

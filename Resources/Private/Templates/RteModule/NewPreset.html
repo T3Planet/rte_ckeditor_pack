@@ -22,7 +22,7 @@
                 </div>
                 <f:if condition="{availablePresets}">
                     <div class="table-fit">
-                        <table class="table table-hover">
+                        <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th class="col-title" colspan="2"><f:translate key="header.preset_title" extensionName="RteCkeditorPack"/></th>
@@ -32,7 +32,7 @@
                                 <tr>
                                     <td>{item.preset}</td>
                                     <td class="text-end">
-                                        <button class="btn btn-notice delete t3js-modal-trigger" 
+                                        <button class="btn btn-danger delete t3js-modal-trigger" 
                                         href="{be:moduleLink(route:'tce_db', query:'cmd[tx_rteckeditorpack_domain_model_toolbaritems][{item.uid}][delete]=1', arguments:'{redirect: returnUrl}')}"
                                         title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete')}"
                                         data-severity="warning"
