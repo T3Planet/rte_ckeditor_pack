@@ -25,8 +25,8 @@ return [
         'target' => RteModuleController::class . '::getToolBar',
     ],
     'new_preset' => [
-        'path' => '/add/_preset',
-        'target' => RteModuleController::class . '::addPreset',
+        'path' => '/manage/preset',
+        'target' => RteModuleController::class . '::managePreset',
     ],
     'save_feature_configuration' => [
         'path' => '/ckeditor/feature/configuration',

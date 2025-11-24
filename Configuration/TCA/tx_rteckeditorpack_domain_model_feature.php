@@ -21,7 +21,7 @@ return [
         '1' => [
             'showitem' => '
                 --div--;LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_feature.tab.general,
-                enable, config_key, fields, toolbar_items,
+                enable, config_key, fields, toolbar_item,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
                 hidden, deleted
             ',
@@ -85,7 +85,7 @@ return [
                 'enableRichtext' => false,
             ],
         ],
-        'toolbar_items' => [
+        'toolbar_item' => [
             'exclude' => true,
             'label' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_feature.toolbar_items',
             'description' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_feature.toolbar_items.description',

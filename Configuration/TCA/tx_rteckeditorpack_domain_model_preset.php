@@ -21,7 +21,7 @@ return [
         '1' => [
             'showitem' => '
                 --div--;LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.tab.general,
-                preset_key,
+                preset_key,is_custom,toolbar_items,
                 --div--;LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.tab.features,
                 features,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
@@ -53,6 +53,28 @@ return [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim,required,unique',
+                'default' => '',
+            ],
+        ],
+        'is_custom' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.is_custom',
+            'description' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.is_custom.description',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'default' => 0,
+            ],
+        ],
+        'toolbar_items' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_feature.toolbar_items',
+            'description' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_feature.toolbar_items.description',
+            'config' => [
+                'type' => 'text',
+                'cols' => 50,
+                'rows' => 5,
+                'eval' => 'trim',
                 'default' => '',
             ],
         ],

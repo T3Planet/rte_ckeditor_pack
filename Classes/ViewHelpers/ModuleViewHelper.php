@@ -10,6 +10,8 @@
 namespace T3Planet\RteCkeditorPack\ViewHelpers;
 
 use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -21,7 +23,7 @@ class ModuleViewHelper extends AbstractViewHelper
     public function initializeArguments(): void
     {
         $this->registerArgument('key', 'string', '', true);
-        $this->registerArgument('preset', 'string', '', false);
+        $this->registerArgument('preset', 'int', '', false);
         $this->registerArgument('isToolbar', 'bool', '', false);
     }
 
@@ -33,22 +35,28 @@ class ModuleViewHelper extends AbstractViewHelper
     public function render(): bool
     {
         $key = $this->arguments['key'];
-        $preset = $this->arguments['preset'] ?? '';
+        $presetUid = (int)$this->arguments['preset'] ?? 0;
         $isToolbar = $this->arguments['isToolbar'] ? true : false;
-        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
-
-        if (!$preset) {
-            $record = $configurationRepository->findByConfigKey($key)->getFirst();
-            return $record ? $record->isEnable() : false;
+        
+        // Use FeatureRepository with UID
+        $featureRepository = GeneralUtility::makeInstance(FeatureRepository::class);
+        $feature = $featureRepository->findByPresetUidAndConfigKey($presetUid, $key);
+        
+        if ($feature) {
+            return $feature->isEnable();
         }
-        $results = $configurationRepository->findInvisibleRecord($key, $preset, $isToolbar);
-        $record = array_filter($results, function ($record) use ($preset, $isToolbar) {
-            $presetArray = GeneralUtility::trimExplode(',', $record->getPreset(), true);
-            return $isToolbar
-                ? !in_array($preset, $presetArray, true)
-                : in_array($preset, $presetArray, true);
-        });
-        return $record ? $record[0]->isEnable() : false;
-
+        return false;
+        
+        // Fallback to old Configuration table for backward compatibility
+        // $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        // $results = $configurationRepository->findInvisibleRecord($key);
+        // $record = array_filter($results, function ($record) use ($presetKey, $isToolbar) {
+        //     $presetArray = GeneralUtility::trimExplode(',', $record->getPreset(), true);
+        //     return $isToolbar
+        //         ? !in_array($presetKey, $presetArray, true)
+        //         : in_array($presetKey, $presetArray, true);
+        // });
+        
+        // return $record ? $record[0]->isEnable() : false;
     }
 }

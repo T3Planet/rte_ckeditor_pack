@@ -7,9 +7,21 @@
                         <label for="presets" class="form-label"><f:translate key="features.presets" /></label>
                         <div class="input-group">
                             <select name="activePresets" id="rtePresets" class="form-control form-select me-2">
-                                <f:for each="{availablePresets}" as="" key="preset">
-                                    <option value="{preset}"  {f:if(condition: '{preset} == {activePreset}' , then: 'selected' )}><f:format.case mode="capital">{preset}</f:format.case></option>
-                                </f:for>
+                                <f:if condition="{groupedPresets.yaml}">
+                                    <optgroup label="from YAML (TYPO3 Core)">
+                                        <f:for each="{groupedPresets.yaml}" as="presetData" key="preset">
+                                            <f:variable name="presetValue" value="{f:if(condition: '{presetData.uid} > 0', then: '{presetData.uid}', else: '{preset}')}" />
+                                            <option value="{presetValue}" {f:if(condition: '{presetValue} == {activePreset} || {preset} == {activePreset}', then: 'selected')}><f:format.case mode="capital">{preset}</f:format.case></option>
+                                        </f:for>
+                                    </optgroup>
+                                </f:if>
+                                <f:if condition="{groupedPresets.custom}">
+                                    <optgroup label="from Custom">
+                                        <f:for each="{groupedPresets.custom}" as="presetData" key="preset">
+                                            <option value="{presetData.uid}" {f:if(condition: '{presetData.uid} == {activePreset}', then: 'selected')}><f:format.case mode="capital">{preset}</f:format.case></option>
+                                        </f:for>
+                                    </optgroup>
+                                </f:if>
                             </select>
                             <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="small" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
                                 <core:icon identifier="actions-variable-add" size="small" alternativeMarkupIdentifier="inline" /> <span class="ms-1"><f:translate key="new.presets" /></span>

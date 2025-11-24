@@ -17,6 +17,12 @@ class Preset extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     protected string $presetKey = '';
 
+    protected bool $isCustom = false;
+
+    protected bool $hidden = false;
+
+    protected string $toolbarItems = '';
+
     /**
      * @var ObjectStorage<Feature>
      */
@@ -35,6 +41,48 @@ class Preset extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setPresetKey(string $presetKey): void
     {
         $this->presetKey = $presetKey;
+    }
+
+    public function getIsCustom(): bool
+    {
+        return $this->isCustom;
+    }
+
+    public function setIsCustom(bool $isCustom): void
+    {
+        $this->isCustom = $isCustom;
+    }
+
+    public function getHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden(bool $hidden): void
+    {
+        $this->hidden = $hidden;
+    }
+
+    public function getToolbarItems(): string
+    {
+        return $this->toolbarItems;
+    }
+
+    public function setToolbarItems(string $toolbarItems): void
+    {
+        $this->toolbarItems = $toolbarItems;
+    }
+
+    /**
+     * Get usage source based on hidden status
+     * hidden = 0 (active) → usage = 1 (use CKEditor Pack)
+     * hidden = 1 (inactive) → usage = 0 (use YAML)
+     *
+     * @return int
+     */
+    public function getUsage(): int
+    {
+        return $this->hidden ? 0 : 1;
     }
 
     /**

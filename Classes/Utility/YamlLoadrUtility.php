@@ -17,6 +17,27 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class YamlLoadrUtility
 {
+
+    public function fetchToolBarItems(string $presetName): string
+    {
+        $configuration = $this->loadConfigurationFromPreset($presetName);
+
+        $configuration = GeneralUtility::makeInstance(
+            CKEditor5Migrator::class,
+            $configuration
+        )->get();
+
+        if (isset($configuration['editor']['config']) && isset($configuration['editor']['config']['toolbar']['items'])) {
+
+            $items = $configuration['editor']['config']['toolbar']['items'];
+            if($items){
+               return implode(',',$items);
+            }
+        }
+        return '';
+    }
+
+
     public function fetchToolBar(string $presetName): array
     {
         $activeItemArray = [];

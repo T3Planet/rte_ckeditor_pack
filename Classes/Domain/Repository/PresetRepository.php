@@ -24,9 +24,11 @@ class PresetRepository extends Repository
         $this->querySettings = $querySettings;
     }
 
+
     public function initializeObject(): void
     {
         $this->setDefaultQuerySettings($this->querySettings->setRespectStoragePage(false));
+        $this->setDefaultQuerySettings($this->querySettings->setIgnoreEnableFields(true));
     }
 
     /**

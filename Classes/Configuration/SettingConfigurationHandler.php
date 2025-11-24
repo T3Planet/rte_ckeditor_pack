@@ -11,39 +11,40 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Configuration;
 
-use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
+use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class SettingConfigurationHandler implements SingletonInterface
 {
-    /**
-     * @var array
-    */
-    protected $config;
-
-    public function __construct(
-    ) {
-        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
-        $this->config = $configurationRepository->fetchConfiguration('FeatureConfiguration');
+    public function __construct()
+    {
+        // No need to load config in constructor, use ExtensionConfigurationUtility directly
     }
 
     public function getTokenUrl(): string
     {
-        $type = $this->config['authType'] ?? '';
+        $authType = ExtensionConfigurationUtility::get('authType', 'none');
 
-        if ($type === 'dev_token' && $token_url = $this->getDevelopmentTokenUrl()) {
-            return $token_url;
+        if ($authType === 'dev_token') {
+            $tokenUrl = $this->getDevelopmentTokenUrl();
+            if ($tokenUrl) {
+                return $tokenUrl;
+            }
         }
 
-        if ($type === 'key' && $this->getAccessKey() && $this->getEnvironmentId()) {
-            $baseUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-            // Check if the base URL ends with a slash and remove it
-            if (substr($baseUrl, -1) === '/') {
-                $baseUrl = substr($baseUrl, 0, -1);
+        if ($authType === 'key') {
+            $accessKey = $this->getAccessKey();
+            $environmentId = $this->getEnvironmentId();
+            if ($accessKey && $environmentId) {
+                $baseUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+                // Check if the base URL ends with a slash and remove it
+                if (substr($baseUrl, -1) === '/') {
+                    $baseUrl = substr($baseUrl, 0, -1);
+                }
+                // Concatenate with '/ckeditor5-premium/token'
+                return $baseUrl . '/ckeditor5-premium/token';
             }
-            // Concatenate with '/ckeditor5-premium/token'
-            return $baseUrl . '/ckeditor5-premium/token';
         }
 
         // The empty string allows to use the evaluation version note.
@@ -52,17 +53,20 @@ class SettingConfigurationHandler implements SingletonInterface
 
     public function getAccessKey(): ?string
     {
-        return $this->config['accessKey'];
+        $accessKey = ExtensionConfigurationUtility::get('accessKey', '');
+        return $accessKey ?: null;
     }
 
     public function getEnvironmentId(): ?string
     {
-        return $this->config['environmentId'];
+        $environmentId = ExtensionConfigurationUtility::get('environmentId', '');
+        return $environmentId ?: null;
     }
 
     public function getDevelopmentTokenUrl(): ?string
     {
-        return $this->config['tokenUrl'];
+        $tokenUrl = ExtensionConfigurationUtility::get('tokenUrl', '');
+        return $tokenUrl ?: null;
     }
 
     public function getBaseUrl(): ?string
