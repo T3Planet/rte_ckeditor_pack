@@ -6,7 +6,7 @@
 1.0.1 24 November 2025
 ===========================
 
-Here is the list of features and updates introduced in the initial release: ::
+Here is the list of features and updates introduced in this release: ::
 
  24-11-2025 [FEATURE] Added search functionality to the Toolbar, including active/inactive item highlighting.
  24-11-2025 [TASK] Removed the "Files" tab from the module and moved Image Configuration to the Free Packages section.

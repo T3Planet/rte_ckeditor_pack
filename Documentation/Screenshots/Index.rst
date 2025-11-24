@@ -17,17 +17,17 @@ Interactive Demo Guide
 CKEditor RTE
 ============
 
-.. figure:: Images/rte.png
+.. figure:: images/rte.png
    :alt: Basic Configuration
 
 CKEditor Pack
 =============
 
-.. figure:: Images/feature.png
+.. figure:: images/feature.png
    :alt: Basic Configuration
 
-.. figure:: Images/toolbar.png
+.. figure:: images/toolbar.png
    :alt: Basic Configuration
 
-.. figure:: Images/setting.png
+.. figure:: images/setting.png
    :alt: Basic Configuration

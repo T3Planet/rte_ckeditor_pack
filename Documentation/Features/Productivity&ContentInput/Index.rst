@@ -7,7 +7,7 @@
 Productivity & Content Input
 ==============================
 
-.. figure:: Images/office.png
+.. figure:: images/office.png
    :width: 400px
    :height: 240px
    :alt: Basic Configuration
