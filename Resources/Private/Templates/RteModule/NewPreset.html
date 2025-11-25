@@ -29,7 +29,6 @@
                                     <tr>
                                         <th class="col-title"><f:translate key="header.preset_title" extensionName="RteCkeditorPack"/></th>
                                         <th class="col-title"><f:translate key="presets.usage_source" extensionName="RteCkeditorPack" default="Usage Source"/></th>
-                                        <th class="col-title"><f:translate key="presets.status" extensionName="RteCkeditorPack" default="Status"/></th>
                                         <th class="col-title text-end"><f:translate key="presets.actions" extensionName="RteCkeditorPack" default="Actions"/></th>
                                     </tr>
                                 </thead>
@@ -39,40 +38,29 @@
                                             <td><f:format.case mode="capital">{item.preset_key}</f:format.case></td>
                                             <td>
                                                 <f:if condition="{item.uid} > 0">
-                                                    <f:if condition="{item.hidden} == 0">
+                                                    <f:if condition="{item.usage_source} == 0">
                                                         <f:then>
-                                                            <span class="badge bg-info"><f:translate key="presets.source_pack" extensionName="RteCkeditorPack" default="Load from CKEditor Pack"/></span>
+                                                            <span class="badge bg-secondary me-2"><f:translate key="presets.source_yaml" extensionName="RteCkeditorPack" default="Load from YAML"/></span>
+                                                            <a href="{be:moduleLink(route:'tce_db', query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][usage_source]=1', arguments:'{redirect: returnUrl}')}" 
+                                                               class="btn btn-sm btn-default" 
+                                                               title="{f:translate(key: 'presets.switch_to_pack', extensionName: 'RteCkeditorPack', default: 'Switch to CKEditor Pack')}">
+                                                                <core:icon identifier="actions-edit-unhide" size="small" />
+                                                                <span class="ms-1"><f:translate key="presets.source_pack" extensionName="RteCkeditorPack" default="Load from CKEditor Pack"/></span>
+                                                            </a>
                                                         </f:then>
                                                         <f:else>
-                                                            <span class="badge bg-secondary"><f:translate key="presets.source_yaml" extensionName="RteCkeditorPack" default="Load from YAML"/></span>
+                                                            <span class="badge bg-info me-2"><f:translate key="presets.source_pack" extensionName="RteCkeditorPack" default="Load from CKEditor Pack"/></span>
+                                                            <a href="{be:moduleLink(route:'tce_db', query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][usage_source]=0', arguments:'{redirect: returnUrl}')}" 
+                                                               class="btn btn-sm btn-default" 
+                                                               title="{f:translate(key: 'presets.switch_to_yaml', extensionName: 'RteCkeditorPack', default: 'Switch to YAML')}">
+                                                                <core:icon identifier="actions-edit-hide" size="small" />
+                                                                <span class="ms-1"><f:translate key="presets.source_yaml" extensionName="RteCkeditorPack" default="Load from YAML"/></span>
+                                                            </a>
                                                         </f:else>
                                                     </f:if>
                                                 </f:if>
                                                 <f:if condition="{item.uid} == 0">
                                                     <span class="text-muted"><f:translate key="presets.source_yaml" extensionName="RteCkeditorPack" default="Load from YAML"/></span>
-                                                </f:if>
-                                            </td>
-                                            <td>
-                                                <f:if condition="{item.uid} > 0">
-                                                    <f:if condition="{item.hidden} == 0">
-                                                        <f:then>
-                                                            <a href="{be:moduleLink(route:'tce_db', query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][hidden]=1', arguments:'{redirect: returnUrl}')}" 
-                                                               class="btn btn-sm btn-default" 
-                                                               title="{f:translate(key: 'presets.disable', extensionName: 'RteCkeditorPack', default: 'Disable')}">
-                                                                <core:icon identifier="actions-edit-hide" size="small" />
-                                                            </a>
-                                                        </f:then>
-                                                        <f:else>
-                                                            <a href="{be:moduleLink(route:'tce_db', query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][hidden]=0', arguments:'{redirect: returnUrl}')}" 
-                                                               class="btn btn-sm btn-default" 
-                                                               title="{f:translate(key: 'presets.enable', extensionName: 'RteCkeditorPack', default: 'Enable')}">
-                                                                <core:icon identifier="actions-edit-unhide" size="small" />
-                                                            </a>
-                                                        </f:else>
-                                                    </f:if>
-                                                </f:if>
-                                                <f:if condition="{item.uid} == 0">
-                                                    <span class="text-muted"><f:translate key="presets.yaml_readonly" extensionName="RteCkeditorPack" default="YAML-based (read-only)"/></span>
                                                 </f:if>
                                             </td>
                                             <td class="text-end">

@@ -93,6 +93,17 @@ class YamlLoadrUtility
     }
 
     /**
+     * Load YAML configuration for a preset and migrate to CKEditor5 format
+     *
+     * @param string $presetKey
+     * @return array
+     */
+    public function loadYamlConfiguration(string $presetKey): array
+    {
+        return $this->loadConfigurationFromPreset($presetKey);
+    }
+
+    /**
      * Returns an array with Typoscript the old way (with dot)
      * Since the functionality in YAML is without the dots, but the new configuration is used without the dots
      * this functionality adds also an explicit = 1 to the arrays

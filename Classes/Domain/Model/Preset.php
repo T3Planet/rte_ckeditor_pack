@@ -21,6 +21,8 @@ class Preset extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 
     protected bool $hidden = false;
 
+    protected int $usageSource = 0;
+
     protected string $toolbarItems = '';
 
     /**
@@ -61,6 +63,16 @@ class Preset extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setHidden(bool $hidden): void
     {
         $this->hidden = $hidden;
+    }
+
+    public function getUsageSource(): int
+    {
+        return $this->usageSource;
+    }
+
+    public function setUsageSource(int $usageSource): void
+    {
+        $this->usageSource = $usageSource;
     }
 
     public function getToolbarItems(): string

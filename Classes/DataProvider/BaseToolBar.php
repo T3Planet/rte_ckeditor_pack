@@ -238,6 +238,7 @@ class BaseToolBar
                 'key' => $presetKey,
                 'is_custom' => $preset->getIsCustom(),
                 'hidden' => $preset->getHidden() ? 1 : 0,
+                'usage_source' => $preset->getUsageSource(),
             ];
         }
         
@@ -255,6 +256,7 @@ class BaseToolBar
                     $preset->setPresetKey($presetKey);
                     $preset->setIsCustom(false);
                     $preset->setHidden(true);
+                    $preset->setUsageSource(0); // 0 = Load from YAML
                     $preset->setToolbarItems($toolBarItems);
                     $this->presetRepository->add($preset);
                     $this->persistenceManager->persistAll();
@@ -265,6 +267,7 @@ class BaseToolBar
                         'key' => $presetKey,
                         'is_custom' => false,
                         'hidden' => 1,
+                        'usage_source' => 0,
                     ];
                 } catch (\Exception) {}
             } else {

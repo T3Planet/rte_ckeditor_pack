@@ -13,9 +13,11 @@ use T3Planet\RteCkeditorPack\Configuration\EditorConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\MentionConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler;
 use T3Planet\RteCkeditorPack\DataProvider\Modules;
-use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Utility\ChannelIdUtility;
+use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -33,7 +35,8 @@ class RteConfigurationModifier
 
     public function __construct(
         protected SettingConfigurationHandler $settingsConfigHandler,
-        protected ConfigurationRepository $configurationRepository,
+        protected FeatureRepository $featureRepository,
+        protected PresetRepository $presetRepository,
         protected ToolbarGroupsRepository $groupRepository,
         protected Modules $modules
     ) {
@@ -57,14 +60,23 @@ class RteConfigurationModifier
             $configuration = $event->getConfiguration();
             $configuration['importModules'][] = '@t3planet/RteCkeditorPack/ckeditor5-error';
             $configuration = $this->ensureCollaborationChannelConfiguration($configuration, $data);
-            $enabledModule = $this->configurationRepository->findByEnable(true)->toArray();
+            
+            // Get preset UID from preset key
+            $preset = $this->presetRepository->findByPresetKey($this->selectedPreset);
+            $presetUid = $preset ? $preset->getUid() : 0;
+            
+            // Get enabled features for this preset
+            $enabledFeatures = [];
+            if ($presetUid > 0) {
+                $enabledFeatures = $this->featureRepository->findEnabledByPresetUid($presetUid);
+            }
+            
             $configuration = $this->addToolbarItems($configuration);
 
-            if ($enabledModule) {
-                $enabledModules = $this->filterByPreset($enabledModule);
-                foreach ($enabledModules as $module) {
-                    // Add configuration based on the record or the module
-                    $configuration = $this->processRecordConfiguration($configuration, $module);
+            if ($enabledFeatures) {
+                foreach ($enabledFeatures as $feature) {
+                    // Add configuration based on the feature
+                    $configuration = $this->processRecordConfiguration($configuration, $feature);
                 }
             }
             // Add extension settings and cache the configuration
@@ -82,17 +94,16 @@ class RteConfigurationModifier
     }
 
     /**
-     * Processes the configuration for a given record.
+     * Processes the configuration for a given feature.
      */
-    private function processRecordConfiguration(array $configuration, $record): array
+    private function processRecordConfiguration(array $configuration, $feature): array
     {
-        $selectedPreset = $this->selectedPreset;
-        if (!$record->isEnable()) {
+        if (!$feature->isEnable()) {
             return $configuration;
         }
 
         $availbleItems = $configuration['toolbar']['items'] ?? [];
-        $recordConfigKey = $record->getConfigKey();
+        $recordConfigKey = $feature->getConfigKey();
 
         if ($recordConfigKey) {
             $rec = $this->modules->getItemByConfigKey($recordConfigKey);
@@ -121,19 +132,13 @@ class RteConfigurationModifier
                     return $configuration;
                 }
             }
-            $allowedPresets = $record->getPresetArray();
 
+            // Feature is already tied to the correct preset, so no need to check preset array
             if (isset($moduleConfiguration['module'])) {
-                if (!isset($moduleConfiguration['toolBarItems'])) {
-                    if ($allowedPresets && in_array($selectedPreset, $allowedPresets)) {
-                        $configuration = $this->processModuleConfiguration($configuration, $moduleConfiguration, $recordConfigKey, $record);
-                    }
-                } else {
-                    $configuration = $this->processModuleConfiguration($configuration, $moduleConfiguration, $recordConfigKey, $record);
-                }
+                $configuration = $this->processModuleConfiguration($configuration, $moduleConfiguration, $recordConfigKey, $feature);
             }
 
-            $fieldConfig = $record->getFields();
+            $fieldConfig = $feature->getFields();
 
             if ($fieldConfig) {
 
@@ -158,13 +163,8 @@ class RteConfigurationModifier
                         }
                     }
                 } else {
-                    if (in_array($recordConfigKey, $this->invisibleFeatures)) {
-                        if ($allowedPresets && in_array($selectedPreset, $allowedPresets)) {
-                            $configuration = $this->processFieldConfiguration($fieldValues, $fieldConfigArray, $configuration, $recordConfigKey);
-                        }
-                    } else {
-                        $configuration = $this->processFieldConfiguration($fieldValues, $fieldConfigArray, $configuration, $recordConfigKey);
-                    }
+                    // Feature is already tied to the correct preset, so no need to check preset array
+                    $configuration = $this->processFieldConfiguration($fieldValues, $fieldConfigArray, $configuration, $recordConfigKey);
                 }
             }
         }
@@ -174,8 +174,18 @@ class RteConfigurationModifier
 
     private function addToolbarItems(array $configuration): array
     {
-
-        $toolBarItems = $this->groupRepository->fetchToolBarItems($this->selectedPreset);
+        // Get preset by preset key
+        $preset = $this->presetRepository->findByPresetKey($this->selectedPreset);
+        
+        $toolBarItems = [];
+        
+        if ($preset && $preset->getToolbarItems()) {
+            // Get toolbar items from preset table's toolbar_items column
+            $toolBarItems = GeneralUtility::trimExplode(',', $preset->getToolbarItems(), true);
+        } else {
+            // Fallback to old method if preset not found or toolbar_items is empty
+            $toolBarItems = $this->groupRepository->fetchToolBarItems($this->selectedPreset);
+        }
 
         if ($toolBarItems) {
             $configuration['toolbar']['items'] = [];
@@ -332,12 +342,13 @@ class RteConfigurationModifier
      */
     private function addExtensionSettings(array &$configuration): void
     {
-        $extSettings = $this->configurationRepository->findConfiguration('FeatureConfiguration');
-        if (isset($extSettings['licenseKey'])) {
-            $configuration['licenseKey'] = $extSettings['licenseKey'];
+        $licenseKey = ExtensionConfigurationUtility::get('licenseKey', '');
+        if ($licenseKey) {
+            $configuration['licenseKey'] = $licenseKey;
         }
-        if (isset($extSettings['webSocketUrl'])) {
-            $configuration['cloudServices']['webSocketUrl'] = $extSettings['webSocketUrl'];
+        $webSocketUrl = ExtensionConfigurationUtility::get('webSocketUrl', '');
+        if ($webSocketUrl) {
+            $configuration['cloudServices']['webSocketUrl'] = $webSocketUrl;
         }
     }
 
@@ -346,18 +357,20 @@ class RteConfigurationModifier
      */
     private function isEnableRealTimeCollaboration(): bool
     {
-        $record = $this->configurationRepository->findByConfigKey('RealTimeCollaboration')->getFirst();
-        if (!$record || !$record->isEnable()) {
+        // Get preset UID from preset key
+        $preset = $this->presetRepository->findByPresetKey($this->selectedPreset);
+        if (!$preset) {
+            return false;
+        }
+        
+        $presetUid = $preset->getUid();
+        $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, 'RealTimeCollaboration');
+        
+        if (!$feature || !$feature->isEnable()) {
             return false;
         }
 
-        $presetString = trim((string)$record->getPreset());
-        if ($presetString === '') {
-            return true;
-        }
-
-        $presets = array_map('trim', explode(',', $presetString));
-        return in_array($this->selectedPreset, $presets, true);
+        return true;
     }
 
     /**
@@ -506,27 +519,6 @@ class RteConfigurationModifier
         return $GLOBALS['BE_USER']->check('custom_options', 'rte_editor' . ':' . $module);
     }
 
-    private function filterByPreset(array $records): array
-    {
-        $preset = $this->selectedPreset;
-        $filtered = array_filter($records, function ($config) use ($preset) {
-            if ($config->getConfigKey() === 'FeatureConfiguration') {
-                return true;
-            }
-
-            $presetString = trim((string)$config->getPreset());
-            if ($presetString === '') {
-                return true;
-            }
-
-            $presets = array_map('trim', explode(',', $presetString));
-
-            return in_array($preset, $presets, true);
-        });
-
-        return $filtered ?? [];
-
-    }
 
     private function ensureCollaborationChannelConfiguration(array $configuration, array $data): array
     {

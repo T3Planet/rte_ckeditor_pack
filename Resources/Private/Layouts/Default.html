@@ -6,6 +6,9 @@
 
 <div class="module t3-ckeditor">
     <div class="module-docheader t3js-module-docheader flex-row align-items-end justify-content-between pb-0">
+        <div class="me-3">
+            <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />
+        </div>
         <form action="" method="post" id="presetForm">
             <f:if condition="{availablePresets}">
                 <div class="form-group" style="min-width: 300px;">
@@ -35,10 +38,14 @@
                 </div>
             </f:if>
         </form>
+        <div class="dashboard-configuration btn-group my-1 ms-auto">
+            <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" /></a>
+            <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" /></a>
+            <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" /></a>
+        </div>
+    </div>
+    <div class="module-body t3js-module-body">
         <div class="dashboard-tabs" role="tablist">
-            <div class="me-3">
-                <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />
-            </div>
             <f:if condition="{availableModules}">
                 <f:for each="{availableModules}" as="module" iteration="i">
                     <button
@@ -61,13 +68,6 @@
                 <f:translate key="ckeditorKit.tab.settings" />
             </button>
         </div>
-        <div class="dashboard-configuration btn-group my-1 ms-auto">
-            <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" /></a>
-            <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" /></a>
-            <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" /></a>
-        </div>
-    </div>
-    <div class="module-body t3js-module-body">
         <div class="tab-content" id="dashboardTab">
             <f:render section="main" arguments="{_all}" />
         </div>

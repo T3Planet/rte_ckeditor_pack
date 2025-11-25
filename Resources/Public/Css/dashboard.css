@@ -39,7 +39,11 @@
 
 .t3-ckeditor .dashboard-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:calc(-1 * var(--module-body-padding-y)) calc(-1 * var(--module-body-padding-x)) var(--module-body-padding-y);padding:var(--module-body-padding-y) var(--module-body-padding-x) 0;background:light-dark(#dadada, #262626);border-bottom:1px solid light-dark(#cdcdcd, #262626)}
 .t3-ckeditor .dashboard-tabs {display:flex;flex-wrap:wrap;align-items:center}
-.t3-ckeditor .dashboard-tab{padding:12px 15px;margin-right: 3px;}
+
+.t3-ckeditor .dashboard-tab{
+    padding:8px 15px;
+    margin-right: 3px;
+}
 
 /*Dashboard*/
 

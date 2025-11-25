@@ -1,6 +1,5 @@
 import AjaxRequest from "@typo3/core/ajax/ajax-request.js";
 import Notification from "@typo3/backend/notification.js";
-
 document.addEventListener('click', (event) => {
     if (event.target.classList.contains('indent-feature-toggle')) {
         let classes = document.querySelectorAll('.use-indent-classes');
@@ -49,6 +48,55 @@ document.addEventListener('click', (event) => {
     }
 
     if (event.target.tagName === 'BUTTON') {
+        if (event.target.classList.contains('sync-preset')) {
+            event.preventDefault();
+            const button = event.target;
+            const presetUid = button.getAttribute('data-preset-uid');
+            
+            if (!presetUid) {
+                Notification.error('Error', 'Preset UID is missing');
+                return;
+            }
+
+            // Disable button during request
+            button.disabled = true;
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Syncing...';
+
+            const formData = new FormData();
+            formData.append('presetUid', presetUid);
+
+            new AjaxRequest(TYPO3.settings.ajaxUrls['sync_preset'])
+                .post(formData)
+                .then(async (response) => {
+                    const responseBody = await response.resolve();
+                    
+                    if (typeof responseBody === 'object' && responseBody.notifications && Array.isArray(responseBody.notifications)) {
+                        responseBody.notifications.forEach((notification) => {
+                            const title = TYPO3.lang[notification.title] ?? notification.title ?? '';
+                            const message = TYPO3.lang[notification.message] ?? notification.message ?? '';
+                            const severity = notification.severity ?? 0;
+                            if (severity === 0) {
+                                Notification.success(title, message);
+                            } else if (severity === 1) {
+                                Notification.warning(title, message);
+                            } else if (severity === 2) {
+                                Notification.error(title, message);
+                            } else {
+                                Notification.info(title, message);
+                            }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    Notification.error('Sync Error', error.message ?? 'Failed to sync preset');
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.innerHTML = originalContent;
+                });
+        }
+
         if (event.target.classList.contains('insert-section')) {
             let panelGroup = event.target.closest('.panel-group-wrap')?.querySelector('.panel-group');
             if (panelGroup) {

@@ -1,53 +1,17 @@
-    <div class="row align-items-end">
-        <div class="col-auto">
-            <h2 class="mb-3"><f:translate key="ckeditorKit.module.feature" /></h2>
-            <f:comment><form action="" method="post" id="presetForm">
-                <f:if condition="{availablePresets}">
-                    <div class="form-group" style="min-width: 300px;">
-                        <label for="presets" class="form-label"><f:translate key="features.presets" /></label>
-                        <div class="input-group">
-                            <select name="activePresets" id="rtePresets" class="form-control form-select me-2">
-                                <f:if condition="{groupedPresets.yaml}">
-                                    <optgroup label="from YAML (TYPO3 Core)">
-                                        <f:for each="{groupedPresets.yaml}" as="presetData" key="preset">
-                                            <f:variable name="presetValue" value="{f:if(condition: '{presetData.uid} > 0', then: '{presetData.uid}', else: '{preset}')}" />
-                                            <option value="{presetValue}" {f:if(condition: '{presetValue} == {activePreset} || {preset} == {activePreset}', then: 'selected')}><f:format.case mode="capital">{preset}</f:format.case></option>
-                                        </f:for>
-                                    </optgroup>
-                                </f:if>
-                                <f:if condition="{groupedPresets.custom}">
-                                    <optgroup label="from Custom">
-                                        <f:for each="{groupedPresets.custom}" as="presetData" key="preset">
-                                            <option value="{presetData.uid}" {f:if(condition: '{presetData.uid} == {activePreset}', then: 'selected')}><f:format.case mode="capital">{preset}</f:format.case></option>
-                                        </f:for>
-                                    </optgroup>
-                                </f:if>
-                            </select>
-                            <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="small" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
-                                <core:icon identifier="actions-variable-add" size="small" alternativeMarkupIdentifier="inline" /> <span class="ms-1"><f:translate key="new.presets" /></span>
-                            </button>
-                        </div>
-                    </div>
-                </f:if>
-            </form></f:comment>
-        </div>
-        <div class="col">
-            <div class="form-group text-end">
-                <form action="" method="post" id="ckEditorModules">
-                    <button type="button" id="toggleLabel" class="btn btn-primary"><f:translate key="features.ToggleLabel" /></button>
-                    <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'features.settings.group')}"
-                        data-key="toolbar_configuration">
-                        <core:icon identifier="actions-variable-add" size="small" alternativeMarkupIdentifier="inline" />
-                        <f:translate key="features.settings.group" />
-                    </button>
-                    
-                    <input type="hidden" name="activePreset" value="{activePreset}"/>
-                    <input type="hidden" name="enable" />
-                    <input type="hidden" name="disabled" />
-                    <input type="hidden" name="position" />
-                </form>
-            </div>
-        </div>
+    <div class="form-group text-end">
+        <form action="" method="post" id="ckEditorModules">
+            <button type="button" id="toggleLabel" class="btn btn-primary"><f:translate key="features.ToggleLabel" /></button>
+            <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'features.settings.group')}"
+                data-key="toolbar_configuration">
+                <core:icon identifier="actions-variable-add" size="small" alternativeMarkupIdentifier="inline" />
+                <f:translate key="features.settings.group" />
+            </button>
+            
+            <input type="hidden" name="activePreset" value="{activePreset}"/>
+            <input type="hidden" name="enable" />
+            <input type="hidden" name="disabled" />
+            <input type="hidden" name="position" />
+        </form>
     </div>
     <div class="card feature-toggle-card">
         <div class="card-header position-relative widget-content-title">

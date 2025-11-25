@@ -17,9 +17,12 @@ use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
+use T3Planet\RteCkeditorPack\DataProvider\Configuration\FieldType;
+use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
 use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
 use T3Planet\RteCkeditorPack\Utility\FlashUtility;
 use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
+use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Cache\CacheManager;
@@ -652,6 +655,7 @@ class RteModuleController extends ActionController
                         $preset->setPresetKey($presetName);
                         $preset->setIsCustom(true); // Custom preset created by user
                         $preset->setHidden(false); // Default: active (use CKEditor Pack)
+                        $preset->setUsageSource(1); // 1 = Load from CKEditor Pack
                         $this->presetRepository->add($preset);
                         $this->persistenceManager->persistAll();
                         
@@ -688,15 +692,16 @@ class RteModuleController extends ActionController
         $customPresets = $presetsData['custom'] ?? [];
         
         // Convert to array format for template (with preset_key as key)
-        // Usage is derived from hidden: hidden=0 (active) → usage=1 (CKEditor Pack), hidden=1 (inactive) → usage=0 (YAML)
         $corePresetsArray = [];
         foreach ($corePresets as $presetKey => $presetData) {
             $preset = null;
             $hidden = $presetData['hidden'] ?? 1; // Default to 1 (inactive/use YAML) if not set
+            $usageSource = $presetData['usage_source'] ?? 0; // Default to 0 (Load from YAML) if not set
             if ($presetData['uid'] > 0) {
                 $preset = $this->presetRepository->findByUid($presetData['uid']);
                 if ($preset) {
                     $hidden = $preset->getHidden() ? 1 : 0;
+                    $usageSource = $preset->getUsageSource();
                 }
             }
             $corePresetsArray[] = [
@@ -704,6 +709,7 @@ class RteModuleController extends ActionController
                 'preset_key' => $presetData['key'],
                 'is_custom' => $presetData['is_custom'],
                 'hidden' => $hidden,
+                'usage_source' => $usageSource,
             ];
         }
         
@@ -711,14 +717,17 @@ class RteModuleController extends ActionController
         foreach ($customPresets as $presetKey => $presetData) {
             $preset = $this->presetRepository->findByUid($presetData['uid']);
             $hidden = 0;
+            $usageSource = 1; // Custom presets default to Load from CKEditor Pack
             if ($preset) {
                 $hidden = $preset->getHidden() ? 1 : 0;
+                $usageSource = $preset->getUsageSource();
             }
             $customPresetsArray[] = [
                 'uid' => $presetData['uid'],
                 'preset_key' => $presetData['key'],
                 'is_custom' => $presetData['is_custom'],
                 'hidden' => $hidden,
+                'usage_source' => $usageSource,
             ];
         }
         
@@ -790,4 +799,88 @@ class RteModuleController extends ActionController
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/module-functionality.js');
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/user-adapter.js');
     }
+
+    /**
+     * Sync preset toolbar items from YAML configuration
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function syncPreset(ServerRequestInterface $request): ResponseInterface
+    {
+        $data = $request->getParsedBody();
+        $presetUid = isset($data['presetUid']) && is_numeric($data['presetUid']) ? (int)$data['presetUid'] : 0;
+        $notification = [];
+        
+        try {
+            if ($presetUid > 0) {
+                $preset = $this->presetRepository->findByUid($presetUid);
+
+                if (!$preset) {
+                    throw new \Exception('Preset not found');
+                }
+
+                // Get preset key to load YAML configuration
+                $presetKey = $preset->getPresetKey();
+                
+                // Load YAML configuration
+                $yamlLoader = GeneralUtility::makeInstance(YamlLoadrUtility::class);
+                $yamlConfig = $yamlLoader->loadYamlConfiguration($presetKey);
+                
+                if (empty($yamlConfig) && isset($yamlConfig['editor']['config'])) {
+                    throw new \Exception('YAML configuration not found for preset: ' . $presetKey);
+                }
+                $yamlConfiguration = $yamlConfig['editor']['config'];
+
+                $features = $this->featureRepository->findByPresetUid($presetUid);
+                
+                foreach ($features as $feature) {
+                    $configKey = $feature->getConfigKey();
+                    $moduleConfiguration = $feature->getFields() ? json_decode($feature->getFields(), true) : [];
+                    if (empty($moduleConfiguration)) {
+                        continue;
+                    }
+                    
+                    if(!array_key_exists(strtolower($configKey),$yamlConfiguration)){
+                        continue;
+                    }
+                    $yamlFeatureConfig[strtolower($configKey)] = $yamlConfiguration[strtolower($configKey)];
+
+                    $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
+                    $syncData = $mergeUtility->mergeRecursiveDistinct($yamlFeatureConfig, $moduleConfiguration);
+                    
+                    if (empty($syncData)) {
+                        continue;
+                    }
+                    $feature->setFields(json_encode($syncData));
+                    $this->featureRepository->update($feature);
+                }
+                
+                $this->persistenceManager->persistAll();
+                $this->cache->flush();
+                
+                $notification[] = [
+                    'title' => 'ckeditorKit.operation.success',
+                    'message' => 'ckeditorKit.preset.sync.success.message',
+                    'severity' => 0,
+                ];
+            } else {
+                throw new \Exception('Invalid preset UID');
+            }
+        } catch (\Exception $e) {
+            $notification[] = [
+                'title' => 'ckeditorKit.operation.error',
+                'message' => 'ckeditorKit.preset.sync.error.message',
+                'severity' => 2,
+            ];
+        }
+
+        return new JsonResponse([
+            'notifications' => $notification,
+        ]);
+    }
+
+
+
+  
 }

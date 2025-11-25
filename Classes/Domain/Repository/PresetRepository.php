@@ -56,5 +56,20 @@ class PresetRepository extends Repository
         $query->setOrderings(['presetKey' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING]);
         return $query->execute()->toArray();
     }
+
+    /**
+     *  Find preset by UID
+     *
+     * @param int $uid The identifier of the object to find
+     * @return object|null The matching object if found, otherwise NULL
+     * @phpstan-return T|null
+     */
+    public function findByUid($uid)
+    {
+        $query = $this->createQuery();
+        $query->matching($query->equals('uid', $uid));
+        $query->setLimit(1);
+        return $query->execute()->getFirst();
+    }
 }
 

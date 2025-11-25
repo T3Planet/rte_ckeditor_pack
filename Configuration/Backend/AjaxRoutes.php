@@ -32,4 +32,8 @@ return [
         'path' => '/ckeditor/feature/configuration',
         'target' => RteModuleController::class . '::saveSettings',
     ],
+    'sync_preset' => [
+        'path' => '/preset/sync',
+        'target' => RteModuleController::class . '::syncPreset',
+    ],
 ];

@@ -80,6 +80,7 @@ CREATE TABLE tx_rteckeditorpack_domain_model_preset (
     crdate int(11) unsigned DEFAULT '0' NOT NULL,
     cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
     is_custom smallint(1) unsigned NOT NULL DEFAULT '0',
+    usage_source smallint(1) unsigned NOT NULL DEFAULT '0',
     PRIMARY KEY (uid),
     UNIQUE KEY preset_key (preset_key),
     KEY parent (pid),
