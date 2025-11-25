@@ -3,6 +3,10 @@
     xmlns:ckit="http://typo3.org/ns/T3Planet/RteCkeditorPack/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:layout name="Default" />
 <f:section name="main">
+    <div class="tab-pane fade {f:if(condition: '{currentModule} == features', then: 'show active')}" id="features-tab-pane" role="tabpanel" aria-labelledby="features-tab">
+       <f:render partial="Dashboard/FeatureConfig" arguments="{_all}" />
+    </div>
+
     <f:if condition="{availableModules}">
         <f:for each="{availableModules}" as="module" iteration="i">
             <div class="tab-pane fade {f:if(condition: '{module.key} == {currentModule}', then: 'show active')}" id="{module.key}-tab-pane" role="tabpanel" aria-labelledby="{module.key}-tab" tabindex="{i.index}">
@@ -11,8 +15,7 @@
                     <f:if condition="{module.cards}">
                         <f:for each="{module.cards}" as="card" iteration="j">
                             <f:if condition="{card.details}">
-                                <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: ' disabled')} 
-                                {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'card--active')}" style="">
+                                <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: ' disabled')} {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'card--active')}">
                                     <div class="card-header">
                                         <div class="card-icon">
                                             <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />
@@ -70,10 +73,6 @@
 
     <div class="tab-pane fade {f:if(condition: '{currentModule} == settings', then: 'show active')}" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab">
         <f:render partial="Dashboard/GeneralSettings" arguments="{_all}" />
-    </div>
-
-    <div class="tab-pane fade {f:if(condition: '{currentModule} == features', then: 'show active')}" id="features-tab-pane" role="tabpanel" aria-labelledby="features-tab">
-       <f:render partial="Dashboard/FeatureConfig" arguments="{_all}" />
     </div>
 
     <div class="tab-pane fade" id="Favorites-tab-pane" role="tabpanel" aria-labelledby="Favorites-tab">

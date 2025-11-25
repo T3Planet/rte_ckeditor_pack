@@ -70,6 +70,31 @@ class Modules
             ],
             [
                 'tab' => Tabs::STANDALONE,
+                'details' => $cardDetails->getDetailsByKey('ToggleAi'),
+                'configuration' => [
+                    'default' => false,
+                    'is_premium' => true,
+                    'config_key' => 'ToggleAi',
+                    'module' => [
+                        [
+                            'library' => '@t3planet/RteCkeditorPack/ai-sidebar',
+                            'exports' => 'AISidebar'
+                        ],
+                        [
+                            'library' => '@ckeditor/ckeditor5-cloud-services',
+                            'exports' => 'CloudServices'
+                        ],
+                        [
+                            'library' => '@ckeditor/ckeditor5-ai',
+                            'exports' => 'AIChat,AIEditorIntegration,AIQuickActions,AIReviewMode'
+                        ],
+                    ],
+                    'toolBarItems' => 'toggleAi,aiQuickActions',
+                ],
+                'fields' => $this->getFieldsFromFeature(AIFeature::class),
+            ],
+            [
+                'tab' => Tabs::STANDALONE,
                 'details' => $cardDetails->getDetailsByKey('ImportWord'),
                 'configuration' => [
                     'default' => false,
@@ -130,23 +155,6 @@ class Modules
                     'toolBarItems' => 'ExportWord',
                 ],
                 'fields' => $this->getFieldsFromFeature(ExportWordFeature::class),
-            ],
-            [
-                'tab' => Tabs::STANDALONE,
-                'details' => $cardDetails->getDetailsByKey('AIAssistant'),
-                'configuration' => [
-                    'default' => false,
-                    'is_premium' => true,
-                    'config_key' => 'AIAssistant',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-ai',
-                            'exports' => 'AIAssistant,OpenAITextAdapter',
-                        ],
-                    ],
-                    'toolBarItems' => 'aiAssistant,aiCommands',
-                ],
-                'fields' => $this->getFieldsFromFeature(AIFeature::class),
             ],
             [
                 'tab' => Tabs::STANDALONE,

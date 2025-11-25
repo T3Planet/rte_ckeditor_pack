@@ -37,7 +37,7 @@
                 <source>Presets</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.settings">
-                <source>Premium Settings</source>
+                <source>Settings</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.btn_title">
                 <source>Configuration</source>
@@ -87,10 +87,10 @@
             <trans-unit id="ckeditorKit.tab.premium.export_to_pdf.description">
                 <source>Create a polished PDF version of your content directly from the editor with one click. Formatting and layout are preserved accurately.</source>
             </trans-unit>
-            <trans-unit id="ckeditorKit.tab.premium.ai_assistant">
+            <trans-unit id="ckeditorKit.tab.premium.toggle_ai">
                 <source>CKEditor AI</source>
             </trans-unit>
-            <trans-unit id="ckeditorKit.tab.premium.ai_assistant.description">
+            <trans-unit id="ckeditorKit.tab.premium.toggle_ai.description">
                 <source>Add a built-in AI Assistant to write, rephrase, translate, or summarize your text. Get instant help directly inside the editor.</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.premium.footnotes">
@@ -491,6 +491,12 @@
             <trans-unit id="realtime.adapter.loader.status.error">
                 <source>Connection error. Retrying…</source>
             </trans-unit>
+            <trans-unit id="ai.sidebar.loader.title">
+                <source>Initializing AI assistant…</source>
+            </trans-unit>
+            <trans-unit id="ai.sidebar.loader.description">
+                <source>Preparing AI features and connecting to services.</source>
+            </trans-unit>
 
             <trans-unit id="feature_form.submit">
                 <source>Save Changes</source>
@@ -701,11 +707,11 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="toolbar.item.ExportWord">
                 <source>Export Word</source>
             </trans-unit>
-            <trans-unit id="toolbar.item.aiAssistant">
-                <source>AI Assistant</source>
+            <trans-unit id="toolbar.item.toggleAi">
+                <source>Toggle AI</source>
             </trans-unit>
-            <trans-unit id="toolbar.item.aiCommands">
-                <source>AI Commands</source>
+            <trans-unit id="toolbar.item.aiQuickActions">
+                <source>AI Quick Actions</source>
             </trans-unit>
             <trans-unit id="toolbar.item.previousPage">
                 <source>Previous Page</source>

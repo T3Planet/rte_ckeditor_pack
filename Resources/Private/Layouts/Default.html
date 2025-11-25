@@ -5,18 +5,12 @@
     }" />
 <div class="module t3-ckeditor">
     <div class="module-docheader t3js-module-docheader flex-row align-items-end justify-content-between pb-0">
-        <div class="dashboard-tabs" role="tablist">
+        <div class="dashboard-tabs w-100" role="tablist">
             <div class="me-3">
                 <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />
             </div>
             <f:if condition="{availableModules}">
                 <f:for each="{availableModules}" as="module" iteration="i">
-                    <button
-                        class="dashboard-tab {f:if(condition: '{module.key} == {currentModule}', then: 'active')} {f:if(condition: '{tabKey} == wishlist', then: 'disabled')}"
-                        id="{module.key}-tab" data-bs-toggle="tab" data-bs-target="#{module.key}-tab-pane"
-                        type="button" role="tab" aria-controls="{module.key}-pane"
-                        aria-selected="{f:if(condition: '{module.key} == {currentModule}', then: 'true', else: 'false')}">{module.label}</button>
-
                     <f:if condition="{module.key} == 'plugins'">
                         <button class="dashboard-tab {f:if(condition: '{currentModule} == features', then: 'active')}" id="features-tab" data-bs-toggle="tab" 
                             data-bs-target="#features-tab-pane"
@@ -26,15 +20,36 @@
                     </f:if>
                 </f:for>
             </f:if>
-            <button class="dashboard-tab {f:if(condition: '{currentModule} == settings', then: 'active')}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
-                type="button" role="tab" aria-controls="settings-pane" aria-selected="{f:if(condition: '{currentModule} == settings', then: 'true', else: 'false')}">
-                <f:translate key="ckeditorKit.tab.settings" />
-            </button>
-        </div>
-        <div class="dashboard-configuration btn-group my-1 ms-auto">
-            <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" /></a>
-            <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" /></a>
-            <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm"><f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" /></a>
+            <f:if condition="{availableModules}">
+                <f:for each="{availableModules}" as="module" iteration="i">
+                    <button
+                        class="dashboard-tab {f:if(condition: '{module.key} == {currentModule}', then: 'active')} {f:if(condition: '{tabKey} == wishlist', then: 'disabled')}"
+                        id="{module.key}-tab" data-bs-toggle="tab" data-bs-target="#{module.key}-tab-pane"
+                        type="button" role="tab" aria-controls="{module.key}-pane"
+                        aria-selected="{f:if(condition: '{module.key} == {currentModule}', then: 'true', else: 'false')}">{module.label}</button>
+                </f:for>
+            </f:if>
+            <div class="dashboard-configuration btn-group ms-auto">
+                <button class="dashboard-tab btn btn-sm btn-notice {f:if(condition: '{currentModule} == settings', then: 'active')}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
+                    type="button" role="tab" aria-controls="settings-pane" aria-selected="{f:if(condition: '{currentModule} == settings', then: 'true', else: 'false')}">
+                    <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
+                    <f:translate key="ckeditorKit.tab.settings" />
+                </button>
+                <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank"
+                    class="btn btn-default btn-sm">
+                    <core:icon identifier="actions-document-share" size="small" alternativeMarkupIdentifier="inline" />
+                    <f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" />
+                </a>
+                <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank"
+                class="btn btn-default btn-sm">
+                    <core:icon identifier="actions-file-view" size="small" alternativeMarkupIdentifier="inline" />
+                    <f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" />
+                </a>
+                <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm">
+                    <core:icon identifier="actions-file-video" size="small" alternativeMarkupIdentifier="inline" />
+                    <f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" />
+                </a>
+            </div>
         </div>
     </div>
     <div class="module-body t3js-module-body">

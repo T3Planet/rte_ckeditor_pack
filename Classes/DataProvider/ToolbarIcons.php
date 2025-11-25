@@ -14,7 +14,6 @@ class ToolbarIcons
     private const ICONS = [
         'comment' => 'actions-comment',
         'commentsArchive' => 'actions-chat',
-        'aiCommands' => 'actions-terminal',
         'fullscreen' => 'actions-fullscreen',
         'insertImage' => 'rte_insertImage',
         'bold' => 'rte_bold',
@@ -50,7 +49,8 @@ class ToolbarIcons
         'ImportWord' => 'mimetypes-word',
         'ExportWord' => 'mimetypes-word',
         'ExportPdf' => 'actions-file-pdf',
-        'aiAssistant' => 'ai_assistant',
+        'toggleAi' => 'rte_toggleAi',
+        'aiQuickActions' => 'rte_aiQuickActions',
         'insertFootnote' => 'rte_footnotes',
         'footnotesStyle' => 'rte_footnotesStyle',
         'bookmark' => 'rte_bookmark',

@@ -38,8 +38,28 @@
 }
 
 .t3-ckeditor .dashboard-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:calc(-1 * var(--module-body-padding-y)) calc(-1 * var(--module-body-padding-x)) var(--module-body-padding-y);padding:var(--module-body-padding-y) var(--module-body-padding-x) 0;background:light-dark(#dadada, #262626);border-bottom:1px solid light-dark(#cdcdcd, #262626)}
-.t3-ckeditor .dashboard-tabs {display:flex;flex-wrap:wrap;align-items:center}
-.t3-ckeditor .dashboard-tab{padding:12px 15px;margin-right: 3px;}
+
+.t3-ckeditor .dashboard-tabs {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap: 4px;
+}
+
+.t3-ckeditor .dashboard-tab.active {
+    border-color:light-dark(var(--bs-blue), #262626)
+}
+
+.t3-ckeditor .dashboard-tab.btn-notice {
+    padding: 5px 8px;
+    border: 0;
+    -webkit-margin-after: 0;
+    box-shadow: none;
+}
+
+.t3-ckeditor .dashboard-tab.btn-notice:hover {
+    z-index: auto !important;
+}
 
 /*Dashboard*/
 
@@ -79,7 +99,7 @@
 }
 
 .card.card--active {
-    background-color: light-dark(#f3f7fd, #062541);
+    background-color: light-dark(#ebebeb, #062541);
 }
 
 .ckeditor .card.card--active .btn-default,

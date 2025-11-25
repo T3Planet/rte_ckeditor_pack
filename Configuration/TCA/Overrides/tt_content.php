@@ -38,8 +38,3 @@ call_user_func(
             = \T3Planet\RteCkeditorPack\Backend\Preview\RteImagePreviewRenderer::class;
     }
 );
-
-// Configure Default Permissions
-// $GLOBALS['TCA']['be_groups']['columns']['custom_options']['config']['default'] =
-// 'rte_editor:ImportWord,rte_editor:ExportWord,rte_editor:ExportPdf,rte_editor:Comments,rte_editor:CaseChange,rte_editor:Comments,rte_editor:FormatPainter,
-// rte_editor:Template,rte_editor:MultiLevelList,rte_editor:TrackChanges,rte_editor:TableOfContents,rte_editor:RevisionHistory,rte_editor:AIAssistant';

@@ -186,11 +186,6 @@ class RteModuleController extends ActionController
 
         try {
             if ($configKey) {
-                if ($configKey === 'AIAssistant') {
-                    if (isset($data['config']['ai']['openAI']['apiUrl']) && $data['config']['ai']['openAI']['apiUrl'] === '') {
-                        unset($data['config']['ai']['openAI']['apiUrl']);
-                    }
-                }
                 $fieldData = isset($data['config']) ? json_encode($data['config']) : '';
                 $record = $this->configurationRepository->findByConfigKey($configKey)->getFirst();
 

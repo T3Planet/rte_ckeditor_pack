@@ -19,26 +19,60 @@ class AIFeature implements FeatureInterface
         return [
             'ai' => [
                 (new Field())
-                    ->setName('openAI')
-                    ->setKey('openAI')
-                    ->setType(FieldType::ARRAY)  // Array type to indicate nested fields
-                    ->setValue([  // Nested fields as the value
+                    ->setName('Container Type')
+                    ->setKey('container')
+                    ->setType(FieldType::ARRAY)
+                    ->setValue([
                         (new Field())
-                            ->setName('Api Url')
-                            ->setKey('apiUrl')
-                            ->setType(FieldType::INPUT)
-                            ->setValue(''),
+                            ->setName('Type')
+                            ->setKey('type')
+                            ->setType(FieldType::SELECT)
+                            ->setValue([
+                                'Overlay' => 'overlay',
+                                'Sidebar' => 'sidebar'
+                            ]),
                         (new Field())
-                            ->setName('requestHeaders')
-                            ->setKey('requestHeaders')
+                            ->setName('Side')
+                            ->setKey('side')
+                            ->setType(FieldType::SELECT)
+                            ->setValue([
+                                'Left' => 'left',
+                                'Right' => 'right'
+                            ]),
+                    ]),
+                (new Field())
+                    ->setName('Chat Configuration')
+                    ->setKey('chat')
+                    ->setType(FieldType::ARRAY)
+                    ->setValue([
+                        (new Field())
+                            ->setName('Models')
+                            ->setKey('models')
                             ->setType(FieldType::ARRAY)
                             ->setValue([
                                 (new Field())
-                                    ->setName('Authorization')
-                                    ->setKey('Authorization')
-                                    ->setType(FieldType::INPUT)
-                                    ->setValue('')
-                                    ->setPlaceholder($this->translateLabel('field.placeholder.authorization')),
+                                    ->setName('Default Model ID')
+                                    ->setKey('defaultModelId')
+                                    ->setType(FieldType::SELECT)
+                                    ->setValue([
+                                        'Use Cloud Services Default' => '',
+                                        'GPT-5' => 'gpt-5',
+                                        'GPT-5 Mini' => 'gpt-5-mini',
+                                        'GPT-4.1' => 'gpt-4.1',
+                                        'GPT-4.1 Mini' => 'gpt-4.1-mini',
+                                        'Claude 4.5 Sonnet' => 'claude-4-5-sonnet',
+                                        'Claude 4.5 Haiku' => 'claude-4-5-haiku',
+                                    ]),
+                                (new Field())
+                                    ->setName('Displayed Models')
+                                    ->setKey('displayedModels')
+                                    ->setType(FieldType::VALUE_LIST)
+                                    ->setValue(['gpt', 'claude']),
+                                (new Field())
+                                    ->setName('Model Selector Always Visible')
+                                    ->setKey('modelSelectorAlwaysVisible')
+                                    ->setType(FieldType::BOOLEAN)
+                                    ->setValue(false),
                             ]),
                     ]),
             ],

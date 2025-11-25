@@ -6,6 +6,8 @@
 
 # TYPO3 Extension `rte_ckeditor_pack`
 
+![CKEditor Pack](Resources/Public/Images/Readme/readme.png)
+
 This extension brings the powerful CKEditor feature-set to TYPO3 projects. It bundles curated toolbar presets, backend modules for configuration, preview helpers, and specialized middleware that keeps TYPO3 content clean while enabling modern collaboration flows.
 
 It includes these features:

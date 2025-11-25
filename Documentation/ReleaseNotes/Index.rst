@@ -19,3 +19,4 @@ List of versions
 
   1.0.0/Index
   1.0.1/Index
+  1.1.0/Index

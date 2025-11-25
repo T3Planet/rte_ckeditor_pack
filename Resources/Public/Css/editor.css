@@ -474,7 +474,8 @@
 }
 
 .icon-ckeditor_module_logo {
-  max-width: 20px;
+  max-width: 23px;
+  margin-bottom: 3px;
 }
 
 .card .card-header .badge--premium {
@@ -504,4 +505,25 @@
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .ck-rt-loader__spinner { animation: none; border-top-color: rgba(0,0,0,.6); }
+}
+
+/* AI Configuration */
+.rte-ckeditor-ai-sidebar {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+}
+
+.ck-ai-sidebar-container {
+  position: sticky;
+  top: 0;
+}
+
+.ck.ck-tabs.ck-ai-tabs {
+  min-width: 400px;
+  max-width: 400px;
+  height: 100%;
+}
+.ck.ck-tabs.ck-ai-tabs.ck-hidden {
+  display: none;
 }
