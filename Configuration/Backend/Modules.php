@@ -13,7 +13,10 @@ return [
         'extensionName' => 'RteCkeditorPack',
         'inheritNavigationComponentFromMainModule' => false,
         'controllerActions' => [
-            RteModuleController::class => 'main',
+            RteModuleController::class => [
+                'main',
+                'settings'
+            ]
         ],
     ],
 ];

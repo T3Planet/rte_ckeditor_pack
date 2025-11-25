@@ -97,22 +97,15 @@ class RteModuleController extends ActionController
         $presetsData = $this->baseToolBar->findAvailablePresets();
         $corePresets = $presetsData['core'] ?? [];
         $customPresets = $presetsData['custom'] ?? [];
-        
-        // Merge for backward compatibility and easier access
         $availablePresets = array_merge($corePresets, $customPresets);
         
         // Get first preset key and extract UID
         $firstPresetKey = array_key_first($availablePresets);
         $activePresetUid = $availablePresets[$firstPresetKey]['uid'] ?? 0;
-        $activePresetKey = $firstPresetKey;
-        
         $attributes = $this->request->getParsedBody();
 
         if ($attributes) {
-            if (array_key_exists('licenseKey', $attributes)) {
-                $this->generalSettings($attributes);
-                $currentModule = 'settings';
-            } elseif ($attributes && array_key_exists('position', $attributes) || array_key_exists('modules', $attributes)) {
+            if ($attributes && array_key_exists('position', $attributes) || array_key_exists('modules', $attributes)) {
                 $this->updateModules($attributes);
                 $currentModule = isset($attributes['active_tab']) ? $attributes['active_tab'] : 'features';
                 if (isset($attributes['activePreset'])) {
@@ -123,13 +116,10 @@ class RteModuleController extends ActionController
                         $activePresetUid = (int)$presetValue;
                         foreach ($availablePresets as $key => $presetData) {
                             if (isset($presetData['uid']) && $presetData['uid'] === $activePresetUid) {
-                                $activePresetKey = $key;
                                 break;
                             }
                         }
                     } else {
-                        // It's a preset key, get the UID
-                        $activePresetKey = $presetValue;
                         $activePresetUid = $availablePresets[$presetValue]['uid'] ?? 0;
                     }
                 }
@@ -141,13 +131,10 @@ class RteModuleController extends ActionController
                     $activePresetUid = (int)$presetValue;
                     foreach ($availablePresets as $key => $presetData) {
                         if (isset($presetData['uid']) && $presetData['uid'] === $activePresetUid) {
-                            $activePresetKey = $key;
                             break;
                         }
                     }
                 } else {
-                    // It's a preset key, get the UID
-                    $activePresetKey = $presetValue;
                     $activePresetUid = $availablePresets[$presetValue]['uid'] ?? 0;
                 }
                 $currentModule = 'features';
@@ -155,14 +142,11 @@ class RteModuleController extends ActionController
             $this->cache->flush();
         }
 
-        $extSettings = ExtensionConfigurationUtility::getAll();
-        
-        // Group presets by is_custom for optgroups
         $groupedPresets = [
-            'yaml' => $corePresets, // YAML-based presets (TYPO3 Core)
-            'custom' => $customPresets, // Custom presets
+            'yaml' => $corePresets,
+            'custom' => $customPresets,
         ];
-
+        
         $this->moduleTemplate->assignMultiple([
             'availableModules' => $availableModules,
             'currentModule' => $currentModule,
@@ -170,12 +154,64 @@ class RteModuleController extends ActionController
             'availablePresets' => $availablePresets, // Keep for backward compatibility
             'groupedPresets' => $groupedPresets, // New grouped structure
             'activePreset' => $activePresetUid,
-            'extSettings' => $extSettings,
         ]);
         
         $this->preparePageRenderer();
         return $this->moduleTemplate->renderResponse('RteModule/Index');
     }
+
+    public function settingsAction(): ResponseInterface
+    {
+        $notification = [];
+        $validate = false;
+
+        $data = $this->request->getParsedBody();
+        // Validate tokenUrl if provided
+        if (isset($data['tokenUrl']) && !empty($data['tokenUrl']) && filter_var($data['tokenUrl'], FILTER_VALIDATE_URL)) {
+            $status = $this->validator->validateUrl($data['tokenUrl']);
+            $validate = true;
+            if (!$status) {
+                $notification['title'] = 'ckeditorKit.operation.error.invalid_token';
+                $notification['message'] = 'ckeditorKit.operation.error.invalid_token.message';
+                $notification['severity'] = 2;
+                $this->notification->addFlashNotification($notification);
+            }
+        }
+        
+        if($data && $validate){
+            try {
+                // Prepare configuration array - only include allowed fields from form data
+                $allowedFields = [
+                    'licenseKey', 'authType', 'environmentId', 'accessKey', 'apiKey',
+                    'organizationId', 'tokenUrl', 'webSocketUrl', 'apiBaseUrl'
+                ];
+                $configuration = array_intersect_key($data, array_flip($allowedFields));
+                $success = ExtensionConfigurationUtility::set($configuration);
+                if ($success) {
+                    $this->cache->flush();
+                    $notification['title'] = 'ckeditorKit.operation.success';
+                    $notification['message'] = 'ckeditorKit.general_settings.success.message';
+                    $notification['severity'] = 0;
+                    $this->notification->addFlashNotification($notification);
+                } else {
+                    throw new \Exception('Failed to save extension configuration');
+                }
+            } catch (\Exception $e) {
+                $notification['title'] = 'ckeditorKit.operation.error';
+                $notification['message'] = 'ckeditorKit.general_settings.error.message';
+                $notification['severity'] = 2;
+                $this->notification->addFlashNotification($notification);
+            }
+        }
+
+        $extSettings = ExtensionConfigurationUtility::getAll();
+        $this->moduleTemplate->assignMultiple([
+            'extSettings' => $extSettings,
+        ]);
+        $this->preparePageRenderer();
+        return $this->moduleTemplate->renderResponse('RteModule/ExtSettings');
+    }
+
 
     public function getCkeditorSettings(ServerRequestInterface $request): ResponseInterface
     {
@@ -497,53 +533,6 @@ class RteModuleController extends ActionController
         }
 
         return false;
-    }
-
-    private function generalSettings(array $data): bool
-    {
-        $notification = [];
-        
-        // Validate tokenUrl if provided
-        if (isset($data['tokenUrl']) && !empty($data['tokenUrl'])) {
-            $status = $this->validator->validateUrl($data['tokenUrl']);
-            if (!$status) {
-                $notification['title'] = 'ckeditorKit.operation.error.invalid_token';
-                $notification['message'] = 'ckeditorKit.operation.error.invalid_token.message';
-                $notification['severity'] = 2;
-                $this->notification->addFlashNotification($notification);
-                return false;
-            }
-        }
-
-        try {
-            // Prepare configuration array - only include allowed fields from form data
-            $allowedFields = [
-                'licenseKey', 'authType', 'environmentId', 'accessKey', 'apiKey',
-                'organizationId', 'tokenUrl', 'webSocketUrl', 'apiBaseUrl'
-            ];
-            
-            $configuration = array_intersect_key($data, array_flip($allowedFields));
-            
-            // Save configuration using ExtensionConfigurationUtility
-            $success = ExtensionConfigurationUtility::set($configuration);
-            
-            if ($success) {
-                $this->cache->flush();
-                $notification['title'] = 'ckeditorKit.operation.success';
-                $notification['message'] = 'ckeditorKit.general_settings.success.message';
-                $notification['severity'] = 0;
-                $this->notification->addFlashNotification($notification);
-                return true;
-            } else {
-                throw new \Exception('Failed to save extension configuration');
-            }
-        } catch (\Exception $e) {
-            $notification['title'] = 'ckeditorKit.operation.error';
-            $notification['message'] = 'ckeditorKit.general_settings.error.message';
-            $notification['severity'] = 2;
-            $this->notification->addFlashNotification($notification);
-            return false;
-        }
     }
 
    
