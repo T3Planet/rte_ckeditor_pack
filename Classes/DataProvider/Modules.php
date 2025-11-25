@@ -706,7 +706,7 @@ class Modules
                 'details' => $cardDetails->getDetailsByKey('TextPartLanguage'),
                 'configuration' => [
                     'default' => true,
-                    'config_key' => 'TextPartLanguage',
+                    'config_key' => 'Language',
                     'module' => [
                         [
                             'library' => '@ckeditor/ckeditor5-language',

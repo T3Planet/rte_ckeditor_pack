@@ -67,10 +67,12 @@
             </div>
         </f:for>
     </f:if>
-
-    <div class="tab-pane fade {f:if(condition: '{currentModule} == settings', then: 'show active')}" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab">
-        <f:render partial="Dashboard/GeneralSettings" arguments="{_all}" />
-    </div>
+    <f:comment>
+        <!-- General Settings (not used yet) -->
+        <div class="tab-pane fade {f:if(condition: '{currentModule} == settings', then: 'show active')}" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab">
+            <f:render partial="Dashboard/GeneralSettings" arguments="{_all}" />
+        </div>
+    </f:comment>
 
     <div class="tab-pane fade {f:if(condition: '{currentModule} == features', then: 'show active')}" id="features-tab-pane" role="tabpanel" aria-labelledby="features-tab">
        <f:render partial="Dashboard/FeatureConfig" arguments="{_all}" />
