@@ -6,11 +6,6 @@
 Helpful Links
 ==============
 
-.. figure:: Images/helpfullinks.png
-   :width: 400px
-   :height: 240px
-   :alt: Basic Configuration
-
 - Introduction CKEditor Pack: https://t3planet.de/ckeditor
 - Interactive Demo Guide: https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr
 - Slack Community: https://typo3.slack.com/archives/C09UKJY15DF

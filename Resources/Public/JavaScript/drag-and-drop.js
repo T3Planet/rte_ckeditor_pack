@@ -48,7 +48,8 @@ class DragAndDropState {
       disableFeatures: 'input[name="disabled"]',
       toolbarPosition: 'input[name="position"]',
       toolbarPositionGrid5: 'input[name="positionGrid5"]', // New field for grid-5 positions
-      loaderDiv: "#rte-ckeditor__loader"
+      loaderDiv: "#rte-ckeditor__loader",
+      searchInput: ".toolBarItems-search"
     };
 
     Object.entries(selectors).forEach(([key, selector]) => {
@@ -520,6 +521,120 @@ class UIEventHandlers {
   }
 }
 
+// Search manager for filtering items across all grids
+class SearchManager {
+  constructor(state) {
+    this.state = state;
+    this.searchDebounceTimer = null;
+    this.initializeSearch();
+  }
+
+  initializeSearch() {
+    if (!this.state.elements.searchInput) return;
+
+    this.state.elements.searchInput.addEventListener('input', (event) => {
+      this.handleSearchInput(event.target.value);
+    });
+
+    // Handle clear button if exists
+    this.state.elements.searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        this.state.elements.searchInput.value = '';
+        this.handleSearchInput('');
+      }
+    });
+  }
+
+  handleSearchInput(searchTerm) {
+    // Debounce search to avoid excessive filtering
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
+    }
+
+    this.searchDebounceTimer = setTimeout(() => {
+      this.filterItems(searchTerm.trim());
+    }, 100); // 300ms debounce delay
+  }
+
+  filterItems(searchTerm) {
+    // Get all drag items across all grids
+    const allItems = document.querySelectorAll('.drag-item');
+    
+    if (!searchTerm || searchTerm === '') {
+      // Remove all highlights when search is empty
+      allItems.forEach(item => this.removeHighlight(item));
+      return;
+    }
+
+    const searchLower = searchTerm.toLowerCase();
+    
+    allItems.forEach(item => {
+      const searchableText = this.getSearchableText(item);
+      const matches = searchableText.toLowerCase().includes(searchLower);
+      
+      if (matches) {
+        this.highlightItem(item);
+      } else {
+        this.removeHighlight(item);
+      }
+    });
+  }
+
+  getSearchableText(item) {
+    // Get text from multiple sources for better search coverage
+    const toggleBtn = item.querySelector('.toggle-btn');
+    if (!toggleBtn) return '';
+
+    // Priority 1: data-bs-title attribute (title)
+    let searchText = toggleBtn.getAttribute('data-bs-title') || '';
+    
+    // Priority 2: toggle-label text content
+    const toggleLabel = item.querySelector('.toggle-label');
+    if (toggleLabel) {
+      searchText += ' ' + toggleLabel.textContent.trim();
+    }
+    
+    // Priority 3: data-items attribute (toolbar items)
+    const dataItems = toggleBtn.getAttribute('data-items') || '';
+    if (dataItems && dataItems !== '|' && dataItems !== '-') {
+      searchText += ' ' + dataItems;
+    }
+    
+    // Priority 4: button title attribute
+    const titleAttr = toggleBtn.getAttribute('title') || '';
+    if (titleAttr) {
+      searchText += ' ' + titleAttr;
+    }
+
+    return searchText.trim();
+  }
+
+  highlightItem(item) {
+    // Add highlight class to matching items
+    item.classList.add('search-highlight');
+    const toggleBtn = item.querySelector('.toggle-btn');
+    if (toggleBtn) {
+      toggleBtn.classList.add('search-highlight-btn');
+    }
+  }
+
+  removeHighlight(item) {
+    // Remove highlight class from items
+    item.classList.remove('search-highlight');
+    const toggleBtn = item.querySelector('.toggle-btn');
+    if (toggleBtn) {
+      toggleBtn.classList.remove('search-highlight-btn');
+    }
+  }
+
+  clearSearch() {
+    if (this.state.elements.searchInput) {
+      this.state.elements.searchInput.value = '';
+      this.filterItems('');
+    }
+  }
+}
+
 // Utility functions
 function showNotification(message, type = "info") {
   const notificationType = type === "error" ? "error" :
@@ -533,12 +648,14 @@ function initDragAndDropApp() {
   const eventHandlers = new EventHandlers(state);
   const sortableManager = new SortableManager(state, eventHandlers);
   const uiEventHandlers = new UIEventHandlers(state);
+  const searchManager = new SearchManager(state);
 
   window.DragAndDropApp = {
     state,
     eventHandlers,
     sortableManager,
     uiEventHandlers,
+    searchManager,
     showNotification,
     deleteSeparatorItem: (item) => uiEventHandlers.deleteSeparatorItem(item)
   };

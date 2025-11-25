@@ -188,7 +188,6 @@ export default class Emoji extends Plugin {
 
   _updateGrid(currentGroupName, gridView,characterContainString = '') {
     gridView.tiles.clear();
-    console.log(characterContainString);
     if (characterContainString) {
       currentGroupName = 'All';
     }
@@ -229,7 +228,6 @@ export default class Emoji extends Plugin {
 
     // return search results.
     searchView.on('keyup', this.debounce((searchObj) => {
-      console.log(searchObj.source.element.value, gridView, 'test');
       if (searchObj.source.element.value) {
         this._updateGrid('All', gridView, searchObj.source.element.value);
       }else {
@@ -239,7 +237,6 @@ export default class Emoji extends Plugin {
 
     // Update the grid of special characters when a user changed the character group.
     navigationView.on('execute', () => {
-      console.log(navigationView, gridView, 'test');
       this._updateGrid(navigationView.currentGroupName, gridView);
     });
 

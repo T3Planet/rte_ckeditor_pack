@@ -25,5 +25,5 @@ Insert images and videos by browsing your files or entering their URL directly i
 
    - `View Interactive Guide <https://app.supademo.com/demo/cmi2vdqp81n5lqnb9xe9dxh92?step=13>`_
 
-.. figure:: Images/media.png
+.. figure:: images/media.png
    :alt: Basic Configuration

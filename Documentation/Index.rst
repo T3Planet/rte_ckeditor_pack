@@ -13,7 +13,7 @@ CKEditor Pack
    t3planet/rte-ckeditor-pack
 
 :Version:
-   main
+   stable
 
 :Language:
    en

@@ -5,11 +5,6 @@
 Support
 ========
 
-.. figure:: Images/suppport.png
-   :width: 500px
-   :height: 240px
-   :alt: Basic Configuration
-
 Have any questions or need help with CKEditor Pack?  
 Our dedicated TYPO3 experts are here to support you every step of the way. Whether you’re facing technical issues, need guidance, or want to request a custom feature, we’ve got you covered.
 

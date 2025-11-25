@@ -273,7 +273,7 @@
                 <source>Save Changes</source>
             </trans-unit>
             <trans-unit id="features.settings.group">
-                <source>Create Groups</source>
+                <source>Toolbar Groups</source>
             </trans-unit>
             <trans-unit id="features.settings.dragDrop">
                 <source>Drag N Drop Features</source>
@@ -493,16 +493,37 @@
             </trans-unit>
 
             <trans-unit id="feature_form.submit">
-                <source>Submit</source>
+                <source>Save Changes</source>
+            </trans-unit>
+            <trans-unit id="feature_form.divider">
+                <source>Divider (|)</source>
+            </trans-unit>
+            <trans-unit id="feature_form.break">
+                <source>Break (-)</source>
             </trans-unit>
             <trans-unit id="feature_form.create">
                 <source>Create Preset</source>
+            </trans-unit>
+            <trans-unit id="create_group.heading">
+                <source>Grouping toolbar items in dropdowns (nested toolbars)</source>
+            </trans-unit>
+            <trans-unit id="create_group.desc">
+                <source>To save space in your toolbar or arrange the features thematically, you can group several items into a dropdown.</source>
+            </trans-unit>
+            <trans-unit id="create_group.desc2">
+                <source>It will create a "Basic styles" dropdown with a three vertical dots icon (</source>
+            </trans-unit>
+            <trans-unit id="create_group.desc3">
+                <source>) containing the additional basic text styles buttons set.</source>
             </trans-unit>
             <trans-unit id="feature.enable">
                 <source>Enable</source>
             </trans-unit>
             <trans-unit id="features.presets">
                 <source>Available Presets</source>
+            </trans-unit>
+            <trans-unit id="features.search">
+                <source>Search Toolbar Item</source>
             </trans-unit>
 
             <trans-unit id="collapse.featureConfiguration">
@@ -837,10 +858,10 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>Manage Presets</source>
             </trans-unit>
             <trans-unit id="form.preset_name">
-                <source>Name</source>
+                <source>New Preset Name</source>
             </trans-unit>
             <trans-unit id="form.preset_name.description">
-                <source>It must be unique,do not use spaces</source>
+                <source>Enter a unique identifier without any spaces.</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.presert.success.message">
                 <source>New Preset is inserted successfully</source>
@@ -910,7 +931,7 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>Cancel</source>
             </trans-unit>
             <trans-unit id="t3editor.form.submit">
-                <source>Submit</source>
+                <source>Save Changes</source>
             </trans-unit>
             <trans-unit id="t3editor.form.docs">
                 <source>Docs</source>

@@ -6,7 +6,7 @@
 Toolbar & Presets
 ==================
 
-.. figure:: Images/toolbar.png
+.. figure:: images/toolbar.png
    :alt: Basic Configuration
 
 You can easily create your own RTE presets or edit your preset using the drag-n-drop UI toolbar

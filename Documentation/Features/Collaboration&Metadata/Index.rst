@@ -7,7 +7,7 @@
 Collaboration & Metadata
 =========================
 
-.. figure:: Images/mention.png
+.. figure:: images/mention.png
    :alt: Basic Configuration
 
 Mentions

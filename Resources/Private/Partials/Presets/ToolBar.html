@@ -27,10 +27,16 @@
                 <div class="separator-buttons">
                     <div class="position-relative grid-3 drag-grid">
                         <div class="drag-item drag-separator-item">
-                            <button title="Divider (|)" class="btn border btn-bg-white" data-items="|" data-id="PipeLine"><core:icon identifier="actions-viewmode-compare" size="small" alternativeMarkupIdentifier="inline" /></button>
+                            <button title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:feature_form.divider')}" class="btn border btn-bg-white" data-items="|" data-id="PipeLine" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-content="{item.items}" data-bs-title="{f:if(condition: '{item.label}' , then: '{item.label}', else:'{item.toolBar}')}">
+                                <core:icon identifier="actions-viewmode-compare" size="small" alternativeMarkupIdentifier="inline" />
+                                <span class="label-show toggle-label"><f:translate key="feature_form.divider" /></span>
+                            </button>
                         </div>
                         <div class="drag-item drag-separator-item">
-                            <button title="Break (-)" class="btn border btn-bg-white" data-items="-" data-id="NewLine"><core:icon identifier="actions-arrow-right-down-alt" size="small" alternativeMarkupIdentifier="inline" /></button>
+                            <button title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:feature_form.break')}" class="btn border btn-bg-white" data-items="-" data-id="NewLine" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-content="{item.items}" data-bs-title="{f:if(condition: '{item.label}' , then: '{item.label}', else:'{item.toolBar}')}">
+                                <core:icon identifier="actions-arrow-right-down-alt" size="small" alternativeMarkupIdentifier="inline" />
+                                <span class="label-show toggle-label"><f:translate key="feature_form.break" /></span>
+                            </button>
                         </div>
                     </div>
                 </div>

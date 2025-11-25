@@ -67,8 +67,8 @@
 }
 
 .dashboard-tab.active {
-    background: var(--bs-blue);
-    color: #fff;
+    background: #f7f7f7;
+    color: #000;
 }
 
 .dashboard-tab {
@@ -78,8 +78,8 @@
 .dashboard-tab.active:focus,
 .dashboard-tab.active:hover {
     text-decoration: none;
-    background: var(--bs-blue);
-    color: #f2f2f2;
+    background: #f7f7f7;
+    color: #000;
 }
 
 .card.card--active {
