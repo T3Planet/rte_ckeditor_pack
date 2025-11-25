@@ -78,4 +78,9 @@ class AlignmentFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [];
+    }
 }

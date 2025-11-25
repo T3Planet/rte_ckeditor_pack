@@ -100,7 +100,11 @@ class YamlLoadrUtility
      */
     public function loadYamlConfiguration(string $presetKey): array
     {
-        return $this->loadConfigurationFromPreset($presetKey);
+        $configuration =  $this->loadConfigurationFromPreset($presetKey);
+        return GeneralUtility::makeInstance(
+            CKEditor5Migrator::class,
+            $configuration
+        )->get();
     }
 
     /**

@@ -71,5 +71,29 @@ class PresetRepository extends Repository
         $query->setLimit(1);
         return $query->execute()->getFirst();
     }
+
+    /**
+     * Find preset by preset key
+     *
+     * @param string $presetKey
+     * @return Preset|null
+     */
+    public function findByUsage(string $presetKey): ?Preset
+    {
+        $query = $this->createQuery();
+        
+        $querySettings = $query->getQuerySettings();
+        $querySettings->setIgnoreEnableFields(false);
+        $query->setQuerySettings($querySettings);
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('presetKey', $presetKey),
+                $query->equals('usageSource', 0)
+            )
+        );
+        $query->setLimit(1);
+        return $query->execute()->getFirst();
+    }
 }
 

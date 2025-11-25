@@ -62,12 +62,6 @@ services:
     arguments:
       - '@TYPO3\CMS\Core\Database\ConnectionPool'
 
-
-  T3Planet\RteCkeditorPack\EventListener\InstallationListener:
-    tags:
-      - name: event.listener
-        identifier: 'rte_configuration_activated'
-
   T3Planet\RteCkeditorPack\Domain\Repository\RevisionHistoryRepository:
     public: true
     arguments:

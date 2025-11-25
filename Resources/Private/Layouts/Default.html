@@ -14,7 +14,7 @@
                 <div class="d-flex align-items-center gap-2" style="min-width: 250px;">
                     <select name="activePresets" id="rtePresets" class="form-select form-control form-select-sm">
                         <f:if condition="{groupedPresets.yaml}">
-                            <optgroup label="Existing Presets">
+                            <optgroup label="Theme Presets">
                                 <f:for each="{groupedPresets.yaml}" as="presetData" key="preset">
                                     <f:variable name="presetValue"
                                         value="{f:if(condition: '{presetData.uid} > 0', then: '{presetData.uid}', else: '{preset}')}" />
@@ -27,7 +27,7 @@
                             </optgroup>
                         </f:if>
                         <f:if condition="{groupedPresets.custom}">
-                            <optgroup label="CKEditor Pack Presets">
+                            <optgroup label="CKEditor Presets">
                                 <f:for each="{groupedPresets.custom}" as="presetData" key="preset">
                                     <option value="{presetData.uid}"
                                         {f:if(condition: '{presetData.uid} == {activePreset}' , then: 'selected' )}>
@@ -47,15 +47,22 @@
             </f:if>
         </form>
         <div class="dashboard-configuration btn-group my-1 ms-auto">
+            <button class="btn btn-sm btn-notice" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane" type="button" role="tab" aria-controls="settings-pane" aria-selected="{f:if(condition: '{currentModule} == settings', then: 'true', else: 'false')}">
+                <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
+                <f:translate key="ckeditorKit.tab.settings" />
+            </button>
             <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank"
                 class="btn btn-default btn-sm">
+                <core:icon identifier="actions-document-share" size="small" alternativeMarkupIdentifier="inline" />
                 <f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" />
             </a>
             <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank"
-                class="btn btn-default btn-sm">
+            class="btn btn-default btn-sm">
+                <core:icon identifier="actions-file-view" size="small" alternativeMarkupIdentifier="inline" />
                 <f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" />
             </a>
             <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm">
+                <core:icon identifier="actions-file-video" size="small" alternativeMarkupIdentifier="inline" />
                 <f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" />
             </a>
         </div>
@@ -80,16 +87,6 @@
                     </f:if>
                 </f:for>
             </f:if>
-
-            <f:comment>
-                <!-- General Settings (not used yet) -->
-                <button class="dashboard-tab {f:if(condition: '{currentModule} == settings', then: 'active')}"
-                    id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane" type="button" role="tab"
-                    aria-controls="settings-pane"
-                    aria-selected="{f:if(condition: '{currentModule} == settings', then: 'true', else: 'false')}">
-                    <f:translate key="ckeditorKit.tab.settings" />
-                </button>
-            </f:comment>
         </div>
         <div class="tab-content form-section" id="dashboardTab">
             <f:render section="main" arguments="{_all}" />

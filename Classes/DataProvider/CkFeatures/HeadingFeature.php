@@ -146,4 +146,9 @@ class HeadingFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [];
+    }
 }

@@ -9,7 +9,6 @@
 
 namespace T3Planet\RteCkeditorPack\ViewHelpers;
 
-use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

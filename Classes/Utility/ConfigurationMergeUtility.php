@@ -58,13 +58,19 @@ class ConfigurationMergeUtility
     {
         $unique = [];
         $seen = [];
-
+        
         foreach ($items as $item) {
             if (isset($item['model'])) {
                 if (in_array($item['model'], $seen, true)) {
                     continue; // skip duplicate
                 }
                 $seen[] = $item['model'];
+            }
+            if (isset($item['languageCode'])) {
+                if (in_array($item['languageCode'], $seen, true)) {
+                    continue; // skip duplicate
+                }
+                $seen[] = $item['languageCode'];
             }
             $unique[] = $item;
         }

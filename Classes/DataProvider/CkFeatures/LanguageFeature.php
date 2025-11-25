@@ -27,20 +27,20 @@ class LanguageFeature implements FeatureInterface
                                 ->setName('Title')
                                 ->setKey('title')
                                 ->setType(FieldType::INPUT)
-                                ->setValue('Hindi'),
+                                ->setValue('English'),
 
                             (new Field())
                                 ->setName('Language Code')
                                 ->setKey('languageCode')
                                 ->setType(FieldType::INPUT)
-                                ->setValue('hi'),
+                                ->setValue('en'),
                         ],
                         [
                             (new Field())
                                 ->setName('Title')
                                 ->setKey('title')
                                 ->setType(FieldType::INPUT)
-                                ->setValue('Germany'),
+                                ->setValue('German'),
 
                             (new Field())
                                 ->setName('Language Code')

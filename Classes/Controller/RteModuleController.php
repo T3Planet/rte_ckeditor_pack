@@ -12,12 +12,10 @@ use T3Planet\RteCkeditorPack\Domain\Model\Configuration;
 use T3Planet\RteCkeditorPack\Domain\Model\Feature;
 use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
-use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
-use T3Planet\RteCkeditorPack\DataProvider\Configuration\FieldType;
 use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
 use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
 use T3Planet\RteCkeditorPack\Utility\FlashUtility;
@@ -41,8 +39,6 @@ class RteModuleController extends ActionController
 
     protected FlashUtility $notification;
 
-    protected ConfigurationRepository $configurationRepository;
-
     protected FeatureRepository $featureRepository;
 
     protected PresetRepository $presetRepository;
@@ -63,13 +59,11 @@ class RteModuleController extends ActionController
         protected readonly ModuleTemplateFactory $moduleTemplateFactory,
         protected readonly PageRenderer $pageRenderer,
         protected readonly BaseToolBar $baseToolBar,
-        ConfigurationRepository $configurationRepository,
         FeatureRepository $featureRepository,
         PresetRepository $presetRepository,
         PersistenceManager $persistenceManager,
         ToolbarGroupsRepository $groupsRepository,
     ) {
-        $this->configurationRepository = $configurationRepository;
         $this->featureRepository = $featureRepository;
         $this->presetRepository = $presetRepository;
         $this->persistenceManager = $persistenceManager;
@@ -772,22 +766,6 @@ class RteModuleController extends ActionController
         }
     }
 
-    protected function initializeModuleTemplate(ServerRequestInterface $request): ModuleTemplate
-    {
-        return $this->moduleTemplateFactory->create($request);
-    }
-
-    protected function preparePageRenderer(): void
-    {
-        $this->pageRenderer->addCssFile('EXT:dashboard/Resources/Public/Css/dashboard.css');
-        $this->pageRenderer->addCssFile('EXT:backend/Resources/Public/Css/backend.css');
-        $this->pageRenderer->addCssFile('EXT:rte_ckeditor_pack/Resources/Public/Css/dashboard.css');
-        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/global-button.js');
-        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/wizard-manipulation.js');
-        $this->pageRenderer->loadJavaScriptModule('@typo3/backend/multi-record-selection.js');
-        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/module-functionality.js');
-        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/user-adapter.js');
-    }
 
     /**
      * Sync preset toolbar items from YAML configuration
@@ -824,6 +802,7 @@ class RteModuleController extends ActionController
                 $features = $this->featureRepository->findByPresetUid($presetUid);
                 
                 foreach ($features as $feature) {
+                    $yamlFeatureConfig = [];
                     $configKey = $feature->getConfigKey();
                     $moduleConfiguration = $feature->getFields() ? json_decode($feature->getFields(), true) : [];
                     if (empty($moduleConfiguration)) {
@@ -833,8 +812,8 @@ class RteModuleController extends ActionController
                     if(!array_key_exists(strtolower($configKey),$yamlConfiguration)){
                         continue;
                     }
+                   
                     $yamlFeatureConfig[strtolower($configKey)] = $yamlConfiguration[strtolower($configKey)];
-
                     $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
                     $syncData = $mergeUtility->mergeRecursiveDistinct($yamlFeatureConfig, $moduleConfiguration);
                     
@@ -869,7 +848,70 @@ class RteModuleController extends ActionController
         ]);
     }
 
+    /**
+     * Reset preset toolbar items from YAML configuration
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function resetPreset(ServerRequestInterface $request): ResponseInterface
+    {
+        $data = $request->getQueryParams();
+        $presetUid = isset($data['presetUid']) && is_numeric($data['presetUid']) ? (int)$data['presetUid'] : 0;
+        $notification = [];
+        
+        try {
+            if ($presetUid > 0) {
+                $preset = $this->presetRepository->findByUid($presetUid);
 
+                if (!$preset) {
+                    throw new \Exception('Preset not found');
+                }
+                $preset->setToolbarItems('');
+                $this->presetRepository->update($preset);
+                $features = $this->featureRepository->findByPresetUid($presetUid);
+                foreach ($features as $feature) {
+                    $feature->setEnable(false);
+                    $this->featureRepository->update($feature);
+                }
+                $this->persistenceManager->persistAll();
+                $this->cache->flush();
+                $notification[] = [
+                    'title' => 'ckeditorKit.operation.success',
+                    'message' => 'ckeditorKit.preset.sync.success.message',
+                    'severity' => 0,
+                ];
+            } else {
+                throw new \Exception('Invalid preset UID');
+            }
+        } catch (\Exception $e) {
+            $notification[] = [
+                'title' => 'ckeditorKit.operation.error',
+                'message' => 'ckeditorKit.preset.sync.error.message',
+                'severity' => 2,
+            ];
+        }
 
+        return new JsonResponse([
+            'notifications' => $notification,
+        ]);
+    }
+
+    protected function initializeModuleTemplate(ServerRequestInterface $request): ModuleTemplate
+    {
+        return $this->moduleTemplateFactory->create($request);
+    }
+
+    protected function preparePageRenderer(): void
+    {
+        $this->pageRenderer->addCssFile('EXT:dashboard/Resources/Public/Css/dashboard.css');
+        $this->pageRenderer->addCssFile('EXT:backend/Resources/Public/Css/backend.css');
+        $this->pageRenderer->addCssFile('EXT:rte_ckeditor_pack/Resources/Public/Css/dashboard.css');
+        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/global-button.js');
+        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/wizard-manipulation.js');
+        $this->pageRenderer->loadJavaScriptModule('@typo3/backend/multi-record-selection.js');
+        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/module-functionality.js');
+        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/user-adapter.js');
+    }
   
 }

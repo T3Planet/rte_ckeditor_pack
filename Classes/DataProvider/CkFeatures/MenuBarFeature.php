@@ -26,4 +26,9 @@ class MenuBarFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [];
+    }
 }

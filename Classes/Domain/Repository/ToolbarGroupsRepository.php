@@ -51,23 +51,6 @@ class ToolbarGroupsRepository extends Repository
 
     }
 
-    public function fetchToolBarItems(string $activePreset): array
-    {
-        $queryBuilder = $this->getQueryBuilder(self::TOOLBAR_TABLE_NAME);
-        $existingRecord = $queryBuilder
-                ->select('*')
-                ->from(self::TOOLBAR_TABLE_NAME)
-                ->where($queryBuilder->expr()->eq('preset', $queryBuilder->createNamedParameter($activePreset)))
-                ->setMaxResults(1)
-                ->executeQuery()
-                ->fetchAssociative();
-
-        if ($existingRecord && $existingRecord['items']) {
-            return explode(',', $existingRecord['items']);
-        }
-        return [];
-    }
-
     public function findPresets(array $toolBarItems = [], string $fields = '*'): array
     {
         $queryBuilder = $this->getQueryBuilder(self::TOOLBAR_TABLE_NAME);

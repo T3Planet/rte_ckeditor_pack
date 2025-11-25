@@ -83,4 +83,9 @@ class StyleFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [];
+    }
 }

@@ -37,7 +37,7 @@
                 <source>Presets</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.settings">
-                <source>Premium Settings</source>
+                <source>Settings</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.btn_title">
                 <source>Configuration</source>

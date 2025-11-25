@@ -13,15 +13,6 @@ CREATE TABLE tx_rteckeditorpack_domain_model_comment
     PRIMARY KEY (uid),
 );
 
-
-CREATE TABLE tx_rteckeditorpack_domain_model_configuration (
-	enable smallint(1) unsigned NOT NULL DEFAULT '0',
-	config_key varchar(255) NOT NULL UNIQUE DEFAULT '',
-    fields text NOT NULL DEFAULT '',
-    preset text,
-    UNIQUE KEY configuration_key (config_key)
-);
-
 CREATE TABLE tx_rteckeditorpack_domain_model_suggestions
 (
     uid int(11) NOT NULL auto_increment,

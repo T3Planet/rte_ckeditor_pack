@@ -41,6 +41,7 @@ use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TemplateFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TransformationsFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WordCountFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WProofreaderFeature;
+use T3Planet\RteCkeditorPack\DataProvider\Configuration\SettingsConfiguration;
 use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -48,11 +49,9 @@ class Modules
 {
     protected array $ckeditorModules = [];
 
-    protected ConfigurationRepository $configurationRepository;
 
     public function __construct()
     {
-        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
 
         // Create a ModuleDetails object
         $cardDetails = new CardData();
@@ -96,45 +95,34 @@ class Modules
                     'config_key' => 'ExportWord',
                     'default' => false,
                     'is_premium' => true,
-                    'module' => $this->getModulesFromFeature(ExportWordFeature::class),
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-cloud-services',
+                            'exports' => 'CloudServices',
+                        ],
+                        [
+                            'library' => '@ckeditor/ckeditor5-export-word',
+                            'exports' => 'ExportWord',
+                        ],
+                    ],
                     'toolBarItems' => 'ExportWord',
                 ],
                 'fields' => $this->getFieldsFromFeature(ExportWordFeature::class),
             ],
             [
                 'tab' => Tabs::STANDALONE,
-                'details' => $cardDetails->getDetailsByKey('ToggleAi'),
+                'details' => $cardDetails->getDetailsByKey('AIAssistant'),
                 'configuration' => [
                     'default' => false,
                     'is_premium' => true,
-                    'config_key' => 'ToggleAi',
-                    'module' => $this->getModulesFromFeature(AIFeature::class),
-                    'toolBarItems' => 'toggleAi,aiQuickActions',
-                    'default_config' => [
-                        'ai' => [
-                            'container' => [
-                                'type' => 'overlay',
-                                'side' => 'right'
-                            ],
-                            'chat' => [
-                                'models' => [
-                                    'model' => 'gpt-4o-mini',
-                                    'modelSelectorAlwaysVisible' => false
-                                ],
-                                'context' => [
-                                    'document' => [
-                                        'enabled' => true
-                                    ],
-                                    'urls' => [
-                                        'enabled' => true
-                                    ],
-                                    'files' => [
-                                        'enabled' => true
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
+                    'config_key' => 'AIAssistant',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-ai',
+                            'exports' => 'AIAssistant,OpenAITextAdapter',
+                        ],
+                    ],
+                    'toolBarItems' => 'aiAssistant,aiCommands',
                 ],
                 'fields' => $this->getFieldsFromFeature(AIFeature::class),
             ],
@@ -239,19 +227,8 @@ class Modules
                 'configuration' => [
                     'default' => false,
                     'config_key' => 'RealTimeCollaboration',
-                    'module' => [
-                        [
-                            'library' => '@t3planet/RteCkeditorPack/realtime-adapter.js',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-cloud-services',
-                            'exports' => 'CloudServices',
-                        ],
-                        [
-                            'library' => '@ckeditor/ckeditor5-real-time-collaboration',
-                            'exports' => 'RealTimeCollaborativeEditing,PresenceList',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(CollaborationFeature::class),
+                   
                 ],
                 'fields' => $this->getFieldsFromFeature(CollaborationFeature::class),
             ],
@@ -463,15 +440,7 @@ class Modules
                 'configuration' => [
                     'config_key' => 'Images',
                     'default' => true,
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-image',
-                            'exports' => 'Image, ImageUpload, ImageToolbar, ImageCaption, ImageStyle',
-                        ],
-                        [
-                            'library' => '@t3planet/RteCkeditorPack/typo3-image',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(ImageFeature::class),
                     'toolBarItems' => 'insertImage',
                 ],
                 'fields' => $this->getFieldsFromFeature(ImageFeature::class),
@@ -481,12 +450,7 @@ class Modules
                 'details' => $cardDetails->getDetailsByKey('BalloonToolbar'),
                 'configuration' => [
                     'config_key' => 'BalloonToolbar',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-ui',
-                            'exports' => 'BalloonToolbar',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(BalloonToolbarFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(BalloonToolbarFeature::class),
             ],
@@ -505,10 +469,8 @@ class Modules
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('BlockToolbar'),
                 'configuration' => [
-                    'default' => true,
-                    'config_key' => 'Font',
-                    'module' => $this->getModulesFromFeature(FontFeature::class),
-                    'toolBarItems' => 'fontFamily,fontSize,fontColor,fontBackgroundColor',
+                    'config_key' => 'BlockToolbar',
+                    'module' => $this->getModulesFromFeature(BlockToolbarFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(BlockToolbarFeature::class),
             ],
@@ -519,8 +481,13 @@ class Modules
                 'configuration' => [
                     'config_key' => 'Code',
                     'default' => true,
-                    'module' => $this->getModulesFromFeature(HighlightFeature::class),
-                    'toolBarItems' => 'Highlight',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-basic-styles',
+                            'exports' => 'Code',
+                        ],
+                    ],
+                    'toolBarItems' => 'code',
                 ],
             ],
             [
@@ -529,12 +496,7 @@ class Modules
                 'configuration' => [
                     'default' => true,
                     'config_key' => 'CodeBlock',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-code-block',
-                            'exports' => 'CodeBlock',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(CodeBlockFeature::class),
                     'toolBarItems' => 'codeBlock',
                 ],
                 'fields' => $this->getFieldsFromFeature(CodeBlockFeature::class),
@@ -558,8 +520,10 @@ class Modules
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('Font'),
                 'configuration' => [
-                    'config_key' => 'TextTransformation',
-                    'module' => $this->getModulesFromFeature(TransformationsFeature::class),
+                    'default' => true,
+                    'config_key' => 'Font',
+                    'module' => $this->getModulesFromFeature(FontFeature::class),
+                    'toolBarItems' => 'fontFamily,fontSize,fontColor,fontBackgroundColor',
                 ],
                 'fields' => [
                     '' => $this->getFieldsFromFeature(FontFeature::class),
@@ -571,9 +535,14 @@ class Modules
                 'is_toggle' => 1,
                 'configuration' => [
                     'default' => true,
-                    'config_key' => 'CodeBlock',
-                    'module' => $this->getModulesFromFeature(CodeBlockFeature::class),
-                    'toolBarItems' => 'codeBlock',
+                    'config_key' => 'FullScreen',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-fullscreen',
+                            'exports' => 'Fullscreen',
+                        ],
+                    ],
+                    'toolBarItems' => 'fullscreen',
                 ],
                 'fields' => $this->getFieldsFromFeature(MenuBarFeature::class),
             ],
@@ -581,8 +550,9 @@ class Modules
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('Heading'),
                 'configuration' => [
-                    'config_key' => 'BlockToolbar',
-                    'module' => $this->getModulesFromFeature(BlockToolbarFeature::class),
+                    'default' => true,
+                    'config_key' => 'Heading',
+                    'toolBarItems' => 'heading',
                 ],
                 'fields' => $this->getFieldsFromFeature(HeadingFeature::class),
             ],
@@ -590,8 +560,10 @@ class Modules
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('HighLight'),
                 'configuration' => [
-                    'config_key' => 'BalloonToolbar',
-                    'module' => $this->getModulesFromFeature(BalloonToolbarFeature::class),
+                    'config_key' => 'HighLight',
+                    'default' => true,
+                    'module' => $this->getModulesFromFeature(HighlightFeature::class),
+                    'toolBarItems' => 'Highlight',
                 ],
                 'fields' => $this->getFieldsFromFeature(HighlightFeature::class),
             ],
@@ -601,9 +573,14 @@ class Modules
                 'is_toggle' => 1,
                 'configuration' => [
                     'default' => true,
-                    'config_key' => 'TextPartLanguage',
-                    'module' => $this->getModulesFromFeature(LanguageFeature::class),
-                    'toolBarItems' => 'textPartLanguage',
+                    'config_key' => 'HtmlEmbed',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-html-embed',
+                            'exports' => 'HtmlEmbed',
+                        ],
+                    ],
+                    'toolBarItems' => 'htmlEmbed',
                 ],
             ],
             [
@@ -707,22 +684,22 @@ class Modules
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('Alignment'),
                 'configuration' => [
-                    'config_key' => 'WordCount',
-                    'module' => $this->getModulesFromFeature(WordCountFeature::class),
+                    'default' => true,
+                    'config_key' => 'Alignment',
+                    'toolBarItems' => 'alignment',
                 ],
-                'fields' => $this->getFieldsFromFeature(WordCountFeature::class),
+                'fields' => $this->getFieldsFromFeature(AlignmentFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('TextStyles'),
             ],
             [
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('TextTransformation'),
                 'configuration' => [
                     'config_key' => 'TextTransformation',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-typing',
-                            'exports' => 'TextTransformation',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(TransformationsFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(TransformationsFeature::class),
             ],
@@ -732,12 +709,7 @@ class Modules
                 'configuration' => [
                     'default' => true,
                     'config_key' => 'Language',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-language',
-                            'exports' => 'TextPartLanguage',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(LanguageFeature::class),
                     'toolBarItems' => 'textPartLanguage',
                 ],
                 'fields' => $this->getFieldsFromFeature(LanguageFeature::class),
@@ -764,12 +736,7 @@ class Modules
                 'is_toggle' => 0,
                 'configuration' => [
                     'config_key' => 'WordCount',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-word-count',
-                            'exports' => 'WordCount',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(WordCountFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(WordCountFeature::class),
             ],
@@ -795,15 +762,29 @@ class Modules
                 'details' => $cardDetails->getDetailsByKey('RestrictedEditingMode'),
                 // 'is_toggle' => 1,
                 'configuration' => [
-                    'config_key' => 'Images',
-                    'default' => true,
-                    'module' => $this->getModulesFromFeature(ImageFeature::class),
-                    'toolBarItems' => 'insertImage',
+                    'default' => false,
+                    'config_key' => 'RestrictedEditingMode',
                 ],
-                'fields' => $this->getFieldsFromFeature(ImageFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('FindAndReplace'),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('SpecialCharacters'),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('SelectAll'),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('SourceEditing'),
             ],
         ];
     }
+
 
     public function getAllItems(): array
     {
@@ -898,4 +879,3 @@ class Modules
     }
 
 }
-

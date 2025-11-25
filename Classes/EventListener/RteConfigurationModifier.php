@@ -9,20 +9,21 @@
 
 namespace T3Planet\RteCkeditorPack\EventListener;
 
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use T3Planet\RteCkeditorPack\DataProvider\Modules;
+use TYPO3\CMS\Core\Configuration\CKEditor5Migrator;
+use T3Planet\RteCkeditorPack\Utility\ChannelIdUtility;
+use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
 use T3Planet\RteCkeditorPack\Configuration\EditorConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\MentionConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler;
-use T3Planet\RteCkeditorPack\DataProvider\Modules;
-use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
-use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
-use T3Planet\RteCkeditorPack\Utility\ChannelIdUtility;
-use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\RteCKEditor\Form\Element\Event\BeforePrepareConfigurationForEditorEvent;
 
 class RteConfigurationModifier
@@ -62,16 +63,16 @@ class RteConfigurationModifier
             $configuration = $this->ensureCollaborationChannelConfiguration($configuration, $data);
             
             // Get preset UID from preset key
-            $preset = $this->presetRepository->findByPresetKey($this->selectedPreset);
+            $preset = $this->presetRepository->findByUsage($this->selectedPreset);
+            
             $presetUid = $preset ? $preset->getUid() : 0;
             
             // Get enabled features for this preset
             $enabledFeatures = [];
             if ($presetUid > 0) {
                 $enabledFeatures = $this->featureRepository->findEnabledByPresetUid($presetUid);
+                $configuration = $this->addToolbarItems($configuration,$preset->getToolbarItems());
             }
-            
-            $configuration = $this->addToolbarItems($configuration);
 
             if ($enabledFeatures) {
                 foreach ($enabledFeatures as $feature) {
@@ -176,19 +177,12 @@ class RteConfigurationModifier
         return $configuration;
     }
 
-    private function addToolbarItems(array $configuration): array
+    private function addToolbarItems(array $configuration, string $presetToolBarItems): array
     {
-        // Get preset by preset key
-        $preset = $this->presetRepository->findByPresetKey($this->selectedPreset);
-        
         $toolBarItems = [];
-        
-        if ($preset && $preset->getToolbarItems()) {
+        if ($presetToolBarItems) {
             // Get toolbar items from preset table's toolbar_items column
-            $toolBarItems = GeneralUtility::trimExplode(',', $preset->getToolbarItems(), true);
-        } else {
-            // Fallback to old method if preset not found or toolbar_items is empty
-            $toolBarItems = $this->groupRepository->fetchToolBarItems($this->selectedPreset);
+            $toolBarItems = GeneralUtility::trimExplode(',', $presetToolBarItems, true);
         }
 
         if ($toolBarItems) {

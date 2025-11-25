@@ -42,7 +42,6 @@
 
 .t3-ckeditor .dashboard-tab{
     padding:8px 15px;
-    margin-right: 3px;
 }
 
 /*Dashboard*/
@@ -83,7 +82,7 @@
 }
 
 .card.card--active {
-    background-color: light-dark(#f3f7fd, #062541);
+    background-color: light-dark(#ebebeb, #062541);
 }
 
 .ckeditor .card.card--active .btn-default,

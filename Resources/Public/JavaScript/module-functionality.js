@@ -106,8 +106,10 @@ function initModuleFunc(params) {
 }
 
 const cardCheck = document.querySelectorAll('.btn-toggle');
+
 if (cardCheck.length) {
-  cardCheck.forEach(element => {
+    cardCheck.forEach(element => {
+    console.log(element);
     if (element.closest('.card')) {
       if (element.checked) {
         element.closest('.card').classList.add('card--active');
