@@ -132,6 +132,10 @@ class RteConfigurationModifier
                     return $configuration;
                 }
             }
+            // Merge default_config if it exists (for AI Assistant and other features)
+            if (isset($moduleConfiguration['default_config'])) {
+                $configuration = array_merge_recursive($configuration, $moduleConfiguration['default_config']);
+            }
 
             // Feature is already tied to the correct preset, so no need to check preset array
             if (isset($moduleConfiguration['module'])) {

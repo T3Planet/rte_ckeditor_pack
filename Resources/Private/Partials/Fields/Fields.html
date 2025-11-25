@@ -104,7 +104,7 @@
                 <input type="hidden" name="{fieldName}" value="0" />
                 <input class="form-check-input {field.class}" id="{field.key}" type="checkbox" name="{fieldName}" value="1"
                     {f:if(condition: '{fieldValue}' , then: 'checked' )} />
-                <label for="{field.key}" class="form-check-label form-label">{field.name}</label>
+                <label for="{field.key}" class="form-check-label form-label text-nowrap">{field.name}</label>
             </div>
         </f:case>
         <f:case value="TEXTAREA">

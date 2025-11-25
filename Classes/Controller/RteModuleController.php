@@ -260,18 +260,7 @@ class RteModuleController extends ActionController
         $presetUid = isset($data['preset']) && is_numeric($data['preset']) ? (int)$data['preset'] : 0;
         
         try {
-            if ($configKey && $presetUid > 0) {
-                $preset = $this->presetRepository->findByUid($presetUid);
-
-                if (!$preset) {
-                    throw new \Exception('Preset not found');
-                }
-
-                if ($configKey === 'AIAssistant') {
-                    if (isset($data['config']['ai']['openAI']['apiUrl']) && $data['config']['ai']['openAI']['apiUrl'] === '') {
-                        unset($data['config']['ai']['openAI']['apiUrl']);
-                    }
-                }
+            if ($configKey) {
                 $fieldData = isset($data['config']) ? json_encode($data['config']) : '';
 
                 // Get feature from new feature table

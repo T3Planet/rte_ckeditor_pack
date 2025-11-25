@@ -103,13 +103,38 @@ class Modules
             ],
             [
                 'tab' => Tabs::STANDALONE,
-                'details' => $cardDetails->getDetailsByKey('AIAssistant'),
+                'details' => $cardDetails->getDetailsByKey('ToggleAi'),
                 'configuration' => [
                     'default' => false,
                     'is_premium' => true,
-                    'config_key' => 'AIAssistant',
+                    'config_key' => 'ToggleAi',
                     'module' => $this->getModulesFromFeature(AIFeature::class),
-                    'toolBarItems' => 'aiAssistant,aiCommands',
+                    'toolBarItems' => 'toggleAi,aiQuickActions',
+                    'default_config' => [
+                        'ai' => [
+                            'container' => [
+                                'type' => 'overlay',
+                                'side' => 'right'
+                            ],
+                            'chat' => [
+                                'models' => [
+                                    'model' => 'gpt-4o-mini',
+                                    'modelSelectorAlwaysVisible' => false
+                                ],
+                                'context' => [
+                                    'document' => [
+                                        'enabled' => true
+                                    ],
+                                    'urls' => [
+                                        'enabled' => true
+                                    ],
+                                    'files' => [
+                                        'enabled' => true
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
                 ],
                 'fields' => $this->getFieldsFromFeature(AIFeature::class),
             ],

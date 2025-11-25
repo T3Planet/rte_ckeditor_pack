@@ -87,10 +87,10 @@
             <trans-unit id="ckeditorKit.tab.premium.export_to_pdf.description">
                 <source>Create a polished PDF version of your content directly from the editor with one click. Formatting and layout are preserved accurately.</source>
             </trans-unit>
-            <trans-unit id="ckeditorKit.tab.premium.ai_assistant">
+            <trans-unit id="ckeditorKit.tab.premium.toggle_ai">
                 <source>CKEditor AI</source>
             </trans-unit>
-            <trans-unit id="ckeditorKit.tab.premium.ai_assistant.description">
+            <trans-unit id="ckeditorKit.tab.premium.toggle_ai.description">
                 <source>Add a built-in AI Assistant to write, rephrase, translate, or summarize your text. Get instant help directly inside the editor.</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.premium.footnotes">

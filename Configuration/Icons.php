@@ -9,10 +9,6 @@ return [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/parent-module.svg',
     ],
-    'ai_assistant' => [
-        'provider' => SvgIconProvider::class,
-        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ai-assistant.svg',
-    ],
     'ckeditor_module' => [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/Extension.svg',
@@ -256,5 +252,13 @@ return [
     'rte_alignment_justify' => [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/alignJustify.svg',
+    ],
+    'rte_toggleAi' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/toggleAi.svg',
+    ],
+    'rte_aiQuickActions' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/aiQuickActions.svg',
     ],
 ];

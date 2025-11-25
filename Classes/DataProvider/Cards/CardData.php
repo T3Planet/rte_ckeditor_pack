@@ -75,14 +75,13 @@ class CardData
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'large',
             ],
-            'AIAssistant' => [
-                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.ai_assistant', 'rte_ckeditor_pack'),
-                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.ai_assistant', 'rte_ckeditor_pack'),
-                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.ai_assistant.description', 'rte_ckeditor_pack'),
-                'icon' => 'ai_assistant',
-                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.coming-soon', 'rte_ckeditor_pack'),
+            'ToggleAi' => [
+                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.toggle_ai', 'rte_ckeditor_pack'),
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.toggle_ai', 'rte_ckeditor_pack'),
+                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.toggle_ai.description', 'rte_ckeditor_pack'),
+                'icon' => 'rte_toggleAi',
+                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
-                'coming_soon' => true,
             ],
             'Footnotes' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.footnotes', 'rte_ckeditor_pack'),
