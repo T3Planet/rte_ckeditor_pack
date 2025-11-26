@@ -18,6 +18,6 @@ possible.
 PayPal
 ------
 
-If you prefer a one-time contribution, donations via `PayPal <https://www.paypal.com/ncp/payment/7L8SBZUEBP838>`_ are also welcome and greatlya
+If you prefer a one-time contribution, donations via `PayPal <https://www.paypal.com/ncp/payment/7L8SBZUEBP838>`_ are also welcome and greatly
 appreciated.
 

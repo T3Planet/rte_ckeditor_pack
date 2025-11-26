@@ -975,6 +975,12 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.plugin.presets.warning">
                 <source>The toolbar configuration from your YAML preset is now managed by the CKEditor Pack extension's drag-and-drop toolbar interface. This means that, at runtime, the CKEditor Pack configuration takes precedence and defines the active toolbar — your YAML file remains intact but is no longer the source for toolbar rendering.</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.title">
+                <source>CKEditor AI Note</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.desc">
+                <source>The Side option is not supported when using the Sidebar type.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

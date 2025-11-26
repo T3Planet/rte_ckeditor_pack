@@ -83,6 +83,7 @@ class BaseToolBar
                     'icon' => $icon,
                     'toolBar' => $value,
                     'label' => $label,
+                    'is_premium' => $toolbar->isPremiumToolbarItem($value)
                 ];
             }
         }
@@ -102,6 +103,7 @@ class BaseToolBar
                             'toolBar' => $value,
                             'label' => $group->getLabel(),
                             'items' =>  $group->getItems(),
+                            'is_premium' => $toolbar->isPremiumToolbarItem($value)
                         ];
                     }
                 } else {
@@ -111,6 +113,7 @@ class BaseToolBar
                         'icon' => $icon,
                         'toolBar' => $value,
                         'label' => $label,
+                        'is_premium' => $toolbar->isPremiumToolbarItem($value)
                     ];
                 }
             }
@@ -142,6 +145,7 @@ class BaseToolBar
                     'icon' => $icon,
                     'toolBar' => $dftItem,
                     'label' => $label,
+                    'is_premium' => $toolbar->isPremiumToolbarItem($dftItem)
                 ];
 
             }
