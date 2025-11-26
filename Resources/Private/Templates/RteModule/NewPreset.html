@@ -8,6 +8,7 @@
     <div id="ckeditor-modal" class="ckeditor modal d-block">
         <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
             <div class="t3js-modal-body modal-body">
+                <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
                 <div class="form-section-custom">
                     <form action="" method="post">
                         <div class="form-group form-group-custom">
@@ -61,18 +62,15 @@
                                             <td class="text-end">
                                                 <div class="btn-group" role="group">
                                                     <f:if condition="{item.uid} > 0">
-                                                        <button type="button" class="t3js-modal-trigger btn btn-sm btn-default reset-preset {f:if(condition: '{item.usage_source}', then: 'disabled')}" 
-                                                                href="{be:moduleLink(route:'reset_preset', arguments:'{presetUid:item.uid}')}"
+
+                                                        <button type="button" class="btn btn-sm btn-default reset-preset {f:if(condition: '{item.usage_source}', then: 'disabled')}" 
+                                                                data-preset-uid="{item.uid}"
                                                                 data-preset-key="{item.preset_key}"
-                                                                data-severity="warning"
-                                                                data-title="Reset Configuration"
-                                                                data-bs-content="Are you sure you want to reset the configuration of selected preset?"
-                                                                data-button-close-text="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.no')}"
                                                                 title="{f:translate(key: 'presets.reset', extensionName: 'RteCkeditorPack', default: 'Reset')}">
                                                             <core:icon identifier="actions-refresh" size="small" />
                                                             <span class="ms-1"><f:translate key="presets.reset" extensionName="RteCkeditorPack" default="Reset"/></span>
                                                         </button>
-                                                        
+
                                                         <button type="button" class="btn btn-sm btn-default sync-preset {f:if(condition: '{item.usage_source}', then: 'disabled')}" 
                                                                 data-preset-uid="{item.uid}" 
                                                                 data-preset-key="{item.preset_key}"

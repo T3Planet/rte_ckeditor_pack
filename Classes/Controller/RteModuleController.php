@@ -540,7 +540,7 @@ class RteModuleController extends ActionController
     {
         $assign['groups'] = $this->groupsRepository->findAll();
         // Get preset UID from query params or use 0 (will fallback to YAML)
-        $presetUid = isset($request->getQueryParams()['presetUid']) && is_numeric($request->getQueryParams()['presetUid']) 
+        $presetUid = isset($request->getQueryParams()['presetUid']) && is_numeric($request->getQueryParams()['presetUid'])
             ? (int)$request->getQueryParams()['presetUid'] 
             : 0;
         $activeFeaturItems = $this->baseToolBar->findEnableToolbarItems($presetUid)['activeFeaturItems'];
@@ -720,8 +720,6 @@ class RteModuleController extends ActionController
         return $configArray;
     }
 
-   
-
     private function manageIndent(array $indentBlock, string $key): array
     {
         $type = $key === 'indentBlock' ? 'indentType' : 'outdentType';
@@ -845,10 +843,9 @@ class RteModuleController extends ActionController
      */
     public function resetPreset(ServerRequestInterface $request): ResponseInterface
     {
-        $data = $request->getQueryParams();
+        $data = $request->getParsedBody();
         $presetUid = isset($data['presetUid']) && is_numeric($data['presetUid']) ? (int)$data['presetUid'] : 0;
         $notification = [];
-        
         try {
             if ($presetUid > 0) {
                 $preset = $this->presetRepository->findByUid($presetUid);
@@ -858,18 +855,24 @@ class RteModuleController extends ActionController
                 }
                 $preset->setToolbarItems('');
                 $this->presetRepository->update($preset);
-                $features = $this->featureRepository->findByPresetUid($presetUid);
-                foreach ($features as $feature) {
-                    $feature->setEnable(false);
-                    $this->featureRepository->update($feature);
-                }
-                $this->persistenceManager->persistAll();
-                $this->cache->flush();
-                $notification[] = [
-                    'title' => 'ckeditorKit.operation.success',
-                    'message' => 'ckeditorKit.preset.sync.success.message',
-                    'severity' => 0,
+
+               if($this->featureRepository->removeByPresetId($presetUid)){
+                    $this->persistenceManager->persistAll();
+                    $this->cache->flush();
+                    $notification[] = [
+                        'title' => 'ckeditorKit.operation.success',
+                        'message' => 'ckeditorKit.preset.sync.success.message',
+                        'severity' => 0,
+                    ];
+               }else{
+                 $notification[] = [
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => 'ckeditorKit.preset.sync.error.message',
+                    'severity' => 2,
                 ];
+               }
+              
+             
             } else {
                 throw new \Exception('Invalid preset UID');
             }
@@ -880,10 +883,10 @@ class RteModuleController extends ActionController
                 'severity' => 2,
             ];
         }
-
         return new JsonResponse([
             'notifications' => $notification,
         ]);
+      
     }
 
     protected function initializeModuleTemplate(ServerRequestInterface $request): ModuleTemplate

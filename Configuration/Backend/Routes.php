@@ -27,9 +27,5 @@ return [
     'toolbar_groups' => [
         'path' => '/ckeditor/toolbar-groups',
         'target' => RteModuleController::class . '::saveToolBarGroups',
-    ],
-    'reset_preset' => [
-        'path' => '/ckeditor/preset/reset',
-        'target' => RteModuleController::class . '::resetPreset',
     ]
 ];

@@ -36,4 +36,8 @@ return [
         'path' => '/preset/sync',
         'target' => RteModuleController::class . '::syncPreset',
     ],
+    'reset_preset' => [
+        'path' => '/preset/reset',
+        'target' => RteModuleController::class . '::resetPreset',
+    ],
 ];

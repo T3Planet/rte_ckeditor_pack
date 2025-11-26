@@ -16,15 +16,45 @@ class AISidebar extends Plugin {
 
     constructor(editor) {
         super(editor);
+        this.editor = editor;
+        this._loaderEl = null;
         
         // Set container element IMMEDIATELY in constructor
         // This must happen before AI plugins read the config
         this._setupContainer();
+        
+        // Show loader if AI is enabled
+        if (this._isAIEnabled()) {
+            const channelId = this.editor.sourceElement?.id;
+            if (channelId) {
+                this._showLoader({
+                    channelId,
+                    title: this._translate('ai.sidebar.loader.title', 'Loading AI features…'),
+                    desc: this._translate('ai.sidebar.loader.description', 'Initializing AI assistant…')
+                });
+            }
+        }
     }
 
     init() {
         // Also set up in init() as a fallback in case config wasn't ready in constructor
         this._setupContainer();
+    }
+
+    afterInit() {
+        // Hide loader when editor is ready
+        this.editor.on('ready', () => {
+            this._hideLoader();
+        });
+        
+        // Also hide on error or destroy
+        this.editor.on('error', () => {
+            this._hideLoader();
+        });
+        
+        this.editor.on('destroy', () => {
+            this._hideLoader();
+        });
     }
 
     _setupContainer() {
@@ -104,6 +134,72 @@ class AISidebar extends Plugin {
             // If no container type is set, default to overlay
             config.ai.container.type = 'overlay';
         }
+    }
+
+    /**
+     * Check if AI is enabled in the configuration
+     */
+    _isAIEnabled() {
+        const config = this.editor.config._config || {};
+        return config.ai && (config.ai.container || config.ai.chat);
+    }
+
+    /* ----------------------- Loader Helpers ----------------------- */
+
+    _getMountContainer() {
+        const channelElement = this.editor.sourceElement;
+        const fromForm = channelElement?.closest('.form-control-wrap') || null;
+        const parent = fromForm || channelElement?.parentElement || this.editor.sourceElement?.parentElement;
+        if (!parent) return null;
+
+        const style = window.getComputedStyle(parent);
+        if (style.position === 'static') {
+            parent.style.position = 'relative';
+        }
+        return parent;
+    }
+
+    _showLoader({ channelId, title, desc }) {
+        const mount = this._getMountContainer();
+        if (!mount || this._loaderEl?.isConnected) return;
+
+        const el = document.createElement('div');
+        el.className = 'ck-rt-loader';
+        el.setAttribute('role', 'status');
+        el.setAttribute('aria-live', 'polite');
+        el.id = `${channelId}-ai-loader`;
+
+        el.innerHTML = `
+            <div class="ck-rt-loader__box" aria-label="AI is loading">
+                <div class="ck-rt-loader__row">
+                    <div class="ck-rt-loader__spinner" aria-hidden="true"></div>
+                    <div class="ck-rt-loader__title">${title || 'Loading AI Chat…'}</div>
+                </div>
+                <div class="ck-rt-loader__desc">${desc || ''}</div>
+            </div>
+        `;
+
+        mount.appendChild(el);
+        this._loaderEl = el;
+    }
+
+    _updateLoaderDesc(text) {
+        const descEl = this._loaderEl?.querySelector('.ck-rt-loader__desc');
+        if (descEl) descEl.textContent = text || '';
+    }
+
+    _hideLoader() {
+        if (this._loaderEl?.parentNode) {
+            this._loaderEl.parentNode.removeChild(this._loaderEl);
+        }
+        this._loaderEl = null;
+    }
+
+    _translate(key, fallback = '') {
+        const scope = typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : {});
+        const translations = scope?.TYPO3?.lang;
+        const value = translations?.[key];
+        return (typeof value === 'string' && value.trim() !== '') ? value : fallback;
     }
 }
 

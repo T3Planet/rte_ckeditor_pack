@@ -109,6 +109,19 @@ class FeatureRepository extends Repository
         $query->setOrderings(['configKey' => QueryInterface::ORDER_ASCENDING]);
         return $query->execute()->toArray();
     }
+
+    /**
+     * Remove all features by preset UID
+     *
+     * @param int $presetUid
+     * @return bool
+     */
+    public function removeByPresetId(int $presetUid): bool
+    {
+        $features = $this->findByPresetUid($presetUid);
+        foreach ($features as $feature) {
+            $this->remove($feature);
+        }
+        return true;
+    }
 }
-
-
