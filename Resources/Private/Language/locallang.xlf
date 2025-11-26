@@ -22,7 +22,7 @@
                 <source>File Management</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.module.settings">
-                <source>Settings</source>
+                <source>Premium Settings</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.module.plugins">
                 <source>Free Packages</source>
@@ -37,7 +37,7 @@
                 <source>Presets</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.settings">
-                <source>Settings</source>
+                <source>Premium Settings</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.btn_title">
                 <source>Configuration</source>
@@ -941,6 +941,9 @@ The authorization credentials are required for Real-time collaboration or Import
             </trans-unit>
             <trans-unit id="t3editor.form.docs">
                 <source>Docs</source>
+            </trans-unit>
+            <trans-unit id="t3editor.form.open_docs">
+                <source>Open Docs</source>
             </trans-unit>
             <trans-unit id="t3editor.form.demos">
                 <source>Demos</source>

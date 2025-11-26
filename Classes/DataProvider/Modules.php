@@ -962,7 +962,9 @@ class Modules
             }
             $groupedModules[$tabKey]['cards'][] = $module;
         }
-        return $groupedModules;
+        $priority = ['plugins', 'productivity', 'premium', 'collaboration'];
+
+        return array_replace(array_flip($priority), $groupedModules);
     }
 
     public function getItemByConfigKey(string $configKey, bool $toolBar = false): array
