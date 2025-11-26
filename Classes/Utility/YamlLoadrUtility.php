@@ -10,7 +10,7 @@
 namespace T3Planet\RteCkeditorPack\Utility;
 
 use T3Planet\RteCkeditorPack\DataProvider\ToolbarIcons;
-use TYPO3\CMS\Core\Configuration\CKEditor5Migrator;
+use TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;

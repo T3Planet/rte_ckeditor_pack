@@ -4,7 +4,7 @@
         1: '@t3planet/RteCkeditorPack/drag-and-drop.js',
     }" />
 <div class="module t3-ckeditor">
-    <div class="module-docheader t3js-module-docheader flex-row align-items-end justify-content-between pb-0">
+    <div class="module-docheader t3js-module-docheader flex-row align-items-end justify-content-between border-bottom pb-0">
         <div class="dashboard-tabs w-100" role="tablist">
             <div class="me-3">
                 <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />
@@ -30,7 +30,7 @@
                 </f:for>
             </f:if>
             <div class="dashboard-configuration btn-group ms-auto">
-                <button class="dashboard-tab btn btn-sm btn-notice {f:if(condition: '{currentModule} == settings', then: 'active')}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
+                <button class="btn btn-sm btn-notice {f:if(condition: '{currentModule} == settings', then: 'active')}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
                     type="button" role="tab" aria-controls="settings-pane" aria-selected="{f:if(condition: '{currentModule} == settings', then: 'true', else: 'false')}">
                     <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
                     <f:translate key="ckeditorKit.tab.settings" />

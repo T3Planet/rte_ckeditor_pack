@@ -1,17 +1,8 @@
-.t3-ckeditor {
-  --bs-blue:#1f5aad;
-  --bs-purple: #771bff;
-}
-
 .t3-ckeditor .btn-primary,
-.ckeditor .btn-primary {
-  --bs-blue:#1f5aad;
-  --typo3-state-primary-bg:#1f5aad;
-  --typo3-state-primary-border-color:#1f5aad;
-   
+.ckeditor .btn-primary {   
   /* TYPO3 v12 */
-  --bs-btn-bg: var(--bs-blue);
-  --bs-btn-border-color: var(--bs-blue);
+  --bs-btn-bg: var(--token-color-primary-base);
+  --bs-btn-border-color: var(--token-color-primary-base);
 }
 
 .ck-editor__main,
@@ -89,13 +80,13 @@
 }
 
 .t3-ckeditor .dashboard-tab.active {
-  background: var(--bs-blue);
+  background: var(--token-color-primary-base);
   color: #fff;
 }
 
 .t3-ckeditor .dashboard-tab.active:focus,
 .t3-ckeditor .dashboard-tab.active:hover {
-  background: var(--bs-blue);
+  background: var(--token-color-primary-base);
   color: #f2f2f2;
   text-decoration: none;
 }
@@ -157,9 +148,9 @@
 }
 
 .ckeditor--modal.modal-severity-notice .modal-header {
-  --bs-blue:#1f5aad;
-  background-color: var(--bs-blue);
-  border-bottom-color: var(--bs-blue);
+  --bs-blue: var(--token-color-primary-base);
+  background-color: var(--token-color-primary-base);
+  border-bottom-color: var(--token-color-primary-base);
   color: #fff
 }
 

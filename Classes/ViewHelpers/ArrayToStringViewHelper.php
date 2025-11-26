@@ -17,7 +17,7 @@ class ArrayToStringViewHelper extends AbstractViewHelper
     {
         $this->registerArgument(
             'input',
-            'mix',
+            'mixed',
             'return string',
             true
         );

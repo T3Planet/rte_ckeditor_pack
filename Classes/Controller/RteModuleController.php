@@ -135,9 +135,9 @@ class RteModuleController extends ActionController
         }
 
         if ($moduleKey) {
-            $record = $this->configurationRepository->findByConfigKey($moduleKey)->getFirst();
+            $record = $this->configurationRepository->findBy(['configKey' => $moduleKey])->getFirst();
             if ($record) {
-                $assign['record'] = json_decode($record->getFields(), true);
+                $assign['record'] = json_decode($record->getFields(), true) ?: [];
                 $assign['record']['enable'] = $record->getEnable();
                 $assign['record']['configKey'] = $record->getConfigKey();
             }
@@ -187,7 +187,7 @@ class RteModuleController extends ActionController
         try {
             if ($configKey) {
                 $fieldData = isset($data['config']) ? json_encode($data['config']) : '';
-                $record = $this->configurationRepository->findByConfigKey($configKey)->getFirst();
+                $record = $this->configurationRepository->findBy(['configKey' => $configKey])->getFirst();
 
                 if (!$record) {
                     $record = GeneralUtility::makeInstance(Configuration::class);
@@ -303,14 +303,14 @@ class RteModuleController extends ActionController
 
                 foreach ($updatedModules as $module => $value) {
                     $enable = $value == 'true' ? true : false;
-                    $record = $this->configurationRepository->findByConfigKey($module)->getFirst();
+                    $record = $this->configurationRepository->findBy(['configKey' => $module])->getFirst();
                     $key = $module;
                     if (!$record) {
                         $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($module, true);
                         if ($moduleConfiguration) {
                             if (isset($moduleConfiguration['configuration']['config_key'])) {
                                 $key = $moduleConfiguration['configuration']['config_key'];
-                                $record = $this->configurationRepository->findByConfigKey($key)->getFirst();
+                                $record = $this->configurationRepository->findBy(['configKey' => $key])->getFirst();
                             }
                         }
                     }
@@ -326,7 +326,7 @@ class RteModuleController extends ActionController
 
                         if ($enable) {
                             if ($module === 'SourceEditing') {
-                                $realTime = $this->configurationRepository->findByConfigKey('RealTimeCollaboration')->getFirst();
+                                $realTime = $this->configurationRepository->findBy(['configKey' => 'RealTimeCollaboration'])->getFirst();
                                 if ($realTime->isEnable()) {
                                     $enable = false;
                                     $notification['title'] = 'ckeditorKit.plugin.realtime_collaboration';
@@ -432,7 +432,7 @@ class RteModuleController extends ActionController
 
     private function generalSettings(array $data): bool
     {
-        $record = $this->configurationRepository->findByConfigKey('FeatureConfiguration')->getFirst();
+        $record = $this->configurationRepository->findBy(['configKey' => 'FeatureConfiguration'])->getFirst();
 
         if (isset($data['tokenUrl']) && $data['tokenUrl']) {
             $status = $this->validator->validateUrl($data['tokenUrl']);
@@ -567,7 +567,7 @@ class RteModuleController extends ActionController
 
     private function manageToken(array $configArray): array
     {
-        $settings = $this->configurationRepository->findByConfigKey('FeatureConfiguration')->getFirst();
+        $settings = $this->configurationRepository->findBy(['configKey' => 'FeatureConfiguration'])->getFirst();
         if ($settings && $settings->getFields()) {
             $featureConfiguration = json_decode($settings->getFields(), true);
             if ($featureConfiguration && $featureConfiguration['tokenUrl']) {

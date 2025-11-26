@@ -1,19 +1,6 @@
 .t3-ckeditor {
     --bs-blue:#1f5aad;
     --bs-purple: #771bff;
-    --module-docheader-height:67px;
-    --module-docheader-zindex:300;
-    --module-docheader-padding-y:5px;
-    --module-docheader-padding-x:24px;
-    --module-docheader-padding:var(--module-docheader-padding-y) var(--module-docheader-padding-x);
-    --module-docheader-spacing-y:4px;
-    --module-docheader-spacing-x:8px;
-    --module-docheader-spacing:var(--module-docheader-spacing-y) var(--module-docheader-spacing-x);
-    --module-docheader-bar-height:26px;
-    --module-docheader-scroll-offset:calc(-1 * (var(--module-docheader-bar-height) + var(--module-docheader-padding-y)));
-    --module-body-padding-y:24px;
-    --module-body-padding-x:24px;
-    --module-body-padding:var(--module-body-padding-y) var(--module-body-padding-x);
     display: grid;
     grid-template-areas:
         "moduleDocHeader"
@@ -47,7 +34,7 @@
 }
 
 .t3-ckeditor .dashboard-tab.active {
-    border-color:light-dark(var(--bs-blue), #262626)
+    border-color:light-dark(var(--token-color-primary-base), #262626)
 }
 
 .t3-ckeditor .dashboard-tab.btn-notice {
@@ -83,7 +70,7 @@
 }
 
 .dashboard-tab.active {
-    background: var(--bs-blue);
+    background: var(--token-color-primary-base);
     color: #fff;
 }
 
@@ -94,47 +81,12 @@
 .dashboard-tab.active:focus,
 .dashboard-tab.active:hover {
     text-decoration: none;
-    background: var(--bs-blue);
+    background: var(--token-color-primary-base);
     color: #f2f2f2;
 }
 
 .card.card--active {
     background-color: light-dark(#ebebeb, #062541);
-}
-
-.ckeditor .card.card--active .btn-default,
-.t3-ckeditor .card.card--active .btn-default {
-    --dark-blue: #1c4f98;
-    --typo3-btn-color: #fff;
-    --typo3-state-default-bg: light-dark(#1f5aad, #164484);
-    --typo3-state-default-border-color: #1f5aad;
-    --typo3-btn-hover-bg: var(--dark-blue);
-    --typo3-btn-hover-border-color: var(--dark-blue);
-    --typo3-btn-focus-bg: var(--dark-blue);
-    --typo3-btn-focus-border-color: var(--dark-blue);
-    
-    /* TYPO3 12 */
-    --bs-btn-color: var(--typo3-btn-color);
-    --bs-btn-bg: var(--typo3-state-default-bg);
-    --bs-btn-border-color: var(--typo3-state-default-border-color);
-
-    --bs-btn-active-color: var(--typo3-btn-color);
-    --bs-btn-active-bg: var(--typo3-state-default-bg);
-    --bs-btn-active-border-color: var(--typo3-state-default-border-color);
-
-    --bs-btn-hover-color: var(--typo3-btn-color);
-    --bs-btn-hover-bg: var(--typo3-btn-hover-bg);
-    --bs-btn-hover-border-color: var(--typo3-btn-hover-border-color);
-    
-    box-shadow: none !important;
-}
-
-.ckeditor .card.card--active .btn-default:hover,
-.t3-ckeditor .card.card--active .btn-default:hover {
-    --bs-btn-hover-bg: #1c4f98;
-    --bs-btn-hover-border-color: #1c4f98;
-    --bs-btn-active-bg: var(--typo3-btn-hover-bg);
-    --bs-btn-active-border-color: var(--typo3-btn-hover-border-color);
 }
 
 .t3-ckeditor .card-header {
@@ -185,18 +137,6 @@
 
 .card--active .btn .icon-actions-check-circle-alt {
   display: block;
-}
-
-.card--active .btn-check:checked + .btn,
-.card--active .btn.active,
-.card--active .btn.show,
-.card--active .btn:first-child:active,
-.card--active :not(.btn-check) + .btn:active {
-    --bs-btn-active-color: #fff;
-    --typo3-state-default-bg: light-dark(#1f5aad, #164484);
-    --typo3-state-default-border-color: #1f5aad;
-    --typo3-btn-hover-bg: #1c4f98;
-    --typo3-btn-hover-border-color: #1c4f98;
 }
 
 [data-identifier="ckeditorGlobalWizardButton"] * {

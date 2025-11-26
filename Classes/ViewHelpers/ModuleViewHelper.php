@@ -38,7 +38,7 @@ class ModuleViewHelper extends AbstractViewHelper
         $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
 
         if (!$preset) {
-            $record = $configurationRepository->findByConfigKey($key)->getFirst();
+            $record = $configurationRepository->findBy(['configKey' => $key])->getFirst();
             return $record ? $record->isEnable() : false;
         }
         $results = $configurationRepository->findInvisibleRecord($key, $preset, $isToolbar);
