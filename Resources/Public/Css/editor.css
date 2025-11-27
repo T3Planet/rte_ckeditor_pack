@@ -7,17 +7,16 @@
 [data-theme="modern"] .ckeditor--modal,
 [data-theme="modern"] .t3-ckeditor {
   --token-color-primary-base: #205eb5;
+  --token-color-neutral-4: #efefef;
+  --token-color-neutral-15: #d6d4dd;
+  --bs-btn-bg: var(--token-color-primary-base);
+  --bs-btn-border-color: var(--token-color-primary-base);
 }
 
 /* Unique color for fresh theme */
 [data-theme="fresh"] .t3-ckeditor,
 [data-theme="fresh"] .ckeditor--modal {
   --token-color-primary-base: #5033c7;
-}
-
-.t3-ckeditor .btn-primary,
-.ckeditor .btn-primary {   
-  /* TYPO3 v12 */
   --bs-btn-bg: var(--token-color-primary-base);
   --bs-btn-border-color: var(--token-color-primary-base);
 }
@@ -322,6 +321,8 @@
 .drag-grid-wrap .drag-grid.grid-5 .btn-default {
   --typo3-btn-bg: color-mix(in srgb, var(--token-color-primary-base) 8%, #fff);
   --typo3-btn-border-color: color-mix(in srgb, var(--token-color-primary-base) 20%, #fff);
+  --bs-btn-bg: color-mix(in srgb, var(--token-color-primary-base) 8%, #fff);
+  --bs-btn-border-color: color-mix(in srgb, var(--token-color-primary-base) 20%, #fff);
 }
 
 .drag-item .btn-default {

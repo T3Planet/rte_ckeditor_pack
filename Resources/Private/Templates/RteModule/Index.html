@@ -302,12 +302,14 @@
         <f:else>
             <f:if condition="!{isLicense}">
                 <f:then>
-                    <button type="button" class="btn {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'btn-primary', else: 'btn-default')}" title="{card.details.title}"
-                        data-feature="0"
-                        data-key="{f:translate(key:'ckeditorKit.key_missing', extensionName: 'rte_ckeditor_pack')}"
-                        data-identifier="ckeditorGlobalWizardButton">
-                        {card.details.buttonTitle}
-                    </button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'btn-default', else: 'btn-default')}" title="{card.details.title}"
+                            data-feature="0"
+                            data-key="{f:translate(key:'ckeditorKit.key_missing', extensionName: 'rte_ckeditor_pack')}"
+                            data-identifier="ckeditorGlobalWizardButton">
+                            <core:icon identifier="actions-cog" size="small" />
+                        </button>
+                    </div>
                 </f:then>
                 <f:else>
                     <div class="btn-group">
