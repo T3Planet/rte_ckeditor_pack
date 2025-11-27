@@ -19,8 +19,6 @@ $majorVersion = $versionInformation->getMajorVersion();
 // Add TYPO3 v14 specific stylesheet
 if ($majorVersion >= 14) {
     $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_pack_v14'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor-fourteen.css';
-} else if ($majorVersion === 12) {
-    $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_pack'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor-twelve.css';
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][]
