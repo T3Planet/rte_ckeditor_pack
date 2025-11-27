@@ -37,13 +37,16 @@
                 <source>Presets</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.settings">
-                <source>Premium Settings</source>
+                <source>Settings</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.btn_title">
                 <source>Configuration</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.checkbox.enable">
                 <source>Enable</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.card.checkbox.disable">
+                <source>Disable</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.coming-soon">
                 <source>Coming Soon</source>

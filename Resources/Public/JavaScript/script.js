@@ -271,6 +271,68 @@ document.addEventListener('click', (event) => {
 
     }
 
+    if (event.target.id === 'newPresetBtn' || event.target.closest('#newPresetBtn')) {
+        event.preventDefault();
+        const submitButton = event.target.id === 'newPresetBtn' ? event.target : event.target.closest('#newPresetBtn');
+        const form = submitButton.closest('form');
+        if (!form || !submitButton || submitButton.disabled) {
+            return;
+        }
+        const presetNameInput = form.querySelector('#preset-name');
+        const ajaxUrl = form.getAttribute('data-ajax-url');
+        if (!ajaxUrl) {
+            Notification.error('Configuration Error', 'AJAX URL for new_preset is not configured');
+            return;
+        }
+        
+        const formData = new FormData(form);
+        submitButton.disabled = true;
+        submitButton.classList.add('is-loading');
+        
+        new AjaxRequest(ajaxUrl)
+            .post(formData)
+            .then(async (response) => {
+                const responseBody = await response.resolve();
+                
+                // Handle notifications
+                if (typeof responseBody === 'object' && responseBody.notifications && Array.isArray(responseBody.notifications)) {
+                    responseBody.notifications.forEach((notification) => {
+                        const title = TYPO3.lang[notification.title] ?? notification.title ?? '';
+                        const message = TYPO3.lang[notification.message] ?? notification.message ?? '';
+                        const severity = notification.severity ?? 0;
+                        if (severity === 0) {
+                            Notification.success(title, message);
+                        } else if (severity === 1) {
+                            Notification.warning(title, message);
+                        } else if (severity === 2) {
+                            Notification.error(title, message);
+                        } else {
+                            Notification.info(title, message);
+                        }
+                    });
+                }
+                
+                // Clear form and reload on success
+                if (responseBody.notifications && responseBody.notifications.length > 0 && responseBody.notifications[0].severity === 0) {
+                    // Store flag to select last item after reload
+                    sessionStorage.setItem('selectLastPreset', 'true');
+                    
+                    presetNameInput.value = '';
+                    submitButton.setAttribute('disabled', 'disabled');
+                    setTimeout(() => {
+                        top.window.location.reload();
+                    }, 500);
+                }
+            })
+            .catch((error) => {
+                console.error('AJAX Error:', error);
+                Notification.error('Error', error.message ?? 'An error occurred while creating the preset');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.classList.remove('is-loading');
+            });
+    }
 });
 
 const newPresetBtn = document.getElementById('newPresetBtn');

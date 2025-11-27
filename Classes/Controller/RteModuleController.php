@@ -73,11 +73,6 @@ class RteModuleController extends ActionController
     public function mainAction(): ResponseInterface
     {
         $availableModules = GeneralUtility::makeInstance(Modules::class)->getGroupedModulesByTabs();
-        $currentModule = $this->request->getAttribute('moduleData')->getModuleIdentifier();
-
-        if ($currentModule) {
-            $currentModule = str_replace('ckeditor_', '', $currentModule);
-        }
         if (isset($this->request->getQueryParams()['current_module'])) {
             $currentModule = $this->request->getQueryParams()['current_module'] ?? '';
             $notification = $this->request->getQueryParams()['notification'] ?? [];
@@ -109,7 +104,7 @@ class RteModuleController extends ActionController
 
         $this->moduleTemplate->assignMultiple([
             'availableModules' => $availableModules,
-            'currentModule' => $currentModule,
+            'currentModule' => $currentModule ?? 'features',
             'settingFields' => $settingsArray,
             'toolBarConfiguration' => $this->baseToolBar->findEnableToolbarItems($activePreset),
             'availablePresets' => $availablePresets,
@@ -541,26 +536,45 @@ class RteModuleController extends ActionController
     {
         $attributes = $request->getParsedBody();
         $availablePresets = $this->baseToolBar->findAvailablePresets();
+        $notification = [];
 
-        if ($attributes && trim($attributes['presetName']) != '') {
-            $presetName = str_replace(' ', '_', trim(strtolower($attributes['presetName'])) ?? null);
+        // Check if this is an AJAX form submission (has presetName in POST)
+        if ($attributes && isset($attributes['presetName']) && trim($attributes['presetName']) != '') {
+            $presetName = str_replace(' ', '_', trim(strtolower($attributes['presetName'])));
             if (!in_array($presetName, array_keys($availablePresets))) {
-                $this->groupsRepository->insertToolBarPreset($presetName, ['preset' => $presetName]);
-                $notification['title'] = 'ckeditorKit.operation.success';
-                $notification['message'] = 'ckeditorKit.presert.success.message';
-                $notification['severity'] = 0;
-                $this->notification->addFlashNotification($notification);
+                $result = $this->groupsRepository->insertToolBarPreset($presetName, ['preset' => $presetName]);
+                if ($result) {
+                    $notification[] = [
+                        'title' => 'ckeditorKit.operation.success',
+                        'message' => 'ckeditorKit.presert.success.message',
+                        'severity' => 0,
+                    ];
+                } else {
+                    $notification[] = [
+                        'title' => 'ckeditorKit.operation.error',
+                        'message' => 'ckeditorKit.presert.error.message',
+                        'severity' => 2,
+                    ];
+                }
             } else {
-                $notification['title'] = 'ckeditorKit.operation.error';
-                $notification['message'] = 'ckeditorKit.presert.error.message';
-                $notification['severity'] = 2;
-                $this->notification->addFlashNotification($notification);
+                $notification[] = [
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => 'ckeditorKit.presert.error.message',
+                    'severity' => 2,
+                ];
             }
+            return new JsonResponse([
+                'notifications' => $notification,
+            ]);
         }
+        
+        // Regular page load - return rendered template for listing
         $this->moduleTemplate = $this->initializeModuleTemplate($request);
+        $ajaxUrl = $this->urlBuilder->generateBackendUrl('ajax_new_preset');
         $this->moduleTemplate->assignMultiple([
             'availablePresets' => $this->groupsRepository->findPresets(),
             'returnUrl' => $request->getAttribute('normalizedParams')->getRequestUri(),
+            'ajaxUrl' => $ajaxUrl,
         ]);
         return $this->moduleTemplate->renderResponse('RteModule/NewPreset');
     }

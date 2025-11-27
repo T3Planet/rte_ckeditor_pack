@@ -22,9 +22,14 @@ class YamlLoadrUtility
     {
         $activeItemArray = [];
         $configuration = $this->loadConfigurationFromPreset($presetName);
-        if(self::getTypo3MajorVersion() > 12){
-             $configuration = GeneralUtility::makeInstance(
-            CKEditor5Migrator::class,
+        if(self::getTypo3MajorVersion() === 14){
+            $configuration = GeneralUtility::makeInstance(
+            \TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator::class,
+            $configuration
+            )->get();
+        } else{
+            $configuration = GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Configuration\CKEditor5Migrator::class,
             $configuration
             )->get();
         }

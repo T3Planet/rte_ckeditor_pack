@@ -322,16 +322,6 @@
   --bs-btn-active-border-color: var(--typo3-btn-active-border-color);
 }
 
-.ckeditor :not(.card--active) .btn-default:hover,
-.t3-ckeditor :not(.card--active) .btn-default:hover {
-  --bs-btn-hover-bg: #cacaca;
-}
-
-.card .btn-check+.btn:hover {
-  --bs-btn-hover-bg: #cacaca;
-  --bs-btn-bg: var(--bs-btn-hover-bg);
-}
-
 .t3-ckeditor .drag-grid.grid-1 .drag-item .btn-default:hover,
 .t3-ckeditor .drag-grid.grid-4 .drag-item .btn-default:hover {
   --bs-btn-hover-bg: light-dark(#ffffff, #333333);
@@ -499,13 +489,17 @@
 }
 
 /* AI Configuration */
-.rte-ckeditor-ai-sidebar {
+.rte-ckeditor-ai-sidebar .form-wizards-wrap>.form-wizards-item-element,
+.rte-ckeditor-ai-sidebar .form-wizards-wrap>.revision_viewer_container[style*="display: block"] {
+  width: 100%;
+}
+.rte-ckeditor-ai-sidebar .form-wizards-wrap {
   display: flex;
   flex-direction: row-reverse;
-  gap: 10px;
+  gap: 3px;
 }
 
-.ck-ai-sidebar-container {
+.form-wizards-wrap .ck-ai-sidebar-container {
   position: sticky;
   top: 0;
 }

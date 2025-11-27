@@ -290,7 +290,10 @@
             <label class="btn btn-sm {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'btn-primary', else: 'btn-default')}" for="module-{card.configuration.config_key}">
                 <core:icon identifier="actions-check-circle" size="small" />
                 <core:icon identifier="actions-check-circle-alt" size="small" />
-                <f:translate key="ckeditorKit.tab.card.checkbox.enable" extensionName="rte_ckeditor_pack"/>
+                <f:if condition="{ckit:module(key: card.configuration.config_key)}">
+                    <f:then><f:translate key="ckeditorKit.tab.card.checkbox.disable" extensionName="rte_ckeditor_pack"/></f:then>
+                    <f:else><f:translate key="ckeditorKit.tab.card.checkbox.enable" extensionName="rte_ckeditor_pack"/></f:else>
+                </f:if>                
             </label>
             <f:if condition="{card.details.docs}">
                 <a href="{card.details.docs}" target="_blank" class="btn btn-sm btn-default">
