@@ -1,16 +1,17 @@
+.t3-ckeditor,
+.ckeditor--modal,
 [data-theme="auto"] .t3-ckeditor,
 [data-theme="auto"] .ckeditor--modal,
 [data-theme="classic"] .t3-ckeditor,
 [data-theme="classic"] .ckeditor--modal,
 [data-theme="modern"] .ckeditor--modal,
 [data-theme="modern"] .t3-ckeditor {
-  --bs-blue: #205eb5;
-  --token-color-primary-base: var(--bs-blue);
+  --token-color-primary-base: #205eb5;
 }
 
 /* Unique color for fresh theme */
 [data-theme="fresh"] .t3-ckeditor,
-  [data-theme="fresh"] .ckeditor--modal {
+[data-theme="fresh"] .ckeditor--modal {
   --token-color-primary-base: #5033c7;
 }
 
@@ -319,8 +320,8 @@
 
 .drag-grid-wrap .drag-grid.grid-2 .btn-default,
 .drag-grid-wrap .drag-grid.grid-5 .btn-default {
-  --typo3-btn-bg: color-mix(in srgb, var(--token-color-primary-base) 5%, transparent);
-  --typo3-btn-border-color: color-mix(in srgb, var(--token-color-primary-base) 20%, transparent);
+  --typo3-btn-bg: color-mix(in srgb, var(--token-color-primary-base) 8%, #fff);
+  --typo3-btn-border-color: color-mix(in srgb, var(--token-color-primary-base) 20%, #fff);
 }
 
 .drag-item .btn-default {
@@ -530,4 +531,17 @@
   padding: 2px;
   width: 16px;
   justify-content: center;
+}
+
+/* TYPO3 v12 */
+.t3-ckeditor, .btn-check:checked+.btn,
+.t3-ckeditor, .btn.active,
+.t3-ckeditor, .btn.show,
+.t3-ckeditor, .btn:first-child:active,
+.t3-ckeditor, :not(.btn-check)+.btn:active {
+  --bs-btn-active-bg: var(--bs-btn-bg);
+}
+
+.t3-ckeditor, .btn-check+.btn:hover {
+  --bs-btn-bg: var(--bs-btn-hover-bg);
 }
