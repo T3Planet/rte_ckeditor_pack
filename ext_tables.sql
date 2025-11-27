@@ -42,13 +42,6 @@ CREATE TABLE tx_rteckeditorpack_domain_model_revisionhistory
     PRIMARY KEY (uid),
 );
 
-CREATE TABLE tx_rteckeditorpack_domain_model_toolbaritems (
-    uid int(11) NOT NULL auto_increment,
-	items text NOT NULL DEFAULT '',
-    preset varchar(255) DEFAULT NULL UNIQUE,
-    PRIMARY KEY (uid)
-);
-
 CREATE TABLE tx_rteckeditorpack_domain_model_toolbargroups
 (
     uid int(11) NOT NULL auto_increment,

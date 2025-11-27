@@ -15,7 +15,6 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use T3Planet\RteCkeditorPack\DataProvider\Modules;
-use TYPO3\CMS\Core\Configuration\CKEditor5Migrator;
 use T3Planet\RteCkeditorPack\Utility\ChannelIdUtility;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;

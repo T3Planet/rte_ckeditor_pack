@@ -14,7 +14,7 @@ Contribution Workflow
 
 1. **Create an Issue First**  
 
-   Before starting any change, please open an issue in the `GitHub repository <https://github.com/T3Planet/rte_ckeditor_pack/issues>`_   
+   Before starting any change, please open an issue in the `GitHub repository <https://github.com/T3Planet/rte_ckeditor_pack/issues>`_.   
    This helps clarify the problem, discuss feasibility, and confirm whether the proposed 
    change will be accepted.
 

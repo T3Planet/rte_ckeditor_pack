@@ -58,6 +58,10 @@ CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many 
 
        Explore the key features and tools included.
 
+   .. card:: :ref:`CKEditor AI <ckeditorai>`
+
+       AI capabilities in the RTE to improve writing and editing workflows.
+
    .. card:: :ref:`Updating <updating>`
 
        Learn how to update to the latest version safely.
@@ -85,6 +89,7 @@ CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many 
    Screenshots/Index
    Toolbar&Presets/Index
    Features/Index
+   CKEditorAI/Index
    Updating/Index
    Support/Index
    Helpfullinks/Index

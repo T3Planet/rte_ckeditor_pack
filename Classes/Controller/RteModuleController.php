@@ -419,95 +419,96 @@ class RteModuleController extends ActionController
                 if (!$preset) {
                     throw new \Exception('Preset not found');
                 }
-
+                $feature = null;
                 foreach ($updatedModules as $module => $value) {
                     $enable = $value == 'true' ? true : false;
                     
                     // Get module configuration to find the correct config_key
                     $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($module, true);
                     $configKey = $module;
+
                     if ($moduleConfiguration && isset($moduleConfiguration['configuration']['config_key'])) {
                         $configKey = $moduleConfiguration['configuration']['config_key'];
+                        // Get or create feature for this preset and module
+                        $feature = $this->featureRepository->findByPresetUidAndConfigKey($selectedPresetUid, $configKey);
+                        if (!$feature) {
+                            // Create new feature
+                            $feature = GeneralUtility::makeInstance(Feature::class);
+                            $feature->setPresetUid($selectedPresetUid);
+                            $feature->setConfigKey($configKey);
+                            $feature->setEnable($enable);
+                            $feature->setFields('');
+                            $this->featureRepository->add($feature);
+                            $this->persistenceManager->persistAll();
+                        }
                     }
-
-                    // Get or create feature for this preset and module
-                    $feature = $this->featureRepository->findByPresetUidAndConfigKey($selectedPresetUid, $configKey);
-                    
-                    if (!$feature) {
-                        // Create new feature
-                        $feature = GeneralUtility::makeInstance(Feature::class);
-                        $feature->setPresetUid($selectedPresetUid);
-                        $feature->setConfigKey($configKey);
-                        $feature->setEnable($enable);
-                        $feature->setFields('');
-                        $this->featureRepository->add($feature);
-                        $this->persistenceManager->persistAll();
-                    }
-
-                    if ($enable) {
-                        // Handle special cases when enabling
-                        if ($module === 'SourceEditing') {
-                            // Check if RealTimeCollaboration is enabled for this preset
-                            $realTimeFeature = $this->featureRepository->findByPresetUidAndConfigKey($selectedPresetUid, 'RealTimeCollaboration');
-                            if ($realTimeFeature && $realTimeFeature->isEnable()) {
-                                $enable = false;
+              
+                    if($feature){
+                        if ($enable) {
+                            // Handle special cases when enabling
+                            if ($module === 'SourceEditing') {
+                                // Check if RealTimeCollaboration is enabled for this preset
+                                $realTimeFeature = $this->featureRepository->findByPresetUidAndConfigKey($selectedPresetUid, 'RealTimeCollaboration');
+                                if ($realTimeFeature && $realTimeFeature->isEnable()) {
+                                    $enable = false;
+                                    $notification['title'] = 'ckeditorKit.plugin.realtime_collaboration';
+                                    $notification['message'] = 'ckeditorKit.plugin.realtime_collaboration.message';
+                                    $notification['severity'] = 1;
+                                    $this->notification->addFlashNotification($notification);
+                                }
+                            }
+                            
+                            if ($module === 'RealTimeCollaboration') {
+                                $fieldConfiguration = [];
+                                $webSocketUrl = ExtensionConfigurationUtility::get('webSocketUrl', '');
+                                if ($webSocketUrl) {
+                                    $fieldConfiguration['cloudServices'] = ['webSocketUrl' => $webSocketUrl];
+                                }
+                                if (isset($data['config']['allow']['presenceList']) && $data['config']['allow']['presenceList'] === '1') {
+                                    $fieldConfiguration['presenceList'] = ['container' => null];
+                                }
+                                $fieldConfiguration['removePlugins'] = ['SourceEditing'];
+                                $fieldData = json_encode($fieldConfiguration);
+                                $feature->setFields($fieldData);
+                                
                                 $notification['title'] = 'ckeditorKit.plugin.realtime_collaboration';
                                 $notification['message'] = 'ckeditorKit.plugin.realtime_collaboration.message';
                                 $notification['severity'] = 1;
                                 $this->notification->addFlashNotification($notification);
                             }
-                        }
-                        
-                        if ($module === 'RealTimeCollaboration') {
-                            $fieldConfiguration = [];
-                            $webSocketUrl = ExtensionConfigurationUtility::get('webSocketUrl', '');
-                            if ($webSocketUrl) {
-                                $fieldConfiguration['cloudServices'] = ['webSocketUrl' => $webSocketUrl];
-                            }
-                            if (isset($data['config']['allow']['presenceList']) && $data['config']['allow']['presenceList'] === '1') {
-                                $fieldConfiguration['presenceList'] = ['container' => null];
-                            }
-                            $fieldConfiguration['removePlugins'] = ['SourceEditing'];
-                            $fieldData = json_encode($fieldConfiguration);
-                            $feature->setFields($fieldData);
                             
-                            $notification['title'] = 'ckeditorKit.plugin.realtime_collaboration';
-                            $notification['message'] = 'ckeditorKit.plugin.realtime_collaboration.message';
-                            $notification['severity'] = 1;
-                            $this->notification->addFlashNotification($notification);
-                        }
-                        
-                        if ($module === 'Menubar') {
-                            $fieldConfiguration = ['menuBar' => ['isVisible' => true]];
-                            $fieldData = json_encode($fieldConfiguration);
-                            $feature->setFields($fieldData);
-                        }
-                        
-                        $feature->setEnable($enable);
-                    } else {
-                        // Handle disabling
-                        if ($module === 'Menubar') {
-                            $feature->setFields('');
-                        }
-                        
-                        // Check if toolbar items should be removed
-                        if ($data['position'] && isset($moduleConfiguration['configuration']['toolBarItems'])) {
-                            $toolBar = $moduleConfiguration['configuration']['toolBarItems'];
-                            $toolBarItemArray = array_filter(array_map('trim', explode(',', $toolBar)));
-                            $toolBarItems = array_filter(array_map('trim', explode(',', $data['position'])));
-                            $match = array_intersect($toolBarItemArray, $toolBarItems);
-                            if (!$match) {
+                            if ($module === 'Menubar') {
+                                $fieldConfiguration = ['menuBar' => ['isVisible' => true]];
+                                $fieldData = json_encode($fieldConfiguration);
+                                $feature->setFields($fieldData);
+                            }
+                            
+                            $feature->setEnable($enable);
+                        } else {
+                            // Handle disabling
+                            if ($module === 'Menubar') {
+                                $feature->setFields('');
+                            }
+                            
+                            // Check if toolbar items should be removed
+                            if ($data['position'] && isset($moduleConfiguration['configuration']['toolBarItems'])) {
+                                $toolBar = $moduleConfiguration['configuration']['toolBarItems'];
+                                $toolBarItemArray = array_filter(array_map('trim', explode(',', $toolBar)));
+                                $toolBarItems = array_filter(array_map('trim', explode(',', $data['position'])));
+                                $match = array_intersect($toolBarItemArray, $toolBarItems);
+                                if (!$match) {
+                                    // Remove Item from toolBar
+                                    $this->baseToolBar->updateToolBar($module);
+                                }
+                            } elseif (!isset($moduleConfiguration['configuration']['toolBarItems'])) {
                                 // Remove Item from toolBar
                                 $this->baseToolBar->updateToolBar($module);
                             }
-                        } elseif (!isset($moduleConfiguration['configuration']['toolBarItems'])) {
-                            // Remove Item from toolBar
-                            $this->baseToolBar->updateToolBar($module);
+                            
+                            $feature->setEnable(false);
                         }
-                        
-                        $feature->setEnable(false);
                     }
-
+                  
                     $this->featureRepository->update($feature);
                     $this->persistenceManager->persistAll();
                     $this->cache->flush();

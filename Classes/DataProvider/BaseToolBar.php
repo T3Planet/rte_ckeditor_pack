@@ -95,6 +95,7 @@ class BaseToolBar
                     'icon' => $icon,
                     'toolBar' => $value,
                     'label' => $label,
+                    'is_premium' => $toolbar->isPremiumToolbarItem($value)
                 ];
             }
         }
@@ -167,6 +168,7 @@ class BaseToolBar
                     'icon' => $icon,
                     'toolBar' => $dftItem,
                     'label' => $label,
+                    'is_premium' => $toolbar->isPremiumToolbarItem($dftItem)
                 ];
 
             }
@@ -255,8 +257,8 @@ class BaseToolBar
                     $preset = GeneralUtility::makeInstance(Preset::class);
                     $preset->setPresetKey($presetKey);
                     $preset->setIsCustom(false);
-                    $preset->setHidden(true);
-                    $preset->setUsageSource(0); // 0 = Load from YAML
+                    $preset->setHidden(false);
+                    $preset->setUsageSource(0);
                     $preset->setToolbarItems($toolBarItems);
                     $this->presetRepository->add($preset);
                     $this->persistenceManager->persistAll();

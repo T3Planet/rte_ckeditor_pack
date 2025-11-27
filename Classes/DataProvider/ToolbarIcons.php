@@ -90,8 +90,39 @@ class ToolbarIcons
         'address' => 'actions-marker',
     ];
 
+    private const PREMIUM_TOOLBAR_ITEMS = [
+        'toggleAi',
+        'aiQuickActions',
+        'TodoList',
+        'ImportWord',
+        'ExportPdf',
+        'ExportWord',
+        'insertFootnote',
+        'footnotesStyle',
+        'previousPage',
+        'nextPage',
+        'pageNavigation',
+        'multiLevelList',
+        'bookmark',
+        'comment',
+        'commentsArchive',
+        'revisionHistory',
+        'trackChanges',
+        'insertTemplate',
+        'caseChange',
+        'insertMergeField',
+        'previewMergeFields',
+        'FormatPainter',
+        'TableOfContents',
+    ];
+
     public function getIconByName(string $name): ?string
     {
         return self::ICONS[$name] ?? null;
+    }
+
+    public function isPremiumToolbarItem(string $name): bool
+    {
+        return in_array($name, self::PREMIUM_TOOLBAR_ITEMS, true);
     }
 }

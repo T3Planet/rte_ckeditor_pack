@@ -10,7 +10,7 @@ return [
         'versioningWS' => true,
         'rootLevel' => 1,
         'delete' => 'deleted',
-        'hideTable' => false,
+        'hideTable' => true,
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],

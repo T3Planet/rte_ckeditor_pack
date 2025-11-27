@@ -9,8 +9,7 @@ Toolbar & Presets
 .. figure:: images/toolbar.png
    :alt: Basic Configuration
 
-You can easily create your own RTE presets or edit your preset using the drag-n-drop UI toolbar
-management. Take a look at the interactive demo below:
+You can easily create your own RTE presets or edit your preset using the drag-and-drop UI toolbar management. Take a look at the interactive demo below::
 
 .. rst-class:: horizbuttons-attention-m
 
@@ -18,6 +17,4 @@ management. Take a look at the interactive demo below:
 
 .. note::
 
-   The extension replaces any custom YAML configuration when active.  
-   The backend module relies solely on the settings provided by the extension.  
-   Please work with the extension’s core team for any required changes.
+   The extension replaces any custom YAML configuration while active. The backend module relies solely on the settings provided by the extension. For any required changes, please coordinate with the extension's core team.

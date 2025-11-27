@@ -19,7 +19,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class ToolbarGroupsRepository extends Repository
 {
-    private const TOOLBAR_TABLE_NAME = 'tx_rteckeditorpack_domain_model_toolbaritems';
+    private const TOOLBAR_TABLE_NAME = 'tx_rteckeditorpack_domain_model_preset';
 
     public function updateToolBarItems(string $items, string $activePreset): bool
     {
@@ -39,8 +39,8 @@ class ToolbarGroupsRepository extends Repository
         try {
 
             $data = [
-                'preset' => $activePreset,
-                'items' => $normalizedItems,
+                'preset_key' => $activePreset,
+                'toolbar_items' => $normalizedItems,
             ];
             $this->insertToolBarPreset($activePreset, $data);
 
@@ -58,7 +58,7 @@ class ToolbarGroupsRepository extends Repository
         $constraints = [];
         if ($toolBarItems) {
             foreach ($toolBarItems as $item) {
-                $constraints[] = $queryBuilder->expr()->inSet('items', $queryBuilder->createNamedParameter($item));
+                $constraints[] = $queryBuilder->expr()->inSet('toolbar_items', $queryBuilder->createNamedParameter($item));
             }
         }
 
@@ -84,7 +84,7 @@ class ToolbarGroupsRepository extends Repository
                 ->select('uid')
                     ->from(self::TOOLBAR_TABLE_NAME)
                     ->where(
-                        $queryBuilder->expr()->eq('preset', $queryBuilder->createNamedParameter($activePreset))
+                        $queryBuilder->expr()->eq('preset_key', $queryBuilder->createNamedParameter($activePreset))
                     )
                 ->executeQuery()
                 ->fetchOne();
@@ -93,7 +93,7 @@ class ToolbarGroupsRepository extends Repository
                 $connection->update(
                     self::TOOLBAR_TABLE_NAME,
                     $fieldData,
-                    ['preset' => $activePreset]
+                    ['preset_key' => $activePreset]
                 );
             } else {
                 $connection->insert(
