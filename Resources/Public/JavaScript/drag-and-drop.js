@@ -443,11 +443,36 @@ class UIEventHandlers {
     }
 
     if (this.state.elements.toggleLabelButton && this.state.elements.toggleLabel.length) {
+    
+      const applyToggleState = () => {
+          const isOpen = localStorage.getItem('toggleLabel') === 'open';
+  
+          this.state.elements.toggleLabel.forEach(el => {
+              if (isOpen) {
+                  el.classList.remove("label-show");
+              } else {
+                  el.classList.add("label-show");
+              }
+          });
+      };
+  
+      // Apply initial state from localStorage
+      applyToggleState();
+  
+      // On click toggle state
       this.state.elements.toggleLabelButton.addEventListener("click", () => {
-        this.state.elements.toggleLabel.forEach(element => element.classList.toggle("label-show"));
-        setTimeout(() => window.dispatchEvent(new Event("resize")), 200);
+          const isOpen = localStorage.getItem('toggleLabel') === 'open';
+  
+          // Save opposite value
+          localStorage.setItem('toggleLabel', isOpen ? 'closed' : 'open');
+  
+          // Apply updated state
+          applyToggleState();
+  
+          // Optional resize event
+          setTimeout(() => window.dispatchEvent(new Event("resize")), 200);
       });
-    }
+    }  
 
     if (this.state.elements.presetSelector) {
       const presetForm = document.getElementById("presetForm");

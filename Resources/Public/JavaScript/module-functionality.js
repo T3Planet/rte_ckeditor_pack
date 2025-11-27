@@ -124,8 +124,27 @@ if (cardCheck.length) {
     }
   });
 }
+// Select newly created preset after page reload
+function selectLastPreset() {
+    const shouldSelectLastPreset = sessionStorage.getItem('selectLastPreset');
+    if (shouldSelectLastPreset === 'true') {
+        const presetSelect = document.getElementById('rtePresets');
+        if (presetSelect && presetSelect.options.length > 0) {
+            // Select the last option (newly created preset)
+            presetSelect.selectedIndex = presetSelect.options.length - 1;
+            
+            // Trigger change event to ensure any dependent code runs
+            presetSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        // Remove the flag after selecting
+        sessionStorage.removeItem('selectLastPreset');
+    }
+}
 
 initModuleFunc();
+setTimeout(() => {
+    selectLastPreset();
+}, 200);
 document.addEventListener('DOMContentLoaded', () => {
     initModuleFunc();
 });

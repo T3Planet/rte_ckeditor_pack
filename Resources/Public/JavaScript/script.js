@@ -319,9 +319,7 @@ document.addEventListener('click', (event) => {
                     
                     presetNameInput.value = '';
                     submitButton.setAttribute('disabled', 'disabled');
-                    setTimeout(() => {
-                        top.window.location.reload();
-                    }, 500);
+                    top.window.location.reload();
                 }
             })
             .catch((error) => {
@@ -333,7 +331,7 @@ document.addEventListener('click', (event) => {
                 submitButton.classList.remove('is-loading');
             });
     }
-});
+}); 
 
 const newPresetBtn = document.getElementById('newPresetBtn');
 

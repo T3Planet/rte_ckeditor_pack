@@ -417,7 +417,7 @@ class CardData
             ],
             'Menubar' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.menuBar', 'rte_ckeditor_pack'),
-                'subtitle' => '',
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.menuBar', 'rte_ckeditor_pack'),
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.menuBar.description', 'rte_ckeditor_pack'),
                 'icon' => 'content-menu-related',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
@@ -426,7 +426,7 @@ class CardData
             ],
             'Emoji' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.emoji', 'rte_ckeditor_pack'),
-                'subtitle' => '',
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.emoji', 'rte_ckeditor_pack'),
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.emoji.description', 'rte_ckeditor_pack'),
                 'icon' => 'rte_emoji',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),

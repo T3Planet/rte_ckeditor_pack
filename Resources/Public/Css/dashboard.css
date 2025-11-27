@@ -1,6 +1,5 @@
 .t3-ckeditor {
     --bs-blue:#1f5aad;
-    --bs-purple: #771bff;
     display: grid;
     grid-template-areas:
         "moduleDocHeader"
@@ -120,13 +119,24 @@
     box-shadow: none;
 }
 
-.card--active .icon-actions-check-circle,
-.card .btn .icon-actions-check-circle-alt {
+.card--active .icon-actions-toggle-off,
+.card .btn .icon-actions-toggle-on {
     display: none;
 }
 
-.card--active .btn .icon-actions-check-circle-alt {
-  display: block;
+.card--active .btn .icon-actions-toggle-on {
+    display: block;
+}
+
+.ckeditor .btn-check:checked+.btn,
+.ckeditor .btn.active,
+.ckeditor .btn[aria-pressed=true],
+.ckeditor :not(.btn-check)+.btn:active,
+.t3-ckeditor .btn-check:checked+.btn,
+.t3-ckeditor .btn.active,
+.t3-ckeditor .btn[aria-pressed=true],
+.t3-ckeditor :not(.btn-check)+.btn:active {
+    box-shadow: none !important;
 }
 
 [data-identifier="ckeditorGlobalWizardButton"] * {
@@ -194,13 +204,11 @@
 
 .ckeditor .icon-actions-heart-alt,
 .t3-ckeditor .icon-actions-heart-alt {
-    --bs-purple: #771bff;
-    color: var(--bs-purple);
+    color: var(--token-color-primary-base);
 }
 
 .btn-link--purple {
-  --bs-purple: #771bff;
-  color: var(--bs-purple) !important;
+  color: var(--token-color-primary-base) !important;
 }
 
 .t3-ckeditor .btn-default--disable,

@@ -292,12 +292,13 @@
 }
 
 .drag-grid-wrap {
-  background: light-dark(#f5f5f5, #000);
-  border: 10px solid transparent;
-  display: flex;
-  flex-flow: column;
+  background: light-dark(var(--token-color-neutral-4), #000);
+  border: 1px solid var(--token-color-neutral-15);
+  border-radius: var(--typo3-component-border-radius);
+  /* display: flex; */
+  /* flex-flow: column; */
   overflow: hidden;
-  padding: 0 10px 10px;
+  padding: 10px 20px 20px;
 }
 
 .drag-grid-wrap .drag-grid.grid-2 .btn-default,
@@ -507,7 +508,7 @@
 .ck.ck-tabs.ck-ai-tabs {
   min-width: 400px;
   max-width: 400px;
-  height: 100%;
+  min-height: 600px;
 }
 .ck.ck-tabs.ck-ai-tabs.ck-hidden {
   display: none;
