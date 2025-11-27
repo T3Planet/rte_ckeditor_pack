@@ -1,5 +1,4 @@
 .t3-ckeditor {
-    --bs-blue:#1f5aad;
     display: grid;
     grid-template-areas:
         "moduleDocHeader"
@@ -18,27 +17,8 @@
 }
 
 .t3-ckeditor .dashboard-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:calc(-1 * var(--module-body-padding-y)) calc(-1 * var(--module-body-padding-x)) var(--module-body-padding-y);padding:var(--module-body-padding-y) var(--module-body-padding-x) 0;background:light-dark(#dadada, #262626);border-bottom:1px solid light-dark(#cdcdcd, #262626)}
-
-.t3-ckeditor .dashboard-tabs {
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap: 4px;
-}
-
-.t3-ckeditor .dashboard-tab.active {
-    border-color:light-dark(var(--token-color-primary-base), #262626)
-}
-
-.t3-ckeditor .dashboard-tab.btn-notice {
-    padding: 5px 8px;
-    border: 0;
-    -webkit-margin-after: 0;
-    box-shadow: none;
-}
-
-.t3-ckeditor .dashboard-tab.btn-notice:hover {
-    z-index: auto !important;
+.t3-ckeditor .module-docheader {
+    border-bottom: 1px solid light-dark(#cbcacc, #3b3a3f);
 }
 
 /*Dashboard*/
@@ -62,9 +42,29 @@
     background-color: light-dark(#262626, #cdcdcd);
 }
 
-.dashboard-tab.active {
-    background: var(--token-color-primary-base);
+.ckeditor .dashboard-tab.active,
+.t3-ckeditor .dashboard-tab.active {
+    border-color:light-dark(var(--token-color-primary-60), #262626);
+    background: var(--token-color-primary-60);
     color: #fff;
+}
+
+.t3-ckeditor .dashboard-tabs {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap: 4px;
+}
+
+.t3-ckeditor .dashboard-tab.btn-notice {
+    padding: 5px 8px;
+    border: 0;
+    -webkit-margin-after: 0;
+    box-shadow: none;
+}
+
+.t3-ckeditor .dashboard-tab.btn-notice:hover {
+    z-index: auto !important;
 }
 
 .dashboard-tab {

@@ -79,8 +79,9 @@
   margin-top: 0;
 }
 
+.ckeditor .dashboard-tab.active,
 .t3-ckeditor .dashboard-tab.active {
-  background: var(--token-color-primary-base);
+  background: var(--token-color-primary-60);
   color: #fff;
 }
 
@@ -148,9 +149,9 @@
 }
 
 .ckeditor--modal.modal-severity-notice .modal-header {
-  --bs-blue: var(--token-color-primary-base);
-  background-color: var(--token-color-primary-base);
-  border-bottom-color: var(--token-color-primary-base);
+  --bs-blue: var(--token-color-primary-60);
+  background-color: var(--token-color-primary-60);
+  border-bottom-color: var(--token-color-primary-60);
   color: #fff
 }
 

@@ -1,11 +1,3 @@
-.module.t3-ckeditor,
-.ckeditor {
-    /* --token-color-primary-base: #5033c7;
-    --bs-blue: var(--token-color-primary-base);
-    --typo3-state-primary-bg: var(--token-color-primary-base);
-    --typo3-state-primary-border-color: var(--token-color-primary-base); */
-}
-
 .ckeditor-modal-form {
   min-height: 100vh;
   height: 100vh;
