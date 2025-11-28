@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_notifications.xlf" date="2025-10-15T18:03:32Z" product-name="rte-ckeditor-pack" target-language="he">
+    <header/>
+    <body>
+      <trans-unit id="errorNotifications.header.oops">
+        <source>Oops...</source>
+        <target state="needs-translation">Oops...</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.oops">
+        <source>It seems that the editor encountered an error. Save your content and refresh the page. If the error persists, contact your site administrator.</source>
+        <target state="needs-translation">It seems that the editor encountered an error. Save your content and refresh the page. If the error persists, contact your site administrator.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.trialExceeded">
+        <source>Trial limit exceeded</source>
+        <target state="needs-translation">Trial limit exceeded</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.trialExceeded">
+        <source>You have reached the usage limit of your trial license key. Restart the editor - you can reload the page or save edited content.</source>
+        <target state="needs-translation">You have reached the usage limit of your trial license key. Restart the editor - you can reload the page or save edited content.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.usageLimit">
+        <source>Usage limit reached</source>
+        <target state="needs-translation">Usage limit reached</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.usageLimit">
+        <source>You have reached the usage limit of your license key. Please contact our customer support to extend the limit at https://ckeditor.com/contact/.</source>
+        <target state="needs-translation">You have reached the usage limit of your license key. Please contact our customer support to extend the limit at https://ckeditor.com/contact/.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.wproofreaderAuth">
+        <source>WProofreader Authorization Error</source>
+        <target state="needs-translation">WProofreader Authorization Error</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.wproofreaderAuth">
+        <source>Some problems occurred during WProofreader initialization. Check the WProofreader plugin configuration.</source>
+        <target state="needs-translation">Some problems occurred during WProofreader initialization. Check the WProofreader plugin configuration.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.wproofreaderLimit">
+        <source>WProofreader usage limit exceeded</source>
+        <target state="needs-translation">WProofreader usage limit exceeded</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.wproofreaderLimit">
+        <source>The daily limit for the number of words checked using the WProofreader grammar and spell checker has been reached. Please contact your site administrator for help. Access to the service will resume at 00:00 UTC.</source>
+        <target state="needs-translation">The daily limit for the number of words checked using the WProofreader grammar and spell checker has been reached. Please contact your site administrator for help. Access to the service will resume at 00:00 UTC.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.wproofreaderError">
+        <source>WProofreader Error</source>
+        <target state="needs-translation">WProofreader Error</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.wproofreaderError">
+        <source>You have no permission to access the WProofreader proxy.</source>
+        <target state="needs-translation">You have no permission to access the WProofreader proxy.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.accessDenied">
+        <source>Access denied</source>
+        <target state="needs-translation">Access denied</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.accessDenied">
+        <source>You don't have enough permissions for this action.</source>
+        <target state="needs-translation">You don't have enough permissions for this action.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.invalidLicenseKey">
+        <source>Invalid license key</source>
+        <target state="needs-translation">Invalid license key</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.description.invalidLicenseKey">
+        <source>The provided license key is invalid. Please check your license key configuration and contact your site administrator.</source>
+        <target state="needs-translation">The provided license key is invalid. Please check your license key configuration and contact your site administrator.</target>
+      </trans-unit>
+      <trans-unit id="errorNotifications.header.websocketMissingToken">
+        <source>WebSocket connection error. The WebSocket gateway token is missing, Please check your configuration and contact your site administrator.</source>
+        <target state="needs-translation">WebSocket connection error. The WebSocket gateway token is missing, Please check your configuration and contact your site administrator.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
