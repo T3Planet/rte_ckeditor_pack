@@ -68,7 +68,14 @@ class FieldValueUtility
                         $result[$mainKey][$fieldKey] = $iterativeResult;
                     } else {
                         // Handle simple field values
-                        $result[$mainKey][$fieldKey] = self::extractFieldValue($fieldValue);
+                        $normalizedValue = self::extractFieldValue($fieldValue);
+                        
+                        // Normalize field values based on type to match saved format
+                        if ($fieldType instanceof FieldType) {
+                            $normalizedValue = self::normalizeFieldValueByType($normalizedValue, $fieldType);
+                        }
+                        
+                        $result[$mainKey][$fieldKey] = $normalizedValue;
                     }
                 }
             }
@@ -110,6 +117,43 @@ class FieldValueUtility
             return array_map([self::class, 'extractFieldValue'], $value);
         }
         return $value;
+    }
+
+    /**
+     * Normalize field value based on field type to match saved format
+     *
+     * @param mixed $value
+     * @param FieldType $fieldType
+     * @return mixed
+     */
+    protected static function normalizeFieldValueByType($value, FieldType $fieldType)
+    {
+        switch ($fieldType) {
+            case FieldType::SELECT:
+                // For SELECT fields, if value is an array (options), extract the first value
+                // This matches the format after save where it's just the selected value string
+                if (is_array($value) && !empty($value)) {
+                    // Return the first value from the options array
+                    return reset($value);
+                }
+                return $value;
+                
+            case FieldType::BOOLEAN:
+                // For BOOLEAN fields, convert boolean to string "1" or "0"
+                // This matches the format after save
+                if (is_bool($value)) {
+                    return $value ? '1' : '0';
+                }
+                // If already a string "1"/"0", keep it
+                if (is_string($value) && ($value === '1' || $value === '0')) {
+                    return $value;
+                }
+                // Convert truthy/falsy values
+                return ($value ? '1' : '0');
+                
+            default:
+                return $value;
+        }
     }
 }
 
