@@ -5,31 +5,31 @@
     <body>
       <trans-unit id="tx_rteckeditorpack_domain_model_modules">
         <source>Modules</source>
-        <target state="needs-translation">Modules</target>
+        <target state="translated">Module</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_configuration">
         <source>Configuration</source>
-        <target state="needs-translation">Configuration</target>
+        <target state="translated">Konfiguration</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_configuration.description">
         <source>Configuration</source>
-        <target state="needs-translation">Configuration</target>
+        <target state="translated">Konfiguration</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_configuration.config_key">
         <source>Config Key</source>
-        <target state="needs-translation">Config Key</target>
+        <target state="translated">Konfigurationsschlüssel</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_configuration.fields">
         <source>Fields</source>
-        <target state="needs-translation">Fields</target>
+        <target state="translated">Felder</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
         <source>Label</source>
-        <target state="needs-translation">Label</target>
+        <target state="translated">Bezeichnung</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
         <source>Label</source>
-        <target state="needs-translation">Label</target>
+        <target state="translated">Bezeichnung</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.tooltip">
         <source>Tooltip</source>
@@ -37,31 +37,31 @@
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.icon">
         <source>Icon</source>
-        <target state="needs-translation">Icon</target>
+        <target state="translated">Symbol</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.custom_icon">
         <source>Custom Icon</source>
-        <target state="needs-translation">Custom Icon</target>
+        <target state="translated">Benutzerdefiniertes Symbol</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.items">
         <source>Items</source>
-        <target state="needs-translation">Items</target>
+        <target state="translated">Elemente</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.items">
         <source>Items</source>
-        <target state="needs-translation">Items</target>
+        <target state="translated">Elemente</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.preset">
         <source>Preset</source>
-        <target state="needs-translation">Preset</target>
+        <target state="translated">Voreinstellung</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems">
         <source>ToolBar Items</source>
-        <target state="needs-translation">ToolBar Items</target>
+        <target state="translated">Symbolleisten-Elemente</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups">
         <source>ToolBarItem Groups</source>
-        <target state="needs-translation">ToolBarItem Groups</target>
+        <target state="translated">Symbolleistenelement-Gruppen</target>
       </trans-unit>
     </body>
   </file>
