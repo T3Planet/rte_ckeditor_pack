@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_be.xlf" product-name="rte_ckeditor_pack" target-language="fi">
+    <header/>
+    <body>
+      <trans-unit id="labels.ckeditor.cssclass" xml:space="preserve">
+				<source>Custom CSS class</source>
+			<target state="needs-translation">Custom CSS class</target></trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.yes">
+        <source>Yes, discard my changes.</source>
+        <target state="needs-translation">Yes, discard my changes.</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.cancel">
+        <source>No, I will continue editing.</source>
+        <target state="needs-translation">No, I will continue editing.</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.currentPage.modal.message">
+        <source>Are you sure you want to discard these changes?</source>
+        <target state="needs-translation">Are you sure you want to discard these changes?</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.newPage.modal.header">
+        <source>Do you want to close without saving?</source>
+        <target state="needs-translation">Do you want to close without saving?</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.InsertImage">
+        <source>Insert Image</source>
+        <target state="needs-translation">Insert Image</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
