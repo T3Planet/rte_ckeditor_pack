@@ -122,7 +122,13 @@ document.addEventListener('click', (event) => {
                              <strong>ToolBar Group</strong>
                          </a>
                          <div class="btn-group p-1">
-                             <button class="btn btn-danger delete remove-section" type="button"> <span class="t3js-icon icon icon-size-small icon-state-default icon-actions-delete" data-identifier="actions-delete" aria-hidden="true"><span class="icon-markup"><svg class="icon-color"><use xlink:href="/typo3/sysext/core/Resources/Public/Icons/T3Icons/sprites/actions.svg#actions-delete"></use></svg></span></span></button>
+                             <button class="btn btn-danger delete remove-section" type="button">
+                                <span class="t3js-icon icon icon-size-small icon-state-default icon-actions-delete" data-identifier="actions-delete" aria-hidden="true">
+                                    <span class="icon-markup">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g fill="currentColor"><path d="M7 5H6v8h1zM10 5H9v8h1z"/><path d="M13 3h-2v-.75C11 1.56 10.44 1 9.75 1h-3.5C5.56 1 5 1.56 5 2.25V3H3v10.75c0 .69.56 1.25 1.25 1.25h7.5c.69 0 1.25-.56 1.25-1.25V3zm-7-.75A.25.25 0 0 1 6.25 2h3.5a.25.25 0 0 1 .25.25V3H6v-.75zm6 11.5a.25.25 0 0 1-.25.25h-7.5a.25.25 0 0 1-.25-.25V4h8v9.75z"/><path d="M13.5 4h-11a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1z"/></g></svg>
+                                    </span>
+                                </span>
+                             </button>
                          </div>
                      </div>
                      <div id="flush-collapse${nextIndex}" class="panel-collapse search-item collapse show" aria-labelledby="flush-heading${nextIndex}">
@@ -265,7 +271,75 @@ document.addEventListener('click', (event) => {
 
     }
 
-});
+    if (event.target.id === 'newPresetBtn' || event.target.closest('#newPresetBtn')) {
+        event.preventDefault();
+        const submitButton = event.target.id === 'newPresetBtn' ? event.target : event.target.closest('#newPresetBtn');
+        const form = submitButton.closest('form');
+        if (!form || !submitButton || submitButton.disabled) {
+            return;
+        }
+        const presetNameInput = form.querySelector('#preset-name');
+        const ajaxUrl = form.getAttribute('data-ajax-url');
+        if (!ajaxUrl) {
+            Notification.error('Configuration Error', 'AJAX URL for new_preset is not configured');
+            return;
+        }
+        
+        const formData = new FormData(form);
+        submitButton.disabled = true;
+        submitButton.classList.add('is-loading');
+        
+        new AjaxRequest(ajaxUrl)
+            .post(formData)
+            .then(async (response) => {
+                const responseBody = await response.resolve();
+                
+                // Handle notifications
+                if (typeof responseBody === 'object' && responseBody.notifications && Array.isArray(responseBody.notifications)) {
+                    responseBody.notifications.forEach((notification) => {
+                        const title = TYPO3.lang[notification.title] ?? notification.title ?? '';
+                        const message = TYPO3.lang[notification.message] ?? notification.message ?? '';
+                        const severity = notification.severity ?? 0;
+                        if (severity === 0) {
+                            Notification.success(title, message);
+                        } else if (severity === 1) {
+                            Notification.warning(title, message);
+                        } else if (severity === 2) {
+                            Notification.error(title, message);
+                        } else {
+                            Notification.info(title, message);
+                        }
+                    });
+                }
+                
+                // Clear form and reload on success
+                if (responseBody.notifications && responseBody.notifications.length > 0 && responseBody.notifications[0].severity === 0) {
+                    // Get preset name before clearing
+                    const presetName = presetNameInput.value.trim();
+                    
+                    // Store preset name in localStorage
+                    if (presetName) {
+                        localStorage.setItem('activePreset', presetName);
+                    }
+                    
+                    // Store flag to select last item after reload
+                    sessionStorage.setItem('selectLastPreset', 'true');
+                    
+                    presetNameInput.value = '';
+                    submitButton.setAttribute('disabled', 'disabled');
+                    top.window.location.reload();
+                }
+            })
+            .catch((error) => {
+                console.error('AJAX Error:', error);
+                Notification.error('Error', error.message ?? 'An error occurred while creating the preset');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.classList.remove('is-loading');
+            });
+    }
+}); 
 
 const newPresetBtn = document.getElementById('newPresetBtn');
 

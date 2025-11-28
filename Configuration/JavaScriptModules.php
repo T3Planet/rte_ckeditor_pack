@@ -58,6 +58,7 @@ return [
         '@ckeditor/ckeditor5-select-all' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-select-all.js',
         '@ckeditor/ckeditor5-show-blocks' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-show-blocks.js',
         '@ckeditor/ckeditor5-source-editing' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-source-editing.js',
+        '@ckeditor/ckeditor5-source-editing-enhanced' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-source-editing-enhanced.js',
         '@ckeditor/ckeditor5-special-characters' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-special-characters.js',
         '@ckeditor/ckeditor5-style' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-style.js',
         '@ckeditor/ckeditor5-table' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-table.js',

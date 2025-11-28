@@ -23,6 +23,8 @@ class ModuleViewHelper extends AbstractViewHelper
         $this->registerArgument('key', 'string', '', true);
         $this->registerArgument('preset', 'string', '', false);
         $this->registerArgument('isToolbar', 'bool', '', false);
+        $this->registerArgument('fieldConfiguration', 'bool', '', false);
+
     }
 
     /**
@@ -35,10 +37,22 @@ class ModuleViewHelper extends AbstractViewHelper
         $key = $this->arguments['key'];
         $preset = $this->arguments['preset'] ?? '';
         $isToolbar = $this->arguments['isToolbar'] ? true : false;
-        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        $fieldConfiguration = $this->arguments['fieldConfiguration'] ? true : false;
 
+        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        
         if (!$preset) {
-            $record = $configurationRepository->findByConfigKey($key)->getFirst();
+            $record = $configurationRepository->findBy(['configKey' => $key])->getFirst();
+            if ($record && $fieldConfiguration) {
+                $fields = $record->getFields();
+                $fieldsTrimmed = trim($fields);
+                if (empty($fieldsTrimmed) || $fieldsTrimmed === '0' || $fieldsTrimmed === '0.0') {
+                    return false;
+                }
+                $firstChar = substr($fieldsTrimmed, 0, 1);
+                return $firstChar === '{' || $firstChar === '[';
+            }
+        
             return $record ? $record->isEnable() : false;
         }
         $results = $configurationRepository->findInvisibleRecord($key, $preset, $isToolbar);

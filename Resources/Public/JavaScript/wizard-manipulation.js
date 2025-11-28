@@ -48,13 +48,37 @@ class GlobalButtonBarModal {
                     }  
                 });
 
-                currentModal.addEventListener('shown.bs.modal', function () {
+                // Helper function to attach event listeners for both Bootstrap and TYPO3 modal events
+                // This ensures compatibility with all TYPO3 versions (v11 and below use Bootstrap, v12+ use TYPO3 events)
+                const attachModalEvent = (element, eventNames, handler) => {
+                    const events = Array.isArray(eventNames) ? eventNames : [eventNames];
+                    let executed = false;
+                    const guardedHandler = function(...args) {
+                        // Prevent double execution if both events fire (shouldn't happen, but safety measure)
+                        if (!executed) {
+                            executed = true;
+                            handler.apply(this, args);
+                            // Reset flag after a short delay to allow for legitimate re-triggers
+                            setTimeout(() => {
+                                executed = false;
+                            }, 200);
+                        }
+                    };
+                    events.forEach(eventName => {
+                        element.addEventListener(eventName, guardedHandler, { once: false });
+                    });
+                };
+
+                // Modal shown event - compatible with both Bootstrap (v11 and below) and TYPO3 (v12+) events
+                const handleModalShown = function () {
                     if (currentModal.querySelector('iframe')) {
                         currentModal.querySelector('iframe').focus();
                     }
-                });
+                };
+                attachModalEvent(currentModal, ['shown.bs.modal', 'typo3-modal-shown'], handleModalShown);
 
-                currentModal.addEventListener('hide.bs.modal', function () {
+                // Modal hide event - compatible with both Bootstrap (v11 and below) and TYPO3 (v12+) events
+                const handleModalHide = function () {
                     if (localStorage.getItem("isModified") === 'true') {
                         const dashboardTabs = document.querySelector('.dashboard-tabs');
                         let currentModule = '';
@@ -74,7 +98,8 @@ class GlobalButtonBarModal {
                         localStorage.removeItem('isModified');
                         window.location.href = updatedUrl.toString();
                     }
-                });
+                };
+                attachModalEvent(currentModal, ['hide.bs.modal', 'typo3-modal-hide'], handleModalHide);
             }
         });
     }

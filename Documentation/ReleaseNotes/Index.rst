@@ -17,6 +17,7 @@ List of versions
    :glob:
 
 
+  2.0.0/Index
   1.1.0/Index
   1.0.1/Index
   1.0.0/Index

@@ -22,7 +22,7 @@
                 <source>File Management</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.module.settings">
-                <source>Settings</source>
+                <source>Premium Settings</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.module.plugins">
                 <source>Free Packages</source>
@@ -54,196 +54,266 @@
             <trans-unit id="ckeditorKit.tab.Favorites">
                 <source>Favorites</source>
             </trans-unit>
+            <!-- here -->
             <trans-unit id="ckeditorKit.tab.premium.track_changes.description">
-                <source>Suggest edits without changing the main text. Each suggestion is clearly marked, and users can review, accept, or reject them as needed.</source>
+                <source>Suggest edits without changing the text. All suggestions are marked for review.</source>
             </trans-unit>
+            <trans-unit id="features.settings.save">
+                <source>Save Changes</source>
+            </trans-unit>
+            <trans-unit id="features.settings.group">
+                <source>Toolbar Groups</source>
+            </trans-unit>
+            <trans-unit id="features.settings.dragDrop">
+                <source>Drag N Drop Features</source>
+            </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.comments">
                 <source>Comments</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.comments.description">
-                <source>Add, edit, or delete comments anywhere in the editor. Start discussions with threads or limit users to comments-only mode for focused feedback.</source>
-            </trans-unit>
+                <source>Add, edit, or delete comments and use threads or comments-only mode for focus.</source>
+            </trans-unit>            
+            
             <trans-unit id="ckeditorKit.tab.premium.revision_history">
                 <source>Revision History</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.revision_history.description">
-                <source>View, compare, restore, or rename older document versions. Keep track of changes over time and easily bring back earlier content when needed.</source>
-            </trans-unit>
+                <source>View, compare, or restore older versions and recover content when needed.</source>
+            </trans-unit>            
+            
             <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration">
                 <source>Real-time Collaboration</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration.description">
-                <source> Allow multiple users to work on the same content at once. They can edit, comment, suggest changes, and review document history for a smooth Google Docs-style experience.</source>
-            </trans-unit>
+                <source>Let multiple users edit, comment, suggest, and review document history together.</source>
+            </trans-unit>            
+            
             <trans-unit id="ckeditorKit.tab.premium.import_from_word">
                 <source>Import from Word</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.import_from_word.description">
-                <source>Convert Word documents into clean HTML inside CKEditor 5. All formatting, comments, and tracked changes are kept, making importing quick and error-free.</source>
-            </trans-unit>
+                <source>Convert Word files to clean HTML with formatting, comments, and changes kept.</source>
+            </trans-unit>            
+            
             <trans-unit id="ckeditorKit.tab.premium.export_to_pdf">
                 <source>Export to PDF</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.export_to_pdf.description">
-                <source>Create a polished PDF version of your content directly from the editor with one click. Formatting and layout are preserved accurately.</source>
+                <source>Generate a polished PDF from the editor with accurate formatting and layout.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.toggle_ai">
                 <source>CKEditor AI</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.toggle_ai.description">
-                <source>Add a built-in AI Assistant to write, rephrase, translate, or summarize your text. Get instant help directly inside the editor.</source>
+                <source>Use the AI Assistant to write, rephrase, translate, or summarize text instantly.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.footnotes">
                 <source>Footnotes</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.footnotes.description">
-                <source>Insert inline footnotes with automatic numbering. Keep notes and references clear and consistent across the entire document.</source>
+                <source>Insert inline footnotes with automatic numbering to keep notes consistent.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check">
                 <source>Spell and Grammar Check</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check.description">
-                <source>Use an AI-based tool to check spelling, grammar, and punctuation in many languages. See suggestions as you type or review them later.</source>
+                <source>Use AI to check spelling, grammar, and punctuation with instant suggestions.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.pagination">
                 <source>Pagination</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.pagination.description">
-                <source>Preview page breaks while editing to see how your document will look when exported to PDF or Word.</source>
+                <source>Preview page breaks during editing to see the final layout before export.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.math_equations">
                 <source>Math Equations</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.math_equations.description">
-                <source>Easily add properly formatted mathematical notation and chemical formulas to your content.</source>
+                <source>Add formatted mathematical notation and chemical formulas easily.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.multi_level_list">
                 <source>Multi-level List</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.multi_level_list.description">
-                <source>Create and edit advanced numbered lists like 1, 1.1, and 1.1.1. Keep your structure organized and easy to follow.</source>
+                <source>Create numbered lists like 1, 1.1, 1.1.1 to keep structure clear and organized.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.notifications">
                 <source>Notifications</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.notifications.description">
-                <source>Notification system for collaboration features automatically sends email notifications to other users taking part in collaboration.
-                        It notifies team members about comments, mentions, and suggestion updates.
-                        It also displays a part of the content that the notification is about so it's easy to see what other user's activity is about.</source>
+                <source>Send email alerts for comments, mentions, and suggestions with related content snippets.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.slash_commands">
                 <source>Slash Commands</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.slash_commands.description">
-                <source>Use the / key to quickly insert block elements, styles, or content without using the mouse. You can also create and manage your own custom commands.</source>
+                <source>Use “/” to insert blocks, styles, or content quickly. Create custom commands too.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.templates">
                 <source>Templates</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.templates.description">
-                <source>Use templates to add ready-made content blocks like tables or create complete document layouts such as letters or reports quickly and easily.</source>
+                <source>Use templates to add ready-made blocks or full layouts like letters and reports.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.paste_from_office_enhanced">
-                <source>Paste from Office Enhanced</source>
+                <source>Paste Office Enhanced</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.paste_from_office_enhanced.description">
-                <source>Copy and paste from Word or Excel without errors. All formatting and styles are preserved, giving you a clean and accurate HTML output.</source>
+                <source>Paste from Word or Excel with accurate formatting and clean HTML output.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.format_painter">
                 <source>Format Painter</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.format_painter.description">
-                <source>Copy formatting from one section and apply it to others. Keep text styles and layouts consistent across your entire document easily.</source>
+                <source>Copy formatting from one place and apply it elsewhere for consistent styling.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.document_outline">
                 <source>Document Outline</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.document_outline.description">
-                <source>Automatically list document headings in a sidebar. Use it to navigate long content faster and adjust the position of the outline when needed.</source>
+                <source>List document headings in a sidebar for quick navigation through long content.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.table_contents">
                 <source>Table of Contents</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.table_contents.description">
-                <source>Insert a table of contents that updates automatically when your document changes. All headings are linked for quick navigation.</source>
+                <source>Insert an auto-updating table of contents with linked headings for navigation.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.case_change">
                 <source>Case Change</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.case_change.description">
-                <source>Toggle text between UPPERCASE, lowercase, and Title Case with a single click.</source>
+                <source>Switch text between uppercase, lowercase, or title case with one click.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode">
                 <source>Full Screen Mode</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode.description">
-                <source>Use the editor in full screen for a larger workspace. This feature is part of the free CKEditor 5 Plugin Pack. See the Plugin Pack Feature Guide for setup details.</source>
+                <source>Use the editor in full screen for more space. Part of the free CKEditor Plugin Pack.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.merge_fields">
                 <source>Merge Fields</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.merge_fields.description">
-                <source>Add placeholders that can be replaced with text, blocks, or images. Perfect for creating personalized documents or automating bulk emails.</source>
+                <source>Add placeholders for text, blocks, or images to create personalized documents.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.file_management.ckbox">
                 <source>CKBox</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.file_management.ckbox.description">
-                <source> Securely upload, store, and organize your files and images. For use in CKEditor 5. Simplify media discovery with the media browser, alongside an intuitive Image Editor for image adjustments.</source>
+                <source>Upload, store, and manage files securely with a media browser and image editor.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation">
                 <source>Block Indentation</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation.description">
-                <source>Set indentation for text blocks like paragraphs, headings, or lists. This helps visually separate different sections of your content.</source>
+                <source>Set indentation for paragraphs, headings, or lists to separate content visually.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace">
                 <source>Find and Replace</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace.description">
-                <source>Search for words or phrases in your document and replace them with alternate text. </source>
+                <source>Search and replace words or phrases throughout your document.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts">
                 <source>Fonts</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts.description">
-                <source>Change font family, size, and color, including background color. Adjust the text style to match your brand or document design.</source>
+                <source>Change font family, size, and color, including background.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight">
                 <source>Highlight</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight.description">
-                <source>Mark text with different colors. Use it to change background or text color for emphasis or quick visual reference.</source>
+                <source>Mark text with colors for emphasis or quick visual reference.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break">
                 <source>Page Break</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break.description">
-                <source>Insert page breaks to define where new pages start. Control your document’s layout when printing or exporting to PDF or Word.</source>
+                <source>Insert page breaks to control layout when printing or exporting.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all">
                 <source>Select All</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all.description">
-                <source>The select all feature lets you select the entire content using a toolbar button.</source>
+                <source>Select all document content using a toolbar button.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation">
                 <source>Text Transformation</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation.description">
-                <source>Automatically correct or replace certain text fragments. It helps maintain consistent spelling and formatting while typing.</source>
+                <source>Auto-correct or replace text to maintain consistent spelling and formatting.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list">
                 <source>To-do Document List</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list.description">
-                <source>Create interactive checklists with labels. Add, check off, or reorder tasks to manage content more efficiently.</source>
+                <source>Create interactive checklists with labels and reorderable items.</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count">
                 <source>Word count</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count.description">
-                <source>Track words and characters as you write. Monitor content length and progress easily within the editor.</source>
+                <source>Track words and characters while writing and monitor content length easily.</source>
             </trans-unit>
 
             <trans-unit id="ckeditorKit.operation.success">
@@ -257,13 +327,14 @@
             </trans-unit>
             <trans-unit id="ckeditorKit.plugin.setting_save.error.message">
                 <source>Configuration is not updated, please try again</source>
-            </trans-unit>
-
+           </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.export_to_word">
                 <source>Export to Word</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.premium.export_to_word.description">
-                <source>Generate a .docx file instantly from the editor. Keep your document’s original formatting for easy sharing and further editing.</source>
+                <source>Create a .docx file instantly while keeping original formatting intact.</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.key_missing">
                 <source>To unlock premium features, kindly provide a license key.</source>
@@ -299,79 +370,88 @@
             </trans-unit>
             <trans-unit id="ckeditorKit.module_update.error.message">
                 <source>Configuration is not updated, please try again</source>
-            </trans-unit>
-
+           </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed">
                 <source>Html Embed</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed.description">
-                <source>Embed custom HTML snippets inside your document. Ideal for adding widgets, iframes, or other HTML elements directly.</source>
+                <source>Embed custom HTML like widgets or iframes directly in your content.</source>
             </trans-unit>
-
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.code">
                 <source>Code</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.code.description">
-                <source>Display inline code snippets instead of full blocks. Keep code readable while maintaining the natural document flow.</source>
+                <source>Insert inline code snippets that stay readable within the text flow.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock">
                 <source>Code Block</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock.description">
-                <source>Insert preformatted code blocks with language labels. Perfect for displaying code samples in a clean, readable format.</source>
+                <source>Insert preformatted code blocks with language labels for clarity.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar">
                 <source>Block Toolbar</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar.description">
-                <source>Access the main toolbar with dropdowns and buttons. It provides easy access to all editor features in a familiar interface.</source>
+                <source>Access main toolbar options through a dropdown for easy navigation.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.balloonToolbar">
                 <source>Balloon Toolbar</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.balloonToolbar.description">
-                <source>Use a floating toolbar that appears when you select text. It offers quick formatting tools exactly where you need them.</source>
+                <source>Use a floating toolbar that appears on text selection for quick actions.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.file_management.typo3Image">
                 <source>TYPO3 Image</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.file_management.typo3Image.description">
-                <source>Modern image and file uploads, image editing, and native integration with CKEditor.</source>
+                <source>Modern image uploads, editing tools, and native CKEditor integration.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing">
                 <source>Restricted Editing</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description">
-                <source>Control which part of a document users can edit by designating certain sections of a document as non-editable.</source>
+                <source>Control which parts of the document users can edit by locking sections.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown">
                 <source>Markdown</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown.description">
-                <source>Switch from HTML to Markdown output. With autoformatting, it turns CKEditor into a simple yet powerful Markdown editor.</source>
+                <source>Switch to Markdown output with autoformatting for a simple editing flow.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.mediaEmbed">
                 <source>Media Embed</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.mediaEmbed.description">
-                <source>Insert videos, social posts, or maps into your document. Add multimedia content easily and keep everything within the editor.</source>
+                <source>Insert videos, social posts, or maps to enrich your document.</source>
             </trans-unit>
-
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images">
                 <source>Image Configuration</source>
             </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images.description">
-                <source>CKEditor 5 includes built-in tools to insert, upload, resize, style, and caption images. All features work smoothly with block, inline, and responsive images right away.</source>
+                <source>Insert, upload, resize, style, and caption images with full CKEditor support.</source>
             </trans-unit>
-
+            <!-- here -->
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave">
                 <source>Autosave</source>
             </trans-unit>
@@ -383,15 +463,15 @@
                 <source>ShowBlocks</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.showBlocks.description">
-                <source>Visualize all block-level elements in your content. Great for identifying structure and layout during editing.</source>
-            </trans-unit>
+                <source>Visualize block elements to understand document structure while editing.</source>
+            </trans-unit>            
 
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.textPartLanguage">
                 <source>Textpart language</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.textPartLanguage.description">
-                <source>Mark parts of text in different languages so browsers and screen readers can interpret them correctly for accessibility.</source>
-            </trans-unit>
+                <source>Mark text in other languages so browsers and readers interpret it correctly.</source>
+            </trans-unit>            
 
             <trans-unit id="ckeditorKit.tab.layout.CollaborativeDocumentEditor">
                 <source>Collaborative Document Editor</source>
@@ -443,22 +523,22 @@
                 <source>MenuBar</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.menuBar.description">
-                <source>Organize editor tools into a clean menu bar. Customize it to include quick access to standard or custom plugin buttons.</source>
-            </trans-unit>
+                <source>Organize tools in a clean menu bar and customize quick access to plugins.</source>
+            </trans-unit>                     
 
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.emoji">
                 <source>Emoji</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.emoji.description">
-                <source>Insert emojis directly from the toolbar or while typing. Add a friendly and expressive touch to your content.</source>
-            </trans-unit>
+                <source>Insert emojis from the toolbar or while typing to add expression to content.</source>
+            </trans-unit>                     
 
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight">
                 <source>Line Height</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight.description">
-                <source>Change the line height of selected blocks. Adjust spacing for better readability and a cleaner document layout.</source>
-            </trans-unit>
+                <source>Change line height of blocks to adjust spacing for better readability.</source>
+            </trans-unit>            
 
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.special_characters">
                 <source>Special Characters</source>
@@ -553,22 +633,22 @@
                 <source>Heading</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.heading.description">
-                <source>Add headings to structure your document clearly. Headings make your text easier to read and improve accessibility and SEO.</source>
-            </trans-unit>
+                <source>Add headings to structure content clearly and improve readability.</source>
+            </trans-unit>            
 
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment">
                 <source>Text alignment</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment.description">
-                <source>Align your content to the left, right, center, or justify it. Keep your document layout clean and professional.</source>
-            </trans-unit>
+                <source>Align content left, right, center, or justify to keep your layout clean.</source>
+            </trans-unit>            
 
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style">
                 <source>Styles</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style.description">
-                <source>Apply predefined styles to text or elements. These styles add CSS classes to improve appearance or provide semantic meaning.</source>
-            </trans-unit>
+                <source>Apply predefined styles with CSS classes to enhance appearance and meaning.</source>
+            </trans-unit>                    
 
             <trans-unit id="field.placeholder.licenseKey">
                 <source>License key</source>
@@ -614,8 +694,8 @@
                 <source>Mentions</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.premium.mention.description">
-                <source>Use “@” to tag users, groups, or topics inside your document. Get smart suggestions while typing to improve teamwork.</source>
-            </trans-unit>
+                <source>Use “@” to tag users, groups, or topics and get smart suggestions while typing.</source>
+            </trans-unit>                     
             <trans-unit id="ckeditorKit.no_module_update">
                 <source>No Changes</source>
             </trans-unit>
@@ -666,6 +746,13 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>The source editing feature lets you view and edit the source of your document.</source>
             </trans-unit>
 
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced">
+                <source>Source editing (Enhanced)</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced.description">
+                <source>Enhanced source editing with syntax highlighting, code formatting, and improved editing experience for viewing and editing document source code.</source>
+            </trans-unit>
+
             <trans-unit id="toolbar.create_group">
                 <source>Create New Group</source>
             </trans-unit>
@@ -692,8 +779,8 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>Bookmarks</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.bookmark.description">
-                <source>Add and manage bookmarks to move easily through long documents. Improve navigation and create internal links quickly.</source>
-            </trans-unit>
+                <source>Add and manage bookmarks to navigate long documents and create quick links.</source>
+            </trans-unit>            
 
             <trans-unit id="toolbar.item.fullScreen">
                 <source>Full Screen</source>
@@ -942,6 +1029,9 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="t3editor.form.docs">
                 <source>Docs</source>
             </trans-unit>
+            <trans-unit id="t3editor.form.open_docs">
+                <source>Open Docs</source>
+            </trans-unit>
             <trans-unit id="t3editor.form.demos">
                 <source>Demos</source>
             </trans-unit>
@@ -980,6 +1070,9 @@ The authorization credentials are required for Real-time collaboration or Import
             </trans-unit>
             <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.desc">
                 <source>The Side option is not supported when using the Sidebar type.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.add_new">
+                <source>Add New</source>
             </trans-unit>
         </body>
     </file>

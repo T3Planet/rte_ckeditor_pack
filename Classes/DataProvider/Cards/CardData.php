@@ -34,6 +34,7 @@ class CardData
                 'icon' => 'actions-document-edit',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/collaboration/track-changes/track-changes.html',
             ],
             'Comments' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.comments', 'rte_ckeditor_pack'),
@@ -42,6 +43,7 @@ class CardData
                 'icon' => 'content-messages',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/collaboration/comments/comments.html',
             ],
             'ImportWord' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.import_from_word', 'rte_ckeditor_pack'),
@@ -49,7 +51,8 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.import_from_word.description', 'rte_ckeditor_pack'),
                 'icon' => 'mimetypes-word',
                 'buttonTitle' => $this->btnTitle,
-                'modalSize' => 'medium',
+                'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/converters/import-word/import-word.html',
             ],
             'RevisionHistory' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.revision_history', 'rte_ckeditor_pack'),
@@ -58,6 +61,7 @@ class CardData
                 'icon' => 'actions-history',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/collaboration/revision-history/revision-history.html',
             ],
             'ExportPdf' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.export_to_pdf', 'rte_ckeditor_pack'),
@@ -66,6 +70,7 @@ class CardData
                 'icon' => 'actions-file-pdf',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'large',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-pdf.html',
             ],
             'ExportWord' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.export_to_word', 'rte_ckeditor_pack'),
@@ -74,6 +79,7 @@ class CardData
                 'icon' => 'mimetypes-word',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'large',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-word.html',
             ],
             'ToggleAi' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.toggle_ai', 'rte_ckeditor_pack'),
@@ -82,6 +88,7 @@ class CardData
                 'icon' => 'rte_toggleAi',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/ai/ckeditor-ai-overview.html',
             ],
             'Footnotes' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.footnotes', 'rte_ckeditor_pack'),
@@ -89,7 +96,8 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.footnotes.description', 'rte_ckeditor_pack'),
                 'icon' => 'rte_footnotes',
                 'buttonTitle' => $this->btnTitle,
-                'modalSize' => 'medium',
+                'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/footnotes.html',
             ],
             'WProofreader' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.spell_and_grammar_check', 'rte_ckeditor_pack'),
@@ -98,6 +106,7 @@ class CardData
                 'icon' => 'actions-check-badge-alt',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/spelling-and-grammar-checking.html#wproofreader-cloud',
             ],
             'Pagination' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.pagination', 'rte_ckeditor_pack'),
@@ -105,7 +114,8 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.pagination.description', 'rte_ckeditor_pack'),
                 'icon' => 'actions-pagetree',
                 'buttonTitle' => $this->btnTitle,
-                'modalSize' => 'small',
+                'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/pagination/pagination.html',
             ],
             'MultiLevelList' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.multi_level_list', 'rte_ckeditor_pack'),
@@ -114,6 +124,7 @@ class CardData
                 'icon' => 'rte_multiLevelList',
                 'modalSize' => 'small',
                 'buttonTitle' => $this->btnTitle,
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/lists/multi-level-lists.html#common-api',
             ],
             'Mention' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.mention', 'rte_ckeditor_pack'),
@@ -122,6 +133,7 @@ class CardData
                 'icon' => 'actions-pagetree',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html',
             ],
             'RealTimeCollaboration' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.real_time_collaboration', 'rte_ckeditor_pack'),
@@ -131,6 +143,7 @@ class CardData
                 'data_confirmation' => 'false',
                 'buttonTitle' => $this->btnTitle,
                 'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/collaboration/real-time-collaboration/real-time-collaboration.html',
             ],
             'SlashCommand' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.slash_commands', 'rte_ckeditor_pack'),
@@ -139,6 +152,7 @@ class CardData
                 'icon' => 'actions-link',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'large',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/slash-commands.html',
             ],
             'Template' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.templates', 'rte_ckeditor_pack'),
@@ -147,6 +161,7 @@ class CardData
                 'icon' => 'actions-viewmode-tiles',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'large',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/template.html',
             ],
             'PasteFromOfficeEnhanced' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.paste_from_office_enhanced', 'rte_ckeditor_pack'),
@@ -155,6 +170,7 @@ class CardData
                 'icon' => 'actions-file-openoffice',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.checkbox.enable', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/pasting/paste-from-office-enhanced.html',
             ],
             'FormatPainter' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.format_painter', 'rte_ckeditor_pack'),
@@ -163,6 +179,7 @@ class CardData
                 'icon' => 'actions-brush',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.checkbox.enable', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/format-painter.html',
             ],
             'DocumentOutline' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.document_outline', 'rte_ckeditor_pack'),
@@ -171,6 +188,7 @@ class CardData
                 'icon' => 'actions-document-view',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/document-outline.html',
             ],
             'FullScreen' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.full_screen_mode', 'rte_ckeditor_pack'),
@@ -179,6 +197,7 @@ class CardData
                 'icon' => 'actions-fullscreen',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/fullscreen.html',
             ],
             'MergeFields' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.merge_fields', 'rte_ckeditor_pack'),
@@ -187,6 +206,7 @@ class CardData
                 'icon' => 'actions-variable-add',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'large',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/merge-fields.html',
             ],
             'TableOfContents' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.table_contents', 'rte_ckeditor_pack'),
@@ -195,6 +215,7 @@ class CardData
                 'icon' => 'content-menu-pages',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.checkbox.enable', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/table-of-contents.html',
             ],
             'CaseChange' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.case_change', 'rte_ckeditor_pack'),
@@ -203,14 +224,7 @@ class CardData
                 'icon' => 'rte_caseChange',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'small',
-            ],
-            'Typo3Image' => [
-                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image', 'rte_ckeditor_pack'),
-                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image', 'rte_ckeditor_pack'),
-                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image.description', 'rte_ckeditor_pack'),
-                'icon' => 'content-image',
-                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.checkbox.enable', 'rte_ckeditor_pack'),
-                'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/case-change.html',
             ],
             'Images' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.images', 'rte_ckeditor_pack'),
@@ -218,15 +232,8 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.images.description', 'rte_ckeditor_pack'),
                 'icon' => 'content-image',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
-                'modalSize' => 'medium',
-            ],
-            'Image' => [
-                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.auto_image', 'rte_ckeditor_pack'),
-                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.auto_image', 'rte_ckeditor_pack'),
-                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.auto_image.description', 'rte_ckeditor_pack'),
-                'icon' => 'content-image',
-                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
-                'modalSize' => 'medium',
+                'modalSize' => 'small',
+                'docs' => 'https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/Features/Media&VisualContent/Index.html',
             ],
             'Indentation' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.block_indentation', 'rte_ckeditor_pack'),
@@ -235,6 +242,7 @@ class CardData
                 'icon' => 'content-beside-text-img-above-center',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/indent.html',
             ],
             'Bookmark' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.bookmark', 'rte_ckeditor_pack'),
@@ -243,6 +251,7 @@ class CardData
                 'icon' => 'rte_bookmark',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/bookmarks.html',
             ],
             'Font' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.fonts', 'rte_ckeditor_pack'),
@@ -250,7 +259,8 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.fonts.description', 'rte_ckeditor_pack'),
                 'icon' => 'actions-file-text',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
-                'modalSize' => 'medium',
+                'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/font.html',
             ],
             'HighLight' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.highlight', 'rte_ckeditor_pack'),
@@ -259,6 +269,7 @@ class CardData
                 'icon' => 'actions-open',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/highlight.html',
             ],
             'Heading' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.heading', 'rte_ckeditor_pack'),
@@ -267,6 +278,7 @@ class CardData
                 'icon' => 'content-header',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/headings.html',
             ],
             'Alignment' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.alignment', 'rte_ckeditor_pack'),
@@ -275,6 +287,7 @@ class CardData
                 'icon' => 'content-beside-text-img-above-center',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/text-alignment.html',
             ],
             'Style' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.style', 'rte_ckeditor_pack'),
@@ -283,6 +296,7 @@ class CardData
                 'icon' => 'content-beside-text-img-above-center',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/style.html',
             ],
             'PageBreak' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.page_break', 'rte_ckeditor_pack'),
@@ -291,6 +305,7 @@ class CardData
                 'icon' => 'actions-insert',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/page-break.html',
             ],
             'TextTransformation' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.text_transformation', 'rte_ckeditor_pack'),
@@ -299,6 +314,7 @@ class CardData
                 'icon' => 'form-text',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/text-transformation.html',
             ],
             'ListProperties' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.document_list', 'rte_ckeditor_pack'),
@@ -307,6 +323,7 @@ class CardData
                 'icon' => 'apps-clipboard-list',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/lists/lists-properties.html',
             ],
             'WordCount' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.word_count', 'rte_ckeditor_pack'),
@@ -315,6 +332,7 @@ class CardData
                 'icon' => 'content-widget-number',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/word-count.html',
             ],
             'HtmlEmbed' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.htmlEmbed', 'rte_ckeditor_pack'),
@@ -323,6 +341,7 @@ class CardData
                 'icon' => 'content-carousel-html',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/html/html-embed.html',
             ],
             'Code' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.code', 'rte_ckeditor_pack'),
@@ -331,6 +350,7 @@ class CardData
                 'icon' => 'actions-code',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/code-blocks.html',
             ],
             'CodeBlock' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.codeBlock', 'rte_ckeditor_pack'),
@@ -339,6 +359,7 @@ class CardData
                 'icon' => 'actions-file-html',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/code-blocks.html',
             ],
             'BlockToolbar' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.blockToolbar', 'rte_ckeditor_pack'),
@@ -346,7 +367,8 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.blockToolbar.description', 'rte_ckeditor_pack'),
                 'icon' => 'apps-toolbar-menu-actions',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
-                'modalSize' => 'medium',
+                'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/getting-started/setup/editor-types.html#balloon-editor-and-balloon-block-editor',
             ],
             'BalloonToolbar' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.balloonToolbar', 'rte_ckeditor_pack'),
@@ -354,7 +376,8 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.balloonToolbar.description', 'rte_ckeditor_pack'),
                 'icon' => 'apps-toolbar-menu-workspace',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
-                'modalSize' => 'medium',
+                'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/getting-started/setup/editor-types.html#balloon-editor-and-balloon-block-editor',
             ],
             'Markdown' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.markdown', 'rte_ckeditor_pack'),
@@ -363,6 +386,7 @@ class CardData
                 'icon' => 'actions-barcode-read',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/markdown.html',
             ],
             'MediaEmbed' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.mediaEmbed', 'rte_ckeditor_pack'),
@@ -371,6 +395,7 @@ class CardData
                 'icon' => 'content-textmedia',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/media-embed.html',
             ],
             'ShowBlocks' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.showBlocks', 'rte_ckeditor_pack'),
@@ -379,6 +404,7 @@ class CardData
                 'icon' => 'actions-extension',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/show-blocks.html',
             ],
             'TextPartLanguage' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.textPartLanguage', 'rte_ckeditor_pack'),
@@ -387,22 +413,25 @@ class CardData
                 'icon' => 'install-manage-language',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/language.html',
             ],
             'Menubar' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.menuBar', 'rte_ckeditor_pack'),
-                'subtitle' => '',
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.menuBar', 'rte_ckeditor_pack'),
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.menuBar.description', 'rte_ckeditor_pack'),
                 'icon' => 'content-menu-related',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/getting-started/setup/menubar.html',
             ],
             'Emoji' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.emoji', 'rte_ckeditor_pack'),
-                'subtitle' => '',
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.emoji', 'rte_ckeditor_pack'),
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.emoji.description', 'rte_ckeditor_pack'),
                 'icon' => 'rte_emoji',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'small',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/emoji.html',
             ],
             'LineHeight' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.lineHeight', 'rte_ckeditor_pack'),
@@ -411,7 +440,35 @@ class CardData
                 'icon' => 'actions-chevron-expand',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
                 'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/line-height.html',
             ],
+            'SourceEditingEnhanced' => [
+                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced', 'rte_ckeditor_pack'),
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced', 'rte_ckeditor_pack'),
+                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced.description', 'rte_ckeditor_pack'),
+                'icon' => 'rte_sourceEditingEnhanced',
+                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
+                'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/source-editing/source-editing-enhanced.html',
+            ],
+            // 'Typo3Image' => [
+            //     'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image', 'rte_ckeditor_pack'),
+            //     'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image', 'rte_ckeditor_pack'),
+            //     'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image.description', 'rte_ckeditor_pack'),
+            //     'icon' => 'content-image',
+            //     'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.checkbox.enable', 'rte_ckeditor_pack'),
+            //     'modalSize' => 'medium',
+            //     'docs' => 'https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/Features/Media&VisualContent/Index.html',
+            // ],
+            // 'Image' => [
+            //     'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.auto_image', 'rte_ckeditor_pack'),
+            //     'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.auto_image', 'rte_ckeditor_pack'),
+            //     'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.auto_image.description', 'rte_ckeditor_pack'),
+            //     'icon' => 'content-image',
+            //     'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
+            //     'modalSize' => 'medium',
+            //     'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/image.html',
+            // ],
             // 'MathEquations' => [
             //     'title' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.premium.math_equations', 'rte_ckeditor_pack'),
             //     'subtitle' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.premium.math_equations', 'rte_ckeditor_pack'),

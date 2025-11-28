@@ -46,6 +46,7 @@ class ToolbarIcons
         'emoji' => 'rte_emoji',
         'lineHeight' => 'actions-chevron-expand',
         'sourceEditing' => 'rte_sourceEditing',
+        'sourceEditingEnhanced' => 'rte_sourceEditingEnhanced',
         'ImportWord' => 'mimetypes-word',
         'ExportWord' => 'mimetypes-word',
         'ExportPdf' => 'actions-file-pdf',
@@ -114,6 +115,7 @@ class ToolbarIcons
         'previewMergeFields',
         'FormatPainter',
         'TableOfContents',
+        'sourceEditingEnhanced',
     ];
 
     public function getIconByName(string $name): ?string

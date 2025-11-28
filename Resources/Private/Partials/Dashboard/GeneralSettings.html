@@ -1,7 +1,7 @@
 <form action="" method="post" id="ckEditorSettings">
     <div class="row align-items-center">
         <div class="col">
-            <h2 class="mb-3"><f:translate key="ckeditorKit.tab.settings" /></h2>
+            <h2 class="mb-3"><f:translate key="ckeditorKit.module.settings" /></h2>
         </div>
         <div class="col">
             <div class="form-group text-end mb-3">
@@ -86,7 +86,7 @@
             </div>
         </f:case>
         <f:case value="BOOLEAN">
-            <div class="form-group form-check form-switch {field.class}">
+            <div class="form-group form-check form-switch {field.class} border-bottom pb-2 mb-3">
                 <input type="hidden" name="{fieldName}" value="0" />
                 <input class="form-check-input" id="{field.key}" type="checkbox" name="{field.key}" value="1"
                     {f:if(condition: '{origValue} == 1 || (!{origValue} && {field.value}) ' , then: 'checked' )} />

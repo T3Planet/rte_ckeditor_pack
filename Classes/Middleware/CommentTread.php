@@ -41,28 +41,23 @@ class CommentTread implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $default = 1;
-        $response = '';
+        $response = null;
         if (str_contains($request->getRequestTarget(), '/comments/thread/')) {
-            $default = 0;
             $response = $this->fetchAllComments($request);
         }
         if (str_contains($request->getRequestTarget(), '/comments/update/')) {
-            $default = 0;
             $response = $this->updateComment($request);
         }
         if (str_contains($request->getRequestTarget(), '/comments/delete/')) {
-            $default = 0;
             $response = $this->deleteComment($request);
         }
         if ($request->getRequestTarget() === '/comments') {
-            $default = 0;
             $response = $this->addComment($request);
         }
-        if ($default) {
-            return $handler->handle($request);
+        if ($response instanceof ResponseInterface) {
+            return $response;
         }
-        return $response;
+        return $handler->handle($request);
     }
 
     /**

@@ -8,11 +8,11 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'ckeditor@t3planet.de',
     'author_company' => 'T3Planet',
     'state' => 'stable',
-    'version' => '1.1.0',
+    'version' => '2.0.0',
     'constraints' => [
         'depends' => [
             'php' => '8.1.0-8.4.99',
-            'typo3' => '12.4.25-13.4.20',
+            'typo3' => '12.4.25-14.0',
         ],
         'conflicts' => [],
         'suggests' => [],

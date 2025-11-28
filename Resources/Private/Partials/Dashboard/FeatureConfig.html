@@ -11,7 +11,7 @@
                                     <option value="{preset}"  {f:if(condition: '{preset} == {activePreset}' , then: 'selected' )}><f:format.case mode="capital">{preset}</f:format.case></option>
                                 </f:for>
                             </select>
-                            <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
+                            <button type="button" class="btn btn-notice text-nowrap" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
                                 <span><f:translate key="new.presets" /></span>
                             </button>
                         </div>
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="card feature-toggle-card">
-        <div class="card-header position-relative widget-content-title">
+        <div class="card-header position-relative widget-content-title ps-3 pt-3">
             <h2><f:translate key="features.visible" /></h2>
         </div>
         <div class="card-body">
@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="card feature-toggle-card">
-        <div class="card-header py-2 widget-content-title">
+        <div class="card-header position-relative widget-content-title ps-3 pt-3">
             <h2><f:translate key="features.hidden" /></h2>
         </div>
         <div class="card-body">

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Backend\Preview;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 
@@ -33,7 +35,13 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
-        $row  = $item->getRecord();
+       
+        if(self::getTypo3MajorVersion() > 13){
+            $row  = $item->getRow();
+        }else{
+            $row  = $item->getRecord();
+        }
+
         $html = $row['bodytext'] ?? '';
 
         // Sanitize HTML (replaces invalid chars with U+FFFD)<.
@@ -49,7 +57,7 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
         return $this
             ->linkEditContent(
                 $this->renderTextWithHtml($html),
-                $row
+                $item->getRecord()
             )
             . '<br />';
     }
@@ -142,5 +150,16 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
         }
 
         return $this->toRemove;
+    }
+
+
+    /**
+     * Get TYPO3 major version
+     *
+     * @return int
+     */
+    public static function getTypo3MajorVersion(): int
+    {
+        return GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion();
     }
 }

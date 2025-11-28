@@ -2,8 +2,6 @@ import { Plugin } from '@ckeditor/ckeditor5-core';
 
 /**
  * AI Sidebar Container Plugin
- * Sets up the sidebar container element for AI features when container type is 'sidebar'
- * Must run before AI plugins initialize to set the container element
  */
 class AISidebar extends Plugin {
     static get pluginName() {
@@ -18,12 +16,16 @@ class AISidebar extends Plugin {
         super(editor);
         this.editor = editor;
         this._loaderEl = null;
-        
-        // Set container element IMMEDIATELY in constructor
-        // This must happen before AI plugins read the config
+        this._revisionObserver = null;
+        this._isRevisionViewer = this._detectRevisionViewerEditor();
+        this._aiContainerEl = null;
+
+        if (this._isRevisionViewer) {
+            return;
+        }
+
         this._setupContainer();
-        
-        // Show loader if AI is enabled
+
         if (this._isAIEnabled()) {
             const channelId = this.editor.sourceElement?.id;
             if (channelId) {
@@ -37,119 +39,200 @@ class AISidebar extends Plugin {
     }
 
     init() {
-        // Also set up in init() as a fallback in case config wasn't ready in constructor
+        if (this._isRevisionViewer) {
+            return;
+        }
         this._setupContainer();
     }
 
     afterInit() {
-        // Hide loader when editor is ready
-        this.editor.on('ready', () => {
-            this._hideLoader();
-        });
-        
-        // Also hide on error or destroy
-        this.editor.on('error', () => {
-            this._hideLoader();
-        });
-        
+        if (this._isRevisionViewer) {
+            return;
+        }
+
+        this.editor.on('ready', () => this._hideLoader());
+        this.editor.on('error', () => this._hideLoader());
         this.editor.on('destroy', () => {
             this._hideLoader();
+            this._disconnectRevisionObserver();
         });
+
+        this._setupRevisionHistorySync();
+    }
+
+    _detectRevisionViewerEditor() {
+        const sourceEl = this.editor.sourceElement;
+        if (!sourceEl) {
+            return false;
+        }
+
+        if (sourceEl.classList?.contains('revision_viewer_editor')) {
+            return true;
+        }
+
+        if (sourceEl.closest('.revision_viewer_container')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    _getAiConfig() {
+        const fullConfig = this.editor.config._config || (this.editor.config._config = {});
+        if (!fullConfig.ai) {
+            fullConfig.ai = {};
+        }
+        if (!fullConfig.ai.container) {
+            fullConfig.ai.container = {};
+        }
+        return fullConfig.ai;
+    }
+
+    _isAIEnabled() {
+        const config = this.editor.config._config || {};
+        return !!(config.ai && (config.ai.container || config.ai.chat));
     }
 
     _setupContainer() {
-        const channelId = this.editor.sourceElement?.id;
+        const sourceEl = this.editor.sourceElement;
+        const channelId = sourceEl?.id;
         if (!channelId) {
             return;
         }
 
-        // Get config from _config (this is where CKEditor stores runtime config)
-        const config = this.editor.config._config || (this.editor.config._config = {});
-        
-        // Ensure AI config structure exists
-        if (!config.ai) {
-            config.ai = {};
-        }
-        if (!config.ai.container) {
-            config.ai.container = {};
-        }
-        
-        // Check what container type is configured
-        // The config should come from the saved user configuration merged into editor config
-        let containerType = config.ai.container.type;
-        
-        // If container type is 'sidebar', we need to create the container element
+        const aiConfig = this._getAiConfig();
+        const containerType = aiConfig.container.type;
+
         if (containerType === 'sidebar') {
-            const containerId = channelId + '-ai-sidebar-container';
-            
-            // Find or create the container element
+            const containerId = `${channelId}-ai-sidebar-container`;
             let containerElement = document.getElementById(containerId);
-            
+
             if (!containerElement) {
-                const formItem = document.querySelector('#' + channelId)?.closest('.form-control-wrap');
+                const formItem = document.querySelector(`#${channelId}`)?.closest('.form-control-wrap');
+
                 if (formItem) {
-                    containerElement = document.createElement("div");
-                    containerElement.id = containerId;
-                    containerElement.className = "ck-ai-sidebar-container";
-                    
-                    // Insert before the first child of formItem
-                    formItem.insertBefore(containerElement, formItem.firstChild);
+                    const formWizardsWrap = formItem.querySelector('.form-wizards-wrap');
+                    const revisionViewerContainer = document.getElementById(`${channelId}revision_viewer_container`);
+
+                    if (formWizardsWrap) {
+                        if (revisionViewerContainer && revisionViewerContainer.parentElement === formWizardsWrap) {
+                            revisionViewerContainer.insertAdjacentHTML('beforebegin', `
+                                <div id="${containerId}" class="ck-ai-sidebar-container"></div>
+                            `);
+                            containerElement = document.getElementById(containerId);
+                        } else {
+                            formWizardsWrap.insertAdjacentHTML('afterbegin', `
+                                <div id="${containerId}" class="ck-ai-sidebar-container"></div>
+                            `);
+                            containerElement = document.getElementById(containerId);
+                        }
+                    } else {
+                        containerElement = document.createElement('div');
+                        containerElement.id = containerId;
+                        containerElement.className = 'ck-ai-sidebar-container';
+                        formItem.insertBefore(containerElement, formItem.firstChild);
+                    }
+
                     formItem.classList.add('rte-ckeditor-ai-sidebar');
                 } else {
-                    // Try alternative: append to body as fallback
-                    containerElement = document.createElement("div");
+                    containerElement = document.createElement('div');
                     containerElement.id = containerId;
-                    containerElement.className = "ck-ai-sidebar-container";
+                    containerElement.className = 'ck-ai-sidebar-container';
                     document.body.appendChild(containerElement);
                 }
             }
-            
-            // CRITICAL: Set the container element in config - AI plugins check this immediately
+
             if (containerElement) {
-                // Set on _config (used by CKEditor internally)
-                config.ai.container.element = containerElement;
-                config.ai.container.type = 'sidebar';
-                
-                // Ensure it's also accessible via editor.config.get('ai')
-                // This is the canonical way CKEditor accesses config
+                this._aiContainerEl = containerElement;
+                aiConfig.container.element = containerElement;
+                aiConfig.container.type = 'sidebar';
+
                 try {
-                    // Try to set it directly on the config object
-                    const aiConfig = this.editor.config.get('ai') || {};
-                    if (!aiConfig.container) {
-                        aiConfig.container = {};
+                    const runtimeAiConfig = this.editor.config.get('ai') || {};
+                    if (!runtimeAiConfig.container) {
+                        runtimeAiConfig.container = {};
                     }
-                    aiConfig.container.element = containerElement;
-                    aiConfig.container.type = 'sidebar';
+                    runtimeAiConfig.container.element = containerElement;
+                    runtimeAiConfig.container.type = 'sidebar';
                 } catch (e) {
-                    // Config might be read-only during initialization, that's okay
-                    // The _config should be enough
+                    // Config might be read-only during initialization
                 }
             } else {
-                // If container creation failed, fallback to overlay to prevent errors
                 console.warn('AISidebar: Could not create sidebar container, falling back to overlay');
-                config.ai.container.type = 'overlay';
-                delete config.ai.container.element;
+                aiConfig.container.type = 'overlay';
+                delete aiConfig.container.element;
             }
         } else if (!containerType) {
-            // If no container type is set, default to overlay
-            config.ai.container.type = 'overlay';
+            aiConfig.container.type = 'overlay';
         }
     }
 
-    /**
-     * Check if AI is enabled in the configuration
-     */
-    _isAIEnabled() {
-        const config = this.editor.config._config || {};
-        return config.ai && (config.ai.container || config.ai.chat);
+    _setupRevisionHistorySync() {
+        if (!this._aiContainerEl) {
+            return;
+        }
+
+        const sourceEl = this.editor.sourceElement;
+        if (!sourceEl) {
+            return;
+        }
+
+        let editorContainer = sourceEl.closest('.form-wizards-item-element');
+
+        if (!editorContainer) {
+            const rhConfig = this.editor.config._config?.revisionHistory;
+            if (rhConfig?.editorContainer) {
+                editorContainer = rhConfig.editorContainer;
+            }
+        }
+
+        if (!editorContainer) {
+            return;
+        }
+
+        const aiEl = this._aiContainerEl;
+        const originalDisplay = aiEl.style.display || '';
+
+        const applyVisibility = () => {
+            const computedStyle = window.getComputedStyle(editorContainer);
+            const isHidden =
+                editorContainer.style.display === 'none' ||
+                editorContainer.hidden ||
+                editorContainer.getAttribute('aria-hidden') === 'true' ||
+                computedStyle.display === 'none';
+
+            if (isHidden) {
+                if (aiEl.style.display !== 'none') {
+                    aiEl.dataset.ckAiSidebarPrevDisplay = aiEl.style.display || originalDisplay;
+                    aiEl.style.display = 'none';
+                }
+            } else {
+                const prev = aiEl.dataset.ckAiSidebarPrevDisplay || originalDisplay;
+                aiEl.style.display = prev;
+            }
+        };
+
+        applyVisibility();
+
+        this._revisionObserver = new MutationObserver(applyVisibility);
+        this._revisionObserver.observe(editorContainer, {
+            attributes: true,
+            attributeFilter: ['style', 'hidden', 'aria-hidden', 'class']
+        });
     }
 
-    /* ----------------------- Loader Helpers ----------------------- */
+    _disconnectRevisionObserver() {
+        if (this._revisionObserver) {
+            this._revisionObserver.disconnect();
+            this._revisionObserver = null;
+        }
+    }
 
     _getMountContainer() {
         const channelElement = this.editor.sourceElement;
         const fromForm = channelElement?.closest('.form-control-wrap') || null;
         const parent = fromForm || channelElement?.parentElement || this.editor.sourceElement?.parentElement;
+
         if (!parent) return null;
 
         const style = window.getComputedStyle(parent);
@@ -199,10 +282,9 @@ class AISidebar extends Plugin {
         const scope = typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : {});
         const translations = scope?.TYPO3?.lang;
         const value = translations?.[key];
-        return (typeof value === 'string' && value.trim() !== '') ? value : fallback;
+        return typeof value === 'string' && value.trim() !== '' ? value : fallback;
     }
 }
 
 export { AISidebar };
 export default AISidebar;
-

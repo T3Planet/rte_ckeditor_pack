@@ -36,6 +36,7 @@ use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MenuBarFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MergeFieldsFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\PaginationFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SlashCommandFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SourceEditingEnhancedFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\StyleFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TemplateFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TransformationsFeature;
@@ -155,6 +156,23 @@ class Modules
                     'toolBarItems' => 'ExportWord',
                 ],
                 'fields' => $this->getFieldsFromFeature(ExportWordFeature::class),
+            ],
+            [
+                'tab' => Tabs::STANDALONE,
+                'details' => $cardDetails->getDetailsByKey('SourceEditingEnhanced'),
+                'configuration' => [
+                    'default' => false,
+                    'is_premium' => true,
+                    'config_key' => 'SourceEditingEnhanced',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-source-editing-enhanced',
+                            'exports' => 'SourceEditingEnhanced',
+                        ],
+                    ],
+                    'toolBarItems' => 'sourceEditingEnhanced',
+                ],
+                'fields' => $this->getFieldsFromFeature(SourceEditingEnhancedFeature::class),
             ],
             [
                 'tab' => Tabs::STANDALONE,
@@ -592,22 +610,6 @@ class Modules
             ],
             [
                 'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('Code'),
-                'is_toggle' => 1,
-                'configuration' => [
-                    'config_key' => 'Code',
-                    'default' => true,
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-basic-styles',
-                            'exports' => 'Code',
-                        ],
-                    ],
-                    'toolBarItems' => 'code',
-                ],
-            ],
-            [
-                'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('CodeBlock'),
                 'configuration' => [
                     'default' => true,
@@ -621,21 +623,6 @@ class Modules
                     'toolBarItems' => 'codeBlock',
                 ],
                 'fields' => $this->getFieldsFromFeature(CodeBlockFeature::class),
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('Emoji'),
-                'is_toggle' => 1,
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'Emoji',
-                    'module' => [
-                        [
-                            'library' => '@t3planet/RteCkeditorPack/ckeditor5-emoji',
-                        ],
-                    ],
-                    'toolBarItems' => 'emoji',
-                ],
             ],
             [
                 'tab' => Tabs::CORE,
@@ -654,23 +641,6 @@ class Modules
                 'fields' => [
                     '' => $this->getFieldsFromFeature(FontFeature::class),
                 ],
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('FullScreen'),
-                'is_toggle' => 1,
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'FullScreen',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-fullscreen',
-                            'exports' => 'Fullscreen',
-                        ],
-                    ],
-                    'toolBarItems' => 'fullscreen',
-                ],
-                'fields' => $this->getFieldsFromFeature(MenuBarFeature::class),
             ],
             [
                 'tab' => Tabs::CORE,
@@ -697,6 +667,123 @@ class Modules
                     'toolBarItems' => 'Highlight',
                 ],
                 'fields' => $this->getFieldsFromFeature(HighlightFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('Style'),
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'Style',
+                    'toolBarItems' => 'style',
+                ],
+                'fields' => $this->getFieldsFromFeature(StyleFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('Alignment'),
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'Alignment',
+                    'toolBarItems' => 'alignment',
+                ],
+                'fields' => $this->getFieldsFromFeature(AlignmentFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('TextStyles'),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('TextTransformation'),
+                'configuration' => [
+                    'config_key' => 'TextTransformation',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-typing',
+                            'exports' => 'TextTransformation',
+                        ],
+                    ],
+                ],
+                'fields' => $this->getFieldsFromFeature(TransformationsFeature::class),
+            ],
+             [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('TextPartLanguage'),
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'TextPartLanguage',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-language',
+                            'exports' => 'TextPartLanguage',
+                        ],
+                    ],
+                    'toolBarItems' => 'textPartLanguage',
+                ],
+                'fields' => $this->getFieldsFromFeature(LanguageFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('WordCount'),
+                'is_toggle' => 0,
+                'configuration' => [
+                    'config_key' => 'WordCount',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-word-count',
+                            'exports' => 'WordCount',
+                        ],
+                    ],
+                ],
+                'fields' => $this->getFieldsFromFeature(WordCountFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('Code'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'config_key' => 'Code',
+                    'default' => true,
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-basic-styles',
+                            'exports' => 'Code',
+                        ],
+                    ],
+                    'toolBarItems' => 'code',
+                ],
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('Emoji'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'Emoji',
+                    'module' => [
+                        [
+                            'library' => '@t3planet/RteCkeditorPack/ckeditor5-emoji',
+                        ],
+                    ],
+                    'toolBarItems' => 'emoji',
+                ],
+            ],
+            [
+                'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('FullScreen'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'FullScreen',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-fullscreen',
+                            'exports' => 'Fullscreen',
+                        ],
+                    ],
+                    'toolBarItems' => 'fullscreen',
+                ],
+                'fields' => $this->getFieldsFromFeature(MenuBarFeature::class),
             ],
             [
                 'tab' => Tabs::CORE,
@@ -803,60 +890,6 @@ class Modules
             ],
             [
                 'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('Style'),
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'Style',
-                    'toolBarItems' => 'style',
-                ],
-                'fields' => $this->getFieldsFromFeature(StyleFeature::class),
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('Alignment'),
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'Alignment',
-                    'toolBarItems' => 'alignment',
-                ],
-                'fields' => $this->getFieldsFromFeature(AlignmentFeature::class),
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('TextStyles'),
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('TextTransformation'),
-                'configuration' => [
-                    'config_key' => 'TextTransformation',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-typing',
-                            'exports' => 'TextTransformation',
-                        ],
-                    ],
-                ],
-                'fields' => $this->getFieldsFromFeature(TransformationsFeature::class),
-            ],
-             [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('TextPartLanguage'),
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'TextPartLanguage',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-language',
-                            'exports' => 'TextPartLanguage',
-                        ],
-                    ],
-                    'toolBarItems' => 'textPartLanguage',
-                ],
-                'fields' => $this->getFieldsFromFeature(LanguageFeature::class),
-            ],
-            [
-                'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('ListProperties'),
                 'is_toggle' => 1,
                 'configuration' => [
@@ -870,21 +903,6 @@ class Modules
                     ],
                     'toolBarItems' => 'TodoList',
                 ],
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('WordCount'),
-                'is_toggle' => 0,
-                'configuration' => [
-                    'config_key' => 'WordCount',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-word-count',
-                            'exports' => 'WordCount',
-                        ],
-                    ],
-                ],
-                'fields' => $this->getFieldsFromFeature(WordCountFeature::class),
             ],
             [
                 'tab' => Tabs::PRODUCTIVITY,
@@ -962,7 +980,9 @@ class Modules
             }
             $groupedModules[$tabKey]['cards'][] = $module;
         }
-        return $groupedModules;
+        $priority = ['plugins', 'productivity', 'premium', 'collaboration'];
+
+        return array_replace(array_flip($priority), $groupedModules);
     }
 
     public function getItemByConfigKey(string $configKey, bool $toolBar = false): array

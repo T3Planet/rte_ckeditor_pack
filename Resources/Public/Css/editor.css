@@ -1,17 +1,24 @@
-.t3-ckeditor {
-  --bs-blue:#1f5aad;
-  --bs-purple: #771bff;
+.t3-ckeditor,
+.ckeditor--modal,
+[data-theme="auto"] .t3-ckeditor,
+[data-theme="auto"] .ckeditor--modal,
+[data-theme="classic"] .t3-ckeditor,
+[data-theme="classic"] .ckeditor--modal,
+[data-theme="modern"] .ckeditor--modal,
+[data-theme="modern"] .t3-ckeditor {
+  --token-color-primary-base: #205eb5;
+  --token-color-neutral-4: #efefef;
+  --token-color-neutral-15: #d6d4dd;
+  --bs-btn-bg: var(--token-color-primary-base);
+  --bs-btn-border-color: var(--token-color-primary-base);
 }
 
-.t3-ckeditor .btn-primary,
-.ckeditor .btn-primary {
-  --bs-blue:#1f5aad;
-  --typo3-state-primary-bg:#1f5aad;
-  --typo3-state-primary-border-color:#1f5aad;
-   
-  /* TYPO3 v12 */
-  --bs-btn-bg: var(--bs-blue);
-  --bs-btn-border-color: var(--bs-blue);
+/* Unique color for fresh theme */
+[data-theme="fresh"] .t3-ckeditor,
+[data-theme="fresh"] .ckeditor--modal {
+  --token-color-primary-base: #5033c7;
+  --bs-btn-bg: var(--token-color-primary-base);
+  --bs-btn-border-color: var(--token-color-primary-base);
 }
 
 .ck-editor__main,
@@ -88,14 +95,15 @@
   margin-top: 0;
 }
 
+.ckeditor .dashboard-tab.active,
 .t3-ckeditor .dashboard-tab.active {
-  background: var(--bs-blue);
+  background: var(--token-color-primary-base);
   color: #fff;
 }
 
 .t3-ckeditor .dashboard-tab.active:focus,
 .t3-ckeditor .dashboard-tab.active:hover {
-  background: var(--bs-blue);
+  background: var(--token-color-primary-base);
   color: #f2f2f2;
   text-decoration: none;
 }
@@ -157,9 +165,8 @@
 }
 
 .ckeditor--modal.modal-severity-notice .modal-header {
-  --bs-blue:#1f5aad;
-  background-color: var(--bs-blue);
-  border-bottom-color: var(--bs-blue);
+  background-color: var(--token-color-primary-base);
+  border-bottom-color: var(--token-color-primary-base);
   color: #fff
 }
 
@@ -301,44 +308,26 @@
 }
 
 .drag-grid-wrap {
-  background: light-dark(#f5f5f5, #000);
-  border: 10px solid transparent;
-  display: flex;
-  flex-flow: column;
+  background: light-dark(var(--token-color-neutral-4), #000);
+  border: 1px solid var(--token-color-neutral-15);
+  border-radius: var(--typo3-component-border-radius);
+  /* display: flex; */
+  /* flex-flow: column; */
   overflow: hidden;
-  padding: 0 10px 10px;
+  padding: 10px 20px 20px;
 }
 
 .drag-grid-wrap .drag-grid.grid-2 .btn-default,
 .drag-grid-wrap .drag-grid.grid-5 .btn-default {
-  --typo3-btn-bg: light-dark(#f3f7fd, #041d40);
-  --typo3-btn-border-color: light-dark(#bdcadf, #0f3e8b);
-
-  /* TYPO3 12 */
-  --bs-btn-bg: var(--typo3-btn-bg);
-  --bs-btn-border-color: var(--typo3-btn-border-color);
+  --typo3-btn-bg: color-mix(in srgb, var(--token-color-primary-base) 8%, #fff);
+  --typo3-btn-border-color: color-mix(in srgb, var(--token-color-primary-base) 20%, #fff);
+  --bs-btn-bg: color-mix(in srgb, var(--token-color-primary-base) 8%, #fff);
+  --bs-btn-border-color: color-mix(in srgb, var(--token-color-primary-base) 20%, #fff);
 }
 
 .drag-item .btn-default {
   --typo3-btn-bg: light-dark(#ffffff, #333333);
   --typo3-btn-hover-bg: light-dark(#ffffff, #404040);
-
-  /* TYPO3 12 */
-  --bs-btn-bg: var(--typo3-btn-bg);
-  --bs-btn-hover-bg: var(--typo3-btn-hover-bg);
-  --bs-btn-hover-border-color: var(--typo3-btn-hover-border-color);
-  --bs-btn-active-bg: var(--typo3-btn-active-bg);
-  --bs-btn-active-border-color: var(--typo3-btn-active-border-color);
-}
-
-.ckeditor :not(.card--active) .btn-default:hover,
-.t3-ckeditor :not(.card--active) .btn-default:hover {
-  --bs-btn-hover-bg: #cacaca;
-}
-
-.card .btn-check+.btn:hover {
-  --bs-btn-hover-bg: #cacaca;
-  --bs-btn-bg: var(--bs-btn-hover-bg);
 }
 
 .t3-ckeditor .drag-grid.grid-1 .drag-item .btn-default:hover,
@@ -350,7 +339,7 @@
 .t3-ckeditor .drag-grid.grid-2 .drag-item .btn-default:hover,
 .t3-ckeditor .drag-grid.grid-5 .drag-item .btn-default:hover {
   --bs-btn-hover-bg: light-dark(#f3f7fd, #041d40);
-  --bs-btn-hover-border-color: light-dark(#bdcadf, #0f3e8b);
+  --bs-btn-hover-border-color: light-dark(#bdcadf, color-mix(in srgb, var(--token-color-primary-base) 50%, transparent));
 }
 
 .drag-item {
@@ -508,13 +497,17 @@
 }
 
 /* AI Configuration */
-.rte-ckeditor-ai-sidebar {
+.rte-ckeditor-ai-sidebar .form-wizards-wrap>.form-wizards-item-element,
+.rte-ckeditor-ai-sidebar .form-wizards-wrap>.revision_viewer_container[style*="display: block"] {
+  width: 100%;
+}
+.rte-ckeditor-ai-sidebar .form-wizards-wrap {
   display: flex;
   flex-direction: row-reverse;
-  gap: 10px;
+  gap: 3px;
 }
 
-.ck-ai-sidebar-container {
+.form-wizards-wrap .ck-ai-sidebar-container {
   position: sticky;
   top: 0;
 }
@@ -522,7 +515,7 @@
 .ck.ck-tabs.ck-ai-tabs {
   min-width: 400px;
   max-width: 400px;
-  height: 100%;
+  min-height: 600px;
 }
 .ck.ck-tabs.ck-ai-tabs.ck-hidden {
   display: none;
@@ -539,4 +532,17 @@
   padding: 2px;
   width: 16px;
   justify-content: center;
+}
+
+/* TYPO3 v12 */
+.t3-ckeditor, .btn-check:checked+.btn,
+.t3-ckeditor, .btn.active,
+.t3-ckeditor, .btn.show,
+.t3-ckeditor, .btn:first-child:active,
+.t3-ckeditor, :not(.btn-check)+.btn:active {
+  --bs-btn-active-bg: var(--bs-btn-bg);
+}
+
+.t3-ckeditor, .btn-check+.btn:hover {
+  --bs-btn-bg: var(--bs-btn-hover-bg);
 }

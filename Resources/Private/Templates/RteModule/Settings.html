@@ -20,7 +20,7 @@
                         <div class="callout callout-info mt-4">
                             <div class="callout-content">
                                 <div class="callout-title">
-                                    <h5><f:translate key="ckeditorKit.plugin.realtime_collaboration.warning.title" extensionName="RteCkeditorPack"/></h5>
+                                    <h5 class="h3"><f:translate key="ckeditorKit.plugin.realtime_collaboration.warning.title" extensionName="RteCkeditorPack"/></h5>
                                 </div>
                                 <div class="callout-body">
                                     <p><f:format.raw><f:translate key="ckeditorKit.plugin.realtime_collaboration.warning1" extensionName="RteCkeditorPack"/></f:format.raw></p>
@@ -33,7 +33,7 @@
                         <div class="callout callout-info mt-4">
                             <div class="callout-content">
                                 <div class="callout-title">
-                                    <h5><f:translate key="ckeditorKit.plugin.ckeditor_ai.info.title" extensionName="RteCkeditorPack"/></h5>
+                                    <h5 class="h3"><f:translate key="ckeditorKit.plugin.ckeditor_ai.info.title" extensionName="RteCkeditorPack"/></h5>
                                 </div>
                                 <div class="callout-body">
                                     <p><f:format.raw><f:translate key="ckeditorKit.plugin.ckeditor_ai.info.desc" extensionName="RteCkeditorPack"/></f:format.raw></p>
@@ -51,7 +51,7 @@
     </form>
 </f:section>
 <f:section name="enableModule">
-    <div class="form-group form-check form-switch">
+    <div class="form-group form-check form-switch border-bottom pb-2 mb-3">
         <input type="hidden" name="enable" value="0" />
         <input class="form-check-input" id="module-{title}" type="checkbox" name="enable" value="1"
             {f:if(condition: '{isEnable}' , then: 'checked' )} />

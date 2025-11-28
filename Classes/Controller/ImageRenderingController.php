@@ -21,6 +21,7 @@ use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 
 class ImageRenderingController
 {
@@ -62,6 +63,7 @@ class ImageRenderingController
      *
      * @return string HTML output
      */
+     #[AsAllowedCallable]
     public function renderImageAttributes(?string $content, array $conf, ServerRequestInterface $request): string
     {
 

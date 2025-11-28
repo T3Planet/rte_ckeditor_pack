@@ -9,11 +9,12 @@
 
 namespace T3Planet\RteCkeditorPack\Utility;
 
-use T3Planet\RteCkeditorPack\DataProvider\ToolbarIcons;
-use TYPO3\CMS\Core\Configuration\CKEditor5Migrator;
-use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use T3Planet\RteCkeditorPack\DataProvider\ToolbarIcons;
+use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
+use TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator;
 
 class YamlLoadrUtility
 {
@@ -21,11 +22,17 @@ class YamlLoadrUtility
     {
         $activeItemArray = [];
         $configuration = $this->loadConfigurationFromPreset($presetName);
-
-        $configuration = GeneralUtility::makeInstance(
-            CKEditor5Migrator::class,
+        if(self::getTypo3MajorVersion() === 14){
+            $configuration = GeneralUtility::makeInstance(
+            \TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator::class,
             $configuration
-        )->get();
+            )->get();
+        } else{
+            $configuration = GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Configuration\CKEditor5Migrator::class,
+            $configuration
+            )->get();
+        }
 
         if (isset($configuration['editor']['config']) && isset($configuration['editor']['config']['toolbar']['items'])) {
 
@@ -94,5 +101,17 @@ class YamlLoadrUtility
         }
         return $typoScriptArray;
     }
+
+
+    /**
+     * Get TYPO3 major version
+     *
+     * @return int
+     */
+    public static function getTypo3MajorVersion(): int
+    {
+        return GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion();
+    }
+
 
 }

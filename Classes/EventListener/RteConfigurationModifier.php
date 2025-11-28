@@ -57,7 +57,7 @@ class RteConfigurationModifier
             $configuration = $event->getConfiguration();
             $configuration['importModules'][] = '@t3planet/RteCkeditorPack/ckeditor5-error';
             $configuration = $this->ensureCollaborationChannelConfiguration($configuration, $data);
-            $enabledModule = $this->configurationRepository->findByEnable(true)->toArray();
+            $enabledModule = $this->configurationRepository->findBy(['enable' => 1])->toArray();
             $configuration = $this->addToolbarItems($configuration);
 
             if ($enabledModule) {
@@ -349,7 +349,7 @@ class RteConfigurationModifier
      */
     private function isEnableRealTimeCollaboration(): bool
     {
-        $record = $this->configurationRepository->findByConfigKey('RealTimeCollaboration')->getFirst();
+        $record = $this->configurationRepository->findBy(['configKey' => 'RealTimeCollaboration'])->getFirst();
         if (!$record || !$record->isEnable()) {
             return false;
         }

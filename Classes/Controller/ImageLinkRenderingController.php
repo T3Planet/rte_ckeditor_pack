@@ -21,7 +21,7 @@ use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 class ImageLinkRenderingController
 {
     /**
@@ -61,6 +61,7 @@ class ImageLinkRenderingController
      *
      * @return string HTML output
      */
+     #[AsAllowedCallable]
     public function renderImages(?string $content, array $conf, ServerRequestInterface $request): string
     {
         // Get link inner HTML

@@ -17,7 +17,7 @@ class FormatValueViewHelper extends AbstractViewHelper
     {
         $this->registerArgument(
             'input',
-            'mix',
+            'mixed',
             'return string',
             true
         );

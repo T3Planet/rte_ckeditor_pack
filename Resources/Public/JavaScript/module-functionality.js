@@ -67,10 +67,36 @@ function initModuleFunc(params) {
     
         toggleModules.forEach(function (element) {
             element.addEventListener('click', function (event) {
+                let isChecked = event.target.checked;
+                
+                // If checkbox has 'config-not-saved' class and is being enabled,
+                // open modal first before allowing toggle
+                if (element.classList.contains('config-not-saved') && isChecked) {
+                    // Find the card containing this checkbox
+                    const card = element.closest('.card');
+                    if (card) {
+                        // Find the settings button in the same card
+                        const settingsButton = card.querySelector('button[data-identifier="ckeditorGlobalWizardButton"]');
+                        
+                        if (settingsButton) {
+                            // Prevent form submission
+                            event.preventDefault();
+                            event.stopPropagation();
+                            
+                            // Reset checkbox to unchecked state
+                            element.checked = false;
+                            
+                            // Trigger click on settings button to open modal
+                            settingsButton.click();
+                            return false;
+                        }
+                    }
+                }
+                
+                // Normal behavior - proceed with form submission
                 if(loaderDiv){
                     loaderDiv.classList.add("ns-show-overlay");
                 }
-                let isChecked = event.target.checked;
                 let inputName = event.target.name;
                 let hiddenInput = featureForm.querySelector(`input[name="${inputName}"]`);
                 if (!hiddenInput) {
@@ -125,7 +151,79 @@ if (cardCheck.length) {
   });
 }
 
+function selectPresetFromLocalStorage() {
+    const activePreset = localStorage.getItem('activePreset');
+    const shouldSelectLastPreset = sessionStorage.getItem('selectLastPreset');
+    
+    const presetSelect = document.getElementById('rtePresets');
+    if (!presetSelect || presetSelect.options.length === 0) {
+        return;
+    }
+    
+    // Handle newly created preset
+    if (shouldSelectLastPreset === 'true') {
+        if (presetSelect.options.length > 0) {
+            const lastIndex = presetSelect.options.length - 1;
+            const lastPresetValue = presetSelect.options[lastIndex].value;
+            
+            presetSelect.selectedIndex = lastIndex;
+            presetSelect.value = lastPresetValue;
+            
+            // Save to localStorage
+            localStorage.setItem('activePreset', lastPresetValue);
+            
+            // Trigger change to submit form and load preset data
+            presetSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            
+            // Remove flag
+            sessionStorage.removeItem('selectLastPreset');
+        }
+        return;
+    }
+    
+    // Handle restoring from localStorage
+    if (activePreset) {
+        // Check if current selected value matches localStorage
+        const currentValue = presetSelect.value;
+        
+        // Check if backend has already selected the localStorage preset
+        let backendHasCorrectPreset = false;
+        for (let i = 0; i < presetSelect.options.length; i++) {
+            if (presetSelect.options[i].value === activePreset && presetSelect.options[i].hasAttribute('selected')) {
+                backendHasCorrectPreset = true;
+                break;
+            }
+        }
+        
+        // Only trigger change if:
+        // 1. Current value is different from localStorage value
+        // 2. AND backend hasn't already selected the localStorage preset
+        if (currentValue !== activePreset && !backendHasCorrectPreset) {
+            // Find and select the preset
+            for (let i = 0; i < presetSelect.options.length; i++) {
+                if (presetSelect.options[i].value === activePreset) {
+                    presetSelect.selectedIndex = i;
+                    presetSelect.value = activePreset;
+                    
+                    // Trigger change event to load the preset data (will submit form once)
+                    presetSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                    break;
+                }
+            }
+        }
+        // If values match OR backend already selected it, do nothing (no reload)
+    }
+}
+
 initModuleFunc();
+// Wait for page to fully load before selecting preset
+if (document.readyState === 'complete') {
+    selectPresetFromLocalStorage();
+} else {
+    window.addEventListener('load', () => {
+        selectPresetFromLocalStorage();
+    });
+}
 document.addEventListener('DOMContentLoaded', () => {
     initModuleFunc();
 });

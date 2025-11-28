@@ -5,50 +5,52 @@
 <f:layout name="Modals" />
 <f:section name="content">
 <f:be.pageRenderer includeJavaScriptModules="{0: '@t3planet/RteCkeditorPack/script.js'}"/>
-    <div id="ckeditor-modal" class="ckeditor modal d-block">
-        <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
-            <div class="t3js-modal-body modal-body">
-                <div class="form-section-custom">
-                    <form action="" method="post">
-                        <div class="form-group form-group-custom">
-                            <label for="preset-name" class="form-label"><f:translate key="form.preset_name" extensionName="RteCkeditorPack"/></label>
-                            <div class="input-group">
-                                <input type="input" id="preset-name" class="form-control" name="presetName" required placeholder="{f:translate(key: 'form.preset_name', extensionName:'RteCkeditorPack')}"/>
-                                <button type="submit" class="input-group-text btn btn-primary" id="newPresetBtn" disabled><f:translate key="feature_form.create" extensionName="RteCkeditorPack"/></button>
+    <div class="ckeditor-modal-form">
+        <div id="ckeditor-modal" class="ckeditor modal d-block">
+            <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
+                <div class="t3js-modal-body modal-body">
+                    <div class="form-section-custom">
+                        <form id="newPresetForm" data-ajax-url="{ajaxUrl}">
+                            <div class="form-group form-group-custom border-bottom pb-3 mb-3">
+                                <label for="preset-name" class="form-label"><f:translate key="form.preset_name" extensionName="RteCkeditorPack"/></label>
+                                <div class="input-group">
+                                    <input type="input" id="preset-name" class="form-control" name="presetName" required placeholder="{f:translate(key: 'form.preset_name', extensionName:'RteCkeditorPack')}"/>
+                                    <button type="submit" class="input-group-text btn btn-primary" id="newPresetBtn" disabled><f:translate key="feature_form.create" extensionName="RteCkeditorPack"/></button>
+                                </div>
+                                <div class="form-text"><f:translate key="form.preset_name.description" extensionName="RteCkeditorPack"/></div>
                             </div>
-                            <div class="form-text"><f:translate key="form.preset_name.description" extensionName="RteCkeditorPack"/></div>
-                        </div>
-                    </form>
-                </div>
-                <f:if condition="{availablePresets}">
-                    <div class="table-fit">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="col-title" colspan="2"><f:translate key="header.preset_title" extensionName="RteCkeditorPack"/></th>
-                                </tr>
-                            </thead>
-                            <f:for each="{availablePresets}" as="item">
-                                <tr>
-                                    <td>{item.preset}</td>
-                                    <td class="text-end">
-                                        <button class="btn btn-danger delete t3js-modal-trigger" 
-                                        href="{be:moduleLink(route:'tce_db', query:'cmd[tx_rteckeditorpack_domain_model_toolbaritems][{item.uid}][delete]=1', arguments:'{redirect: returnUrl}')}"
-                                        title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete')}"
-                                        data-severity="warning"
-                                        data-title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:label.confirm.delete_record.title')}"
-                                        data-bs-content="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:deleteWarning')}"
-                                        data-button-close-text="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.no')}">
-                                        <core:icon identifier="actions-delete" />
-                                    </button>
-                                    </td>
-                                </tr>
-                            </f:for>
-                        </table>
+                        </form>
                     </div>
-                </f:if>
+                    <f:if condition="{availablePresets}">
+                        <div class="table-fit">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-title" colspan="2"><f:translate key="header.preset_title" extensionName="RteCkeditorPack"/></th>
+                                    </tr>
+                                </thead>
+                                <f:for each="{availablePresets}" as="item">
+                                    <tr>
+                                        <td>{item.preset}</td>
+                                        <td class="text-end">
+                                            <button class="btn btn-danger delete t3js-modal-trigger" 
+                                            href="{be:moduleLink(route:'tce_db', query:'cmd[tx_rteckeditorpack_domain_model_toolbaritems][{item.uid}][delete]=1', arguments:'{redirect: returnUrl}')}"
+                                            title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete')}"
+                                            data-severity="warning"
+                                            data-title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:label.confirm.delete_record.title')}"
+                                            data-bs-content="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:deleteWarning')}"
+                                            data-button-close-text="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.no')}">
+                                            <core:icon identifier="actions-delete" alternativeMarkupIdentifier="inline" />
+                                        </button>
+                                        </td>
+                                    </tr>
+                                </f:for>
+                            </table>
+                        </div>
+                    </f:if>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </f:section>
 </html>

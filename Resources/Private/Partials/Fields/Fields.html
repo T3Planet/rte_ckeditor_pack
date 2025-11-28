@@ -96,7 +96,7 @@
             </div>
         </f:case>
         <f:case value="BOOLEAN">
-            <div class="form-group form-check form-switch">
+            <div class="form-group form-check form-switch border-bottom pb-2 mb-3">
                 <f:if condition="{origValue} == 0 || {origValue} == 1">
                     <f:then><f:variable name="fieldValue">{origValue}</f:variable></f:then>
                     <f:else><f:variable name="fieldValue">{field.value}</f:variable></f:else>
@@ -131,7 +131,7 @@
                                             <strong>{f:if(condition: '{panelTitle}',then:'{panelTitle}', else: '{field.name}  {z.cycle}')}</strong>
                                         </a>
                                         <div class="btn-group {f:if(condition: '{z.isFirst}', then: 'd-none')}">
-                                            <button class="btn btn-notice delete remove-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                            <button class="btn border-start rounded-0 delete remove-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
                                         </div>
                                     </div>
                                     <f:variable name="iterativeFieldRaw" value="{field.value.0}"></f:variable>
@@ -149,8 +149,9 @@
                                 </div>
                             </f:for>
                         </div>
-                        <button class="btn btn-primary add insert-section ms-auto mb-2 d-block" type="button">
+                        <button class="btn btn-notice add insert-section ms-auto mb-2 d-block" type="button">
                             <core:icon identifier="actions-placeholder-add" size="small" />
+                            <f:translate key="ckeditorKit.add_new" extensionName="rte_ckeditor_pack" />
                         </button>
                     </div>
                 </f:then>
@@ -168,7 +169,7 @@
                                             <strong>{f:if(condition: '{iterativeFieldRaw.0.value}',then:'{iterativeFieldRaw.0.value}', else: '{field.name} {y.cycle}')}</strong>
                                         </a>
                                         <div class="btn-group {f:if(condition: '{y.isFirst}', then: 'd-none')}">
-                                            <button class="btn btn-notice delete remove-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                            <button class="btn border-start rounded-0 delete remove-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
                                         </div>
                                     </div>
                                     <div id="flush-collapse-{field.key -> f:format.trim()}-{iterativeFieldKey}{y.cycle}" class="panel-collapse search-item collapse {f:if(condition: '{y.isFirst}', then: 'show')}" aria-labelledby="flush-heading{iterativeFieldKey}{y.cycle}">
@@ -183,8 +184,9 @@
                                 </div>
                             </f:for>
                         </div>
-                        <button class="btn btn-primary add insert-section ms-auto mb-2 d-block" type="button">
+                        <button class="btn btn-notice add insert-section ms-auto mb-2 d-block" type="button">
                             <core:icon identifier="actions-placeholder-add" size="small" />
+                            <f:translate key="ckeditorKit.add_new" extensionName="rte_ckeditor_pack" />
                         </button>
                     </div>
                 </f:else>
@@ -204,7 +206,7 @@
                                             <span class="caret"></span> <strong>Sub {field.name}  {z.cycle}</strong>
                                         </a>
                                         <div class="btn-group  {f:if(condition: '{z.isFirst}', then: 'd-none')}">
-                                            <button class="btn btn-notice delete remove-inner-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                            <button class="btn border-start rounded-0 delete remove-inner-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
                                         </div>
                                     </div>
                                    
@@ -223,8 +225,9 @@
                                 </div>
                             </f:for>
                         </div>
-                        <button class="btn btn-primary add insert-inner-section ms-auto mb-2 d-block" type="button">
+                        <button class="btn btn-notice add insert-inner-section ms-auto mb-2 d-block" type="button">
                             <core:icon identifier="actions-placeholder-add" size="small" />
+                            <f:translate key="ckeditorKit.add_new" extensionName="rte_ckeditor_pack" />
                         </button>
                     </div>
                 </f:then>
@@ -240,7 +243,7 @@
                                             <span class="caret"></span> <strong>{field.name} {y.cycle}</strong>
                                         </a>
                                         <div class="btn-group {f:if(condition: '{y.isFirst}', then: 'd-none')}">
-                                            <button class="btn btn-notice delete remove-inner-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
+                                            <button class="btn border-start rounded-0 delete remove-inner-section" type="button"><core:icon identifier="actions-delete" size="small" /></button>
                                         </div>
                                     </div>
                                     <div id="inner-collapse{iterativeFieldKey}{y.cycle}" class="panel-collapse search-item collapse {f:if(condition: '{y.isFirst}', then: 'show')}" aria-labelledby="flush-heading{iterativeFieldKey}{y.cycle}">
@@ -255,8 +258,9 @@
                                 </div>
                             </f:for>
                         </div>
-                        <button class="btn btn-primary add insert-inner-section ms-auto mb-2 d-block" type="button">
+                        <button class="btn btn-notice add insert-inner-section ms-auto mb-2 d-block" type="button">
                             <core:icon identifier="actions-placeholder-add" size="small" />
+                            <f:translate key="ckeditorKit.add_new" extensionName="rte_ckeditor_pack" />
                         </button>
                     </div>
                 </f:else>

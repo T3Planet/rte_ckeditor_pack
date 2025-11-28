@@ -56,7 +56,7 @@ class BaseToolBar
     public function findEnableToolbarItems(string $activePreset = ''): array
     {
         // Items enable as a feature
-        $enabledModule = $this->configurationRepository->findByEnable(true);
+        $enabledModule = $this->configurationRepository->findBy(['enable' => 1]);
 
         $toolBarItemArrayRaw = [];
         foreach ($enabledModule as $module) {

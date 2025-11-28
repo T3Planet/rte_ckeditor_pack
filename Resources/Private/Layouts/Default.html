@@ -30,7 +30,7 @@
                 </f:for>
             </f:if>
             <div class="dashboard-configuration btn-group ms-auto">
-                <button class="dashboard-tab btn btn-sm btn-notice {f:if(condition: '{currentModule} == settings', then: 'active')}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
+                <button class="btn btn-sm btn-notice {f:if(condition: '{currentModule} == settings', then: 'active')}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
                     type="button" role="tab" aria-controls="settings-pane" aria-selected="{f:if(condition: '{currentModule} == settings', then: 'true', else: 'false')}">
                     <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
                     <f:translate key="ckeditorKit.tab.settings" />
