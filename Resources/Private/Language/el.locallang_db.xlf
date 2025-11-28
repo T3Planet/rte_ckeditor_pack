@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf" date="2024-09-19T12:27:21Z" product-name="rte_ckeditor_pack" target-language="el">
+    <header/>
+    <body>
+      <trans-unit id="tx_rteckeditorpack_domain_model_modules">
+        <source>Modules</source>
+        <target state="needs-translation">Modules</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration">
+        <source>Configuration</source>
+        <target state="needs-translation">Configuration</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.description">
+        <source>Configuration</source>
+        <target state="needs-translation">Configuration</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.config_key">
+        <source>Config Key</source>
+        <target state="needs-translation">Config Key</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.fields">
+        <source>Fields</source>
+        <target state="needs-translation">Fields</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
+        <source>Label</source>
+        <target state="needs-translation">Label</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
+        <source>Label</source>
+        <target state="needs-translation">Label</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.tooltip">
+        <source>Tooltip</source>
+        <target state="needs-translation">Tooltip</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.icon">
+        <source>Icon</source>
+        <target state="needs-translation">Icon</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.custom_icon">
+        <source>Custom Icon</source>
+        <target state="needs-translation">Custom Icon</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.items">
+        <source>Items</source>
+        <target state="needs-translation">Items</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.items">
+        <source>Items</source>
+        <target state="needs-translation">Items</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.preset">
+        <source>Preset</source>
+        <target state="needs-translation">Preset</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems">
+        <source>ToolBar Items</source>
+        <target state="needs-translation">ToolBar Items</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups">
+        <source>ToolBarItem Groups</source>
+        <target state="needs-translation">ToolBarItem Groups</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
