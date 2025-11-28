@@ -36,6 +36,7 @@ use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MenuBarFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MergeFieldsFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\PaginationFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SlashCommandFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SourceEditingEnhancedFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\StyleFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TemplateFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TransformationsFeature;
@@ -155,6 +156,23 @@ class Modules
                     'toolBarItems' => 'ExportWord',
                 ],
                 'fields' => $this->getFieldsFromFeature(ExportWordFeature::class),
+            ],
+            [
+                'tab' => Tabs::STANDALONE,
+                'details' => $cardDetails->getDetailsByKey('SourceEditingEnhanced'),
+                'configuration' => [
+                    'default' => false,
+                    'is_premium' => true,
+                    'config_key' => 'SourceEditingEnhanced',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-source-editing-enhanced',
+                            'exports' => 'SourceEditingEnhanced',
+                        ],
+                    ],
+                    'toolBarItems' => 'sourceEditingEnhanced',
+                ],
+                'fields' => $this->getFieldsFromFeature(SourceEditingEnhancedFeature::class),
             ],
             [
                 'tab' => Tabs::STANDALONE,
