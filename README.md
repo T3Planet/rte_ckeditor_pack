@@ -55,6 +55,7 @@ It includes these features:
 
 | CKEditor Pack | TYPO3 | CKEditor | PHP      | Support / Development                |
 |---------------|-------|----------|----------|--------------------------------------|
+| 2.0            | 14    | 47.2.0   | 8.1 - 8.4| Features, Bugfixes, Security Updates |
 | 1.0            | 13    | 47.2.0   | 8.1 - 8.4| Features, Bugfixes, Security Updates |
 | 1.0            | 12    | 47.1.0   | 8.1 - 8.4| Features, Bugfixes, Security Updates |
 
