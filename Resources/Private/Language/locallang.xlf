@@ -746,6 +746,13 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>The source editing feature lets you view and edit the source of your document.</source>
             </trans-unit>
 
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced">
+                <source>Source editing (Enhanced)</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced.description">
+                <source>Enhanced source editing with syntax highlighting, code formatting, and improved editing experience for viewing and editing document source code.</source>
+            </trans-unit>
+
             <trans-unit id="toolbar.create_group">
                 <source>Create New Group</source>
             </trans-unit>
