@@ -2,6 +2,7 @@
 [![CKEditor Github](https://img.shields.io/badge/CKEditor-Pack-informational?logo=github)](https://github.com/T3Planet/rte_ckeditor_pack)
 [![TYPO3 12](https://img.shields.io/badge/TYPO3-12-important.svg?logo=typo3)](https://get.typo3.org/version/12)
 [![TYPO3 13](https://img.shields.io/badge/TYPO3-13-important.svg?logo=typo3)](https://get.typo3.org/version/13)
+[![TYPO3 14](https://img.shields.io/badge/TYPO3-14-important.svg?logo=typo3)](https://get.typo3.org/version/14)
 [![JavaScript](https://img.shields.io/badge/JavaScript-gray?logo=javascript)](https://img.shields.io/badge/JavaScript-gray?logo=javascript)
 
 # TYPO3 Extension `rte_ckeditor_pack`
