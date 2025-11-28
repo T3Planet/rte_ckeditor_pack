@@ -61,4 +61,4 @@ It includes these features:
 
 ## Notes
 
-- Credit: The image support feature is based on a fork of [rte_ckeditor_image](https://extensions.typo3.org/extension/rte_ckeditor_image), with additional advanced image editing capabilities integrated from CKEditor’s free packages.
+- Credit: The image support in this extension is inspired by a fork of [rte_ckeditor_image](https://extensions.typo3.org/extension/rte_ckeditor_image). We built on the basic image upload functionality and combined it with enhanced capabilities from CKEditor's free packages, packaged as a no-code, editor-friendly plug-and-play solution. For more advanced, developer-oriented features, we recommend exploring EXT:rte_ckeditor_image directly.
