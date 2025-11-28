@@ -442,6 +442,15 @@ class CardData
                 'modalSize' => 'medium',
                 'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/line-height.html',
             ],
+            'SourceEditingEnhanced' => [
+                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced', 'rte_ckeditor_pack'),
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced', 'rte_ckeditor_pack'),
+                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced.description', 'rte_ckeditor_pack'),
+                'icon' => 'rte_sourceEditingEnhanced',
+                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
+                'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/source-editing/source-editing-enhanced.html',
+            ],
             // 'Typo3Image' => [
             //     'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image', 'rte_ckeditor_pack'),
             //     'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.file_management.typo3Image', 'rte_ckeditor_pack'),
