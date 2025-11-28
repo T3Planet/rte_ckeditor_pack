@@ -8,6 +8,7 @@
 
 Here is the list of features and updates introduced in this release: ::
 
+ 28-11-2025 [FEATURE] Compatibility with TYPO3 v14.0.0
  28-11-2025 [FEATURE] Introduced new CKEditor features Source Editing Enhanced.
  28-11-2025 [FEATURE] Introduced CKEditor official documentation link in feature cards.
  28-11-2025 [FEATURE] Updated preset management to prevent repeated re-selection
