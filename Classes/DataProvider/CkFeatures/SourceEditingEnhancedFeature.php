@@ -29,7 +29,7 @@ class SourceEditingEnhancedFeature implements FeatureInterface
                     ->setName('Allow Collaboration Features')
                     ->setKey('allowCollaborationFeatures')
                     ->setType(FieldType::BOOLEAN)
-                    ->setValue(false),
+                    ->setValue(true),
             ],
         ];
     }
