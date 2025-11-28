@@ -67,10 +67,36 @@ function initModuleFunc(params) {
     
         toggleModules.forEach(function (element) {
             element.addEventListener('click', function (event) {
+                let isChecked = event.target.checked;
+                
+                // If checkbox has 'config-not-saved' class and is being enabled,
+                // open modal first before allowing toggle
+                if (element.classList.contains('config-not-saved') && isChecked) {
+                    // Find the card containing this checkbox
+                    const card = element.closest('.card');
+                    if (card) {
+                        // Find the settings button in the same card
+                        const settingsButton = card.querySelector('button[data-identifier="ckeditorGlobalWizardButton"]');
+                        
+                        if (settingsButton) {
+                            // Prevent form submission
+                            event.preventDefault();
+                            event.stopPropagation();
+                            
+                            // Reset checkbox to unchecked state
+                            element.checked = false;
+                            
+                            // Trigger click on settings button to open modal
+                            settingsButton.click();
+                            return false;
+                        }
+                    }
+                }
+                
+                // Normal behavior - proceed with form submission
                 if(loaderDiv){
                     loaderDiv.classList.add("ns-show-overlay");
                 }
-                let isChecked = event.target.checked;
                 let inputName = event.target.name;
                 let hiddenInput = featureForm.querySelector(`input[name="${inputName}"]`);
                 if (!hiddenInput) {

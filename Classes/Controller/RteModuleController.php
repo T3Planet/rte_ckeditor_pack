@@ -13,7 +13,6 @@ use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
 use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
-use T3Planet\RteCkeditorPack\Utility\FieldValueUtility;
 use T3Planet\RteCkeditorPack\Utility\FlashUtility;
 use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
@@ -309,12 +308,6 @@ class RteModuleController extends ActionController
                                 $key = $moduleConfiguration['configuration']['config_key'];
                                 $record = $this->configurationRepository->findBy(['configKey' => $key])->getFirst();
                             }
-                            
-                            // Extract field values and build configuration structure
-                            if (isset($moduleConfiguration['fields']) && is_array($moduleConfiguration['fields'])) {
-                                $fieldsArray = FieldValueUtility::extractFieldValues($moduleConfiguration['fields']);
-                                $fieldsJson = json_encode($fieldsArray);
-                            }
                         }
                     }
                     if (!$record) {
@@ -322,9 +315,6 @@ class RteModuleController extends ActionController
                         $record->setConfigKey($key);
                         $record->setEnable($enable);
                         $record->setPreset($selectedPreset);
-                        if (isset($fieldsJson)) {
-                            $record->setFields($fieldsJson);
-                        }
                         $this->configurationRepository->add($record);
                     } else {
 

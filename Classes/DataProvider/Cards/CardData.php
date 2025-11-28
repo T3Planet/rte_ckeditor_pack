@@ -241,7 +241,7 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.block_indentation.description', 'rte_ckeditor_pack'),
                 'icon' => 'content-beside-text-img-above-center',
                 'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
-                'modalSize' => 'small',
+                'modalSize' => 'medium',
                 'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/indent.html',
             ],
             'Bookmark' => [
