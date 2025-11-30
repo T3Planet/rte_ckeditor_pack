@@ -3,12 +3,12 @@
   <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_be.xlf" product-name="rte_ckeditor_pack" target-language="da">
     <header/>
     <body>
-      <trans-unit id="labels.ckeditor.cssclass" xml:space="preserve">
+      <trans-unit id="labels.ckeditor.cssclass" xml:space="preserve" approved="yes">
 				<source>Custom CSS class</source>
-			<target state="needs-translation">Custom CSS class</target></trans-unit>
-      <trans-unit id="NsRteCkeditorPack.confirmModal.yes">
+			<target state="final">Brugerdefineret CSS-klasse</target></trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.yes" approved="yes">
         <source>Yes, discard my changes.</source>
-        <target state="needs-translation">Yes, discard my changes.</target>
+        <target state="final">Ja, kassér mine ændringer.</target>
       </trans-unit>
       <trans-unit id="NsRteCkeditorPack.confirmModal.cancel">
         <source>No, I will continue editing.</source>
