@@ -546,6 +546,55 @@ class Modules
                 ],
             ],
             [
+                'tab' => Tabs::PRODUCTIVITY,
+                'details' => $cardDetails->getDetailsByKey('FullScreen'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'FullScreen',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-fullscreen',
+                            'exports' => 'Fullscreen',
+                        ],
+                    ],
+                    'toolBarItems' => 'fullscreen',
+                ],
+                'fields' => $this->getFieldsFromFeature(MenuBarFeature::class),
+            ],
+            [
+                'tab' => Tabs::PRODUCTIVITY,
+                'details' => $cardDetails->getDetailsByKey('TableOfContents'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => false,
+                    'is_premium' => true,
+                    'config_key' => 'TableOfContents',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-document-outline',
+                            'exports' => 'TableOfContents',
+                        ],
+                    ],
+                    'toolBarItems' => 'TableOfContents',
+                ],
+            ],
+            [
+                'tab' => Tabs::PRODUCTIVITY,
+                'details' => $cardDetails->getDetailsByKey('Autoformat'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => false,
+                    'config_key' => 'Autoformat',
+                    'module' => [
+                        [
+                            'library' => '@ckeditor/ckeditor5-autoformat',
+                            'exports' => 'Autoformat',
+                        ],
+                    ],
+                ],
+            ],
+            [
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('Images'),
                 'configuration' => [
@@ -706,7 +755,7 @@ class Modules
                 ],
                 'fields' => $this->getFieldsFromFeature(TransformationsFeature::class),
             ],
-             [
+            [
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('TextPartLanguage'),
                 'configuration' => [
@@ -767,23 +816,6 @@ class Modules
                     ],
                     'toolBarItems' => 'emoji',
                 ],
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('FullScreen'),
-                'is_toggle' => 1,
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'FullScreen',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-fullscreen',
-                            'exports' => 'Fullscreen',
-                        ],
-                    ],
-                    'toolBarItems' => 'fullscreen',
-                ],
-                'fields' => $this->getFieldsFromFeature(MenuBarFeature::class),
             ],
             [
                 'tab' => Tabs::CORE,
@@ -902,23 +934,6 @@ class Modules
                         ],
                     ],
                     'toolBarItems' => 'TodoList',
-                ],
-            ],
-            [
-                'tab' => Tabs::PRODUCTIVITY,
-                'details' => $cardDetails->getDetailsByKey('TableOfContents'),
-                'is_toggle' => 1,
-                'configuration' => [
-                    'default' => false,
-                    'is_premium' => true,
-                    'config_key' => 'TableOfContents',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-document-outline',
-                            'exports' => 'TableOfContents',
-                        ],
-                    ],
-                    'toolBarItems' => 'TableOfContents',
                 ],
             ],
             [

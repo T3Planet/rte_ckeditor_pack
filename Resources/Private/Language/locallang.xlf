@@ -228,6 +228,14 @@
                 <source>Checks accessibility issues like headings, alternative text, and links while you edit.</source>
             </trans-unit>
             
+            <trans-unit id="ckeditorKit.tab.productivity.autoformat">
+                <source>Auto Format</source>
+            </trans-unit>
+            
+            <trans-unit id="ckeditorKit.tab.productivity.autoformat.description">
+                <source>Automatically formats content while typing. Use markdown shortcuts like **bold**, *italic*, # heading, and more.</source>
+            </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode">
                 <source>Full Screen Mode</source>
             </trans-unit>

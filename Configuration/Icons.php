@@ -269,4 +269,8 @@ return [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/editoria11y.svg',
     ],
+    'rte_autoformat' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/autoformat.svg',
+    ],
 ];
