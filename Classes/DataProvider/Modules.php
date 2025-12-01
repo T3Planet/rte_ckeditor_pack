@@ -922,7 +922,7 @@ class Modules
                 ],
             ],
             [
-                'tab' => Tabs::PRODUCTIVITY,
+                'tab' => Tabs::STANDALONE,
                 'details' => $cardDetails->getDetailsByKey('Editoria11y'),
                 'is_toggle' => 1,
                 'configuration' => [
