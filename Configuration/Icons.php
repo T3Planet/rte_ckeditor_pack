@@ -265,4 +265,8 @@ return [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/aiQuickActions.svg',
     ],
+    'rte_editoria11y' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/editoria11y.svg',
+    ],
 ];

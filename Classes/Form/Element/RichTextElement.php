@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Form\Element;
 
+use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\RteCKEditor\Form\Element\RichTextElement as CoreElem;
 
 class RichTextElement extends CoreElem
@@ -172,7 +174,11 @@ class RichTextElement extends CoreElem
         }
 
         $fullElement = '<div class="formengine-field-item t3js-formengine-field-item">' . implode(LF, $fullElement) . '</div>';
-        $resultArray['html'] = $this->wrapWithFieldsetAndLegend($fullElement);
+        
+        $extPath = 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.css';
+        $absoluteWebPath = PathUtility::getAbsoluteWebPath(GeneralUtility::getFileAbsFileName($extPath));
+        $tempElement = '<div id="editoria11y-config" data-css-path="' . htmlspecialchars($absoluteWebPath) . '" style="display: none;"></div>';
+        $resultArray['html'] = $this->wrapWithFieldsetAndLegend($fullElement . $tempElement);
 
         $resultArray['javaScriptModules'][] = JavaScriptModuleInstruction::create('@typo3/rte-ckeditor/ckeditor5.js');
 
@@ -187,7 +193,24 @@ class RichTextElement extends CoreElem
         }
 
         $resultArray = $this->addCustomStylesheets($resultArray);
+        
+        // Only load Editoria11y if it's enabled
+        if ($this->isEditoria11yEnabled()) {
+            $resultArray['javaScriptModules'][] = JavaScriptModuleInstruction::create('@t3planet/RteCkeditorPack/editoria11y-integration.js');
+        }
 
         return $resultArray;
+    }
+
+    /**
+     * Check if Editoria11y is enabled
+     *
+     * @return bool
+     */
+    protected function isEditoria11yEnabled(): bool
+    {
+        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        $record = $configurationRepository->findBy(['configKey' => 'Editoria11y'])->getFirst();
+        return $record ? $record->isEnable() : false;
     }
 }

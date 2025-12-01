@@ -134,5 +134,7 @@ return [
         '@t3planet/RteCkeditorPack/line-height-ui' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/line-height-ui.js',
         '@t3planet/RteCkeditorPack/line-height-utils' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/utils.js',
         '@t3planet/RteCkeditorPack/ckeditor5-error' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ErrorNotifications/error-notifications.js',
+        '@t3planet/RteCkeditorPack/editoria11y.min.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.js',
+        '@t3planet/RteCkeditorPack/editoria11y-integration.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y-integration.js',
     ],
 ];
