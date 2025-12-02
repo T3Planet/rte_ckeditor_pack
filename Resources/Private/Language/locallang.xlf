@@ -1074,6 +1074,18 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.add_new">
                 <source>Add New</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.success.message">
+                <source>Synchronization completed successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.error.message">
+                <source>Synchronization failed. Please try again</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.reset.success.message">
+                <source>Reset completed successfully</source>
+            </trans-unit>
+             <trans-unit id="ckeditorKit.preset.reset.error.message">
+                <source>Reset failed. Please try again</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

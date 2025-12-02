@@ -56,7 +56,7 @@ CREATE TABLE tx_rteckeditorpack_domain_model_toolbargroups
 CREATE TABLE tx_rteckeditorpack_domain_model_preset (
     uid int(11) NOT NULL auto_increment,
     pid int(11) DEFAULT '0' NOT NULL,
-    preset_key varchar(255) NOT NULL UNIQUE,
+    preset_key varchar(255) NOT NULL,
     toolbar_items text NOT NULL DEFAULT '',
     deleted smallint(1) unsigned DEFAULT '0' NOT NULL,
     hidden smallint(1) unsigned DEFAULT '0' NOT NULL,
@@ -66,7 +66,6 @@ CREATE TABLE tx_rteckeditorpack_domain_model_preset (
     is_custom smallint(1) unsigned NOT NULL DEFAULT '0',
     usage_source smallint(1) unsigned NOT NULL DEFAULT '0',
     PRIMARY KEY (uid),
-    UNIQUE KEY preset_key (preset_key),
     KEY parent (pid),
     KEY deleted (deleted),
     KEY hidden (hidden)

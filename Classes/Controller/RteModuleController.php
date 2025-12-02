@@ -623,7 +623,6 @@ class RteModuleController extends ActionController
                         $preset = GeneralUtility::makeInstance(Preset::class);
                         $preset->setPresetKey($presetName);
                         $preset->setIsCustom(true);
-                        $preset->setHidden(false);
                         $this->presetRepository->add($preset);
                         $this->persistenceManager->persistAll();
                         $notification[] = [
@@ -865,13 +864,13 @@ class RteModuleController extends ActionController
                     $this->cache->flush();
                     $notification[] = [
                         'title' => 'ckeditorKit.operation.success',
-                        'message' => 'ckeditorKit.preset.sync.success.message',
+                        'message' => 'ckeditorKit.preset.reset.success.message',
                         'severity' => 0,
                     ];
                }else{
                  $notification[] = [
                     'title' => 'ckeditorKit.operation.error',
-                    'message' => 'ckeditorKit.preset.sync.error.message',
+                    'message' => 'ckeditorKit.preset.reset.error.message',
                     'severity' => 2,
                 ];
                }
@@ -883,7 +882,7 @@ class RteModuleController extends ActionController
         } catch (\Exception $e) {
             $notification[] = [
                 'title' => 'ckeditorKit.operation.error',
-                'message' => 'ckeditorKit.preset.sync.error.message',
+                'message' => 'ckeditorKit.preset.reset.error.message',
                 'severity' => 2,
             ];
         }
