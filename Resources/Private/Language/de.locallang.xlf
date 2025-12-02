@@ -8,535 +8,535 @@
         <target state="needs-translation">CKEditor Pack</target>
       </trans-unit>
       <!-- Main Module Tabs-->
-      <trans-unit id="ckeditorKit.module.standalone">
+      <trans-unit id="ckeditorKit.module.standalone" approved="yes">
         <source>Features</source>
-        <target state="translated">Funktionen</target>
+        <target state="final">Funktionen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module.collaboration">
+      <trans-unit id="ckeditorKit.module.collaboration" approved="yes">
         <source>Collaboration</source>
-        <target state="translated">Zusammenarbeit</target>
+        <target state="final">Zusammenarbeit</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module.productivity">
+      <trans-unit id="ckeditorKit.module.productivity" approved="yes">
         <source>Productivity</source>
-        <target state="translated">Produktivität</target>
+        <target state="final">Produktivität</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module.file_management">
+      <trans-unit id="ckeditorKit.module.file_management" approved="yes">
         <source>File Management</source>
-        <target state="translated">Dateiverwaltung</target>
+        <target state="final">Dateiverwaltung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module.settings">
+      <trans-unit id="ckeditorKit.module.settings" approved="yes">
         <source>Premium Settings</source>
-        <target state="translated">Premium-Einstellungen</target>
+        <target state="final">Premium-Einstellungen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module.plugins">
+      <trans-unit id="ckeditorKit.module.plugins" approved="yes">
         <source>Free Packages</source>
-        <target state="translated">Kostenlose Pakete</target>
+        <target state="final">Kostenlose Pakete</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module.feature">
+      <trans-unit id="ckeditorKit.module.feature" approved="yes">
         <source>Toolbar</source>
-        <target state="translated">Symbolleiste</target>
+        <target state="final">Symbolleiste</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.file_management">
+      <trans-unit id="ckeditorKit.tab.file_management" approved="yes">
         <source>Files</source>
-        <target state="translated">Dateien</target>
+        <target state="final">Dateien</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.layout">
+      <trans-unit id="ckeditorKit.tab.layout" approved="yes">
         <source>Presets</source>
-        <target state="translated">Vorgaben</target>
+        <target state="final">Vorgaben</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.settings">
+      <trans-unit id="ckeditorKit.tab.settings" approved="yes">
         <source>Settings</source>
-        <target state="translated">Einstellungen</target>
+        <target state="final">Einstellungen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.card.btn_title">
+      <trans-unit id="ckeditorKit.tab.card.btn_title" approved="yes">
         <source>Configuration</source>
-        <target state="translated">Konfiguration</target>
+        <target state="final">Konfiguration</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.card.checkbox.enable">
+      <trans-unit id="ckeditorKit.tab.card.checkbox.enable" approved="yes">
         <source>Enable</source>
-        <target state="translated">Aktivieren</target>
+        <target state="final">Aktivieren</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.card.coming-soon">
+      <trans-unit id="ckeditorKit.tab.card.coming-soon" approved="yes">
         <source>Coming Soon</source>
-        <target state="translated">Demnächst verfügbar</target>
+        <target state="final">Demnächst verfügbar</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.track_changes">
+      <trans-unit id="ckeditorKit.tab.premium.track_changes" approved="yes">
         <source>Track Changes</source>
-        <target state="translated">Änderungen verfolgen</target>
+        <target state="final">Änderungen verfolgen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.Favorites">
+      <trans-unit id="ckeditorKit.tab.Favorites" approved="yes">
         <source>Favorites</source>
-        <target state="translated">Favoriten</target>
+        <target state="final">Favoriten</target>
       </trans-unit>
       <!-- here -->
-      <trans-unit id="ckeditorKit.tab.premium.track_changes.description">
+      <trans-unit id="ckeditorKit.tab.premium.track_changes.description" approved="yes">
         <source>Suggest edits without changing the text. All suggestions are marked for review.</source>
-        <target state="translated">Vorschläge machen, ohne den Text zu ändern. Alle Vorschläge werden zur Überprüfung markiert.</target>
+        <target state="final">Vorschläge machen, ohne den Text zu ändern. Alle Vorschläge werden zur Überprüfung markiert.</target>
       </trans-unit>
-      <trans-unit id="features.settings.save">
+      <trans-unit id="features.settings.save" approved="yes">
         <source>Save Changes</source>
-        <target state="translated">Änderungen speichern</target>
+        <target state="final">Änderungen speichern</target>
       </trans-unit>
-      <trans-unit id="features.settings.group">
+      <trans-unit id="features.settings.group" approved="yes">
         <source>Toolbar Groups</source>
-        <target state="translated">Symbolleisten-Gruppen</target>
+        <target state="final">Symbolleisten-Gruppen</target>
       </trans-unit>
-      <trans-unit id="features.settings.dragDrop">
+      <trans-unit id="features.settings.dragDrop" approved="yes">
         <source>Drag N Drop Features</source>
-        <target state="translated">Drag-and-Drop-Funktionen</target>
+        <target state="final">Drag-and-Drop-Funktionen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.comments">
+      <trans-unit id="ckeditorKit.tab.premium.comments" approved="yes">
         <source>Comments</source>
-        <target state="translated">Kommentare</target>
+        <target state="final">Kommentare</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.comments.description">
+      <trans-unit id="ckeditorKit.tab.premium.comments.description" approved="yes">
         <source>Add, edit, or delete comments and use threads or comments-only mode for focus.</source>
-        <target state="translated">Kommentare hinzufügen, bearbeiten oder löschen und Threads oder Nur-Kommentare-Modus zur Fokussierung verwenden.</target>
+        <target state="final">Kommentare hinzufügen, bearbeiten oder löschen und Threads oder Nur-Kommentare-Modus zur Fokussierung verwenden.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.revision_history">
+      <trans-unit id="ckeditorKit.tab.premium.revision_history" approved="yes">
         <source>Revision History</source>
-        <target state="translated">Versionsverlauf</target>
+        <target state="final">Versionsverlauf</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.revision_history.description">
+      <trans-unit id="ckeditorKit.tab.premium.revision_history.description" approved="yes">
         <source>View, compare, or restore older versions and recover content when needed.</source>
-        <target state="translated">Ältere Versionen anzeigen, vergleichen oder wiederherstellen und Inhalte bei Bedarf wiederherstellen.</target>
+        <target state="final">Ältere Versionen anzeigen, vergleichen oder wiederherstellen und Inhalte bei Bedarf wiederherstellen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration">
+      <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration" approved="yes">
         <source>Real-time Collaboration</source>
-        <target state="translated">Echtzeit-Zusammenarbeit</target>
+        <target state="final">Echtzeit-Zusammenarbeit</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration.description">
+      <trans-unit id="ckeditorKit.tab.premium.real_time_collaboration.description" approved="yes">
         <source>Let multiple users edit, comment, suggest, and review document history together.</source>
-        <target state="translated">Lassen Sie mehrere Benutzer ein Dokument gemeinsam bearbeiten, kommentieren, vorschlagen und die Verlaufshistorie überprüfen.</target>
+        <target state="final">Lassen Sie mehrere Benutzer ein Dokument gemeinsam bearbeiten, kommentieren, vorschlagen und die Verlaufshistorie überprüfen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.import_from_word">
+      <trans-unit id="ckeditorKit.tab.premium.import_from_word" approved="yes">
         <source>Import from Word</source>
-        <target state="translated">Aus Word importieren</target>
+        <target state="final">Aus Word importieren</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.import_from_word.description">
+      <trans-unit id="ckeditorKit.tab.premium.import_from_word.description" approved="yes">
         <source>Convert Word files to clean HTML with formatting, comments, and changes kept.</source>
-        <target state="translated">Word-Dateien in sauberes HTML konvertieren, wobei Formatierungen, Kommentare und Änderungen erhalten bleiben.</target>
+        <target state="final">Word-Dateien in sauberes HTML konvertieren, wobei Formatierungen, Kommentare und Änderungen erhalten bleiben.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.export_to_pdf">
+      <trans-unit id="ckeditorKit.tab.premium.export_to_pdf" approved="yes">
         <source>Export to PDF</source>
-        <target state="translated">Als PDF exportieren</target>
+        <target state="final">Als PDF exportieren</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.export_to_pdf.description">
+      <trans-unit id="ckeditorKit.tab.premium.export_to_pdf.description" approved="yes">
         <source>Generate a polished PDF from the editor with accurate formatting and layout.</source>
-        <target state="translated">Ein ansprechendes PDF aus dem Editor mit genauer Formatierung und Layout erstellen.</target>
+        <target state="final">Ein ansprechendes PDF aus dem Editor mit genauer Formatierung und Layout erstellen.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.premium.toggle_ai">
         <source>CKEditor AI</source>
         <target state="needs-translation">CKEditor AI</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.toggle_ai.description">
+      <trans-unit id="ckeditorKit.tab.premium.toggle_ai.description" approved="yes">
         <source>Use the AI Assistant to write, rephrase, translate, or summarize text instantly.</source>
-        <target state="translated">Nutzen Sie den KI-Assistenten, um Text sofort zu schreiben, umzuformulieren, zu übersetzen oder zusammenzufassen.</target>
+        <target state="final">Nutzen Sie den KI-Assistenten, um Text sofort zu schreiben, umzuformulieren, zu übersetzen oder zusammenzufassen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.footnotes">
+      <trans-unit id="ckeditorKit.tab.premium.footnotes" approved="yes">
         <source>Footnotes</source>
-        <target state="translated">Fußnoten</target>
+        <target state="final">Fußnoten</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.footnotes.description">
+      <trans-unit id="ckeditorKit.tab.premium.footnotes.description" approved="yes">
         <source>Insert inline footnotes with automatic numbering to keep notes consistent.</source>
-        <target state="translated">Inline-Fußnoten mit automatischer Nummerierung einfügen, um Notizen konsistent zu halten.</target>
+        <target state="final">Inline-Fußnoten mit automatischer Nummerierung einfügen, um Notizen konsistent zu halten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check">
+      <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check" approved="yes">
         <source>Spell and Grammar Check</source>
-        <target state="translated">Rechtschreib- und Grammatikprüfung</target>
+        <target state="final">Rechtschreib- und Grammatikprüfung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check.description">
+      <trans-unit id="ckeditorKit.tab.premium.spell_and_grammar_check.description" approved="yes">
         <source>Use AI to check spelling, grammar, and punctuation with instant suggestions.</source>
-        <target state="translated">Nutzen Sie KI, um Rechtschreibung, Grammatik und Interpunktion mit sofortigen Vorschlägen zu prüfen.</target>
+        <target state="final">Nutzen Sie KI, um Rechtschreibung, Grammatik und Interpunktion mit sofortigen Vorschlägen zu prüfen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.pagination">
+      <trans-unit id="ckeditorKit.tab.premium.pagination" approved="yes">
         <source>Pagination</source>
-        <target state="translated">Paginierung</target>
+        <target state="final">Paginierung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.pagination.description">
+      <trans-unit id="ckeditorKit.tab.premium.pagination.description" approved="yes">
         <source>Preview page breaks during editing to see the final layout before export.</source>
-        <target state="translated">Seitenumbrüche während der Bearbeitung anzeigen, um das endgültige Layout vor dem Export zu sehen.</target>
+        <target state="final">Seitenumbrüche während der Bearbeitung anzeigen, um das endgültige Layout vor dem Export zu sehen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.math_equations">
+      <trans-unit id="ckeditorKit.tab.premium.math_equations" approved="yes">
         <source>Math Equations</source>
-        <target state="translated">Mathematische Gleichungen</target>
+        <target state="final">Mathematische Gleichungen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.math_equations.description">
+      <trans-unit id="ckeditorKit.tab.premium.math_equations.description" approved="yes">
         <source>Add formatted mathematical notation and chemical formulas easily.</source>
-        <target state="translated">Formatierten mathematischen Notationen und chemische Formeln einfach hinzufügen.</target>
+        <target state="final">Formatierten mathematischen Notationen und chemische Formeln einfach hinzufügen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.multi_level_list">
+      <trans-unit id="ckeditorKit.tab.premium.multi_level_list" approved="yes">
         <source>Multi-level List</source>
-        <target state="translated">Mehrstufige Liste</target>
+        <target state="final">Mehrstufige Liste</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.multi_level_list.description">
+      <trans-unit id="ckeditorKit.tab.premium.multi_level_list.description" approved="yes">
         <source>Create numbered lists like 1, 1.1, 1.1.1 to keep structure clear and organized.</source>
-        <target state="translated">Nummerierte Listen wie 1, 1.1, 1.1.1 erstellen, um die Struktur klar und organisiert zu halten.</target>
+        <target state="final">Nummerierte Listen wie 1, 1.1, 1.1.1 erstellen, um die Struktur klar und organisiert zu halten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.notifications">
+      <trans-unit id="ckeditorKit.tab.premium.notifications" approved="yes">
         <source>Notifications</source>
-        <target state="translated">Benachrichtigungen</target>
+        <target state="final">Benachrichtigungen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.notifications.description">
+      <trans-unit id="ckeditorKit.tab.premium.notifications.description" approved="yes">
         <source>Send email alerts for comments, mentions, and suggestions with related content snippets.</source>
-        <target state="translated">E-Mail-Benachrichtigungen für Kommentare, Erwähnungen und Vorschläge mit entsprechenden Inhaltsschnipseln senden.</target>
+        <target state="final">E-Mail-Benachrichtigungen für Kommentare, Erwähnungen und Vorschläge mit entsprechenden Inhaltsschnipseln senden.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.slash_commands">
+      <trans-unit id="ckeditorKit.tab.productivity.slash_commands" approved="yes">
         <source>Slash Commands</source>
-        <target state="translated">Slash-Befehle</target>
+        <target state="final">Slash-Befehle</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.slash_commands.description">
+      <trans-unit id="ckeditorKit.tab.productivity.slash_commands.description" approved="yes">
         <source>Use “/” to insert blocks, styles, or content quickly. Create custom commands too.</source>
-        <target state="translated">Verwenden Sie „/“, um schnell Blöcke, Stile oder Inhalte einzufügen. Erstellen Sie auch benutzerdefinierte Befehle.</target>
+        <target state="final">Verwenden Sie „/“, um schnell Blöcke, Stile oder Inhalte einzufügen. Erstellen Sie auch benutzerdefinierte Befehle.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.templates">
+      <trans-unit id="ckeditorKit.tab.productivity.templates" approved="yes">
         <source>Templates</source>
-        <target state="translated">Vorlagen</target>
+        <target state="final">Vorlagen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.templates.description">
+      <trans-unit id="ckeditorKit.tab.productivity.templates.description" approved="yes">
         <source>Use templates to add ready-made blocks or full layouts like letters and reports.</source>
-        <target state="translated">Vorlagen verwenden, um vorgefertigte Blöcke oder vollständige Layouts wie Briefe und Berichte hinzuzufügen.</target>
+        <target state="final">Vorlagen verwenden, um vorgefertigte Blöcke oder vollständige Layouts wie Briefe und Berichte hinzuzufügen.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.productivity.paste_from_office_enhanced">
         <source>Paste Office Enhanced</source>
         <target state="needs-translation">Paste Office Enhanced</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.paste_from_office_enhanced.description">
+      <trans-unit id="ckeditorKit.tab.productivity.paste_from_office_enhanced.description" approved="yes">
         <source>Paste from Word or Excel with accurate formatting and clean HTML output.</source>
-        <target state="translated">Aus Word oder Excel mit genauer Formatierung und sauberem HTML-Output einfügen.</target>
+        <target state="final">Aus Word oder Excel mit genauer Formatierung und sauberem HTML-Output einfügen.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.productivity.format_painter">
         <source>Format Painter</source>
         <target state="needs-translation">Format Painter</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.format_painter.description">
+      <trans-unit id="ckeditorKit.tab.productivity.format_painter.description" approved="yes">
         <source>Copy formatting from one place and apply it elsewhere for consistent styling.</source>
-        <target state="translated">Formatierung von einer Stelle kopieren und an einer anderen anwenden, um ein einheitliches Styling zu gewährleisten.</target>
+        <target state="final">Formatierung von einer Stelle kopieren und an einer anderen anwenden, um ein einheitliches Styling zu gewährleisten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.document_outline">
+      <trans-unit id="ckeditorKit.tab.productivity.document_outline" approved="yes">
         <source>Document Outline</source>
-        <target state="translated">Dokumentumriss</target>
+        <target state="final">Dokumentumriss</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.document_outline.description">
+      <trans-unit id="ckeditorKit.tab.productivity.document_outline.description" approved="yes">
         <source>List document headings in a sidebar for quick navigation through long content.</source>
-        <target state="translated">Dokumentüberschriften in einer Seitenleiste auflisten, um eine schnelle Navigation durch lange Inhalte zu ermöglichen.</target>
+        <target state="final">Dokumentüberschriften in einer Seitenleiste auflisten, um eine schnelle Navigation durch lange Inhalte zu ermöglichen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.table_contents">
+      <trans-unit id="ckeditorKit.tab.productivity.table_contents" approved="yes">
         <source>Table of Contents</source>
-        <target state="translated">Inhaltsverzeichnis</target>
+        <target state="final">Inhaltsverzeichnis</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.table_contents.description">
+      <trans-unit id="ckeditorKit.tab.productivity.table_contents.description" approved="yes">
         <source>Insert an auto-updating table of contents with linked headings for navigation.</source>
-        <target state="translated">Ein automatisches Inhaltsverzeichnis mit verlinkten Überschriften für die Navigation einfügen.</target>
+        <target state="final">Ein automatisches Inhaltsverzeichnis mit verlinkten Überschriften für die Navigation einfügen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.case_change">
+      <trans-unit id="ckeditorKit.tab.productivity.case_change" approved="yes">
         <source>Case Change</source>
-        <target state="translated">Groß-/Kleinschreibung ändern</target>
+        <target state="final">Groß-/Kleinschreibung ändern</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.case_change.description">
+      <trans-unit id="ckeditorKit.tab.productivity.case_change.description" approved="yes">
         <source>Switch text between uppercase, lowercase, or title case with one click.</source>
-        <target state="translated">Text mit einem Klick zwischen Groß-, Klein- oder Titelcase umschalten.</target>
+        <target state="final">Text mit einem Klick zwischen Groß-, Klein- oder Titelcase umschalten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode">
+      <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode" approved="yes">
         <source>Full Screen Mode</source>
-        <target state="translated">Vollbildmodus</target>
+        <target state="final">Vollbildmodus</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode.description">
+      <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode.description" approved="yes">
         <source>Use the editor in full screen for more space. Part of the free CKEditor Plugin Pack.</source>
-        <target state="translated">Den Editor im Vollbildmodus nutzen, um mehr Platz zu schaffen. Teil des kostenlosen CKEditor Plugin Packs.</target>
+        <target state="final">Den Editor im Vollbildmodus nutzen, um mehr Platz zu schaffen. Teil des kostenlosen CKEditor Plugin Packs.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.merge_fields">
+      <trans-unit id="ckeditorKit.tab.productivity.merge_fields" approved="yes">
         <source>Merge Fields</source>
-        <target state="translated">Feldzusammenführung</target>
+        <target state="final">Feldzusammenführung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.productivity.merge_fields.description">
+      <trans-unit id="ckeditorKit.tab.productivity.merge_fields.description" approved="yes">
         <source>Add placeholders for text, blocks, or images to create personalized documents.</source>
-        <target state="translated">Platzhalter für Text, Blöcke oder Bilder hinzufügen, um personalisierte Dokumente zu erstellen.</target>
+        <target state="final">Platzhalter für Text, Blöcke oder Bilder hinzufügen, um personalisierte Dokumente zu erstellen.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.file_management.ckbox">
         <source>CKBox</source>
         <target state="needs-translation">CKBox</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.file_management.ckbox.description">
+      <trans-unit id="ckeditorKit.tab.file_management.ckbox.description" approved="yes">
         <source>Upload, store, and manage files securely with a media browser and image editor.</source>
-        <target state="translated">Dateien sicher hochladen, speichern und verwalten mit einem Medienbrowser und Bildeditor.</target>
+        <target state="final">Dateien sicher hochladen, speichern und verwalten mit einem Medienbrowser und Bildeditor.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation" approved="yes">
         <source>Block Indentation</source>
-        <target state="translated">Blockeinzug</target>
+        <target state="final">Blockeinzug</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.block_indentation.description" approved="yes">
         <source>Set indentation for paragraphs, headings, or lists to separate content visually.</source>
-        <target state="translated">Einzug für Absätze, Überschriften oder Listen festlegen, um Inhalte visuell zu trennen.</target>
+        <target state="final">Einzug für Absätze, Überschriften oder Listen festlegen, um Inhalte visuell zu trennen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace" approved="yes">
         <source>Find and Replace</source>
-        <target state="translated">Suchen und Ersetzen</target>
+        <target state="final">Suchen und Ersetzen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.find_and_replace.description" approved="yes">
         <source>Search and replace words or phrases throughout your document.</source>
-        <target state="translated">Wörter oder Phrasen im gesamten Dokument suchen und ersetzen.</target>
+        <target state="final">Wörter oder Phrasen im gesamten Dokument suchen und ersetzen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts" approved="yes">
         <source>Fonts</source>
-        <target state="translated">Schriftarten</target>
+        <target state="final">Schriftarten</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.fonts.description" approved="yes">
         <source>Change font family, size, and color, including background.</source>
-        <target state="translated">Schriftfamilie, -größe und -farbe ändern, einschließlich Hintergrund.</target>
+        <target state="final">Schriftfamilie, -größe und -farbe ändern, einschließlich Hintergrund.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight" approved="yes">
         <source>Highlight</source>
-        <target state="translated">Hervorheben</target>
+        <target state="final">Hervorheben</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.highlight.description" approved="yes">
         <source>Mark text with colors for emphasis or quick visual reference.</source>
-        <target state="translated">Text mit Farben markieren, um einen Akzent zu setzen oder als schnelle visuelle Referenz.</target>
+        <target state="final">Text mit Farben markieren, um einen Akzent zu setzen oder als schnelle visuelle Referenz.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break" approved="yes">
         <source>Page Break</source>
-        <target state="translated">Seitenumbruch</target>
+        <target state="final">Seitenumbruch</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.page_break.description" approved="yes">
         <source>Insert page breaks to control layout when printing or exporting.</source>
-        <target state="translated">Seitenumbrüche einfügen, um das Layout beim Drucken oder Exportieren zu steuern.</target>
+        <target state="final">Seitenumbrüche einfügen, um das Layout beim Drucken oder Exportieren zu steuern.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all" approved="yes">
         <source>Select All</source>
-        <target state="translated">Alle auswählen</target>
+        <target state="final">Alle auswählen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.select_all.description" approved="yes">
         <source>Select all document content using a toolbar button.</source>
-        <target state="translated">Gesamten Dokumentinhalt mit einer Symbolleistenschaltfläche auswählen.</target>
+        <target state="final">Gesamten Dokumentinhalt mit einer Symbolleistenschaltfläche auswählen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation" approved="yes">
         <source>Text Transformation</source>
-        <target state="translated">Textumwandlung</target>
+        <target state="final">Textumwandlung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_transformation.description" approved="yes">
         <source>Auto-correct or replace text to maintain consistent spelling and formatting.</source>
-        <target state="translated">Text automatisch korrigieren oder ersetzen, um eine konsistente Rechtschreibung und Formatierung zu gewährleisten.</target>
+        <target state="final">Text automatisch korrigieren oder ersetzen, um eine konsistente Rechtschreibung und Formatierung zu gewährleisten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list" approved="yes">
         <source>To-do Document List</source>
-        <target state="translated">To-do-Dokumentliste</target>
+        <target state="final">To-do-Dokumentliste</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.document_list.description" approved="yes">
         <source>Create interactive checklists with labels and reorderable items.</source>
-        <target state="translated">Interaktive Checklisten mit Beschriftungen und umsortierbaren Elementen erstellen.</target>
+        <target state="final">Interaktive Checklisten mit Beschriftungen und umsortierbaren Elementen erstellen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count" approved="yes">
         <source>Word count</source>
-        <target state="translated">Wortanzahl</target>
+        <target state="final">Wortanzahl</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.word_count.description" approved="yes">
         <source>Track words and characters while writing and monitor content length easily.</source>
-        <target state="translated">Wörter und Zeichen während des Schreibens nachverfolgen und die Inhaltslänge einfach überwachen.</target>
+        <target state="final">Wörter und Zeichen während des Schreibens nachverfolgen und die Inhaltslänge einfach überwachen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.operation.success">
+      <trans-unit id="ckeditorKit.operation.success" approved="yes">
         <source>Success</source>
-        <target state="translated">Erfolg</target>
+        <target state="final">Erfolg</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.operation.error">
+      <trans-unit id="ckeditorKit.operation.error" approved="yes">
         <source>Error Occured</source>
-        <target state="translated">Fehler aufgetreten</target>
+        <target state="final">Fehler aufgetreten</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.setting_save.success.message">
+      <trans-unit id="ckeditorKit.plugin.setting_save.success.message" approved="yes">
         <source>Configuration updated successfully</source>
-        <target state="translated">Konfiguration erfolgreich aktualisiert</target>
+        <target state="final">Konfiguration erfolgreich aktualisiert</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.setting_save.error.message">
+      <trans-unit id="ckeditorKit.plugin.setting_save.error.message" approved="yes">
         <source>Configuration is not updated, please try again</source>
-        <target state="translated">Konfiguration nicht aktualisiert, bitte erneut versuchen</target>
+        <target state="final">Konfiguration nicht aktualisiert, bitte erneut versuchen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.export_to_word">
+      <trans-unit id="ckeditorKit.tab.premium.export_to_word" approved="yes">
         <source>Export to Word</source>
-        <target state="translated">Export nach Word</target>
+        <target state="final">Export nach Word</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.export_to_word.description">
+      <trans-unit id="ckeditorKit.tab.premium.export_to_word.description" approved="yes">
         <source>Create a .docx file instantly while keeping original formatting intact.</source>
-        <target state="translated">Sofort eine .docx-Datei erstellen und dabei das ursprüngliche Format beibehalten.</target>
+        <target state="final">Sofort eine .docx-Datei erstellen und dabei das ursprüngliche Format beibehalten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.key_missing">
+      <trans-unit id="ckeditorKit.key_missing" approved="yes">
         <source>To unlock premium features, kindly provide a license key.</source>
-        <target state="translated">Um Premium-Funktionen freizuschalten, geben Sie bitte einen Lizenzschlüssel an.</target>
+        <target state="final">Um Premium-Funktionen freizuschalten, geben Sie bitte einen Lizenzschlüssel an.</target>
       </trans-unit>
-      <trans-unit id="features.settings.save">
+      <trans-unit id="features.settings.save" approved="yes">
         <source>Save Changes</source>
-        <target state="translated">Änderungen speichern</target>
+        <target state="final">Änderungen speichern</target>
       </trans-unit>
-      <trans-unit id="features.settings.group">
+      <trans-unit id="features.settings.group" approved="yes">
         <source>Toolbar Groups</source>
-        <target state="translated">Symbolleisten-Gruppen</target>
+        <target state="final">Symbolleisten-Gruppen</target>
       </trans-unit>
-      <trans-unit id="features.settings.dragDrop">
+      <trans-unit id="features.settings.dragDrop" approved="yes">
         <source>Drag N Drop Features</source>
-        <target state="translated">Drag-and-Drop-Funktionen</target>
+        <target state="final">Drag-and-Drop-Funktionen</target>
       </trans-unit>
-      <trans-unit id="features.drag.inactive">
+      <trans-unit id="features.drag.inactive" approved="yes">
         <source>Toolbar InActive Items</source>
-        <target state="translated">Inaktive Symbolleisten-Elemente</target>
+        <target state="final">Inaktive Symbolleisten-Elemente</target>
       </trans-unit>
-      <trans-unit id="features.drag.active">
+      <trans-unit id="features.drag.active" approved="yes">
         <source>Toolbar Active Items</source>
-        <target state="translated">Aktive Symbolleisten-Elemente</target>
+        <target state="final">Aktive Symbolleisten-Elemente</target>
       </trans-unit>
-      <trans-unit id="features.visible">
+      <trans-unit id="features.visible" approved="yes">
         <source>Visible Feature</source>
-        <target state="translated">Sichtbares Feature</target>
+        <target state="final">Sichtbares Feature</target>
       </trans-unit>
-      <trans-unit id="features.hidden">
+      <trans-unit id="features.hidden" approved="yes">
         <source>Hidden Feature</source>
-        <target state="translated">Verstecktes Feature</target>
+        <target state="final">Verstecktes Feature</target>
       </trans-unit>
-      <trans-unit id="features.ToggleLabel">
+      <trans-unit id="features.ToggleLabel" approved="yes">
         <source>Toggle Label</source>
-        <target state="translated">Bezeichnung umschalten</target>
+        <target state="final">Bezeichnung umschalten</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module_update.success.message">
+      <trans-unit id="ckeditorKit.module_update.success.message" approved="yes">
         <source>Feature setting is updated successfully</source>
-        <target state="translated">Feature-Einstellung wurde erfolgreich aktualisiert</target>
+        <target state="final">Feature-Einstellung wurde erfolgreich aktualisiert</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.module_update.error.message">
+      <trans-unit id="ckeditorKit.module_update.error.message" approved="yes">
         <source>Configuration is not updated, please try again</source>
-        <target state="translated">Konfiguration ist nicht aktualisiert, bitte erneut versuchen</target>
+        <target state="final">Konfiguration ist nicht aktualisiert, bitte erneut versuchen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed" approved="yes">
         <source>Html Embed</source>
-        <target state="translated">Html Einbettung</target>
+        <target state="final">Html Einbettung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.htmlEmbed.description" approved="yes">
         <source>Embed custom HTML like widgets or iframes directly in your content.</source>
-        <target state="translated">Eigenes HTML wie Widgets oder iFrames direkt in Ihren Inhalt einbetten.</target>
+        <target state="final">Eigenes HTML wie Widgets oder iFrames direkt in Ihren Inhalt einbetten.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.code">
         <source>Code</source>
         <target state="needs-translation">Code</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.code.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.code.description" approved="yes">
         <source>Insert inline code snippets that stay readable within the text flow.</source>
-        <target state="translated">Fügen Sie Inline-Code-Schnipsel ein, die innerhalb des Textflusses lesbar bleiben.</target>
+        <target state="final">Fügen Sie Inline-Code-Schnipsel ein, die innerhalb des Textflusses lesbar bleiben.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock" approved="yes">
         <source>Code Block</source>
-        <target state="translated">Code-Block</target>
+        <target state="final">Code-Block</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.codeBlock.description" approved="yes">
         <source>Insert preformatted code blocks with language labels for clarity.</source>
-        <target state="translated">Fügen Sie zur besseren Übersichtlichkeit vorformatierte Code-Blöcke mit Sprachbezeichnungen ein.</target>
+        <target state="final">Fügen Sie zur besseren Übersichtlichkeit vorformatierte Code-Blöcke mit Sprachbezeichnungen ein.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar" approved="yes">
         <source>Block Toolbar</source>
-        <target state="translated">Block-Symbolleiste.</target>
+        <target state="final">Block-Symbolleiste.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.blockToolbar.description" approved="yes">
         <source>Access main toolbar options through a dropdown for easy navigation.</source>
-        <target state="translated">Zugriff auf die Optionen der Hauptsymbolleiste über ein Dropdown-Menü für eine einfache Navigation.</target>
+        <target state="final">Zugriff auf die Optionen der Hauptsymbolleiste über ein Dropdown-Menü für eine einfache Navigation.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.balloonToolbar">
         <source>Balloon Toolbar</source>
         <target state="needs-translation">Balloon Toolbar</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.balloonToolbar.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.balloonToolbar.description" approved="yes">
         <source>Use a floating toolbar that appears on text selection for quick actions.</source>
-        <target state="translated">Verwenden Sie eine schwebende Symbolleiste, die bei Textauswahl für schnelle Aktionen erscheint.</target>
+        <target state="final">Verwenden Sie eine schwebende Symbolleiste, die bei Textauswahl für schnelle Aktionen erscheint.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.file_management.typo3Image">
         <source>TYPO3 Image</source>
         <target state="needs-translation">TYPO3 Image</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.file_management.typo3Image.description">
+      <trans-unit id="ckeditorKit.tab.file_management.typo3Image.description" approved="yes">
         <source>Modern image uploads, editing tools, and native CKEditor integration.</source>
-        <target state="translated">Moderne Bild-Uploads, Bearbeitungswerkzeuge und native CKEditor-Integration.</target>
+        <target state="final">Moderne Bild-Uploads, Bearbeitungswerkzeuge und native CKEditor-Integration.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing">
         <source>Restricted Editing</source>
         <target state="needs-translation">Restricted Editing</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description" approved="yes">
         <source>Control which parts of the document users can edit by locking sections.</source>
-        <target state="translated">Kontrollieren Sie, welche Teile des Dokuments Benutzer bearbeiten können, indem Sie Abschnitte sperren.</target>
+        <target state="final">Kontrollieren Sie, welche Teile des Dokuments Benutzer bearbeiten können, indem Sie Abschnitte sperren.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown">
         <source>Markdown</source>
         <target state="needs-translation">Markdown</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown.description" approved="yes">
         <source>Switch to Markdown output with autoformatting for a simple editing flow.</source>
-        <target state="translated">Wechseln Sie zu Markdown-Ausgabe mit automatischer Formatierung für einen einfachen Bearbeitungsfluss.</target>
+        <target state="final">Wechseln Sie zu Markdown-Ausgabe mit automatischer Formatierung für einen einfachen Bearbeitungsfluss.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.mediaEmbed">
         <source>Media Embed</source>
         <target state="needs-translation">Media Embed</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.mediaEmbed.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.mediaEmbed.description" approved="yes">
         <source>Insert videos, social posts, or maps to enrich your document.</source>
-        <target state="translated">Fügen Sie Videos, Social Media-Posts oder Karten ein, um Ihr Dokument zu bereichern.</target>
+        <target state="final">Fügen Sie Videos, Social Media-Posts oder Karten ein, um Ihr Dokument zu bereichern.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images">
         <source>Image Configuration</source>
         <target state="needs-translation">Image Configuration</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images.description" approved="yes">
         <source>Insert, upload, resize, style, and caption images with full CKEditor support.</source>
-        <target state="translated">Bilder einfügen, hochladen, skalieren, stylen und beschriften mit voller CKEditor-Unterstützung.</target>
+        <target state="final">Bilder einfügen, hochladen, skalieren, stylen und beschriften mit voller CKEditor-Unterstützung.</target>
       </trans-unit>
       <!-- here -->
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave">
         <source>Autosave</source>
         <target state="needs-translation">Autosave</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave.description" approved="yes">
         <source>Make sure nothing gets lost by automatically saving your document every time a change is made.</source>
-        <target state="translated">Stellen Sie sicher, dass nichts verloren geht, indem Sie Ihr Dokument bei jeder Änderung automatisch speichern.</target>
+        <target state="final">Stellen Sie sicher, dass nichts verloren geht, indem Sie Ihr Dokument bei jeder Änderung automatisch speichern.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.showBlocks">
         <source>ShowBlocks</source>
         <target state="needs-translation">ShowBlocks</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.showBlocks.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.showBlocks.description" approved="yes">
         <source>Visualize block elements to understand document structure while editing.</source>
-        <target state="translated">Visualisieren Sie Blockelemente, um die Dokumentstruktur während der Bearbeitung zu verstehen.</target>
+        <target state="final">Visualisieren Sie Blockelemente, um die Dokumentstruktur während der Bearbeitung zu verstehen.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.textPartLanguage">
         <source>Textpart language</source>
         <target state="needs-translation">Textpart language</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.textPartLanguage.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.textPartLanguage.description" approved="yes">
         <source>Mark text in other languages so browsers and readers interpret it correctly.</source>
-        <target state="translated">Markieren Sie Text in anderen Sprachen, damit Browser und Leser ihn korrekt interpretieren.</target>
+        <target state="final">Markieren Sie Text in anderen Sprachen, damit Browser und Leser ihn korrekt interpretieren.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.layout.CollaborativeDocumentEditor">
         <source>Collaborative Document Editor</source>
         <target state="needs-translation">Collaborative Document Editor</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.layout.CollaborativeDocumentEditor.description">
+      <trans-unit id="ckeditorKit.tab.layout.CollaborativeDocumentEditor.description" approved="yes">
         <source>Perfect for reports and academic papers with advanced document features and supports all available Collaboration Features.</source>
-        <target state="translated">Perfekt für Berichte und akademische Arbeiten mit erweiterten Dokumentfunktionen und unterstützt alle verfügbaren Zusammenarbeitsfunktionen.</target>
+        <target state="final">Perfekt für Berichte und akademische Arbeiten mit erweiterten Dokumentfunktionen und unterstützt alle verfügbaren Zusammenarbeitsfunktionen.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.layout.CollaborativeArticleEditor">
         <source>Collaborative Article Editor</source>
         <target state="needs-translation">Collaborative Article Editor</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.layout.CollaborativeArticleEditor.description">
+      <trans-unit id="ckeditorKit.tab.layout.CollaborativeArticleEditor.description" approved="yes">
         <source>General purpose, feature-rich editor perfect for CMS and semantic document creation.</source>
-        <target state="translated">Vielseitiger, funktionsreicher Editor, ideal für CMS und semantische Dokumentenerstellung.</target>
+        <target state="final">Vielseitiger, funktionsreicher Editor, ideal für CMS und semantische Dokumentenerstellung.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.layout.FeatureRichEditor">
         <source>Feature-rich Editor</source>
         <target state="needs-translation">Feature-rich Editor</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.layout.FeatureRichEditor.description">
+      <trans-unit id="ckeditorKit.tab.layout.FeatureRichEditor.description" approved="yes">
         <source>An editor packed with features to help you easily test most of the functionalities available in CKEditor 5.</source>
-        <target state="translated">Ein Editor voller Funktionen, mit denen Sie die meisten in CKEditor 5 verfügbaren Funktionen einfach testen können.</target>
+        <target state="final">Ein Editor voller Funktionen, mit denen Sie die meisten in CKEditor 5 verfügbaren Funktionen einfach testen können.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.layout.DocumentEditor">
         <source>Document Editor</source>
         <target state="needs-translation">Document Editor</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.layout.DocumentEditor.description">
+      <trans-unit id="ckeditorKit.tab.layout.DocumentEditor.description" approved="yes">
         <source>A Document editor with some preselected choice of plugins to match some common usage scenarios.</source>
-        <target state="translated">Ein Dokumenteditor mit einer vorgestellten Auswahl an Plugins, die einige gängige Nutzungsszenarien abdecken.</target>
+        <target state="final">Ein Dokumenteditor mit einer vorgestellten Auswahl an Plugins, die einige gängige Nutzungsszenarien abdecken.</target>
       </trans-unit>
       <trans-unit id="favorite.DataNotFound" resname="favorite.DataNotFound">
         <source>No favorites found! Click on "heart icon" to set as your favorite.</source>
@@ -546,611 +546,611 @@
         <source>No Card found!</source>
         <target state="needs-translation">No Card found!</target>
       </trans-unit>
-      <trans-unit id="favorite.remove" resname="favorite.remove">
+      <trans-unit id="favorite.remove" resname="favorite.remove" approved="yes">
         <source>Remove All</source>
-        <target state="translated">Alle entfernen</target>
+        <target state="final">Alle entfernen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.general_settings.success.message">
+      <trans-unit id="ckeditorKit.general_settings.success.message" approved="yes">
         <source>Settings saved successfully</source>
-        <target state="translated">Einstellungen erfolgreich gespeichert</target>
+        <target state="final">Einstellungen erfolgreich gespeichert</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.general_settings.error">
+      <trans-unit id="ckeditorKit.general_settings.error" approved="yes">
         <source>Error</source>
-        <target state="translated">Fehler</target>
+        <target state="final">Fehler</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.general_settings.error.message">
+      <trans-unit id="ckeditorKit.general_settings.error.message" approved="yes">
         <source>Settings are not saved, please try again</source>
-        <target state="translated">Einstellungen nicht gespeichert, bitte versuchen Sie es erneut</target>
+        <target state="final">Einstellungen nicht gespeichert, bitte versuchen Sie es erneut</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.menuBar">
         <source>MenuBar</source>
         <target state="needs-translation">MenuBar</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.menuBar.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.menuBar.description" approved="yes">
         <source>Organize tools in a clean menu bar and customize quick access to plugins.</source>
-        <target state="translated">Organisieren Sie Werkzeuge in einer übersichtlichen Menüleiste und passen Sie den schnellen Zugriff auf Plugins an.</target>
+        <target state="final">Organisieren Sie Werkzeuge in einer übersichtlichen Menüleiste und passen Sie den schnellen Zugriff auf Plugins an.</target>
       </trans-unit>
       <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.emoji">
         <source>Emoji</source>
         <target state="needs-translation">Emoji</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.emoji.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.emoji.description" approved="yes">
         <source>Insert emojis from the toolbar or while typing to add expression to content.</source>
-        <target state="translated">Fügen Sie Emojis aus der Symbolleiste oder während der Eingabe ein, um dem Inhalt Ausdruck zu verleihen.</target>
+        <target state="final">Fügen Sie Emojis aus der Symbolleiste oder während der Eingabe ein, um dem Inhalt Ausdruck zu verleihen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight" approved="yes">
         <source>Line Height</source>
-        <target state="translated">Zeilenhöhe</target>
+        <target state="final">Zeilenhöhe</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.lineHeight.description" approved="yes">
         <source>Change line height of blocks to adjust spacing for better readability.</source>
-        <target state="translated">Ändern Sie die Zeilenhöhe von Blöcken, um den Abstand für bessere Lesbarkeit anzupassen.</target>
+        <target state="final">Ändern Sie die Zeilenhöhe von Blöcken, um den Abstand für bessere Lesbarkeit anzupassen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.special_characters">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.special_characters" approved="yes">
         <source>Special Characters</source>
-        <target state="translated">Sonderzeichen</target>
+        <target state="final">Sonderzeichen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.special_characters.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.special_characters.description" approved="yes">
         <source>Insert unique symbols and characters into your document such as mathematical operators, currency symbols, punctuation, graphic symbols, Emojis, and Unicode letters.</source>
-        <target state="translated">Fügen Sie einzigartige Symbole und Zeichen in Ihr Dokument ein, wie mathematische Operatoren, Währungssymbole, Satzzeichen, grafische Symbole, Emojis und Unicode-Buchstaben.</target>
+        <target state="final">Fügen Sie einzigartige Symbole und Zeichen in Ihr Dokument ein, wie mathematische Operatoren, Währungssymbole, Satzzeichen, grafische Symbole, Emojis und Unicode-Buchstaben.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.realtime_collaboration">
+      <trans-unit id="ckeditorKit.plugin.realtime_collaboration" approved="yes">
         <source>Warning</source>
-        <target state="translated">Warnung</target>
+        <target state="final">Warnung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.message">
+      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.message" approved="yes">
         <source>The Source editing plugin is not compatible with real-time collaboration, so it has been disabled</source>
-        <target state="translated">Das Quellbearbeitungs-Plugin ist nicht mit der Echtzeitzusammenarbeit kompatibel, daher wurde es deaktiviert</target>
+        <target state="final">Das Quellbearbeitungs-Plugin ist nicht mit der Echtzeitzusammenarbeit kompatibel, daher wurde es deaktiviert</target>
       </trans-unit>
-      <trans-unit id="realtime.adapter.loader.title">
+      <trans-unit id="realtime.adapter.loader.title" approved="yes">
         <source>Connecting to collaboration…</source>
-        <target state="translated">Verbindung zur Zusammenarbeit herstellen…</target>
+        <target state="final">Verbindung zur Zusammenarbeit herstellen…</target>
       </trans-unit>
-      <trans-unit id="realtime.adapter.loader.description">
+      <trans-unit id="realtime.adapter.loader.description" approved="yes">
         <source>Preparing editor and syncing realtime session.</source>
-        <target state="translated">Editor vorbereiten und Echtzeitsitzung synchronisieren.</target>
+        <target state="final">Editor vorbereiten und Echtzeitsitzung synchronisieren.</target>
       </trans-unit>
-      <trans-unit id="realtime.adapter.loader.status.initializing">
+      <trans-unit id="realtime.adapter.loader.status.initializing" approved="yes">
         <source>Establishing connection…</source>
-        <target state="translated">Verbindung herstellen…</target>
+        <target state="final">Verbindung herstellen…</target>
       </trans-unit>
-      <trans-unit id="realtime.adapter.loader.status.connected">
+      <trans-unit id="realtime.adapter.loader.status.connected" approved="yes">
         <source>Connected. Loading document…</source>
-        <target state="translated">Verbunden. Dokument wird geladen…</target>
+        <target state="final">Verbunden. Dokument wird geladen…</target>
       </trans-unit>
-      <trans-unit id="realtime.adapter.loader.status.reconnecting">
+      <trans-unit id="realtime.adapter.loader.status.reconnecting" approved="yes">
         <source>Connection lost. Reconnecting…</source>
-        <target state="translated">Verbindung verloren. Erneut verbinden…</target>
+        <target state="final">Verbindung verloren. Erneut verbinden…</target>
       </trans-unit>
-      <trans-unit id="realtime.adapter.loader.status.error">
+      <trans-unit id="realtime.adapter.loader.status.error" approved="yes">
         <source>Connection error. Retrying…</source>
-        <target state="translated">Verbindungsfehler. Erneuter Versuch…</target>
+        <target state="final">Verbindungsfehler. Erneuter Versuch…</target>
       </trans-unit>
-      <trans-unit id="ai.sidebar.loader.title">
+      <trans-unit id="ai.sidebar.loader.title" approved="yes">
         <source>Initializing AI assistant…</source>
-        <target state="translated">KI-Assistent initialisieren…</target>
+        <target state="final">KI-Assistent initialisieren…</target>
       </trans-unit>
-      <trans-unit id="ai.sidebar.loader.description">
+      <trans-unit id="ai.sidebar.loader.description" approved="yes">
         <source>Preparing AI features and connecting to services.</source>
-        <target state="translated">Vorbereitung von KI-Funktionen und Verbindung zu Diensten.</target>
+        <target state="final">Vorbereitung von KI-Funktionen und Verbindung zu Diensten.</target>
       </trans-unit>
-      <trans-unit id="feature_form.submit">
+      <trans-unit id="feature_form.submit" approved="yes">
         <source>Save Changes</source>
-        <target state="translated">Änderungen speichern</target>
+        <target state="final">Änderungen speichern</target>
       </trans-unit>
-      <trans-unit id="feature_form.divider">
+      <trans-unit id="feature_form.divider" approved="yes">
         <source>Divider (|)</source>
-        <target state="translated">Teiler (|)</target>
+        <target state="final">Teiler (|)</target>
       </trans-unit>
-      <trans-unit id="feature_form.break">
+      <trans-unit id="feature_form.break" approved="yes">
         <source>Break (-)</source>
-        <target state="translated">Pause (-)</target>
+        <target state="final">Pause (-)</target>
       </trans-unit>
-      <trans-unit id="feature_form.create">
+      <trans-unit id="feature_form.create" approved="yes">
         <source>Create Preset</source>
-        <target state="translated">Voreinstellung erstellen</target>
+        <target state="final">Voreinstellung erstellen</target>
       </trans-unit>
-      <trans-unit id="create_group.heading">
+      <trans-unit id="create_group.heading" approved="yes">
         <source>Grouping toolbar items in dropdowns (nested toolbars)</source>
-        <target state="translated">Gruppieren von Symbolleistenelementen in Dropdown-Menüs (verschachtelte Symbolleisten)</target>
+        <target state="final">Gruppieren von Symbolleistenelementen in Dropdown-Menüs (verschachtelte Symbolleisten)</target>
       </trans-unit>
-      <trans-unit id="create_group.desc">
+      <trans-unit id="create_group.desc" approved="yes">
         <source>To save space in your toolbar or arrange the features thematically, you can group several items into a dropdown.</source>
-        <target state="translated">Um Platz in Ihrer Symbolleiste zu sparen oder die Funktionen thematisch zu ordnen, können Sie mehrere Elemente in einem Dropdown-Menü gruppieren.</target>
+        <target state="final">Um Platz in Ihrer Symbolleiste zu sparen oder die Funktionen thematisch zu ordnen, können Sie mehrere Elemente in einem Dropdown-Menü gruppieren.</target>
       </trans-unit>
-      <trans-unit id="create_group.desc2">
+      <trans-unit id="create_group.desc2" approved="yes">
         <source>It will create a "Basic styles" dropdown with a three vertical dots icon (</source>
-        <target state="translated">Es wird ein Dropdown-Menü "Grundlegende Stile" mit einem Symbol für drei vertikale Punkte (</target>
+        <target state="final">Es wird ein Dropdown-Menü "Grundlegende Stile" mit einem Symbol für drei vertikale Punkte (</target>
       </trans-unit>
-      <trans-unit id="create_group.desc3">
+      <trans-unit id="create_group.desc3" approved="yes">
         <source>) containing the additional basic text styles buttons set.</source>
-        <target state="translated">) erstellt, das zusätzliche grundlegende Textstil-Buttons enthält.</target>
+        <target state="final">) erstellt, das zusätzliche grundlegende Textstil-Buttons enthält.</target>
       </trans-unit>
-      <trans-unit id="feature.enable">
+      <trans-unit id="feature.enable" approved="yes">
         <source>Enable</source>
-        <target state="translated">Aktivieren</target>
+        <target state="final">Aktivieren</target>
       </trans-unit>
-      <trans-unit id="features.presets">
+      <trans-unit id="features.presets" approved="yes">
         <source>Available Presets</source>
-        <target state="translated">Verfügbare Voreinstellungen</target>
+        <target state="final">Verfügbare Voreinstellungen</target>
       </trans-unit>
-      <trans-unit id="features.search">
+      <trans-unit id="features.search" approved="yes">
         <source>Search Toolbar Item</source>
-        <target state="translated">Suchleistentool-Item</target>
+        <target state="final">Suchleistentool-Item</target>
       </trans-unit>
-      <trans-unit id="collapse.featureConfiguration">
+      <trans-unit id="collapse.featureConfiguration" approved="yes">
         <source>Feature Configuration</source>
-        <target state="translated">Funktionskonfiguration</target>
+        <target state="final">Funktionskonfiguration</target>
       </trans-unit>
-      <trans-unit id="collapse.advancedSettings">
+      <trans-unit id="collapse.advancedSettings" approved="yes">
         <source>Advanced Settings</source>
-        <target state="translated">Erweiterte Einstellungen</target>
+        <target state="final">Erweiterte Einstellungen</target>
       </trans-unit>
-      <trans-unit id="authorization.none">
+      <trans-unit id="authorization.none" approved="yes">
         <source>Not set</source>
-        <target state="translated">Nicht festgelegt</target>
+        <target state="final">Nicht festgelegt</target>
       </trans-unit>
-      <trans-unit id="authorization.key">
+      <trans-unit id="authorization.key" approved="yes">
         <source>Access key</source>
-        <target state="translated">Zugangsschlüssel</target>
+        <target state="final">Zugangsschlüssel</target>
       </trans-unit>
-      <trans-unit id="authorization.dev_token">
+      <trans-unit id="authorization.dev_token" approved="yes">
         <source>Development token</source>
-        <target state="translated">Entwicklungstoken</target>
+        <target state="final">Entwicklungstoken</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.heading">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.heading" approved="yes">
         <source>Heading</source>
-        <target state="translated">Überschrift</target>
+        <target state="final">Überschrift</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.heading.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.heading.description" approved="yes">
         <source>Add headings to structure content clearly and improve readability.</source>
-        <target state="translated">Fügen Sie Überschriften hinzu, um Inhalte klar zu strukturieren und die Lesbarkeit zu verbessern.</target>
+        <target state="final">Fügen Sie Überschriften hinzu, um Inhalte klar zu strukturieren und die Lesbarkeit zu verbessern.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment" approved="yes">
         <source>Text alignment</source>
-        <target state="translated">Textausrichtung</target>
+        <target state="final">Textausrichtung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.alignment.description" approved="yes">
         <source>Align content left, right, center, or justify to keep your layout clean.</source>
-        <target state="translated">Richten Sie Inhalte linksbündig, rechtsbündig, zentriert oder im Blocksatz aus, um Ihr Layout sauber zu halten.</target>
+        <target state="final">Richten Sie Inhalte linksbündig, rechtsbündig, zentriert oder im Blocksatz aus, um Ihr Layout sauber zu halten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style" approved="yes">
         <source>Styles</source>
-        <target state="translated">Stile</target>
+        <target state="final">Stile</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.style.description" approved="yes">
         <source>Apply predefined styles with CSS classes to enhance appearance and meaning.</source>
-        <target state="translated">Wenden Sie vordefinierte Stile mit CSS-Klassen an, um das Erscheinungsbild und die Bedeutung zu verbessern.</target>
+        <target state="final">Wenden Sie vordefinierte Stile mit CSS-Klassen an, um das Erscheinungsbild und die Bedeutung zu verbessern.</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.licenseKey">
+      <trans-unit id="field.placeholder.licenseKey" approved="yes">
         <source>License key</source>
-        <target state="translated">Lizenzschlüssel</target>
+        <target state="final">Lizenzschlüssel</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.authType">
+      <trans-unit id="field.placeholder.authType" approved="yes">
         <source>Authorization type</source>
-        <target state="translated">Autorisierungstyp</target>
+        <target state="final">Autorisierungstyp</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.environmentId">
+      <trans-unit id="field.placeholder.environmentId" approved="yes">
         <source>Environment ID</source>
-        <target state="translated">Umwelt-ID</target>
+        <target state="final">Umwelt-ID</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.accessKey">
+      <trans-unit id="field.placeholder.accessKey" approved="yes">
         <source>Access Key</source>
-        <target state="translated">Zugangsschlüssel</target>
+        <target state="final">Zugangsschlüssel</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.tokenUrl">
+      <trans-unit id="field.placeholder.tokenUrl" approved="yes">
         <source>Token URL</source>
-        <target state="translated">Token-URL</target>
+        <target state="final">Token-URL</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.organizationId">
+      <trans-unit id="field.placeholder.organizationId" approved="yes">
         <source>Organization ID</source>
-        <target state="translated">Organisations-ID</target>
+        <target state="final">Organisations-ID</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.apiKey">
+      <trans-unit id="field.placeholder.apiKey" approved="yes">
         <source>API key</source>
-        <target state="translated">API-Schlüssel</target>
+        <target state="final">API-Schlüssel</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.webSocketUrl">
+      <trans-unit id="field.placeholder.webSocketUrl" approved="yes">
         <source>Web Socket URL i.e(wss://ORGANIZATION_ID.cke-cs.com/ws)</source>
-        <target state="translated">WebSocket-URL, z.B. (wss://ORGANIZATION_ID.cke-cs.com/ws)</target>
+        <target state="final">WebSocket-URL, z.B. (wss://ORGANIZATION_ID.cke-cs.com/ws)</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.apiBaseUrl">
+      <trans-unit id="field.placeholder.apiBaseUrl" approved="yes">
         <source>API base URL i.e(https://ORGANIZATION_ID.cke-cs.com/api/v5/ENVIRONMENT_ID/)</source>
-        <target state="translated">API-Basis-URL, z.B. (https://ORGANIZATION_ID.cke-cs.com/api/v5/ENVIRONMENT_ID/)</target>
+        <target state="final">API-Basis-URL, z.B. (https://ORGANIZATION_ID.cke-cs.com/api/v5/ENVIRONMENT_ID/)</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.exportPdf.fileName">
+      <trans-unit id="field.placeholder.exportPdf.fileName" approved="yes">
         <source>Name of the file (i.e sample.pdf)</source>
-        <target state="translated">Name der Datei (z.B. sample.pdf)</target>
+        <target state="final">Name der Datei (z.B. sample.pdf)</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.converterUrl">
+      <trans-unit id="field.placeholder.converterUrl" approved="yes">
         <source>Converter URL</source>
-        <target state="translated">Konverter-URL</target>
+        <target state="final">Konverter-URL</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.exportWord.fileName">
+      <trans-unit id="field.placeholder.exportWord.fileName" approved="yes">
         <source>Name of the file (i.e export-word-demo.docx)</source>
-        <target state="translated">Name der Datei (z.B. export-word-demo.docx)</target>
+        <target state="final">Name der Datei (z.B. export-word-demo.docx)</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.trialLicenseKey">
+      <trans-unit id="field.placeholder.trialLicenseKey" approved="yes">
         <source>Trial license key</source>
-        <target state="translated">Testlizenzschlüssel</target>
+        <target state="final">Testlizenzschlüssel</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.mention">
+      <trans-unit id="ckeditorKit.tab.premium.mention" approved="yes">
         <source>Mentions</source>
-        <target state="translated">Erwähnungen</target>
+        <target state="final">Erwähnungen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.premium.mention.description">
+      <trans-unit id="ckeditorKit.tab.premium.mention.description" approved="yes">
         <source>Use “@” to tag users, groups, or topics and get smart suggestions while typing.</source>
-        <target state="translated">Verwenden Sie „@“, um Benutzer, Gruppen oder Themen zu taggen und erhalten Sie intelligente Vorschläge beim Tippen.</target>
+        <target state="final">Verwenden Sie „@“, um Benutzer, Gruppen oder Themen zu taggen und erhalten Sie intelligente Vorschläge beim Tippen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.no_module_update">
+      <trans-unit id="ckeditorKit.no_module_update" approved="yes">
         <source>No Changes</source>
-        <target state="translated">Keine Änderungen</target>
+        <target state="final">Keine Änderungen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.no_module_update.no_changes">
+      <trans-unit id="ckeditorKit.no_module_update.no_changes" approved="yes">
         <source>Nothing to modify</source>
-        <target state="translated">Nichts zu ändern</target>
+        <target state="final">Nichts zu ändern</target>
       </trans-unit>
-      <trans-unit id="field.note.licenseKey">
+      <trans-unit id="field.note.licenseKey" approved="yes">
         <source>The license key is required for Feature Pack, Collaboration Pack, as well as the Productivity Pack.</source>
-        <target state="translated">Der Lizenzschlüssel ist erforderlich für Feature-Pack, Kollaborations-Pack sowie das Produktivitäts-Pack.</target>
+        <target state="final">Der Lizenzschlüssel ist erforderlich für Feature-Pack, Kollaborations-Pack sowie das Produktivitäts-Pack.</target>
       </trans-unit>
-      <trans-unit id="field.note.authType">
+      <trans-unit id="field.note.authType" approved="yes">
         <source>Select the authorization suitable type for your features. The access key-based authorization is highly recommended and the best option in a production environment. The development token should rather be used for testing purposes.
 The authorization credentials are required for Real-time collaboration or Import from Word, and optional for Export to Word/PDF to generate documents without the watermark.</source>
-        <target state="translated">Wählen Sie den passenden Autorisierungstyp für Ihre Funktionen aus. Die auf Zugangsschlüsseln basierende Autorisierung wird dringend empfohlen und ist die beste Option in einer Produktionsumgebung. Das Entwicklungstoken sollte eher zu Testzwecken verwendet werden. Die Autorisierungsdaten sind erforderlich für die Echtzeit-Zusammenarbeit oder den Import aus Word und optional für den Export nach Word/PDF, um Dokumente ohne Wasserzeichen zu erstellen.</target>
+        <target state="final">Wählen Sie den passenden Autorisierungstyp für Ihre Funktionen aus. Die auf Zugangsschlüsseln basierende Autorisierung wird dringend empfohlen und ist die beste Option in einer Produktionsumgebung. Das Entwicklungstoken sollte eher zu Testzwecken verwendet werden. Die Autorisierungsdaten sind erforderlich für die Echtzeit-Zusammenarbeit oder den Import aus Word und optional für den Export nach Word/PDF, um Dokumente ohne Wasserzeichen zu erstellen.</target>
       </trans-unit>
-      <trans-unit id="field.note.environmentId">
+      <trans-unit id="field.note.environmentId" approved="yes">
         <source>The environment management panel can be found in &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;.</source>
-        <target state="translated">Das Umwelt-Verwaltungsfeld finden Sie im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor-Dashboard&lt;/a&gt;.</target>
+        <target state="final">Das Umwelt-Verwaltungsfeld finden Sie im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor-Dashboard&lt;/a&gt;.</target>
       </trans-unit>
-      <trans-unit id="field.note.accessKey">
+      <trans-unit id="field.note.accessKey" approved="yes">
         <source>The access key for the environment can be found in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;.</source>
-        <target state="translated">Der Zugangsschlüssel für die Umgebung kann im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor-Dashboard&lt;/a&gt; gefunden werden.</target>
+        <target state="final">Der Zugangsschlüssel für die Umgebung kann im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor-Dashboard&lt;/a&gt; gefunden werden.</target>
       </trans-unit>
-      <trans-unit id="field.note.tokenUrl">
+      <trans-unit id="field.note.tokenUrl" approved="yes">
         <source>Use the development token URL only for testing purposes. It does not provide full permission validation.&lt;/br&gt;For production environments, it is strongly recommended to use the Environment ID and Access Key instead.</source>
-        <target state="translated">Verwenden Sie die Entwicklungstoken-URL nur zu Testzwecken. Sie bietet keine vollständige Berechtigungsprüfung.&lt;/br&gt;Für Produktionsumgebungen wird dringend empfohlen, stattdessen die Environment ID und den Access Key zu verwenden.</target>
+        <target state="final">Verwenden Sie die Entwicklungstoken-URL nur zu Testzwecken. Sie bietet keine vollständige Berechtigungsprüfung.&lt;/br&gt;Für Produktionsumgebungen wird dringend empfohlen, stattdessen die Environment ID und den Access Key zu verwenden.</target>
       </trans-unit>
-      <trans-unit id="field.note.organizationId">
+      <trans-unit id="field.note.organizationId" approved="yes">
         <source>The Organization ID is available in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;. &lt;/br&gt; Required for Real-time collaboration and API requests.</source>
-        <target state="translated">Die Organizations-ID ist im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; verfügbar. &lt;/br&gt; Erforderlich für die Echtzeit-Zusammenarbeit und API-Anfragen.</target>
+        <target state="final">Die Organizations-ID ist im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; verfügbar. &lt;/br&gt; Erforderlich für die Echtzeit-Zusammenarbeit und API-Anfragen.</target>
       </trans-unit>
-      <trans-unit id="field.note.apiKey">
+      <trans-unit id="field.note.apiKey" approved="yes">
         <source>The API key is also available in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt; and is required for real-time collaboration and API requests</source>
-        <target state="translated">Der API-Schlüssel ist ebenfalls im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; verfügbar und wird für die Echtzeit-Zusammenarbeit und API-Anfragen benötigt.</target>
+        <target state="final">Der API-Schlüssel ist ebenfalls im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; verfügbar und wird für die Echtzeit-Zusammenarbeit und API-Anfragen benötigt.</target>
       </trans-unit>
-      <trans-unit id="field.note.webSocketUrl">
+      <trans-unit id="field.note.webSocketUrl" approved="yes">
         <source>The web socket url can be found in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;. &lt;/br&gt; You can leave this field empty - the system will automatically generate this URL using Organization ID field</source>
-        <target state="translated">Die WebSocket-URL ist im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; zu finden. &lt;/br&gt; Sie können dieses Feld leer lassen - das System generiert diese URL automatisch mit Hilfe des Organization ID Feldes.</target>
+        <target state="final">Die WebSocket-URL ist im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; zu finden. &lt;/br&gt; Sie können dieses Feld leer lassen - das System generiert diese URL automatisch mit Hilfe des Organization ID Feldes.</target>
       </trans-unit>
-      <trans-unit id="field.note.apiBaseUrl">
+      <trans-unit id="field.note.apiBaseUrl" approved="yes">
         <source>The API base URL can be found in the &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor dashboard &lt;/a&gt;. &lt;/br&gt; If left empty, the system automatically creates it using the Organization ID and Environment ID.</source>
-        <target state="translated">Die API-Basis-URL kann im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; gefunden werden. &lt;/br&gt; Wenn es leer gelassen wird, erstellt das System es automatisch unter Verwendung der Organization ID und der Environment ID.</target>
+        <target state="final">Die API-Basis-URL kann im &lt;a href="https://dashboard.ckeditor.com"/&gt;CKEditor Dashboard&lt;/a&gt; gefunden werden. &lt;/br&gt; Wenn es leer gelassen wird, erstellt das System es automatisch unter Verwendung der Organization ID und der Environment ID.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_style">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_style" approved="yes">
         <source>Basic text styles</source>
-        <target state="translated">Grundlegende Textstile</target>
+        <target state="final">Grundlegende Textstile</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_style.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.text_style.description" approved="yes">
         <source>The basic styles feature lets you apply the most essential formatting such as bold, italic, underline, strikethrough, subscript, superscript, and code. Coupled with more formatting features, these serve as a base for any WYSIWYG editor toolset.</source>
-        <target state="translated">Die Grundstile-Funktion ermöglicht Ihnen das Anwenden der grundlegendsten Formatierungen wie Fett, Kursiv, Unterstrichen, Durchgestrichen, Tiefgestellt, Hochgestellt und Code. Zusammen mit anderen Formatierungsfunktionen dienen diese als Basis für jedes WYSIWYG-Editor-Toolset.</target>
+        <target state="final">Die Grundstile-Funktion ermöglicht Ihnen das Anwenden der grundlegendsten Formatierungen wie Fett, Kursiv, Unterstrichen, Durchgestrichen, Tiefgestellt, Hochgestellt und Code. Zusammen mit anderen Formatierungsfunktionen dienen diese als Basis für jedes WYSIWYG-Editor-Toolset.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditing">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditing" approved="yes">
         <source>Source editing</source>
-        <target state="translated">Quellenbearbeitung</target>
+        <target state="final">Quellenbearbeitung</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditing.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditing.description" approved="yes">
         <source>The source editing feature lets you view and edit the source of your document.</source>
-        <target state="translated">Die Quellenbearbeitungsfunktion ermöglicht es Ihnen, die Quelle Ihres Dokuments anzusehen und zu bearbeiten.</target>
+        <target state="final">Die Quellenbearbeitungsfunktion ermöglicht es Ihnen, die Quelle Ihres Dokuments anzusehen und zu bearbeiten.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced" approved="yes">
         <source>Source editing (Enhanced)</source>
-        <target state="translated">Quellenbearbeitung (Erweitert)</target>
+        <target state="final">Quellenbearbeitung (Erweitert)</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.sourceEditingEnhanced.description" approved="yes">
         <source>Enhanced source editing with syntax highlighting, code formatting, and improved editing experience for viewing and editing document source code.</source>
-        <target state="translated">Erweitertes Quellenbearbeiten mit Syntaxhervorhebung, Codeformatierung und verbesserter Bearbeitungserfahrung zum Anzeigen und Bearbeiten des Dokumentquellcodes.</target>
+        <target state="final">Erweitertes Quellenbearbeiten mit Syntaxhervorhebung, Codeformatierung und verbesserter Bearbeitungserfahrung zum Anzeigen und Bearbeiten des Dokumentquellcodes.</target>
       </trans-unit>
-      <trans-unit id="toolbar.create_group">
+      <trans-unit id="toolbar.create_group" approved="yes">
         <source>Create New Group</source>
-        <target state="translated">Neue Gruppe erstellen</target>
+        <target state="final">Neue Gruppe erstellen</target>
       </trans-unit>
-      <trans-unit id="toolbar.label">
+      <trans-unit id="toolbar.label" approved="yes">
         <source>Label</source>
-        <target state="translated">Bezeichnung</target>
+        <target state="final">Bezeichnung</target>
       </trans-unit>
-      <trans-unit id="toolbar.tooltip">
+      <trans-unit id="toolbar.tooltip" approved="yes">
         <source>ToolTip</source>
-        <target state="translated">Tooltip</target>
+        <target state="final">Tooltip</target>
       </trans-unit>
-      <trans-unit id="toolbar.icon">
+      <trans-unit id="toolbar.icon" approved="yes">
         <source>Icon</source>
-        <target state="translated">Symbol</target>
+        <target state="final">Symbol</target>
       </trans-unit>
-      <trans-unit id="toolbar.item">
+      <trans-unit id="toolbar.item" approved="yes">
         <source>Items</source>
-        <target state="translated">Elemente</target>
+        <target state="final">Elemente</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.toolbar.group.success.message">
+      <trans-unit id="ckeditorKit.toolbar.group.success.message" approved="yes">
         <source>Toolbar Group Configuration Saved Successfully</source>
-        <target state="translated">Symbolleiste Gruppen-Konfiguration erfolgreich gespeichert</target>
+        <target state="final">Symbolleiste Gruppen-Konfiguration erfolgreich gespeichert</target>
       </trans-unit>
-      <trans-unit id="toolbar.custom_icon">
+      <trans-unit id="toolbar.custom_icon" approved="yes">
         <source>Custom Icon</source>
-        <target state="translated">Benutzerdefiniertes Symbol</target>
+        <target state="final">Benutzerdefiniertes Symbol</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.bookmark">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.bookmark" approved="yes">
         <source>Bookmarks</source>
-        <target state="translated">Lesezeichen</target>
+        <target state="final">Lesezeichen</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.bookmark.description">
+      <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.bookmark.description" approved="yes">
         <source>Add and manage bookmarks to navigate long documents and create quick links.</source>
-        <target state="translated">Lesezeichen hinzufügen und verwalten, um lange Dokumente zu navigieren und schnelle Links zu erstellen.</target>
+        <target state="final">Lesezeichen hinzufügen und verwalten, um lange Dokumente zu navigieren und schnelle Links zu erstellen.</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.fullScreen">
+      <trans-unit id="toolbar.item.fullScreen" approved="yes">
         <source>Full Screen</source>
-        <target state="translated">Vollbild</target>
+        <target state="final">Vollbild</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.ImportWord">
+      <trans-unit id="toolbar.item.ImportWord" approved="yes">
         <source>Import Word</source>
-        <target state="translated">Word importieren</target>
+        <target state="final">Word importieren</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.ExportPdf">
+      <trans-unit id="toolbar.item.ExportPdf" approved="yes">
         <source>Export Pdf</source>
-        <target state="translated">PDF exportieren</target>
+        <target state="final">PDF exportieren</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.ExportWord">
+      <trans-unit id="toolbar.item.ExportWord" approved="yes">
         <source>Export Word</source>
-        <target state="translated">Word exportieren</target>
+        <target state="final">Word exportieren</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.toggleAi">
+      <trans-unit id="toolbar.item.toggleAi" approved="yes">
         <source>Toggle AI</source>
-        <target state="translated">KI umschalten</target>
+        <target state="final">KI umschalten</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.aiQuickActions">
+      <trans-unit id="toolbar.item.aiQuickActions" approved="yes">
         <source>AI Quick Actions</source>
-        <target state="translated">KI Schnellaktionen</target>
+        <target state="final">KI Schnellaktionen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.previousPage">
+      <trans-unit id="toolbar.item.previousPage" approved="yes">
         <source>Previous Page</source>
-        <target state="translated">Vorherige Seite</target>
+        <target state="final">Vorherige Seite</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.nextPage">
+      <trans-unit id="toolbar.item.nextPage" approved="yes">
         <source>Next Page</source>
-        <target state="translated">Nächste Seite</target>
+        <target state="final">Nächste Seite</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.pageNavigation">
+      <trans-unit id="toolbar.item.pageNavigation" approved="yes">
         <source>Page Navigation</source>
-        <target state="translated">Seitennavigation</target>
+        <target state="final">Seitennavigation</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.multiLevelList">
+      <trans-unit id="toolbar.item.multiLevelList" approved="yes">
         <source>MultiLevel List</source>
-        <target state="translated">Mehrstufige Liste</target>
+        <target state="final">Mehrstufige Liste</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.comment">
+      <trans-unit id="toolbar.item.comment" approved="yes">
         <source>Comment</source>
-        <target state="translated">Kommentar</target>
+        <target state="final">Kommentar</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.revisionHistory">
+      <trans-unit id="toolbar.item.revisionHistory" approved="yes">
         <source>Revision History</source>
-        <target state="translated">Versionsverlauf</target>
+        <target state="final">Versionsverlauf</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.trackChanges">
+      <trans-unit id="toolbar.item.trackChanges" approved="yes">
         <source>Track Changes</source>
-        <target state="translated">Änderungen verfolgen</target>
+        <target state="final">Änderungen verfolgen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.insertTemplate">
+      <trans-unit id="toolbar.item.insertTemplate" approved="yes">
         <source>Insert Template</source>
-        <target state="translated">Vorlage einfügen</target>
+        <target state="final">Vorlage einfügen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.caseChange">
+      <trans-unit id="toolbar.item.caseChange" approved="yes">
         <source>CaseChange</source>
-        <target state="translated">Groß-/Kleinschreibung ändern</target>
+        <target state="final">Groß-/Kleinschreibung ändern</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.insertMergeField">
+      <trans-unit id="toolbar.item.insertMergeField" approved="yes">
         <source>Insert MergeField</source>
-        <target state="translated">MergeField einfügen</target>
+        <target state="final">MergeField einfügen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.previewMergeFields">
+      <trans-unit id="toolbar.item.previewMergeFields" approved="yes">
         <source>Preview MergeFields</source>
-        <target state="translated">MergeFields Vorschau</target>
+        <target state="final">MergeFields Vorschau</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.FormatPainter">
+      <trans-unit id="toolbar.item.FormatPainter" approved="yes">
         <source>Format Painter</source>
-        <target state="translated">Format übertragen</target>
+        <target state="final">Format übertragen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.TableOfContents">
+      <trans-unit id="toolbar.item.TableOfContents" approved="yes">
         <source>Table Of Contents</source>
-        <target state="translated">Inhaltsverzeichnis</target>
+        <target state="final">Inhaltsverzeichnis</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.insertImage">
+      <trans-unit id="toolbar.item.insertImage" approved="yes">
         <source>Insert Image</source>
-        <target state="translated">Bild einfügen</target>
+        <target state="final">Bild einfügen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.outdent">
+      <trans-unit id="toolbar.item.outdent" approved="yes">
         <source>Outdent</source>
-        <target state="translated">Ausrücken</target>
+        <target state="final">Ausrücken</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.indent">
+      <trans-unit id="toolbar.item.indent" approved="yes">
         <source>Indent</source>
-        <target state="translated">Einzug vergrößern</target>
+        <target state="final">Einzug vergrößern</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.fontFamily">
+      <trans-unit id="toolbar.item.fontFamily" approved="yes">
         <source>Font Family</source>
-        <target state="translated">Schriftfamilie</target>
+        <target state="final">Schriftfamilie</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.fontSize">
+      <trans-unit id="toolbar.item.fontSize" approved="yes">
         <source>Font Size</source>
-        <target state="translated">Schriftgröße</target>
+        <target state="final">Schriftgröße</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.fontColor">
+      <trans-unit id="toolbar.item.fontColor" approved="yes">
         <source>Font Color</source>
-        <target state="translated">Schriftfarbe</target>
+        <target state="final">Schriftfarbe</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.fontBackgroundColor">
+      <trans-unit id="toolbar.item.fontBackgroundColor" approved="yes">
         <source>Font BackgroundColor</source>
-        <target state="translated">Schriftart Hintergrundfarbe</target>
+        <target state="final">Schriftart Hintergrundfarbe</target>
       </trans-unit>
       <trans-unit id="toolbar.item.Highlight">
         <source>Highlight</source>
         <target state="needs-translation">Highlight</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.heading">
+      <trans-unit id="toolbar.item.heading" approved="yes">
         <source>Heading</source>
-        <target state="translated">Überschrift</target>
+        <target state="final">Überschrift</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.alignment">
+      <trans-unit id="toolbar.item.alignment" approved="yes">
         <source>Alignment</source>
-        <target state="translated">Ausrichtung</target>
+        <target state="final">Ausrichtung</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.alignment_left">
+      <trans-unit id="toolbar.item.alignment_left" approved="yes">
         <source>Alignment Left</source>
-        <target state="translated">Linksbündig</target>
+        <target state="final">Linksbündig</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.alignment_center">
+      <trans-unit id="toolbar.item.alignment_center" approved="yes">
         <source>Alignment Center</source>
-        <target state="translated">Zentriert</target>
+        <target state="final">Zentriert</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.alignment_right">
+      <trans-unit id="toolbar.item.alignment_right" approved="yes">
         <source>Alignment Right</source>
-        <target state="translated">Rechtsbündig</target>
+        <target state="final">Rechtsbündig</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.alignment_justify">
+      <trans-unit id="toolbar.item.alignment_justify" approved="yes">
         <source>Alignment Justify</source>
-        <target state="translated">Blocksatz</target>
+        <target state="final">Blocksatz</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.style">
+      <trans-unit id="toolbar.item.style" approved="yes">
         <source>Style</source>
-        <target state="translated">Stil</target>
+        <target state="final">Stil</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.codeBlock">
+      <trans-unit id="toolbar.item.codeBlock" approved="yes">
         <source>Code Block</source>
-        <target state="translated">Codeblock</target>
+        <target state="final">Codeblock</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.textPartLanguage">
+      <trans-unit id="toolbar.item.textPartLanguage" approved="yes">
         <source>TextPart Language</source>
-        <target state="translated">Textteil Sprache</target>
+        <target state="final">Textteil Sprache</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.mediaEmbed">
+      <trans-unit id="toolbar.item.mediaEmbed" approved="yes">
         <source>Media Embed</source>
-        <target state="translated">Medieneinbettung</target>
+        <target state="final">Medieneinbettung</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.TodoList">
+      <trans-unit id="toolbar.item.TodoList" approved="yes">
         <source>Todo List</source>
-        <target state="translated">To-Do-Liste</target>
+        <target state="final">To-Do-Liste</target>
       </trans-unit>
       <trans-unit id="toolbar.item.code">
         <source>Code</source>
         <target state="needs-translation">Code</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.findAndReplace">
+      <trans-unit id="toolbar.item.findAndReplace" approved="yes">
         <source>Find And Replace</source>
-        <target state="translated">Suchen und Ersetzen</target>
+        <target state="final">Suchen und Ersetzen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.pageBreak">
+      <trans-unit id="toolbar.item.pageBreak" approved="yes">
         <source>Page Break</source>
-        <target state="translated">Seitenumbruch</target>
+        <target state="final">Seitenumbruch</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.htmlEmbed">
+      <trans-unit id="toolbar.item.htmlEmbed" approved="yes">
         <source>HTML Embed</source>
-        <target state="translated">HTML-Einbettung</target>
+        <target state="final">HTML-Einbettung</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.SelectAll">
+      <trans-unit id="toolbar.item.SelectAll" approved="yes">
         <source>Select All</source>
-        <target state="translated">Alles auswählen</target>
+        <target state="final">Alles auswählen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.showBlocks">
+      <trans-unit id="toolbar.item.showBlocks" approved="yes">
         <source>Show Blocks</source>
-        <target state="translated">Blöcke anzeigen</target>
+        <target state="final">Blöcke anzeigen</target>
       </trans-unit>
       <trans-unit id="toolbar.item.emoji">
         <source>Emoji</source>
         <target state="needs-translation">Emoji</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.lineHeight">
+      <trans-unit id="toolbar.item.lineHeight" approved="yes">
         <source>Line Height</source>
-        <target state="translated">Zeilenhöhe</target>
+        <target state="final">Zeilenhöhe</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.sourceEditing">
+      <trans-unit id="toolbar.item.sourceEditing" approved="yes">
         <source>Source Editing</source>
-        <target state="translated">Quellcode-Bearbeitung</target>
+        <target state="final">Quellcode-Bearbeitung</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.bookmark">
+      <trans-unit id="toolbar.item.bookmark" approved="yes">
         <source>Bookmark</source>
-        <target state="translated">Lesezeichen</target>
+        <target state="final">Lesezeichen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.bold">
+      <trans-unit id="toolbar.item.bold" approved="yes">
         <source>Bold</source>
-        <target state="translated">Fett</target>
+        <target state="final">Fett</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.italic">
+      <trans-unit id="toolbar.item.italic" approved="yes">
         <source>Italic</source>
-        <target state="translated">Kursiv</target>
+        <target state="final">Kursiv</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.subscript">
+      <trans-unit id="toolbar.item.subscript" approved="yes">
         <source>Subscript</source>
-        <target state="translated">Tiefgestellt</target>
+        <target state="final">Tiefgestellt</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.superscript">
+      <trans-unit id="toolbar.item.superscript" approved="yes">
         <source>Superscript</source>
-        <target state="translated">Hochgestellt</target>
+        <target state="final">Hochgestellt</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.underline">
+      <trans-unit id="toolbar.item.underline" approved="yes">
         <source>Underline</source>
-        <target state="translated">Unterstrichen</target>
+        <target state="final">Unterstrichen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.strikethrough">
+      <trans-unit id="toolbar.item.strikethrough" approved="yes">
         <source>Strike through</source>
-        <target state="translated">Durchgestrichen</target>
+        <target state="final">Durchgestrichen</target>
       </trans-unit>
-      <trans-unit id="toolbar.item.specialCharacters">
+      <trans-unit id="toolbar.item.specialCharacters" approved="yes">
         <source>Special Characters</source>
-        <target state="translated">Sonderzeichen</target>
+        <target state="final">Sonderzeichen</target>
       </trans-unit>
-      <trans-unit id="new.presets">
+      <trans-unit id="new.presets" approved="yes">
         <source>Manage Presets</source>
-        <target state="translated">Voreinstellungen verwalten</target>
+        <target state="final">Voreinstellungen verwalten</target>
       </trans-unit>
-      <trans-unit id="form.preset_name">
+      <trans-unit id="form.preset_name" approved="yes">
         <source>New Preset Name</source>
-        <target state="translated">Neuer Voreinstellungsname</target>
+        <target state="final">Neuer Voreinstellungsname</target>
       </trans-unit>
-      <trans-unit id="form.preset_name.description">
+      <trans-unit id="form.preset_name.description" approved="yes">
         <source>Enter a unique identifier without any spaces.</source>
-        <target state="translated">Geben Sie eine eindeutige Kennung ohne Leerzeichen ein.</target>
+        <target state="final">Geben Sie eine eindeutige Kennung ohne Leerzeichen ein.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.presert.success.message">
+      <trans-unit id="ckeditorKit.presert.success.message" approved="yes">
         <source>New Preset is inserted successfully</source>
-        <target state="translated">Neue Voreinstellung erfolgreich eingefügt</target>
+        <target state="final">Neue Voreinstellung erfolgreich eingefügt</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.presert.error.message">
+      <trans-unit id="ckeditorKit.presert.error.message" approved="yes">
         <source>It is already in use, please use unique value</source>
-        <target state="translated">Wird bereits verwendet, bitte verwenden Sie einen eindeutigen Wert</target>
+        <target state="final">Wird bereits verwendet, bitte verwenden Sie einen eindeutigen Wert</target>
       </trans-unit>
       <!-- Permission module in BE usergroups -->
       <trans-unit id="feature.permissions_header">
         <source>RTE Premium Features</source>
         <target state="needs-translation">RTE Premium Features</target>
       </trans-unit>
-      <trans-unit id="header.preset_title">
+      <trans-unit id="header.preset_title" approved="yes">
         <source>Preset Name</source>
-        <target state="translated">Voreinstellungsname</target>
+        <target state="final">Voreinstellungsname</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.marginSuffix">
+      <trans-unit id="field.placeholder.marginSuffix" approved="yes">
         <source>Enter a value followed by a unit (e.g., 10mm or 20px).</source>
-        <target state="translated">Geben Sie einen Wert gefolgt von einer Einheit ein (z. B. 10mm oder 20px).</target>
+        <target state="final">Geben Sie einen Wert gefolgt von einer Einheit ein (z. B. 10mm oder 20px).</target>
       </trans-unit>
-      <trans-unit id="field.placeholder.authorization">
+      <trans-unit id="field.placeholder.authorization" approved="yes">
         <source>Enter your OpenAI API key, prefixed with 'Bearer' (e.g., 'Bearer YOUR_API_KEY')</source>
-        <target state="translated">Geben Sie Ihren OpenAI-API-Schlüssel ein, mit 'Bearer' als Präfix (z. B. 'Bearer YOUR_API_KEY')</target>
+        <target state="final">Geben Sie Ihren OpenAI-API-Schlüssel ein, mit 'Bearer' als Präfix (z. B. 'Bearer YOUR_API_KEY')</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.report_issues">
+      <trans-unit id="t3editor.form.report_issues" approved="yes">
         <source>Report Issues</source>
-        <target state="translated">Probleme melden</target>
+        <target state="final">Probleme melden</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.premiumtrial">
+      <trans-unit id="t3editor.form.premiumtrial" approved="yes">
         <source>Premium Trial</source>
-        <target state="translated">Premium-Testversion</target>
+        <target state="final">Premium-Testversion</target>
       </trans-unit>
       <trans-unit id="t3editor.form.support">
         <source>Support</source>
@@ -1160,85 +1160,85 @@ The authorization credentials are required for Real-time collaboration or Import
         <source>Name</source>
         <target state="needs-translation">Name</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.email">
+      <trans-unit id="t3editor.form.email" approved="yes">
         <source>Email</source>
-        <target state="translated">E-Mail</target>
+        <target state="final">E-Mail</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.issuetype">
+      <trans-unit id="t3editor.form.issuetype" approved="yes">
         <source>Issue Type</source>
-        <target state="translated">Art des Problems</target>
+        <target state="final">Art des Problems</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.description">
+      <trans-unit id="t3editor.form.description" approved="yes">
         <source>Description</source>
-        <target state="translated">Beschreibung</target>
+        <target state="final">Beschreibung</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.attachments">
+      <trans-unit id="t3editor.form.attachments" approved="yes">
         <source>Attachments (Optional)</source>
-        <target state="translated">Anhänge (optional)</target>
+        <target state="final">Anhänge (optional)</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.feature.bug">
+      <trans-unit id="t3editor.form.feature.bug" approved="yes">
         <source>Bug</source>
-        <target state="translated">Fehler</target>
+        <target state="final">Fehler</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.feature.request">
+      <trans-unit id="t3editor.form.feature.request" approved="yes">
         <source>Feature Request</source>
-        <target state="translated">Funktionswunsch</target>
+        <target state="final">Funktionswunsch</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.technical.problem">
+      <trans-unit id="t3editor.form.technical.problem" approved="yes">
         <source>Technical Problem</source>
-        <target state="translated">Technisches Problem</target>
+        <target state="final">Technisches Problem</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.other">
+      <trans-unit id="t3editor.form.other" approved="yes">
         <source>Other</source>
-        <target state="translated">Sonstiges</target>
+        <target state="final">Sonstiges</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.allowExt">
+      <trans-unit id="t3editor.form.allowExt" approved="yes">
         <source>Allow File Extension </source>
-        <target state="translated">Erlaubte Dateierweiterungen</target>
+        <target state="final">Erlaubte Dateierweiterungen</target>
       </trans-unit>
       <trans-unit id="t3editor.form.Ext">
         <source>audio/*,video/*,image/*,application/*</source>
         <target state="needs-translation">audio/*,video/*,image/*,application/*</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.guide">
+      <trans-unit id="t3editor.form.guide" approved="yes">
         <source>Guide</source>
-        <target state="translated">Anleitung</target>
+        <target state="final">Anleitung</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.cancel">
+      <trans-unit id="t3editor.form.cancel" approved="yes">
         <source>Cancel</source>
-        <target state="translated">Abbrechen</target>
+        <target state="final">Abbrechen</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.submit">
+      <trans-unit id="t3editor.form.submit" approved="yes">
         <source>Save Changes</source>
-        <target state="translated">Änderungen speichern</target>
+        <target state="final">Änderungen speichern</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.docs">
+      <trans-unit id="t3editor.form.docs" approved="yes">
         <source>Docs</source>
-        <target state="translated">Dokumentation</target>
+        <target state="final">Dokumentation</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.open_docs">
+      <trans-unit id="t3editor.form.open_docs" approved="yes">
         <source>Open Docs</source>
-        <target state="translated">Dokumentation öffnen</target>
+        <target state="final">Dokumentation öffnen</target>
       </trans-unit>
       <trans-unit id="t3editor.form.demos">
         <source>Demos</source>
         <target state="needs-translation">Demos</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.operation.error.invalid_token">
+      <trans-unit id="ckeditorKit.operation.error.invalid_token" approved="yes">
         <source>Invalid token URL</source>
-        <target state="translated">Ungültige Token-URL</target>
+        <target state="final">Ungültige Token-URL</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.operation.error.invalid_token.message">
+      <trans-unit id="ckeditorKit.operation.error.invalid_token.message" approved="yes">
         <source>Please enter a valid token URL to continue</source>
-        <target state="translated">Bitte geben Sie eine gültige Token-URL ein, um fortzufahren</target>
+        <target state="final">Bitte geben Sie eine gültige Token-URL ein, um fortzufahren</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.feedback">
+      <trans-unit id="t3editor.form.feedback" approved="yes">
         <source>Feedback</source>
-        <target state="translated">Rückmeldung</target>
+        <target state="final">Rückmeldung</target>
       </trans-unit>
-      <trans-unit id="t3editor.form.contribute">
+      <trans-unit id="t3editor.form.contribute" approved="yes">
         <source>Contribute</source>
-        <target state="translated">Mitwirken</target>
+        <target state="final">Mitwirken</target>
       </trans-unit>
       <trans-unit id="t3editor.form.community">
         <source>Community</source>
@@ -1248,29 +1248,29 @@ The authorization credentials are required for Real-time collaboration or Import
         <source>Github</source>
         <target state="needs-translation">Github</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning.title">
+      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning.title" approved="yes">
         <source>Real-time Collaboration Note</source>
-        <target state="translated">Hinweis zur Echtzeit-Zusammenarbeit</target>
+        <target state="final">Hinweis zur Echtzeit-Zusammenarbeit</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning1">
+      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning1" approved="yes">
         <source>To use real-time collaboration features—such as &lt;code&gt;comments&lt;/code&gt;, &lt;code&gt;track changes&lt;/code&gt;, and &lt;code&gt;revision history&lt;/code&gt; — you must disable the Source Editing plugin, as raw HTML editing is not compatible with the collaboration engine</source>
-        <target state="translated">Um Funktionen zur Echtzeit-Zusammenarbeit zu nutzen – wie &lt;code&gt;Kommentare&lt;/code&gt;, &lt;code&gt;Änderungen verfolgen&lt;/code&gt; und &lt;code&gt;Versionsverlauf&lt;/code&gt; – müssen Sie das Quellcode-Bearbeitungs-Plug-in deaktivieren, da die Bearbeitung von Roh-HTML nicht mit der Kollaborations-Engine kompatibel ist</target>
+        <target state="final">Um Funktionen zur Echtzeit-Zusammenarbeit zu nutzen – wie &lt;code&gt;Kommentare&lt;/code&gt;, &lt;code&gt;Änderungen verfolgen&lt;/code&gt; und &lt;code&gt;Versionsverlauf&lt;/code&gt; – müssen Sie das Quellcode-Bearbeitungs-Plug-in deaktivieren, da die Bearbeitung von Roh-HTML nicht mit der Kollaborations-Engine kompatibel ist</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning2">
+      <trans-unit id="ckeditorKit.plugin.realtime_collaboration.warning2" approved="yes">
         <source>Additionally, you must save the RTE content at least once before making any edits. Without this initial save, &lt;code&gt;comments&lt;/code&gt;, &lt;code&gt;track changes&lt;/code&gt;, or &lt;code&gt;revision history&lt;/code&gt; data may be lost.</source>
-        <target state="translated">Außerdem müssen Sie die RTE-Inhalte mindestens einmal speichern, bevor Sie Änderungen vornehmen. Ohne dieses anfängliche Speichern können &lt;code&gt;Kommentare&lt;/code&gt;, &lt;code&gt;Änderungen verfolgen&lt;/code&gt; oder &lt;code&gt;Versionsverlauf&lt;/code&gt;-Daten verloren gehen.</target>
+        <target state="final">Außerdem müssen Sie die RTE-Inhalte mindestens einmal speichern, bevor Sie Änderungen vornehmen. Ohne dieses anfängliche Speichern können &lt;code&gt;Kommentare&lt;/code&gt;, &lt;code&gt;Änderungen verfolgen&lt;/code&gt; oder &lt;code&gt;Versionsverlauf&lt;/code&gt;-Daten verloren gehen.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.presets.warning">
+      <trans-unit id="ckeditorKit.plugin.presets.warning" approved="yes">
         <source>The toolbar configuration from your YAML preset is now managed by the CKEditor Pack extension's drag-and-drop toolbar interface. This means that, at runtime, the CKEditor Pack configuration takes precedence and defines the active toolbar — your YAML file remains intact but is no longer the source for toolbar rendering.</source>
-        <target state="translated">Die Werkzeugleisten-Konfiguration aus Ihrem YAML-Voreinstellung wird nun von der Drag-and-Drop-Werkzeugleisten-Oberfläche der CKEditor Pack-Erweiterung verwaltet. Das bedeutet, dass zur Laufzeit die CKEditor Pack-Konfiguration Vorrang hat und die aktive Werkzeugleiste definiert – Ihre YAML-Datei bleibt intakt, ist jedoch nicht mehr die Quelle für die Werkzeugleisten-Rendering.</target>
+        <target state="final">Die Werkzeugleisten-Konfiguration aus Ihrem YAML-Voreinstellung wird nun von der Drag-and-Drop-Werkzeugleisten-Oberfläche der CKEditor Pack-Erweiterung verwaltet. Das bedeutet, dass zur Laufzeit die CKEditor Pack-Konfiguration Vorrang hat und die aktive Werkzeugleiste definiert – Ihre YAML-Datei bleibt intakt, ist jedoch nicht mehr die Quelle für die Werkzeugleisten-Rendering.</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.title">
+      <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.title" approved="yes">
         <source>CKEditor AI Note</source>
-        <target state="translated">CKEditor KI-Hinweis</target>
+        <target state="final">CKEditor KI-Hinweis</target>
       </trans-unit>
-      <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.desc">
+      <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.desc" approved="yes">
         <source>The Side option is not supported when using the Sidebar type.</source>
-        <target state="translated">Die Option "Seite" wird nicht unterstützt, wenn der Seitenleisten-Typ verwendet wird.</target>
+        <target state="final">Die Option "Seite" wird nicht unterstützt, wenn der Seitenleisten-Typ verwendet wird.</target>
       </trans-unit>
     </body>
   </file>
