@@ -27,13 +27,12 @@ function initModuleFunc(params) {
     }
     
     
-    const authTypeSelect = document.getElementById('authType');
+    const authTypeSelect = document.getElementById('authType'); 
     if (authTypeSelect) {
-        authTypeSelect.addEventListener('change', (event) => {
-            event.preventDefault();
-            const selectedAuthType = event.target.value;
-            const keyTypeFormItems = document.querySelectorAll('.form-item-key-type');
-            const tokenTypeFormItems = document.querySelectorAll('.form-item-dev-token-type');
+        // Function to toggle visibility based on auth type
+        const updateAuthFieldsVisibility = (selectedAuthType) => {
+            const keyTypeFormItems = document.querySelectorAll('.form-item-auth-key');
+            const tokenTypeFormItems = document.querySelectorAll('.form-item-auth-dev-token');
     
             const toggleVisibility = (elements, shouldShow) => {
                 elements.forEach(element => {
@@ -43,20 +42,32 @@ function initModuleFunc(params) {
     
             switch (selectedAuthType) {
                 case 'key':
+                    // Show: Environment ID, Access Key, Organization ID, API Key
                     toggleVisibility(keyTypeFormItems, true);
                     toggleVisibility(tokenTypeFormItems, false);
                     break;
     
                 case 'dev_token':
+                    // Show: Token URL, Organization ID, API Key
                     toggleVisibility(keyTypeFormItems, false);
                     toggleVisibility(tokenTypeFormItems, true);
                     break;
     
                 case 'none':
+                    // Show: Organization ID, API Key only
                     toggleVisibility(keyTypeFormItems, false);
                     toggleVisibility(tokenTypeFormItems, false);
                     break;
             }
+        };
+        
+        // Set initial visibility based on current selection
+        updateAuthFieldsVisibility(authTypeSelect.value);
+        
+        // Update visibility on change
+        authTypeSelect.addEventListener('change', (event) => {
+            event.preventDefault();
+            updateAuthFieldsVisibility(event.target.value);
         });
     }
     
@@ -132,8 +143,9 @@ function initModuleFunc(params) {
 }
 
 const cardCheck = document.querySelectorAll('.btn-toggle');
+
 if (cardCheck.length) {
-  cardCheck.forEach(element => {
+    cardCheck.forEach(element => {
     if (element.closest('.card')) {
       if (element.checked) {
         element.closest('.card').classList.add('card--active');

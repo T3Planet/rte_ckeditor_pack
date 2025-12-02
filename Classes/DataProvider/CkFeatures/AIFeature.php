@@ -10,7 +10,6 @@ namespace T3Planet\RteCkeditorPack\DataProvider\CkFeatures;
 
 use T3Planet\RteCkeditorPack\DataProvider\Configuration\Field;
 use T3Planet\RteCkeditorPack\DataProvider\Configuration\FieldType;
-use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class AIFeature implements FeatureInterface
 {
@@ -79,8 +78,21 @@ class AIFeature implements FeatureInterface
         ];
     }
 
-    private function translateLabel(string $key): string
+    public function getModules(): array
     {
-        return LocalizationUtility::translate($key, 'RteCkeditorPack') ?? '';
+        return [
+            [
+                'library' => '@t3planet/RteCkeditorPack/ai-sidebar',
+                'exports' => 'AISidebar'
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-cloud-services',
+                'exports' => 'CloudServices'
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-ai',
+                'exports' => 'AIChat,AIEditorIntegration,AIQuickActions,AIReviewMode'
+            ],
+        ];
     }
 }

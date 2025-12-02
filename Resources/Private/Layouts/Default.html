@@ -3,82 +3,134 @@
 <f:be.pageRenderer includeJavaScriptModules="{
         1: '@t3planet/RteCkeditorPack/drag-and-drop.js',
     }" />
+
 <div class="module t3-ckeditor">
-    <div class="module-docheader t3js-module-docheader flex-row align-items-end justify-content-between pb-0">
-        <div class="dashboard-tabs w-100" role="tablist">
-            <div class="me-3">
-                <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />
-            </div>
-            <f:if condition="{availableModules}">
-                <f:for each="{availableModules}" as="module" iteration="i">
-                    <f:if condition="{module.key} == 'plugins'">
-                        <button class="dashboard-tab {f:if(condition: '{currentModule} == features', then: 'active')}" id="features-tab" data-bs-toggle="tab" 
-                            data-bs-target="#features-tab-pane"
-                            type="button" role="tab" aria-controls="features-pane" aria-selected="{f:if(condition: '{currentModule} == features', then: 'true', else: 'false')}">
-                            <f:translate key="ckeditorKit.module.feature" />
-                        </button>
-                    </f:if>
-                </f:for>
+    <div class="module-docheader t3js-module-docheader flex-row align-items-center justify-content-between pb-2 pt-3">
+        <div class="me-2">
+            <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />
+        </div>
+        <form action="" method="post" id="presetForm">
+            <f:if condition="{groupedPresets}">
+                <div class="d-flex align-items-center gap-2" style="min-width: 250px;">
+                    <select name="activePresets" id="rtePresets" class="form-select form-control form-select-sm">
+                        <f:if condition="{groupedPresets.yaml}">
+                            <optgroup label="Theme Presets">
+                                <f:for each="{groupedPresets.yaml}" as="presetData" key="preset">
+                                    <f:variable name="presetValue"
+                                        value="{f:if(condition: '{presetData.uid} > 0', then: '{presetData.uid}', else: '{preset}')}" />
+                                    <option value="{presetValue}"
+                                        {f:if(condition: '{presetValue} == {activePreset} || {preset} == {activePreset}'
+                                        , then: 'selected' )}>
+                                        <f:format.case mode="capital">{preset}</f:format.case>
+                                    </option>
+                                </f:for>
+                            </optgroup>
+                        </f:if>
+                        <f:if condition="{groupedPresets.custom}">
+                            <optgroup label="CKEditor Presets">
+                                <f:for each="{groupedPresets.custom}" as="presetData" key="preset">
+                                    <option value="{presetData.uid}"
+                                        {f:if(condition: '{presetData.uid} == {activePreset}' , then: 'selected' )}>
+                                        <f:format.case mode="capital">{preset}</f:format.case>
+                                    </option>
+                                </f:for>
+                            </optgroup>
+                        </f:if>
+                    </select>
+                    <button type="button" class="btn btn-sm btn-notice" data-identifier="ckeditorGlobalWizardButton"
+                        data-modal-size="medium" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
+                        <span class="ms-1">
+                            <f:translate key="new.presets" />
+                        </span>
+                    </button>
+                </div>
             </f:if>
-            <f:if condition="{availableModules}">
-                <f:for each="{availableModules}" as="module" iteration="i">
-                    <button
-                        class="dashboard-tab {f:if(condition: '{module.key} == {currentModule}', then: 'active')} {f:if(condition: '{tabKey} == wishlist', then: 'disabled')}"
-                        id="{module.key}-tab" data-bs-toggle="tab" data-bs-target="#{module.key}-tab-pane"
-                        type="button" role="tab" aria-controls="{module.key}-pane"
-                        aria-selected="{f:if(condition: '{module.key} == {currentModule}', then: 'true', else: 'false')}">{module.label}</button>
-                </f:for>
-            </f:if>
-            <div class="dashboard-configuration btn-group ms-auto">
-                <button class="btn btn-sm btn-notice {f:if(condition: '{currentModule} == settings', then: 'active')}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
-                    type="button" role="tab" aria-controls="settings-pane" aria-selected="{f:if(condition: '{currentModule} == settings', then: 'true', else: 'false')}">
-                    <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
-                    <f:translate key="ckeditorKit.tab.settings" />
-                </button>
-                <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank"
-                    class="btn btn-default btn-sm">
-                    <core:icon identifier="actions-document-share" size="small" alternativeMarkupIdentifier="inline" />
-                    <f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" />
-                </a>
-                <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank"
+        </form>
+        <div class="dashboard-configuration btn-group my-1 ms-auto">
+            <f:link.action action="settings" class="btn btn-sm btn-notice" title="{f:translate(key: 'btn.details')}" role="button">
+                <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
+                <f:translate key="ckeditorKit.tab.settings" />
+            </f:link.action>
+            <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank"
                 class="btn btn-default btn-sm">
-                    <core:icon identifier="actions-file-view" size="small" alternativeMarkupIdentifier="inline" />
-                    <f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" />
-                </a>
-                <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm">
-                    <core:icon identifier="actions-file-video" size="small" alternativeMarkupIdentifier="inline" />
-                    <f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" />
-                </a>
-            </div>
+                <core:icon identifier="actions-document-share" size="small" alternativeMarkupIdentifier="inline" />
+                <f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" />
+            </a>
+            <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank"
+            class="btn btn-default btn-sm">
+                <core:icon identifier="actions-file-view" size="small" alternativeMarkupIdentifier="inline" />
+                <f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" />
+            </a>
+            <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm">
+                <core:icon identifier="actions-file-video" size="small" alternativeMarkupIdentifier="inline" />
+                <f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" />
+            </a>
         </div>
     </div>
     <div class="module-body t3js-module-body">
-        <div class="tab-content" id="dashboardTab">
+        <div class="dashboard-tabs" role="tablist">
+            <f:if condition="{availableModules}">
+                <f:for each="{availableModules}" as="module" iteration="i">
+                    <f:if condition="{module.key} == 'plugins'">
+                        <button class="dashboard-tab {f:if(condition: '{currentModule} == features', then: 'active')}"
+                            id="features-tab" data-bs-toggle="tab" data-bs-target="#features-tab-pane" type="button"
+                            role="tab" aria-controls="features-pane"
+                            aria-selected="{f:if(condition: '{currentModule} == features', then: 'true', else: 'false')}">
+                            <f:translate key="ckeditorKit.module.feature" />
+                        </button>
+                    </f:if>
+                    <button
+                        class="dashboard-tab {f:if(condition: '{module.key} == {currentModule}', then: 'active')} {f:if(condition: '{tabKey} == wishlist', then: 'disabled')}"
+                        id="{module.key}-tab" data-bs-toggle="tab" data-bs-target="#{module.key}-tab-pane" type="button"
+                        role="tab" aria-controls="{module.key}-pane"
+                        aria-selected="{f:if(condition: '{module.key} == {currentModule}', then: 'true', else: 'false')}">{module.label}</button>
+                </f:for>
+            </f:if>
+        </div>
+        <div class="tab-content form-section rounded-0" id="dashboardTab">
             <f:render section="main" arguments="{_all}" />
         </div>
     </div>
     <div class="module-footer border-top t3js-module-footer d-flex justify-content-between align-items-center p-4 py-3">
         <div class="footer-description">
-            <p class="mb-0">Made with <span class="btn-icon"><core:icon identifier="actions-heart-alt" size="small" alternativeMarkupIdentifier="inline" /></span> by TYPO3 contributors, T3Planet, and the CKEditor's official team.</li>
+            <p class="mb-0">Made with <span class="btn-icon">
+                    <core:icon identifier="actions-heart-alt" size="small" alternativeMarkupIdentifier="inline" />
+                </span> by TYPO3 contributors, T3Planet, and the CKEditor's official team.</li>
         </div>
         <ul class="btn-group footer-links list-unstyled mb-0">
             <li>
-                <a class="btn btn-link btn-link--purple p-0" href="https://portal.ckeditor.com/signup/?utm_campaign=ckeditor_typo3_t3planet_landing_page_en&utm_source=t3planet&utm_medium=referral&utm_term=typo3" target="_blank"><f:translate key="t3editor.form.premiumtrial" extensionName="rte_ckeditor_pack" /></a>
+                <a class="btn btn-link btn-link--purple p-0"
+                    href="https://portal.ckeditor.com/signup/?utm_campaign=ckeditor_typo3_t3planet_landing_page_en&utm_source=t3planet&utm_medium=referral&utm_term=typo3"
+                    target="_blank">
+                    <f:translate key="t3editor.form.premiumtrial" extensionName="rte_ckeditor_pack" />
+                </a>
             </li>
             <li>
-                <a class="btn btn-link p-0" href="https://t3planet.de/support" target="_blank"><f:translate key="t3editor.form.support" extensionName="rte_ckeditor_pack" /></a>
+                <a class="btn btn-link p-0" href="https://t3planet.de/support" target="_blank">
+                    <f:translate key="t3editor.form.support" extensionName="rte_ckeditor_pack" />
+                </a>
             </li>
             <li>
-                <a class="btn btn-link p-0" href="https://github.com/T3Planet/rte_ckeditor_pack" target="_blank"><f:translate key="t3editor.form.github" extensionName="rte_ckeditor_pack" /></a>
+                <a class="btn btn-link p-0" href="https://github.com/T3Planet/rte_ckeditor_pack" target="_blank">
+                    <f:translate key="t3editor.form.github" extensionName="rte_ckeditor_pack" />
+                </a>
             </li>
             <li>
-                <a class="btn btn-link p-0" href="https://github.com/T3Planet/rte_ckeditor_pack/issues" target="_blank"><f:translate key="t3editor.form.report_issues" extensionName="rte_ckeditor_pack" /></a>
+                <a class="btn btn-link p-0" href="https://github.com/T3Planet/rte_ckeditor_pack/issues" target="_blank">
+                    <f:translate key="t3editor.form.report_issues" extensionName="rte_ckeditor_pack" />
+                </a>
             </li>
             <li>
-                <a class="btn btn-link p-0" href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/Introduction/Contribution/Index.html" target="_blank"><f:translate key="t3editor.form.contribute" extensionName="rte_ckeditor_pack" /></a>
+                <a class="btn btn-link p-0"
+                    href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/Introduction/Contribution/Index.html"
+                    target="_blank">
+                    <f:translate key="t3editor.form.contribute" extensionName="rte_ckeditor_pack" />
+                </a>
             </li>
             <li>
-                <a class="btn btn-link p-0" href="https://typo3.slack.com/archives/C09UKJY15DF" target="_blank"><f:translate key="t3editor.form.community" extensionName="rte_ckeditor_pack" /></a>
+                <a class="btn btn-link p-0" href="https://typo3.slack.com/archives/C09UKJY15DF" target="_blank">
+                    <f:translate key="t3editor.form.community" extensionName="rte_ckeditor_pack" />
+                </a>
             </li>
         </ul>
     </div>
@@ -87,4 +139,5 @@
     <core:icon alternativeMarkupIdentifier="inline" identifier="rte_loader" size="large" />
     <span class="loader-text"></span>
 </div>
+
 </html>

@@ -1,2 +1,29 @@
 # cat=basic; type=boolean; label=Fetch external images and load them into the user default upload folder (default is on)
 fetchExternalImages = 1
+
+# cat=featureConfiguration; type=text; label=License Key
+licenseKey = 
+
+# cat=featureConfiguration; type=string; label=Authorization Type (none, key, dev_token)
+authType = none
+
+# cat=featureConfiguration; type=string; label=Environment ID
+environmentId = 
+
+# cat=featureConfiguration; type=string; label=Access Key
+accessKey = 
+
+# cat=featureConfiguration; type=string; label=Token URL
+tokenUrl = 
+
+# cat=featureConfiguration; type=string; label=Organization ID
+organizationId = 
+
+# cat=featureConfiguration; type=string; label=API Key
+apiKey = 
+
+# cat=advancedSettings; type=string; label=Web Socket URL
+webSocketUrl = wss://ORGANIZATION_ID.cke-cs.com/ws
+
+# cat=advancedSettings; type=string; label=API Base URL
+apiBaseUrl = https://ORGANIZATION_ID.cke-cs.com/api/v5/ENVIRONMENT_ID/

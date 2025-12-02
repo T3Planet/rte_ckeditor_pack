@@ -33,5 +33,14 @@ class SourceEditingEnhancedFeature implements FeatureInterface
             ],
         ];
     }
-}
 
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-source-editing-enhanced',
+                'exports' => 'SourceEditingEnhanced',
+            ],
+        ];
+    }
+}

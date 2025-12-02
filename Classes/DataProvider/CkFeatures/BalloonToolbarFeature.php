@@ -25,4 +25,14 @@ class BalloonToolbarFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-ui',
+                'exports' => 'BalloonToolbar',
+            ],
+        ];
+    }
 }

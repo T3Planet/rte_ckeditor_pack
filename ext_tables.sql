@@ -13,15 +13,6 @@ CREATE TABLE tx_rteckeditorpack_domain_model_comment
     PRIMARY KEY (uid),
 );
 
-
-CREATE TABLE tx_rteckeditorpack_domain_model_configuration (
-	enable smallint(1) unsigned NOT NULL DEFAULT '0',
-	config_key varchar(255) NOT NULL UNIQUE DEFAULT '',
-    fields text NOT NULL DEFAULT '',
-    preset text,
-    UNIQUE KEY configuration_key (config_key)
-);
-
 CREATE TABLE tx_rteckeditorpack_domain_model_suggestions
 (
     uid int(11) NOT NULL auto_increment,
@@ -51,13 +42,6 @@ CREATE TABLE tx_rteckeditorpack_domain_model_revisionhistory
     PRIMARY KEY (uid),
 );
 
-CREATE TABLE tx_rteckeditorpack_domain_model_toolbaritems (
-    uid int(11) NOT NULL auto_increment,
-	items text NOT NULL DEFAULT '',
-    preset varchar(255) DEFAULT NULL UNIQUE,
-    PRIMARY KEY (uid)
-);
-
 CREATE TABLE tx_rteckeditorpack_domain_model_toolbargroups
 (
     uid int(11) NOT NULL auto_increment,
@@ -67,4 +51,45 @@ CREATE TABLE tx_rteckeditorpack_domain_model_toolbargroups
     custom_icon text DEFAULT NULL,
     items text NOT NULL DEFAULT '',
     PRIMARY KEY (uid),
+);
+
+CREATE TABLE tx_rteckeditorpack_domain_model_preset (
+    uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
+    preset_key varchar(255) NOT NULL UNIQUE,
+    toolbar_items text NOT NULL DEFAULT '',
+    deleted smallint(1) unsigned DEFAULT '0' NOT NULL,
+    hidden smallint(1) unsigned DEFAULT '0' NOT NULL,
+    tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+    crdate int(11) unsigned DEFAULT '0' NOT NULL,
+    cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+    is_custom smallint(1) unsigned NOT NULL DEFAULT '0',
+    usage_source smallint(1) unsigned NOT NULL DEFAULT '0',
+    PRIMARY KEY (uid),
+    UNIQUE KEY preset_key (preset_key),
+    KEY parent (pid),
+    KEY deleted (deleted),
+    KEY hidden (hidden)
+);
+
+CREATE TABLE tx_rteckeditorpack_domain_model_feature (
+    uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
+    enable smallint(1) unsigned NOT NULL DEFAULT '0',
+    config_key varchar(255) NOT NULL DEFAULT '',
+    fields text NOT NULL DEFAULT '',
+    toolbar_item text NOT NULL DEFAULT '',
+    preset_uid int(11) DEFAULT '0' NOT NULL,
+    sorting int(11) unsigned DEFAULT '0' NOT NULL,
+    deleted smallint(1) unsigned DEFAULT '0' NOT NULL,
+    hidden smallint(1) unsigned DEFAULT '0' NOT NULL,
+    tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+    crdate int(11) unsigned DEFAULT '0' NOT NULL,
+    cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+    PRIMARY KEY (uid),
+    KEY parent (pid),
+    KEY deleted (deleted),
+    KEY hidden (hidden),
+    KEY enable (enable),
+    KEY preset_uid (preset_uid)
 );

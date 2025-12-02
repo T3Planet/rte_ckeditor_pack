@@ -84,4 +84,22 @@ class MergeFieldsFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-image',
+                'exports' => 'ImageUtils, ImageEditing',
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-mention',
+                'exports' => 'Mention',
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-merge-fields',
+                'exports' => 'MergeFields',
+            ],
+        ];
+    }
 }

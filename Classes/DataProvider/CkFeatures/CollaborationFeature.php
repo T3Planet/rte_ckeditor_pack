@@ -25,4 +25,21 @@ class CollaborationFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@t3planet/RteCkeditorPack/realtime-adapter.js',
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-cloud-services',
+                'exports' => 'CloudServices',
+            ],
+            [
+                'library' => '@ckeditor/ckeditor5-real-time-collaboration',
+                'exports' => 'RealTimeCollaborativeEditing,PresenceList',
+            ],
+        ];
+    }
 }

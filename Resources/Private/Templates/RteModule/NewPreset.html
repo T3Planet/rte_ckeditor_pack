@@ -5,50 +5,154 @@
 <f:layout name="Modals" />
 <f:section name="content">
 <f:be.pageRenderer includeJavaScriptModules="{0: '@t3planet/RteCkeditorPack/script.js'}"/>
-    <div class="ckeditor-modal-form">
-        <div id="ckeditor-modal" class="ckeditor modal d-block">
-            <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
-                <div class="t3js-modal-body modal-body">
-                    <div class="form-section-custom">
-                        <form id="newPresetForm" data-ajax-url="{ajaxUrl}">
-                            <div class="form-group form-group-custom border-bottom pb-3 mb-3">
-                                <label for="preset-name" class="form-label"><f:translate key="form.preset_name" extensionName="RteCkeditorPack"/></label>
-                                <div class="input-group">
-                                    <input type="input" id="preset-name" class="form-control" name="presetName" required placeholder="{f:translate(key: 'form.preset_name', extensionName:'RteCkeditorPack')}"/>
-                                    <button type="submit" class="input-group-text btn btn-primary" id="newPresetBtn" disabled><f:translate key="feature_form.create" extensionName="RteCkeditorPack"/></button>
-                                </div>
-                                <div class="form-text"><f:translate key="form.preset_name.description" extensionName="RteCkeditorPack"/></div>
+    <div id="ckeditor-modal" class="ckeditor modal d-block">
+        <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
+            <div class="t3js-modal-body modal-body">
+                <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
+                <div class="form-section-custom">
+                    <form id="newPresetForm" data-ajax-url="{ajaxUrl}">
+                        <div class="form-group form-group-custom">
+                            <label for="preset-name" class="form-label"><f:translate key="form.preset_name" extensionName="RteCkeditorPack"/></label>
+                            <div class="input-group">
+                                <input type="input" id="preset-name" class="form-control" name="presetName" required placeholder="{f:translate(key: 'form.preset_name', extensionName:'RteCkeditorPack')}"/>
+                                <button type="submit" class="input-group-text btn btn-primary" id="newPresetBtn" disabled><f:translate key="feature_form.create" extensionName="RteCkeditorPack"/></button>
                             </div>
-                        </form>
-                    </div>
-                    <f:if condition="{availablePresets}">
+                            <div class="form-text"><f:translate key="form.preset_name.description" extensionName="RteCkeditorPack"/></div>
+                        </div>
+                    </form>
+                </div>
+                <f:if condition="{corePresets}">
+                    <div class="mb-4">
+                        <h4 class="mb-3"><f:translate key="presets.from_yaml" extensionName="RteCkeditorPack" default="From YAML (TYPO3)"/></h4>
                         <div class="table-fit">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th class="col-title" colspan="2"><f:translate key="header.preset_title" extensionName="RteCkeditorPack"/></th>
+                                        <th class="col-title"><f:translate key="header.preset_title" extensionName="RteCkeditorPack"/></th>
+                                        <th class="col-title"><f:translate key="presets.usage_source" extensionName="RteCkeditorPack" default="Load From YAML"/></th>
+                                        <th class="col-title text-end"><f:translate key="presets.actions" extensionName="RteCkeditorPack" default="Actions"/></th>
                                     </tr>
                                 </thead>
-                                <f:for each="{availablePresets}" as="item">
-                                    <tr>
-                                        <td>{item.preset}</td>
-                                        <td class="text-end">
-                                            <button class="btn btn-danger delete t3js-modal-trigger" 
-                                            href="{be:moduleLink(route:'tce_db', query:'cmd[tx_rteckeditorpack_domain_model_toolbaritems][{item.uid}][delete]=1', arguments:'{redirect: returnUrl}')}"
-                                            title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete')}"
-                                            data-severity="warning"
-                                            data-title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:label.confirm.delete_record.title')}"
-                                            data-bs-content="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:deleteWarning')}"
-                                            data-button-close-text="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.no')}">
-                                            <core:icon identifier="actions-delete" alternativeMarkupIdentifier="inline" />
-                                        </button>
-                                        </td>
-                                    </tr>
-                                </f:for>
+                                <tbody>
+                                    <f:for each="{corePresets}" as="item">
+                                        <tr>
+                                            <td><f:format.case mode="capital">{item.preset_key}</f:format.case></td>
+                                            <td>
+                                               <f:if condition="{item.usage_source} == 0">
+                                                    <f:then>
+                                                        <a href="{be:moduleLink(route:'tce_db',query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][usage_source]=1', arguments:'{redirect: returnUrl}' )}" 
+                                                        class="btn btn-sm btn-default" 
+                                                        title="{f:translate(key: 'presets.switch_to_pack',  extensionName: 'RteCkeditorPack',   default: 'Switch to CKEditor Pack')}">
+                                                            <core:icon identifier="actions-edit-unhide" size="small" />
+                                                        </a>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <a href="{be:moduleLink(route:'tce_db',query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][usage_source]=0',
+                                                        arguments:'{redirect: returnUrl}')}" 
+                                                        class="btn btn-sm btn-default" 
+                                                        title="{f:translate( key: 'presets.switch_to_yaml',   extensionName: 'RteCkeditorPack',  default: 'Switch to YAML' )}">
+                                                            <core:icon identifier="actions-edit-hide" size="small" />
+                                                        </a>
+                                                    </f:else>
+                                                </f:if>
+                                                <f:if condition="{item.uid} == 0">
+                                                    <span class="text-muted"><f:translate key="presets.source_yaml" extensionName="RteCkeditorPack" default="Load from YAML"/></span>
+                                                </f:if>
+                                            </td>
+                                            <td class="text-end">
+                                                <div class="btn-group" role="group">
+                                                    <f:if condition="{item.uid} > 0">
+
+                                                        <button type="button" class="btn btn-sm btn-default reset-preset {f:if(condition: '{item.usage_source}', then: 'disabled')}" 
+                                                                data-preset-uid="{item.uid}"
+                                                                data-preset-key="{item.preset_key}"
+                                                                title="{f:translate(key: 'presets.reset', extensionName: 'RteCkeditorPack', default: 'Reset')}">
+                                                            <core:icon identifier="actions-refresh" size="small" />
+                                                            <span class="ms-1"><f:translate key="presets.reset" extensionName="RteCkeditorPack" default="Reset"/></span>
+                                                        </button>
+
+                                                        <button type="button" class="btn btn-sm btn-default sync-preset {f:if(condition: '{item.usage_source}', then: 'disabled')}" 
+                                                                data-preset-uid="{item.uid}" 
+                                                                data-preset-key="{item.preset_key}"
+                                                                title="{f:translate(key: 'presets.sync', extensionName: 'RteCkeditorPack', default: 'Sync')}">
+                                                            <core:icon identifier="actions-synchronize" size="small" />
+                                                            <span class="ms-1"><f:translate key="presets.sync" extensionName="RteCkeditorPack" default="Sync"/></span>
+                                                        </button>
+                                                    </f:if>
+                                                    <f:if condition="{item.uid} == 0">
+                                                        <span class="text-muted"><f:translate key="presets.yaml_readonly" extensionName="RteCkeditorPack" default="YAML-based (read-only)"/></span>
+                                                    </f:if>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </f:for>
+                                </tbody>
                             </table>
                         </div>
+                    </div>
+                </f:if>
+                
+                <f:if condition="{customPresets}">
+                    <div class="mb-4">
+                        <h4 class="mb-3"><f:translate key="presets.from_custom" extensionName="RteCkeditorPack" default="From Custom(Ckeditor-pack)"/></h4>
+                        <div class="table-fit">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-title"><f:translate key="header.preset_title" extensionName="RteCkeditorPack"/></th>
+                                        <th class="col-title"><f:translate key="presets.status" extensionName="RteCkeditorPack" default="Status"/></th>
+                                        <th class="col-title text-end"><f:translate key="presets.actions" extensionName="RteCkeditorPack" default="Actions"/></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <f:for each="{customPresets}" as="item">
+                                        <tr>
+                                            <td><f:format.case mode="capital">{item.preset_key}</f:format.case></td>
+                                            <td>
+                                                <f:if condition="{item.hidden} == 0">
+                                                    <f:then>
+                                                        <a href="{be:moduleLink(route:'tce_db', query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][hidden]=1', arguments:'{redirect: returnUrl}')}" 
+                                                           class="btn btn-sm btn-default" 
+                                                           title="{f:translate(key: 'presets.disable', extensionName: 'RteCkeditorPack', default: 'Disable')}">
+                                                            <core:icon identifier="actions-edit-hide" size="small" />
+                                                        </a>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <a href="{be:moduleLink(route:'tce_db', query:'data[tx_rteckeditorpack_domain_model_preset][{item.uid}][hidden]=0', arguments:'{redirect: returnUrl}')}" 
+                                                           class="btn btn-sm btn-default" 
+                                                           title="{f:translate(key: 'presets.enable', extensionName: 'RteCkeditorPack', default: 'Enable')}">
+                                                            <core:icon identifier="actions-edit-unhide" size="small" />
+                                                        </a>
+                                                    </f:else>
+                                                </f:if>
+                                            </td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-notice delete t3js-modal-trigger" 
+                                                href="{be:moduleLink(route:'tce_db', query:'cmd[tx_rteckeditorpack_domain_model_preset][{item.uid}][delete]=1', arguments:'{redirect: returnUrl}')}"
+                                                title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete')}"
+                                                data-severity="warning"
+                                                data-title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:label.confirm.delete_record.title')}"
+                                                data-bs-content="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:deleteWarning')}"
+                                                data-button-close-text="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.no')}">
+                                                    <core:icon identifier="actions-delete" size="small" />
+                                                    <span class="ms-1"><f:translate key="LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete"/></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </f:for>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </f:if>
+                
+                <f:if condition="{corePresets -> f:count()} == 0">
+                    <f:if condition="{customPresets -> f:count()} == 0">
+                        <div class="alert alert-info">
+                            <f:translate key="presets.no_presets" extensionName="RteCkeditorPack" default="No presets available."/>
+                        </div>
                     </f:if>
-                </div>
+                </f:if>
             </div>
         </div>
     </form>

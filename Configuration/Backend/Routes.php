@@ -27,5 +27,5 @@ return [
     'toolbar_groups' => [
         'path' => '/ckeditor/toolbar-groups',
         'target' => RteModuleController::class . '::saveToolBarGroups',
-    ],
+    ]
 ];

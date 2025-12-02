@@ -18,6 +18,27 @@ use TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator;
 
 class YamlLoadrUtility
 {
+
+    public function fetchToolBarItems(string $presetName): string
+    {
+        $configuration = $this->loadConfigurationFromPreset($presetName);
+
+        $configuration = GeneralUtility::makeInstance(
+            CKEditor5Migrator::class,
+            $configuration
+        )->get();
+
+        if (isset($configuration['editor']['config']) && isset($configuration['editor']['config']['toolbar']['items'])) {
+
+            $items = $configuration['editor']['config']['toolbar']['items'];
+            if($items){
+               return implode(',',$items);
+            }
+        }
+        return '';
+    }
+
+
     public function fetchToolBar(string $presetName): array
     {
         $activeItemArray = [];
@@ -76,6 +97,21 @@ class YamlLoadrUtility
             }
         }
         return $configuration;
+    }
+
+    /**
+     * Load YAML configuration for a preset and migrate to CKEditor5 format
+     *
+     * @param string $presetKey
+     * @return array
+     */
+    public function loadYamlConfiguration(string $presetKey): array
+    {
+        $configuration =  $this->loadConfigurationFromPreset($presetKey);
+        return GeneralUtility::makeInstance(
+            CKEditor5Migrator::class,
+            $configuration
+        )->get();
     }
 
     /**

@@ -32,4 +32,14 @@ class CaseChangeFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-case-change',
+                'exports' => 'CaseChange',
+            ],
+        ];
+    }
 }

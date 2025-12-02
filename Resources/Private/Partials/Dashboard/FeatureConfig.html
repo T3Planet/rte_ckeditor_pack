@@ -1,32 +1,15 @@
-    <div class="row align-items-end">
+    <div class="row align-items-center mb-2 mt-1">
         <div class="col-auto">
-            <h2 class="mb-3"><f:translate key="ckeditorKit.module.feature" /></h2>
-            <form action="" method="post" id="presetForm">
-                <f:if condition="{availablePresets}">
-                    <div class="form-group" style="min-width: 300px;">
-                        <label for="presets" class="form-label"><f:translate key="features.presets" /></label>
-                        <div class="d-flex">
-                            <select name="activePresets" id="rtePresets" class="form-control form-select me-2">
-                                <f:for each="{availablePresets}" as="" key="preset">
-                                    <option value="{preset}"  {f:if(condition: '{preset} == {activePreset}' , then: 'selected' )}><f:format.case mode="capital">{preset}</f:format.case></option>
-                                </f:for>
-                            </select>
-                            <button type="button" class="btn btn-notice text-nowrap" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
-                                <span><f:translate key="new.presets" /></span>
-                            </button>
-                        </div>
-                    </div>
-                </f:if>
-            </form>
+            <h2 class="mb-0"><f:translate key="ckeditorKit.module.feature" /></h2>
         </div>
         <div class="col">
             <div class="form-group text-end">
                  <form action="" method="post" id="ckEditorModules" class="d-flex align-items-center justify-content-end gap-2">
                     <div class="search-input d-inline-block">
-                        <input type="text" name="search" id="search" class="form-control toolBarItems-search" placeholder="{f:translate(key: 'features.search')}" data-search-input="toolBarItems" />
+                        <input type="text" name="search" id="search" class="form-control form-control-sm toolBarItems-search" placeholder="{f:translate(key: 'features.search')}" data-search-input="toolBarItems" />
                     </div>
-                    <button type="button" id="toggleLabel" class="btn btn-default"><f:translate key="features.ToggleLabel" /></button>
-                    <button type="button" class="btn btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'features.settings.group')}"
+                    <button type="button" id="toggleLabel" class="btn btn-sm btn-default"><f:translate key="features.ToggleLabel" /></button>
+                    <button type="button" class="btn btn-sm btn-notice" data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium" title="{f:translate(key: 'features.settings.group')}"
                         data-key="toolbar_configuration">
                         <f:translate key="features.settings.group" />
                     </button>
