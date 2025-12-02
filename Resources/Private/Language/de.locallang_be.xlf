@@ -6,25 +6,25 @@
       <trans-unit id="labels.ckeditor.cssclass" xml:space="preserve">
 				<source>Custom CSS class</source>
 			<target state="needs-translation">Custom CSS class</target></trans-unit>
-      <trans-unit id="NsRteCkeditorPack.confirmModal.yes">
+      <trans-unit id="NsRteCkeditorPack.confirmModal.yes" approved="yes">
         <source>Yes, discard my changes.</source>
-        <target state="translated">Ja, verwerfe meine Änderungen.</target>
+        <target state="final">Ja, verwerfe meine Änderungen.</target>
       </trans-unit>
-      <trans-unit id="NsRteCkeditorPack.confirmModal.cancel">
+      <trans-unit id="NsRteCkeditorPack.confirmModal.cancel" approved="yes">
         <source>No, I will continue editing.</source>
-        <target state="translated">Nein, ich werde weiter bearbeiten.</target>
+        <target state="final">Nein, ich werde weiter bearbeiten.</target>
       </trans-unit>
-      <trans-unit id="NsRteCkeditorPack.confirmModal.currentPage.modal.message">
+      <trans-unit id="NsRteCkeditorPack.confirmModal.currentPage.modal.message" approved="yes">
         <source>Are you sure you want to discard these changes?</source>
-        <target state="translated">Sind Sie sicher, dass Sie diese Änderungen verwerfen möchten?</target>
+        <target state="final">Sind Sie sicher, dass Sie diese Änderungen verwerfen möchten?</target>
       </trans-unit>
-      <trans-unit id="NsRteCkeditorPack.confirmModal.newPage.modal.header">
+      <trans-unit id="NsRteCkeditorPack.confirmModal.newPage.modal.header" approved="yes">
         <source>Do you want to close without saving?</source>
-        <target state="translated">Möchten Sie ohne Speichern schließen?</target>
+        <target state="final">Möchten Sie ohne Speichern schließen?</target>
       </trans-unit>
-      <trans-unit id="NsRteCkeditorPack.confirmModal.InsertImage">
+      <trans-unit id="NsRteCkeditorPack.confirmModal.InsertImage" approved="yes">
         <source>Insert Image</source>
-        <target state="translated">Bild einfügen</target>
+        <target state="final">Bild einfügen</target>
       </trans-unit>
     </body>
   </file>
