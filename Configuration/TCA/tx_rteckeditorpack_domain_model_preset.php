@@ -22,8 +22,6 @@ return [
             'showitem' => '
                 --div--;LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.tab.general,
                 preset_key,is_custom,usage_source,toolbar_items,
-                --div--;LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.tab.features,
-                features,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
                 hidden, deleted
             ',
@@ -92,34 +90,6 @@ return [
                 'rows' => 5,
                 'eval' => 'trim',
                 'default' => '',
-            ],
-        ],
-        'features' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.features',
-            'config' => [
-                'type' => 'inline',
-                'foreign_table' => 'tx_rteckeditorpack_domain_model_feature',
-                'foreign_field' => 'preset_uid',
-                'foreign_sortby' => 'sorting',
-                'appearance' => [
-                    'collapseAll' => true,
-                    'expandSingle' => true,
-                    'levelLinksPosition' => 'top',
-                    'useSortable' => true,
-                    'showPossibleLocalizationRecords' => false,
-                    'showRemovedLocalizationRecords' => false,
-                    'showAllLocalizationLink' => false,
-                    'showSynchronizationLink' => false,
-                    'enabledControls' => [
-                        'new' => true,
-                        'dragdrop' => true,
-                        'sort' => true,
-                        'hide' => false,
-                        'delete' => true,
-                        'localize' => false,
-                    ],
-                ],
             ],
         ],
     ],

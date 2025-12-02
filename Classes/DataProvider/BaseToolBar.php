@@ -257,7 +257,6 @@ class BaseToolBar
                     $preset->setPresetKey($presetKey);
                     $preset->setIsCustom(false);
                     $preset->setHidden(false);
-                    $preset->setUsageSource(0);
                     $preset->setToolbarItems($toolBarItems);
                     $this->presetRepository->add($preset);
                     $this->persistenceManager->persistAll();
@@ -273,7 +272,7 @@ class BaseToolBar
                 } catch (\Exception) {}
             } else {
                 $presetData = $presetMap[$presetKey];
-                $presetData['is_custom'] = false; 
+                $presetData['is_custom'] = false;
                 $corePresets[$presetKey] = $presetData;
             }
         }

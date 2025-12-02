@@ -622,9 +622,8 @@ class RteModuleController extends ActionController
                     try {
                         $preset = GeneralUtility::makeInstance(Preset::class);
                         $preset->setPresetKey($presetName);
-                        $preset->setIsCustom(true); // Custom preset created by user
-                        $preset->setHidden(false); // Default: active (use CKEditor Pack)
-                        $preset->setUsageSource(1); // 1 = Load from CKEditor Pack
+                        $preset->setIsCustom(true);
+                        $preset->setHidden(false);
                         $this->presetRepository->add($preset);
                         $this->persistenceManager->persistAll();
                         $notification[] = [

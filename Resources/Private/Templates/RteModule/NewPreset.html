@@ -5,7 +5,8 @@
 <f:layout name="Modals" />
 <f:section name="content">
 <f:be.pageRenderer includeJavaScriptModules="{0: '@t3planet/RteCkeditorPack/script.js'}"/>
-    <div id="ckeditor-modal" class="ckeditor modal d-block">
+<div class="ckeditor-modal-form">
+    <div id="ckeditor-modal" class="ckeditor-modal-form ckeditor modal d-block">
         <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
             <div class="t3js-modal-body modal-body">
                 <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
@@ -155,6 +156,7 @@
                 </f:if>
             </div>
         </div>
-    </form>
+    </div>
+ </div>
 </f:section>
 </html>
