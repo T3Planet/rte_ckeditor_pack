@@ -3,65 +3,65 @@
   <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf" date="2024-09-19T12:27:21Z" product-name="rte_ckeditor_pack" target-language="de">
     <header/>
     <body>
-      <trans-unit id="tx_rteckeditorpack_domain_model_modules">
+      <trans-unit id="tx_rteckeditorpack_domain_model_modules" approved="yes">
         <source>Modules</source>
-        <target state="translated">Module</target>
+        <target state="final">Module</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_configuration">
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration" approved="yes">
         <source>Configuration</source>
-        <target state="translated">Konfiguration</target>
+        <target state="final">Konfiguration</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.description">
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.description" approved="yes">
         <source>Configuration</source>
-        <target state="translated">Konfiguration</target>
+        <target state="final">Konfiguration</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.config_key">
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.config_key" approved="yes">
         <source>Config Key</source>
-        <target state="translated">Konfigurationsschlüssel</target>
+        <target state="final">Konfigurationsschlüssel</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.fields">
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.fields" approved="yes">
         <source>Fields</source>
-        <target state="translated">Felder</target>
+        <target state="final">Felder</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label" approved="yes">
         <source>Label</source>
-        <target state="translated">Bezeichnung</target>
+        <target state="final">Bezeichnung</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label" approved="yes">
         <source>Label</source>
-        <target state="translated">Bezeichnung</target>
+        <target state="final">Bezeichnung</target>
       </trans-unit>
       <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.tooltip">
         <source>Tooltip</source>
         <target state="needs-translation">Tooltip</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.icon">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.icon" approved="yes">
         <source>Icon</source>
-        <target state="translated">Symbol</target>
+        <target state="final">Symbol</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.custom_icon">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.custom_icon" approved="yes">
         <source>Custom Icon</source>
-        <target state="translated">Benutzerdefiniertes Symbol</target>
+        <target state="final">Benutzerdefiniertes Symbol</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.items">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.items" approved="yes">
         <source>Items</source>
-        <target state="translated">Elemente</target>
+        <target state="final">Elemente</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.items">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.items" approved="yes">
         <source>Items</source>
-        <target state="translated">Elemente</target>
+        <target state="final">Elemente</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.preset">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.preset" approved="yes">
         <source>Preset</source>
-        <target state="translated">Voreinstellung</target>
+        <target state="final">Voreinstellung</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems" approved="yes">
         <source>ToolBar Items</source>
-        <target state="translated">Symbolleisten-Elemente</target>
+        <target state="final">Symbolleisten-Elemente</target>
       </trans-unit>
-      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups">
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups" approved="yes">
         <source>ToolBarItem Groups</source>
-        <target state="translated">Symbolleistenelement-Gruppen</target>
+        <target state="final">Symbolleistenelement-Gruppen</target>
       </trans-unit>
     </body>
   </file>
