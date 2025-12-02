@@ -3,73 +3,73 @@
   <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_notifications.xlf" date="2025-10-15T18:03:32Z" product-name="rte-ckeditor-pack" target-language="de">
     <header/>
     <body>
-      <trans-unit id="errorNotifications.header.oops">
+      <trans-unit id="errorNotifications.header.oops" approved="yes">
         <source>Oops...</source>
-        <target state="needs-translation">Oops...</target>
+        <target state="final">Hoppla...</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.oops">
+      <trans-unit id="errorNotifications.description.oops" approved="yes">
         <source>It seems that the editor encountered an error. Save your content and refresh the page. If the error persists, contact your site administrator.</source>
-        <target state="translated">Es scheint, dass der Editor auf einen Fehler gestoßen ist. Speichern Sie Ihre Inhalte und aktualisieren Sie die Seite. Wenn der Fehler weiterhin besteht, wenden Sie sich an Ihren Website-Administrator.</target>
+        <target state="final">Es scheint, dass der Editor auf einen Fehler gestoßen ist. Speichern Sie Ihre Inhalte und aktualisieren Sie die Seite. Wenn der Fehler weiterhin besteht, wenden Sie sich an Ihren Website-Administrator.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.trialExceeded">
+      <trans-unit id="errorNotifications.header.trialExceeded" approved="yes">
         <source>Trial limit exceeded</source>
-        <target state="translated">Testgrenze überschritten</target>
+        <target state="final">Testgrenze überschritten</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.trialExceeded">
+      <trans-unit id="errorNotifications.description.trialExceeded" approved="yes">
         <source>You have reached the usage limit of your trial license key. Restart the editor - you can reload the page or save edited content.</source>
-        <target state="translated">Sie haben die Nutzungslimit Ihrer Testlizenz erreicht. Starten Sie den Editor neu - Sie können die Seite neu laden oder bearbeitete Inhalte speichern.</target>
+        <target state="final">Sie haben die Nutzungslimit Ihrer Testlizenz erreicht. Starten Sie den Editor neu - Sie können die Seite neu laden oder bearbeitete Inhalte speichern.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.usageLimit">
+      <trans-unit id="errorNotifications.header.usageLimit" approved="yes">
         <source>Usage limit reached</source>
-        <target state="translated">Nutzungslimit erreicht</target>
+        <target state="final">Nutzungslimit erreicht</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.usageLimit">
+      <trans-unit id="errorNotifications.description.usageLimit" approved="yes">
         <source>You have reached the usage limit of your license key. Please contact our customer support to extend the limit at https://ckeditor.com/contact/.</source>
-        <target state="translated">Sie haben das Nutzungslimit Ihres Lizenzschlüssels erreicht. Bitte wenden Sie sich an unseren Kundensupport, um das Limit unter https://ckeditor.com/contact/ zu erhöhen.</target>
+        <target state="final">Sie haben das Nutzungslimit Ihres Lizenzschlüssels erreicht. Bitte wenden Sie sich an unseren Kundensupport, um das Limit unter https://ckeditor.com/contact/ zu erhöhen.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.wproofreaderAuth">
+      <trans-unit id="errorNotifications.header.wproofreaderAuth" approved="yes">
         <source>WProofreader Authorization Error</source>
-        <target state="translated">WProofreader Autorisierungsfehler</target>
+        <target state="final">WProofreader Autorisierungsfehler</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.wproofreaderAuth">
+      <trans-unit id="errorNotifications.description.wproofreaderAuth" approved="yes">
         <source>Some problems occurred during WProofreader initialization. Check the WProofreader plugin configuration.</source>
-        <target state="translated">Bei der Initialisierung des WProofreader sind einige Probleme aufgetreten. Überprüfen Sie die Konfiguration des WProofreader-Plugins.</target>
+        <target state="final">Bei der Initialisierung des WProofreader sind einige Probleme aufgetreten. Überprüfen Sie die Konfiguration des WProofreader-Plugins.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.wproofreaderLimit">
+      <trans-unit id="errorNotifications.header.wproofreaderLimit" approved="yes">
         <source>WProofreader usage limit exceeded</source>
-        <target state="translated">WProofreader Nutzungslimit überschritten</target>
+        <target state="final">WProofreader Nutzungslimit überschritten</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.wproofreaderLimit">
+      <trans-unit id="errorNotifications.description.wproofreaderLimit" approved="yes">
         <source>The daily limit for the number of words checked using the WProofreader grammar and spell checker has been reached. Please contact your site administrator for help. Access to the service will resume at 00:00 UTC.</source>
-        <target state="translated">Das Tageslimit für die Anzahl der mit dem WProofreader Grammatik- und Rechtschreibprüfer überprüften Wörter wurde erreicht. Bitte wenden Sie sich an Ihren Website-Administrator, um Hilfe zu erhalten. Der Zugriff auf den Dienst wird um 00:00 UTC wieder aufgenommen.</target>
+        <target state="final">Das Tageslimit für die Anzahl der mit dem WProofreader Grammatik- und Rechtschreibprüfer überprüften Wörter wurde erreicht. Bitte wenden Sie sich an Ihren Website-Administrator, um Hilfe zu erhalten. Der Zugriff auf den Dienst wird um 00:00 UTC wieder aufgenommen.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.wproofreaderError">
+      <trans-unit id="errorNotifications.header.wproofreaderError" approved="yes">
         <source>WProofreader Error</source>
-        <target state="translated">WProofreader Fehler</target>
+        <target state="final">WProofreader Fehler</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.wproofreaderError">
+      <trans-unit id="errorNotifications.description.wproofreaderError" approved="yes">
         <source>You have no permission to access the WProofreader proxy.</source>
-        <target state="translated">Sie haben keine Berechtigung, auf den WProofreader-Proxy zuzugreifen.</target>
+        <target state="final">Sie haben keine Berechtigung, auf den WProofreader-Proxy zuzugreifen.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.accessDenied">
+      <trans-unit id="errorNotifications.header.accessDenied" approved="yes">
         <source>Access denied</source>
-        <target state="translated">Zugriff verweigert</target>
+        <target state="final">Zugriff verweigert</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.accessDenied">
+      <trans-unit id="errorNotifications.description.accessDenied" approved="yes">
         <source>You don't have enough permissions for this action.</source>
-        <target state="translated">Sie haben nicht genügend Berechtigungen für diese Aktion.</target>
+        <target state="final">Sie haben nicht genügend Berechtigungen für diese Aktion.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.invalidLicenseKey">
+      <trans-unit id="errorNotifications.header.invalidLicenseKey" approved="yes">
         <source>Invalid license key</source>
-        <target state="translated">Ungültiger Lizenzschlüssel</target>
+        <target state="final">Ungültiger Lizenzschlüssel</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.description.invalidLicenseKey">
+      <trans-unit id="errorNotifications.description.invalidLicenseKey" approved="yes">
         <source>The provided license key is invalid. Please check your license key configuration and contact your site administrator.</source>
-        <target state="translated">Der angegebene Lizenzschlüssel ist ungültig. Bitte überprüfen Sie Ihre Lizenzschlüssel-Konfiguration und kontaktieren Sie Ihren Website-Administrator.</target>
+        <target state="final">Der angegebene Lizenzschlüssel ist ungültig. Bitte überprüfen Sie Ihre Lizenzschlüssel-Konfiguration und kontaktieren Sie Ihren Website-Administrator.</target>
       </trans-unit>
-      <trans-unit id="errorNotifications.header.websocketMissingToken">
+      <trans-unit id="errorNotifications.header.websocketMissingToken" approved="yes">
         <source>WebSocket connection error. The WebSocket gateway token is missing, Please check your configuration and contact your site administrator.</source>
-        <target state="translated">WebSocket-Verbindungsfehler. Das WebSocket-Gateway-Token fehlt. Bitte überprüfen Sie Ihre Konfiguration und kontaktieren Sie Ihren Website-Administrator.</target>
+        <target state="final">WebSocket-Verbindungsfehler. Das WebSocket-Gateway-Token fehlt. Bitte überprüfen Sie Ihre Konfiguration und kontaktieren Sie Ihren Website-Administrator.</target>
       </trans-unit>
     </body>
   </file>
