@@ -121,7 +121,7 @@
                         </label>
                         <input type="hidden" name="modules[{card.configuration.config_key}]" value="0" />
                         <input id="module-{card.configuration.config_key}" value="1" class="btn-check btn-toggle feature-toggle 
-                        {f:if(condition: '!{ckit:module(key: card.configuration.config_key,fieldConfiguration: 1)}', then: 'config-not-saved')}" type="checkbox" 
+                        {f:if(condition: '!{ckit:module(key: card.configuration.config_key,fieldConfiguration: 1,preset:activePreset)}', then: 'config-not-saved')}" type="checkbox" 
                         name="modules[{card.configuration.config_key}]" {f:if(condition: '{flag}', then: 'checked')}/>
                         <button type="button" class="btn btn-sm {f:if(condition: '{flag}', then: 'btn-default', else: 'btn-default')}"
                             data-identifier="ckeditorGlobalWizardButton" data-modal-size="{card.details.modalSize}"
