@@ -130,6 +130,7 @@ class BaseToolBar
                             'icon' => $icon,
                             'toolBar' => $value,
                             'label' => $label,
+                            'is_premium' => $toolbar->isPremiumToolbarItem($value)
                         ];
                     }
                 }
@@ -188,7 +189,7 @@ class BaseToolBar
                 $uniqueItems[] = $item;
             }
         }
-
+        
         return [
             'activeFeaturItems' => $uniqueItems,
             'visibleToolBarItems' => $toolBarItemArray,

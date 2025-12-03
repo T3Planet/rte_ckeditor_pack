@@ -83,16 +83,17 @@
 </html>
     
 <f:section name="footerButtons">
+    <f:variable name="flag">{ckit:module(key: card.configuration.config_key, preset:activePreset)}</f:variable>
     <f:if condition="{card.is_toggle} && {isLicense}">
         <f:then>
             <div class="btn-group">
-                <label class="btn btn-sm {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'btn-default', else: 'btn-default')}" for="module-{card.configuration.config_key}">
+                <label class="btn btn-sm {f:if(condition: '{flag}', then: 'btn-default', else: 'btn-default')}" for="module-{card.configuration.config_key}">
                     <core:icon identifier="actions-toggle-off" size="small" />
                     <core:icon identifier="actions-toggle-on" size="small" />
                 </label>
                 <input type="hidden" name="modules[{card.configuration.config_key}]" value="0" />
                 <input id="module-{card.configuration.config_key}" value="1" class="btn-check btn-toggle feature-toggle" type="checkbox" 
-                name="modules[{card.configuration.config_key}]" {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'checked')}/>
+                name="modules[{card.configuration.config_key}]" {f:if(condition: '{flag}', then: 'checked')}/>
                 <f:if condition="{card.details.docs}">
                     <a href="{card.details.docs}" target="_blank" class="btn btn-sm btn-default">
                         <core:icon identifier="actions-link" size="small" alternativeMarkupIdentifier="inline" />
@@ -101,7 +102,6 @@
             </div>
         </f:then>
         <f:else>
-            <f:variable name="flag">{ckit:module(key: card.configuration.config_key, preset:activePreset)}</f:variable>
             <f:if condition="!{isLicense}">
                 <f:then>
                     <div class="btn-group">
