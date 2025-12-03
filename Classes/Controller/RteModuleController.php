@@ -125,7 +125,7 @@ class RteModuleController extends ActionController
         $this->moduleTemplate->assignMultiple([
             'availableModules' => $availableModules,
             'currentModule' => $currentModule ?? 'features',
-            'toolBarConfiguration' => $this->baseToolBar->findEnableToolbarItems($activePresetUid),
+            'toolBarConfiguration' => $this->baseToolBar->findEnableToolbarItems((int)$activePresetUid),
             'availablePresets' => $availablePresets, // Keep for backward compatibility
             'groupedPresets' => $groupedPresets, // New grouped structure
             'activePreset' => $activePresetUid,
