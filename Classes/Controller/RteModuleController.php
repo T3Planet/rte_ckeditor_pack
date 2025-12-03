@@ -116,7 +116,9 @@ class RteModuleController extends ActionController
             $activePresetUid = (int)$params['activePreset'];
             $backendUser->setAndSaveSessionData($sessionKey, $activePresetUid);
         } else {
-            $activePresetUid = $backendUser->getSessionData($sessionKey);
+            if($backendUser->getSessionData($sessionKey)){
+                $activePresetUid = $backendUser->getSessionData($sessionKey);
+            }
         }
         $groupedPresets = [
             'yaml' => $corePresets,

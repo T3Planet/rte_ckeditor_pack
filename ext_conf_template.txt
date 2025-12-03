@@ -4,7 +4,7 @@ fetchExternalImages = 1
 # cat=featureConfiguration; type=text; label=License Key
 licenseKey = 
 
-# cat=featureConfiguration; type=string; label=Authorization Type (none, key, dev_token)
+# cat=featureConfiguration; type=options[none, key,dev_token];  label=Authorization Type (none, key, dev_token)
 authType = none
 
 # cat=featureConfiguration; type=string; label=Environment ID
