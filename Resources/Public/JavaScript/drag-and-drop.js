@@ -477,8 +477,6 @@ class UIEventHandlers {
     if (this.state.elements.presetSelector) {
       const presetForm = document.getElementById("presetForm");
       this.state.elements.presetSelector.addEventListener("change", () => {
-        // Save to localStorage for all changes (both user-initiated and programmatic)
-        localStorage.setItem('activePreset', this.state.elements.presetSelector.value);
         if (this.state.elements.loaderDiv) this.state.elements.loaderDiv.classList.add("ns-show-overlay");
         if (presetForm) presetForm.submit();
       });

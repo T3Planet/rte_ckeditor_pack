@@ -23,7 +23,6 @@ use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
 use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
-use T3Planet\RteCkeditorPack\Domain\Model\Configuration;
 use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
@@ -164,8 +163,8 @@ class RteModuleController extends ActionController
         $data = $this->request->getParsedBody();
         if (isset($data['tokenUrl']) && !empty($data['tokenUrl']) && filter_var($data['tokenUrl'], FILTER_VALIDATE_URL)) {
             $status = $this->validator->validateUrl($data['tokenUrl']);
-            $validate = false;
             if (!$status) {
+                $validate = false;
                 $notification['title'] = 'ckeditorKit.operation.error.invalid_token';
                 $notification['message'] = 'ckeditorKit.operation.error.invalid_token.message';
                 $notification['severity'] = 2;

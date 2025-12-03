@@ -542,16 +542,6 @@ class Modules
             ],
             [
                 'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('Style'),
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'Style',
-                    'toolBarItems' => 'style',
-                ],
-                'fields' => $this->getFieldsFromFeature(StyleFeature::class),
-            ],
-            [
-                'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('Alignment'),
                 'configuration' => [
                     'default' => true,
@@ -569,30 +559,9 @@ class Modules
                 'details' => $cardDetails->getDetailsByKey('TextTransformation'),
                 'configuration' => [
                     'config_key' => 'TextTransformation',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-typing',
-                            'exports' => 'TextTransformation',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(TransformationsFeature::class),
                 ],
                 'fields' => $this->getFieldsFromFeature(TransformationsFeature::class),
-            ],
-             [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('TextPartLanguage'),
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'TextPartLanguage',
-                    'module' => [
-                        [
-                            'library' => '@ckeditor/ckeditor5-language',
-                            'exports' => 'TextPartLanguage',
-                        ],
-                    ],
-                    'toolBarItems' => 'textPartLanguage',
-                ],
-                'fields' => $this->getFieldsFromFeature(LanguageFeature::class),
             ],
             [
                 'tab' => Tabs::CORE,
@@ -756,29 +725,6 @@ class Modules
                 'fields' => $this->getFieldsFromFeature(StyleFeature::class),
             ],
             [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('Alignment'),
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'Alignment',
-                    'toolBarItems' => 'alignment',
-                ],
-                'fields' => $this->getFieldsFromFeature(AlignmentFeature::class),
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('TextStyles'),
-            ],
-            [
-                'tab' => Tabs::CORE,
-                'details' => $cardDetails->getDetailsByKey('TextTransformation'),
-                'configuration' => [
-                    'config_key' => 'TextTransformation',
-                    'module' => $this->getModulesFromFeature(TransformationsFeature::class),
-                ],
-                'fields' => $this->getFieldsFromFeature(TransformationsFeature::class),
-            ],
-             [
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('TextPartLanguage'),
                 'configuration' => [

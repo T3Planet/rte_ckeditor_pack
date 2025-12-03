@@ -428,15 +428,7 @@ document.addEventListener('click', (event) => {
                 }
                 
                 // Clear form and reload on success
-                if (responseBody.notifications && responseBody.notifications.length > 0 && responseBody.notifications[0].severity === 0) {
-                    // Get preset name before clearing
-                    const presetName = presetNameInput.value.trim();
-                    
-                    // Store preset name in localStorage
-                    if (presetName) {
-                        localStorage.setItem('activePreset', presetName);
-                    }
-                    
+                if (responseBody.notifications && responseBody.notifications.length > 0 && responseBody.notifications[0].severity === 0) {                    
                     // Store flag to select last item after reload
                     sessionStorage.setItem('selectLastPreset', 'true');
                     
