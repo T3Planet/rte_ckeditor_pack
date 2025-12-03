@@ -9,7 +9,7 @@
         <div class="me-2">
             <core:icon identifier="ckeditor_module_logo" size="medium" alternativeMarkupIdentifier="inline" />
         </div>
-        <form action="" method="post" id="presetForm">
+        <f:form action="main" method="post" id="presetForm">
             <f:if condition="{groupedPresets}">
                 <div class="d-flex align-items-center gap-2" style="min-width: 250px;">
                     <select name="activePresets" id="rtePresets" class="form-select form-control form-select-sm">
@@ -45,7 +45,7 @@
                     </button>
                 </div>
             </f:if>
-        </form>
+        </f:form>
         <div class="dashboard-configuration btn-group my-1 ms-auto">
             <f:if condition="{activePreset}">
                 <f:then>

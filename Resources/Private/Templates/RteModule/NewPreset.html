@@ -37,7 +37,7 @@
                                 <tbody>
                                     <f:for each="{corePresets}" as="item">
                                         <tr>
-                                            <td><f:format.case mode="capital">{item.preset_key}</f:format.case></td>
+                                            <td><f:format.case mode="capital">{item.key}</f:format.case></td>
                                             <td>
                                                <f:if condition="{item.usage_source} == 0">
                                                     <f:then>
@@ -108,7 +108,7 @@
                                 <tbody>
                                     <f:for each="{customPresets}" as="item">
                                         <tr>
-                                            <td><f:format.case mode="capital">{item.preset_key}</f:format.case></td>
+                                            <td><f:format.case mode="capital">{item.key}</f:format.case></td>
                                             <td>
                                                 <f:if condition="{item.hidden} == 0">
                                                     <f:then>

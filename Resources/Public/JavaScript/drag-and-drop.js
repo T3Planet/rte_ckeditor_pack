@@ -478,7 +478,14 @@ class UIEventHandlers {
       const presetForm = document.getElementById("presetForm");
       this.state.elements.presetSelector.addEventListener("change", () => {
         if (this.state.elements.loaderDiv) this.state.elements.loaderDiv.classList.add("ns-show-overlay");
-        if (presetForm) presetForm.submit();
+        if (presetForm) {
+         const presetValue = this.state.elements.presetSelector.value;
+          const baseUrl = presetForm.action;
+          const currentUrl = new URL(baseUrl, window.location.origin);
+          currentUrl.searchParams.set('activePreset', presetValue);
+          presetForm.action = currentUrl.pathname + currentUrl.search;
+          presetForm.submit();
+        }
       });
     }
 

@@ -93,7 +93,7 @@ class RteModuleController extends ActionController
         $corePresets = $presetsData['core'] ?? [];
         $customPresets = $presetsData['custom'] ?? [];
         $availablePresets = array_merge($corePresets, $customPresets);
-        
+
         // Get first preset key and extract UID
         $firstPresetKey = array_key_first($availablePresets);
         $activePresetUid = $availablePresets[$firstPresetKey]['uid'] ?? 0;
@@ -103,45 +103,25 @@ class RteModuleController extends ActionController
             if ($attributes && array_key_exists('position', $attributes) || array_key_exists('modules', $attributes)) {
                 $this->updateModules($attributes);
                 $currentModule = isset($attributes['active_tab']) ? $attributes['active_tab'] : 'features';
-                if (isset($attributes['activePreset'])) {
-                    // Handle both UID (int) and preset key (string) from attributes
-                    $presetValue = $attributes['activePreset'];
-                    if (is_numeric($presetValue)) {
-                        // It's a UID, find the preset key
-                        $activePresetUid = (int)$presetValue;
-                        foreach ($availablePresets as $key => $presetData) {
-                            if (isset($presetData['uid']) && $presetData['uid'] === $activePresetUid) {
-                                break;
-                            }
-                        }
-                    } else {
-                        $activePresetUid = $availablePresets[$presetValue]['uid'] ?? 0;
-                    }
-                }
             }
             if (array_key_exists('activePresets', $attributes)) {
-                $presetValue = $attributes['activePresets'];
-                if (is_numeric($presetValue)) {
-                    // It's a UID, find the preset key
-                    $activePresetUid = (int)$presetValue;
-                    foreach ($availablePresets as $key => $presetData) {
-                        if (isset($presetData['uid']) && $presetData['uid'] === $activePresetUid) {
-                            break;
-                        }
-                    }
-                } else {
-                    $activePresetUid = $availablePresets[$presetValue]['uid'] ?? 0;
-                }
                 $currentModule = 'features';
             }
             $this->cache->flush();
         }
-
+        $backendUser = $GLOBALS['BE_USER'] ?? null;
+        $sessionKey = 'rte_ckeditor_pack_activePreset';
+        $params = $this->request->getQueryParams();
+        if ($params && isset($params['activePreset']) && $params['activePreset']) {
+            $activePresetUid = (int)$params['activePreset'];
+            $backendUser->setAndSaveSessionData($sessionKey, $activePresetUid);
+        } else {
+            $activePresetUid = $backendUser->getSessionData($sessionKey);
+        }
         $groupedPresets = [
             'yaml' => $corePresets,
             'custom' => $customPresets,
         ];
-        
         $this->moduleTemplate->assignMultiple([
             'availableModules' => $availableModules,
             'currentModule' => $currentModule ?? 'features',
@@ -151,7 +131,7 @@ class RteModuleController extends ActionController
             'activePreset' => $activePresetUid,
             'extSettings' =>  ExtensionConfigurationUtility::getAll()
         ]);
-        
+
         $this->preparePageRenderer();
         return $this->moduleTemplate->renderResponse('RteModule/Index');
     }
@@ -203,7 +183,7 @@ class RteModuleController extends ActionController
         $this->moduleTemplate->assignMultiple([
             'extSettings' => $extSettings,
         ]);
-        
+
         $this->preparePageRenderer();
         return $this->moduleTemplate->renderResponse('RteModule/ExtSettings');
     }
@@ -215,7 +195,7 @@ class RteModuleController extends ActionController
         $assign = [];
         $moduleKey = $data['moduleKey'] ?? '';
         $selectedPresetUid = isset($data['selectedPreset']) && is_numeric($data['selectedPreset']) ? (int)$data['selectedPreset'] : 0;
-        
+
         if (isset($data['additionalParams'])) {
             $configuration = $data['additionalParams'] ? json_decode($data['additionalParams'], true) : '';
             $assign['additionalParams'] = $data['additionalParams'] ?? '';
@@ -224,7 +204,7 @@ class RteModuleController extends ActionController
             }
             $assign['configuration'] = $configuration;
         }
-        
+
         if ($moduleKey && $selectedPresetUid > 0) {
             // Get preset by UID (do not create if not exists)
             $preset = $this->presetRepository->findByUid($selectedPresetUid);
@@ -236,7 +216,7 @@ class RteModuleController extends ActionController
                     $assign['record']['configKey'] = $feature->getConfigKey();
                 }
             }
-            
+
             $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($moduleKey);
             $assign['fields'] = $moduleConfiguration['fields'] ?? [];
         }
@@ -284,14 +264,14 @@ class RteModuleController extends ActionController
         $enable = $data['enable'] === '1' ? true : false;
         $notification = [];
         $presetUid = isset($data['preset']) && is_numeric($data['preset']) ? (int)$data['preset'] : 0;
-        
+
         try {
             if ($configKey) {
                 $fieldData = isset($data['config']) ? json_encode($data['config']) : '';
 
                 // Get feature from new feature table
                 $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
-                
+
                 if (!$feature) {
                     $feature = GeneralUtility::makeInstance(Feature::class);
                     $feature->setPresetUid($presetUid);
@@ -377,7 +357,7 @@ class RteModuleController extends ActionController
     {
         $toolBarItems = $data['position'] ?? '';
         $selectedPresetUid = isset($data['activePreset']) && is_numeric($data['activePreset']) ? (int)$data['activePreset'] : 0;
-        
+
         if ($toolBarItems && $selectedPresetUid > 0) {
             // Update toolbar items in preset table
             $preset = $this->presetRepository->findByUid($selectedPresetUid);
@@ -418,7 +398,7 @@ class RteModuleController extends ActionController
                 $feature = null;
                 foreach ($updatedModules as $module => $value) {
                     $enable = $value == 'true' ? true : false;
-                    
+
                     // Get module configuration to find the correct config_key
                     $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($module, true);
                     $configKey = $module;
@@ -438,8 +418,8 @@ class RteModuleController extends ActionController
                             $this->persistenceManager->persistAll();
                         }
                     }
-              
-                    if($feature){
+
+                    if ($feature) {
                         if ($enable) {
                             // Handle special cases when enabling
                             if ($module === 'SourceEditing') {
@@ -453,7 +433,7 @@ class RteModuleController extends ActionController
                                     $this->notification->addFlashNotification($notification);
                                 }
                             }
-                            
+
                             if ($module === 'RealTimeCollaboration') {
                                 $fieldConfiguration = [];
                                 $webSocketUrl = ExtensionConfigurationUtility::get('webSocketUrl', '');
@@ -466,26 +446,26 @@ class RteModuleController extends ActionController
                                 $fieldConfiguration['removePlugins'] = ['SourceEditing'];
                                 $fieldData = json_encode($fieldConfiguration);
                                 $feature->setFields($fieldData);
-                                
+
                                 $notification['title'] = 'ckeditorKit.plugin.realtime_collaboration';
                                 $notification['message'] = 'ckeditorKit.plugin.realtime_collaboration.message';
                                 $notification['severity'] = 1;
                                 $this->notification->addFlashNotification($notification);
                             }
-                            
+
                             if ($module === 'Menubar') {
                                 $fieldConfiguration = ['menuBar' => ['isVisible' => true]];
                                 $fieldData = json_encode($fieldConfiguration);
                                 $feature->setFields($fieldData);
                             }
-                            
+
                             $feature->setEnable($enable);
                         } else {
                             // Handle disabling
                             if ($module === 'Menubar') {
                                 $feature->setFields('');
                             }
-                            
+
                             // Check if toolbar items should be removed
                             if ($data['position'] && isset($moduleConfiguration['configuration']['toolBarItems'])) {
                                 $toolBar = $moduleConfiguration['configuration']['toolBarItems'];
@@ -500,11 +480,11 @@ class RteModuleController extends ActionController
                                 // Remove Item from toolBar
                                 $this->baseToolBar->updateToolBar($module, $selectedPresetUid);
                             }
-                            
+
                             $feature->setEnable(false);
                         }
                     }
-                  
+
                     $this->featureRepository->update($feature);
                     $this->persistenceManager->persistAll();
                     $this->cache->flush();
@@ -532,13 +512,13 @@ class RteModuleController extends ActionController
         return false;
     }
 
-   
+
     public function getToolBar(ServerRequestInterface $request): ResponseInterface
     {
         $assign['groups'] = $this->groupsRepository->findAll();
         // Get preset UID from query params or use 0 (will fallback to YAML)
         $presetUid = isset($request->getQueryParams()['presetUid']) && is_numeric($request->getQueryParams()['presetUid'])
-            ? (int)$request->getQueryParams()['presetUid'] 
+            ? (int)$request->getQueryParams()['presetUid']
             : 0;
         $activeFeaturItems = $this->baseToolBar->findEnableToolbarItems($presetUid)['activeFeaturItems'];
         $toolBars = array_column($activeFeaturItems, 'toolBar');
@@ -608,15 +588,15 @@ class RteModuleController extends ActionController
         $corePresets = $presetsData['core'] ?? [];
         $customPresets = $presetsData['custom'] ?? [];
         $availablePresets = array_merge($corePresets, $customPresets);
-        
+
         if ($attributes && trim($attributes['presetName']) != '') {
             $presetName = str_replace(' ', '_', trim(strtolower($attributes['presetName'])) ?? null);
-            
+
             // Check if preset already exists (in TYPO3 config or database)
             if (!in_array($presetName, array_keys($availablePresets))) {
                 // Check if preset exists in database
                 $existingPreset = $this->presetRepository->findByPresetKey($presetName);
-                
+
                 if (!$existingPreset) {
                     // Create new preset in the new preset table
                     try {
@@ -625,6 +605,12 @@ class RteModuleController extends ActionController
                         $preset->setIsCustom(true);
                         $this->presetRepository->add($preset);
                         $this->persistenceManager->persistAll();
+                        $newPresetUid = $preset->getUid();
+                        $backendUser = $GLOBALS['BE_USER'] ?? null;
+                        if ($backendUser && $newPresetUid) {
+                            $sessionKey = 'rte_ckeditor_pack_activePreset';
+                            $backendUser->setAndSaveSessionData($sessionKey, $newPresetUid);
+                        }
                         $notification[] = [
                             'title' => 'ckeditorKit.operation.success',
                             'message' => 'ckeditorKit.presert.success.message',
@@ -655,58 +641,14 @@ class RteModuleController extends ActionController
                 'notifications' => $notification,
             ]);
         }
-        
-        // Regular page load - return rendered template for listing
         $this->moduleTemplate = $this->initializeModuleTemplate($request);
-        
-        // Get presets grouped by core and custom
         $presetsData = $this->baseToolBar->findAvailablePresets();
         $corePresets = $presetsData['core'] ?? [];
         $customPresets = $presetsData['custom'] ?? [];
-        
-        // Convert to array format for template (with preset_key as key)
-        $corePresetsArray = [];
-        foreach ($corePresets as $presetKey => $presetData) {
-            $preset = null;
-            $hidden = $presetData['hidden'] ?? 1; // Default to 1 (inactive/use YAML) if not set
-            $usageSource = $presetData['usage_source'] ?? 0; // Default to 0 (Load from YAML) if not set
-            if ($presetData['uid'] > 0) {
-                $preset = $this->presetRepository->findByUid($presetData['uid']);
-                if ($preset) {
-                    $hidden = $preset->getHidden() ? 1 : 0;
-                    $usageSource = $preset->getUsageSource();
-                }
-            }
-            $corePresetsArray[] = [
-                'uid' => $presetData['uid'],
-                'preset_key' => $presetData['key'],
-                'is_custom' => $presetData['is_custom'],
-                'hidden' => $hidden,
-                'usage_source' => $usageSource,
-            ];
-        }
-        
-        $customPresetsArray = [];
-        foreach ($customPresets as $presetKey => $presetData) {
-            $preset = $this->presetRepository->findByUid($presetData['uid']);
-            $hidden = 0;
-            $usageSource = 1; // Custom presets default to Load from CKEditor Pack
-            if ($preset) {
-                $hidden = $preset->getHidden() ? 1 : 0;
-                $usageSource = $preset->getUsageSource();
-            }
-            $customPresetsArray[] = [
-                'uid' => $presetData['uid'],
-                'preset_key' => $presetData['key'],
-                'is_custom' => $presetData['is_custom'],
-                'hidden' => $hidden,
-                'usage_source' => $usageSource,
-            ];
-        }
         $ajaxUrl = $this->urlBuilder->generateBackendUrl('ajax_new_preset');
         $this->moduleTemplate->assignMultiple([
-            'corePresets' => $corePresetsArray,
-            'customPresets' => $customPresetsArray,
+            'corePresets' => $corePresets,
+            'customPresets' => $customPresets,
             'returnUrl' => $request->getAttribute('normalizedParams')->getRequestUri(),
             'ajaxUrl' => $ajaxUrl,
         ]);
@@ -768,7 +710,7 @@ class RteModuleController extends ActionController
         $data = $request->getParsedBody();
         $presetUid = isset($data['presetUid']) && is_numeric($data['presetUid']) ? (int)$data['presetUid'] : 0;
         $notification = [];
-        
+
         try {
             if ($presetUid > 0) {
                 $preset = $this->presetRepository->findByUid($presetUid);
@@ -779,18 +721,18 @@ class RteModuleController extends ActionController
 
                 // Get preset key to load YAML configuration
                 $presetKey = $preset->getPresetKey();
-                
+
                 // Load YAML configuration
                 $yamlLoader = GeneralUtility::makeInstance(YamlLoadrUtility::class);
                 $yamlConfig = $yamlLoader->loadYamlConfiguration($presetKey);
-                
+
                 if (empty($yamlConfig) && isset($yamlConfig['editor']['config'])) {
                     throw new \Exception('YAML configuration not found for preset: ' . $presetKey);
                 }
                 $yamlConfiguration = $yamlConfig['editor']['config'];
 
                 $features = $this->featureRepository->findByPresetUid($presetUid);
-                
+
                 foreach ($features as $feature) {
                     $yamlFeatureConfig = [];
                     $configKey = $feature->getConfigKey();
@@ -798,25 +740,25 @@ class RteModuleController extends ActionController
                     if (empty($moduleConfiguration)) {
                         continue;
                     }
-                    
-                    if(!array_key_exists(strtolower($configKey),$yamlConfiguration)){
+
+                    if (!array_key_exists(strtolower($configKey), $yamlConfiguration)) {
                         continue;
                     }
-                   
+
                     $yamlFeatureConfig[strtolower($configKey)] = $yamlConfiguration[strtolower($configKey)];
                     $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
                     $syncData = $mergeUtility->mergeRecursiveDistinct($yamlFeatureConfig, $moduleConfiguration);
-                    
+
                     if (empty($syncData)) {
                         continue;
                     }
                     $feature->setFields(json_encode($syncData));
                     $this->featureRepository->update($feature);
                 }
-                
+
                 $this->persistenceManager->persistAll();
                 $this->cache->flush();
-                
+
                 $notification[] = [
                     'title' => 'ckeditorKit.operation.success',
                     'message' => 'ckeditorKit.preset.sync.success.message',
@@ -859,7 +801,7 @@ class RteModuleController extends ActionController
                 $preset->setToolbarItems('');
                 $this->presetRepository->update($preset);
 
-               if($this->featureRepository->removeByPresetId($presetUid)){
+                if ($this->featureRepository->removeByPresetId($presetUid)) {
                     $this->persistenceManager->persistAll();
                     $this->cache->flush();
                     $notification[] = [
@@ -867,15 +809,13 @@ class RteModuleController extends ActionController
                         'message' => 'ckeditorKit.preset.reset.success.message',
                         'severity' => 0,
                     ];
-               }else{
-                 $notification[] = [
-                    'title' => 'ckeditorKit.operation.error',
-                    'message' => 'ckeditorKit.preset.reset.error.message',
-                    'severity' => 2,
-                ];
-               }
-              
-             
+                } else {
+                    $notification[] = [
+                        'title' => 'ckeditorKit.operation.error',
+                        'message' => 'ckeditorKit.preset.reset.error.message',
+                        'severity' => 2,
+                    ];
+                }
             } else {
                 throw new \Exception('Invalid preset UID');
             }
@@ -889,7 +829,6 @@ class RteModuleController extends ActionController
         return new JsonResponse([
             'notifications' => $notification,
         ]);
-      
     }
 
     protected function initializeModuleTemplate(ServerRequestInterface $request): ModuleTemplate
@@ -908,5 +847,4 @@ class RteModuleController extends ActionController
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/module-functionality.js');
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/user-adapter.js');
     }
-  
 }
