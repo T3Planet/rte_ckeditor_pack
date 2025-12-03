@@ -47,10 +47,20 @@
             </f:if>
         </form>
         <div class="dashboard-configuration btn-group my-1 ms-auto">
-            <f:link.action action="settings" class="btn btn-sm btn-notice" title="{f:translate(key: 'btn.details')}" role="button">
-                <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
-                <f:translate key="ckeditorKit.tab.settings" />
-            </f:link.action>
+            <f:if condition="{activePreset}">
+                <f:then>
+                     <f:link.action action="settings" class="btn btn-sm btn-notice" title="{f:translate(key: 'btn.details')}" role="button">
+                        <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
+                        <f:translate key="ckeditorKit.tab.settings" />
+                    </f:link.action>
+                </f:then>
+                <f:else>
+                    <a href="{f:be.uri(route: 'ckeditor_premium')}" class="btn btn-sm btn-notice" 
+                        title="{f:translate(key: 'btn.details')}" role="button">
+                        <f:translate key="ckeditorKit.tab.dashboard" />
+                    </a>
+                </f:else>
+            </f:if>
             <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank"
                 class="btn btn-default btn-sm">
                 <core:icon identifier="actions-document-share" size="small" alternativeMarkupIdentifier="inline" />

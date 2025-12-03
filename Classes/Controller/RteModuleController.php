@@ -4,32 +4,33 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Controller;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use T3Planet\RteCkeditorPack\DataProvider\BaseToolBar;
-use T3Planet\RteCkeditorPack\DataProvider\Modules;
-use T3Planet\RteCkeditorPack\Domain\Model\Configuration;
-use T3Planet\RteCkeditorPack\Domain\Model\Feature;
-use T3Planet\RteCkeditorPack\Domain\Model\Preset;
-use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
-use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
-use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
-use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
-use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
-use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
-use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
-use T3Planet\RteCkeditorPack\Utility\FlashUtility;
-use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
-use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
-use TYPO3\CMS\Backend\Template\ModuleTemplate;
-use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
-use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Http\JsonResponse;
-use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use T3Planet\RteCkeditorPack\Domain\Model\Preset;
+use T3Planet\RteCkeditorPack\DataProvider\Modules;
+use T3Planet\RteCkeditorPack\Domain\Model\Feature;
+use T3Planet\RteCkeditorPack\Utility\FlashUtility;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use T3Planet\RteCkeditorPack\DataProvider\BaseToolBar;
+use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
+use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
+use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
+use T3Planet\RteCkeditorPack\Domain\Model\Configuration;
+use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
+use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
+use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 
 class RteModuleController extends ActionController
 {
@@ -159,13 +160,11 @@ class RteModuleController extends ActionController
     public function settingsAction(): ResponseInterface
     {
         $notification = [];
-        $validate = false;
-
+        $validate = true;
         $data = $this->request->getParsedBody();
-        // Validate tokenUrl if provided
         if (isset($data['tokenUrl']) && !empty($data['tokenUrl']) && filter_var($data['tokenUrl'], FILTER_VALIDATE_URL)) {
             $status = $this->validator->validateUrl($data['tokenUrl']);
-            $validate = true;
+            $validate = false;
             if (!$status) {
                 $notification['title'] = 'ckeditorKit.operation.error.invalid_token';
                 $notification['message'] = 'ckeditorKit.operation.error.invalid_token.message';
@@ -173,7 +172,6 @@ class RteModuleController extends ActionController
                 $this->notification->addFlashNotification($notification);
             }
         }
-        
         if($data && $validate){
             try {
                 // Prepare configuration array - only include allowed fields from form data
@@ -200,10 +198,13 @@ class RteModuleController extends ActionController
             }
         }
 
-        $extSettings = ExtensionConfigurationUtility::getAll();
+        $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+        $extSettings = $configurationManager->getConfigurationValueByPath('EXTENSIONS/rte_ckeditor_pack') ?? [];
+
         $this->moduleTemplate->assignMultiple([
             'extSettings' => $extSettings,
         ]);
+        
         $this->preparePageRenderer();
         return $this->moduleTemplate->renderResponse('RteModule/ExtSettings');
     }

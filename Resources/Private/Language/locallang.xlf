@@ -39,6 +39,9 @@
             <trans-unit id="ckeditorKit.tab.settings">
                 <source>Settings</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.tab.dashboard">
+                <source>Dashboard</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.btn_title">
                 <source>Configuration</source>
             </trans-unit>
