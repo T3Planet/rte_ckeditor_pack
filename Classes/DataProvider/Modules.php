@@ -42,8 +42,6 @@ use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TemplateFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TransformationsFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WordCountFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WProofreaderFeature;
-use T3Planet\RteCkeditorPack\DataProvider\Configuration\SettingsConfiguration;
-use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Modules

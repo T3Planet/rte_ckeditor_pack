@@ -1106,6 +1106,9 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="comments.save.error.message">
                 <source>Failed to save comments. Please try again.</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.mention">
+                <source>Mention feature cannot be synchronized</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

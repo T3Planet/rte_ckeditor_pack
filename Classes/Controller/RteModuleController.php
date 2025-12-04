@@ -472,7 +472,6 @@ class RteModuleController extends ActionController
                             if ($module === 'Menubar') {
                                 $feature->setFields('');
                             }
-
                             // Check if toolbar items should be removed
                             if ($data['position'] && isset($moduleConfiguration['configuration']['toolBarItems'])) {
                                 $toolBar = $moduleConfiguration['configuration']['toolBarItems'];
@@ -487,11 +486,11 @@ class RteModuleController extends ActionController
                                 // Remove Item from toolBar
                                 $this->baseToolBar->updateToolBar($configKey, $selectedPresetUid);
                             }
-
-                            $feature->setEnable(false);
+                            if (!isset($data['operation'])) {
+                                $feature->setEnable(false);
+                            }
                         }
                     }
-
                     $this->featureRepository->update($feature);
                     $this->persistenceManager->persistAll();
                     $this->cache->flush();
@@ -753,6 +752,14 @@ class RteModuleController extends ActionController
                 foreach ($features as $feature) {
                     $yamlFeatureConfig = [];
                     $configKey = $feature->getConfigKey();
+                    if($configKey == 'Mention'){
+                        $notification[] = [
+                            'title' => 'ckeditorKit.preset.sync.mention',
+                            'severity' => 3,
+                        ];
+                        continue;
+                    }
+                    
                     $moduleConfiguration = $feature->getFields() ? json_decode($feature->getFields(), true) : [];
                     if (empty($moduleConfiguration)) {
                         continue;
