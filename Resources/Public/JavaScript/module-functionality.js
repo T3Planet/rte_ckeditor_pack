@@ -71,7 +71,6 @@ function initModuleFunc(params) {
         });
     }
     
-    
     const toggleModules = document.querySelectorAll('.feature-toggle');
     if (toggleModules) {
         const dashboardTabs = document.querySelector('.dashboard-tabs');
@@ -99,7 +98,9 @@ function initModuleFunc(params) {
                             
                             // Trigger click on settings button to open modal
                             settingsButton.click();
-                            return false;
+                            
+                            // Exit the handler completely - do not proceed to form submission
+                            return;
                         }
                     }
                 }
