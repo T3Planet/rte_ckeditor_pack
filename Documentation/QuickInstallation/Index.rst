@@ -30,6 +30,6 @@ In the TYPO3 backend you can use the extension manager (EM).
 
 You can always get the current version from  https://extensions.typo3.org/extension/rte_ckeditor_pack/  by downloading either the t3x or zip version. Upload the file afterwards in the Extension Manager.
 
-.. figure:: images/install.png
+.. figure:: images/extension.png
    :alt: Basic Configuration
 

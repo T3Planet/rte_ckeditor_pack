@@ -1074,6 +1074,12 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.desc">
                 <source>The Side option is not supported when using the Sidebar type.</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.wproofreader.info.title">
+                <source>WProofreader Note</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.wproofreader.info.desc">
+                <source>The WProofreader plugin required to configure the service id and source url.</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.add_new">
                 <source>Add New</source>
             </trans-unit>

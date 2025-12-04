@@ -14,7 +14,7 @@ Configuration Requirements
 Follow the exact configuration steps demonstrated in the Interactive guide below. Once the link is available, review the demo to ensure your setup matches the showcased order of actions before enabling the features in production.
 
 .. rst-class:: horizbuttons-attention-m
-    - `Configuration Guide <https://app.supademo.com/demo/cmiel3r9wb1glb7b4qrj978xw?step=2>`_  
+    - `Configuration Guide <https://app.supademo.com/demo/cmirbpcxu0zidl821501ext2d?step=2>`_  
 
 .. toctree::
    :maxdepth: 5

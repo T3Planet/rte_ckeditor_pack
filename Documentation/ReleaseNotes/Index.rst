@@ -16,7 +16,7 @@ List of versions
    :titlesonly:
    :glob:
 
-
+  3.0.0/Index
   2.0.0/Index
   1.1.0/Index
   1.0.1/Index
