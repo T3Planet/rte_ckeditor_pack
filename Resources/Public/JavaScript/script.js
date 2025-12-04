@@ -1,5 +1,8 @@
 import AjaxRequest from "@typo3/core/ajax/ajax-request.js";
 import Notification from "@typo3/backend/notification.js";
+import Modal from "@typo3/backend/modal.js";
+import DeferredAction from "@typo3/backend/action-button/deferred-action.js";
+import Severity from "@typo3/backend/severity.js";
 
 document.addEventListener('click', (event) => {
     if (event.target.classList.contains('indent-feature-toggle')) {
@@ -49,6 +52,55 @@ document.addEventListener('click', (event) => {
     }
 
     if (event.target.tagName === 'BUTTON') {
+        if (event.target.classList.contains('sync-preset')) {
+            event.preventDefault();
+            const button = event.target;
+            const presetUid = button.getAttribute('data-preset-uid');
+            
+            if (!presetUid) {
+                Notification.error('Error', 'Preset UID is missing');
+                return;
+            }
+
+            // Disable button during request
+            button.disabled = true;
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Syncing...';
+
+            const formData = new FormData();
+            formData.append('presetUid', presetUid);
+
+            new AjaxRequest(TYPO3.settings.ajaxUrls['sync_preset'])
+                .post(formData)
+                .then(async (response) => {
+                    const responseBody = await response.resolve();
+                    
+                    if (typeof responseBody === 'object' && responseBody.notifications && Array.isArray(responseBody.notifications)) {
+                        responseBody.notifications.forEach((notification) => {
+                            const title = TYPO3.lang[notification.title] ?? notification.title ?? '';
+                            const message = TYPO3.lang[notification.message] ?? notification.message ?? '';
+                            const severity = notification.severity ?? 0;
+                            if (severity === 0) {
+                                Notification.success(title, message);
+                            } else if (severity === 1) {
+                                Notification.warning(title, message);
+                            } else if (severity === 2) {
+                                Notification.error(title, message);
+                            } else {
+                                Notification.info(title, message);
+                            }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    Notification.error('Sync Error', error.message ?? 'Failed to sync preset');
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.innerHTML = originalContent;
+                });
+        }
+
         if (event.target.classList.contains('insert-section')) {
             let panelGroup = event.target.closest('.panel-group-wrap')?.querySelector('.panel-group');
             if (panelGroup) {
@@ -166,6 +218,70 @@ document.addEventListener('click', (event) => {
         }
     }
 
+     if (event.target.classList.contains('reset-preset')) {
+            event.preventDefault();
+            const button = event.target;
+            const presetUid = button.getAttribute('data-preset-uid');
+            
+            if (!presetUid) {
+                Notification.error('Error', 'Preset UID is missing');
+                return;
+            }
+
+            if (button.disabled) {
+                return;
+            }
+            Modal.confirm(
+                'Reset Configuration',
+                'Are you sure you want to reset the configuration of selected preset?',
+                Severity.warning,
+                [
+                    {
+                        text: TYPO3.lang['LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.no'] || 'Cancel',
+                        active: true,
+                        btnClass: 'btn-default',
+                        trigger: () => {
+                            Modal.dismiss();
+                        }
+                    },
+                    {
+                        text: TYPO3.lang['LLL:EXT:backend/Resources/Private/Language/locallang_alt_doc.xlf:buttons.confirm.delete_record.yes'] || 'Yes, reset it',
+                        btnClass: 'btn-warning',
+                        action: new DeferredAction(() => {
+                            const formData = new FormData();
+                            formData.append('presetUid', presetUid);
+
+                            return new AjaxRequest(TYPO3.settings.ajaxUrls['reset_preset'])
+                                .post(formData)
+                                .then(async (response) => {
+                                    const responseBody = await response.resolve();
+                                    
+                                    if (typeof responseBody === 'object' && responseBody.notifications && Array.isArray(responseBody.notifications)) {
+                                        responseBody.notifications.forEach((notification) => {
+                                            const title = TYPO3.lang[notification.title] ?? notification.title ?? '';
+                                            const message = TYPO3.lang[notification.message] ?? notification.message ?? '';
+                                            const severity = notification.severity ?? 0;
+                                            if (severity === 0) {
+                                                Notification.success(title, message);
+                                            } else if (severity === 1) {
+                                                Notification.warning(title, message);
+                                            } else if (severity === 2) {
+                                                Notification.error(title, message);
+                                            } else {
+                                                Notification.info(title, message);
+                                            }
+                                        });
+                                    }
+                                })
+                                .catch((error) => {
+                                    Notification.error('Reset Error', error.message ?? 'Failed to reset preset');
+                                });
+                        })
+                    }
+                ]
+            );
+        }
+
     if (event.target.classList.contains('feature-configuration')) {
         const submitButton = event.target;
         const form = submitButton.closest('form');
@@ -271,7 +387,7 @@ document.addEventListener('click', (event) => {
 
     }
 
-    if (event.target.id === 'newPresetBtn' || event.target.closest('#newPresetBtn')) {
+   if (event.target.id === 'newPresetBtn' || event.target.closest('#newPresetBtn')) {
         event.preventDefault();
         const submitButton = event.target.id === 'newPresetBtn' ? event.target : event.target.closest('#newPresetBtn');
         const form = submitButton.closest('form');
@@ -288,7 +404,6 @@ document.addEventListener('click', (event) => {
         const formData = new FormData(form);
         submitButton.disabled = true;
         submitButton.classList.add('is-loading');
-        
         new AjaxRequest(ajaxUrl)
             .post(formData)
             .then(async (response) => {
@@ -313,15 +428,7 @@ document.addEventListener('click', (event) => {
                 }
                 
                 // Clear form and reload on success
-                if (responseBody.notifications && responseBody.notifications.length > 0 && responseBody.notifications[0].severity === 0) {
-                    // Get preset name before clearing
-                    const presetName = presetNameInput.value.trim();
-                    
-                    // Store preset name in localStorage
-                    if (presetName) {
-                        localStorage.setItem('activePreset', presetName);
-                    }
-                    
+                if (responseBody.notifications && responseBody.notifications.length > 0 && responseBody.notifications[0].severity === 0) {                    
                     // Store flag to select last item after reload
                     sessionStorage.setItem('selectLastPreset', 'true');
                     

@@ -1,10 +1,10 @@
 <form action="" method="post" id="ckEditorSettings">
-    <div class="row align-items-center">
+    <div class="row align-items-center mb-2">
         <div class="col">
-            <h2 class="mb-3"><f:translate key="ckeditorKit.module.settings" /></h2>
+            <h2 class="mb-0"><f:translate key="ckeditorKit.module.settings" /></h2>
         </div>
         <div class="col">
-            <div class="form-group text-end mb-3">
+            <div class="form-group text-end mb-0">
                 <button type="submit" class="btn btn-primary">
                     <core:icon identifier="actions-document-save" size="small" alternativeMarkupIdentifier="inline" />
                     <f:translate key="features.settings.save" />
@@ -12,87 +12,130 @@
             </div>
         </div>
     </div>
-    <f:if condition="{settingFields}">
-        <div class="panel-body">
-            <div role="tabpanel">
-                <ul class="nav nav-tabs" role="tablist">
-                    <f:for each="{settingFields}" as="configurationFields" key="collapseName" iteration="tabIteration">
-                        <li class="nav-item" role="presentation">
-                            <button
-                                type="button"
-                                class="nav-link {f:if(condition: tabIteration.isFirst, then: 'active')}"
-                                data-bs-toggle="tab"
-                                data-bs-target="#settings-{collapseName}"
-                                aria-controls="settings-{collapseName}"
-                                role="tab"
-                                aria-selected="{f:if(condition: tabIteration.isFirst, then: 'true', else: 'false')}"
-                                {f:if(condition: '!tabIteration.isFirst', then: 'tabindex="-1"')}
-                            >
-                                <f:translate key="collapse.{collapseName}" extensionName="rte_ckeditor_pack" />
-                            </button>
-                        </li>
-                    </f:for>
-                </ul>
-                <div class="tab-content">
-                    <f:for each="{settingFields}" as="configurationFields" key="collapseName" iteration="tabIteration">
-                        <div
-                            role="tabpanel"
-                            class="tab-pane {f:if(condition: tabIteration.isFirst, then: 'active show')}"
-                            id="settings-{collapseName}"
-                        >
-                            <div class="form-section">
-                                <f:for each="{configurationFields}" as="configurationField">
-                                    <f:render section="Field" arguments="{field:configurationField,authType:extSettings.authType ,origValue: '{extSettings.{configurationField.key}}'}" />
-                                </f:for>
-                            </div>
-                        </div>
-                    </f:for>
-                </div>
+    <f:if condition="{extSettings}">
+        <div class="form-section mb-2">
+
+            <!-- License Key -->
+            <div class="form-group form-group-textarea-custom">
+                <label for="licenseKey" class="form-label">
+                    <f:translate key="field.name.licenseKey" extensionName="rte_ckeditor_pack" default="License Key" />
+                </label>
+                <textarea id="licenseKey" class="form-control" rows="3" cols="1000" name="licenseKey">{extSettings.licenseKey}</textarea>
+                <f:if condition="{f:translate(key: 'field.note.licenseKey', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.licenseKey', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <!-- Authorization Type -->
+            <div class="form-group">
+                <label for="authType" class="form-label">
+                    <f:translate key="field.name.authType" extensionName="rte_ckeditor_pack" default="Authorization Type" />
+                </label>
+                <select name="authType" id="authType" class="form-control form-select">
+                    <option value="none" {f:if(condition: '{extSettings.authType} == \'none\'', then: 'selected')}>
+                        <f:translate key="authorization.none" extensionName="rte_ckeditor_pack" default="None" />
+                    </option>
+                    <option value="key" {f:if(condition: '{extSettings.authType} == \'key\'', then: 'selected')}>
+                        <f:translate key="authorization.key" extensionName="rte_ckeditor_pack" default="Key" />
+                    </option>
+                    <option value="dev_token" {f:if(condition: '{extSettings.authType} == \'dev_token\'', then: 'selected')}>
+                        <f:translate key="authorization.dev_token" extensionName="rte_ckeditor_pack" default="Development token" />
+                    </option>
+                </select>
+                <f:if condition="{f:translate(key: 'field.note.authType', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.authType', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <!-- Environment ID (shown only for 'key' auth type) -->
+            <div class="form-group form-item-auth-key">
+                <label for="environmentId" class="form-label">
+                    <f:translate key="field.name.environmentId" extensionName="rte_ckeditor_pack" default="Environment ID" />
+                </label>
+                <input type="text" id="environmentId" class="form-control" name="environmentId"
+                    placeholder="{f:translate(key: 'field.placeholder.environmentId', extensionName: 'rte_ckeditor_pack', default: '')}"
+                    value="{extSettings.environmentId}" />
+                <f:if condition="{f:translate(key: 'field.note.environmentId', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.environmentId', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <!-- Access Key (shown only for 'key' auth type) -->
+            <div class="form-group form-item-auth-key">
+                <label for="accessKey" class="form-label">
+                    <f:translate key="field.name.accessKey" extensionName="rte_ckeditor_pack" default="Access Key" />
+                </label>
+                <input type="text" id="accessKey" class="form-control" name="accessKey"
+                    placeholder="{f:translate(key: 'field.placeholder.accessKey', extensionName: 'rte_ckeditor_pack', default: '')}"
+                    value="{extSettings.accessKey}" />
+                <f:if condition="{f:translate(key: 'field.note.accessKey', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.accessKey', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <div class="form-group">
+                <label for="apiKey" class="form-label">
+                    <f:translate key="field.name.apiKey" extensionName="rte_ckeditor_pack" default="API Key" />
+                </label>
+                <input type="text" id="apiKey" class="form-control" name="apiKey"
+                    placeholder="{f:translate(key: 'field.placeholder.apiKey', extensionName: 'rte_ckeditor_pack', default: '')}"
+                    value="{extSettings.apiKey}" />
+                <f:if condition="{f:translate(key: 'field.note.apiKey', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.apiKey', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <!-- Organization ID (shown when authType is 'key') -->
+            <div class="form-group">
+                <label for="organizationId" class="form-label">
+                    <f:translate key="field.name.organizationId" extensionName="rte_ckeditor_pack" default="Organization ID" />
+                </label>
+                <input type="text" id="organizationId" class="form-control" name="organizationId"
+                    placeholder="{f:translate(key: 'field.placeholder.organizationId', extensionName: 'rte_ckeditor_pack', default: '')}"
+                    value="{extSettings.organizationId}" />
+                <f:if condition="{f:translate(key: 'field.note.organizationId', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.organizationId', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <!-- Token URL (shown only for 'dev_token' auth type) -->
+            <div class="form-group form-item-auth-dev-token">
+                <label for="tokenUrl" class="form-label">
+                    <f:translate key="field.name.tokenUrl" extensionName="rte_ckeditor_pack" default="Token URL" />
+                </label>
+                <input type="text" id="tokenUrl" class="form-control" name="tokenUrl"
+                    placeholder="{f:translate(key: 'field.placeholder.tokenUrl', extensionName: 'rte_ckeditor_pack', default: '')}"
+                    value="{extSettings.tokenUrl}" />
+                <f:if condition="{f:translate(key: 'field.note.tokenUrl', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.tokenUrl', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <!-- Web Socket URL -->
+            <div class="form-group">
+                <label for="webSocketUrl" class="form-label">
+                    <f:translate key="field.name.webSocketUrl" extensionName="rte_ckeditor_pack" default="Web Socket URL" />
+                </label>
+                <input type="text" id="webSocketUrl" class="form-control" name="webSocketUrl"
+                    placeholder="{f:translate(key: 'field.placeholder.webSocketUrl', extensionName: 'rte_ckeditor_pack', default: '')}"
+                    value="{extSettings.webSocketUrl}" />
+                <f:if condition="{f:translate(key: 'field.note.webSocketUrl', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.webSocketUrl', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
+            </div>
+
+            <!-- API Base URL -->
+            <div class="form-group">
+                <label for="apiBaseUrl" class="form-label">
+                    <f:translate key="field.name.apiBaseUrl" extensionName="rte_ckeditor_pack" default="API Base URL" />
+                </label>
+                <input type="text" id="apiBaseUrl" class="form-control" name="apiBaseUrl"
+                    placeholder="{f:translate(key: 'field.placeholder.apiBaseUrl', extensionName: 'rte_ckeditor_pack', default: '')}"
+                    value="{extSettings.apiBaseUrl}" />
+                <f:if condition="{f:translate(key: 'field.note.apiBaseUrl', extensionName: 'rte_ckeditor_pack')}">
+                    <small><f:format.raw>{f:translate(key: 'field.note.apiBaseUrl', extensionName: 'rte_ckeditor_pack')}</f:format.raw></small>
+                </f:if>
             </div>
         </div>
     </f:if>
-</form> 
-
-<f:section name="Field">
-    <f:switch expression="{field.type.name}">
-        <f:case value="TEXTAREA">
-            <div class="form-group form-group-textarea-custom">
-                <label for="{field.key}" class="form-label">{field.name}</label>
-                <textarea id="{field.key}" class="form-control" rows="3" cols="1000"
-                    name="{field.key}">{f:if(condition: '{origValue}', then:origValue, else:field.value)}</textarea>
-                <f:if condition="{field.note}"><small><f:format.raw>{field.note}</f:format.raw></small></f:if>
-            </div>
-        </f:case>
-        <f:case value="INPUT">
-            <div class="form-group {field.class} {f:if(condition: '({authType} != key && {field.class} == form-item-key-type) || ({authType} != dev_token && {field.class} == form-item-dev-token-type)', then: 'd-none')}">
-                <label for="{field.key}" class="form-label">{field.name}</label>
-                <input type="text" id="{field.key}" class="form-control" name="{field.key}" placeholder="{field.placeholder}"
-                    value="{f:if(condition: '{origValue}', then:origValue, else:field.value)}" />
-                <f:if condition="{field.note}"><small><f:format.raw>{field.note}</f:format.raw></small></f:if>
-            </div>
-        </f:case>
-        <f:case value="SELECT">
-            <div class="form-group {field.class}">
-                <label for="{field.key}" class="form-label">{field.name}</label>
-                <f:if condition="{field.value}">
-                    <select name="{field.key}" id="{field.key}" class="form-control form-select">
-                        <f:for each="{field.value}" as="selectOptions">
-                            <option value="{selectOptions}"  {f:if(condition: '({selectOptions} == {origValue}) ' , then: 'selected' )}>
-                                <f:translate key="authorization.{selectOptions}" extensionName="rte_ckeditor_pack"/>
-                            </option>
-                        </f:for>
-                    </select>
-                </f:if>
-            </div>
-        </f:case>
-        <f:case value="BOOLEAN">
-            <div class="form-group form-check form-switch {field.class} border-bottom pb-2 mb-3">
-                <input type="hidden" name="{fieldName}" value="0" />
-                <input class="form-check-input" id="{field.key}" type="checkbox" name="{field.key}" value="1"
-                    {f:if(condition: '{origValue} == 1 || (!{origValue} && {field.value}) ' , then: 'checked' )} />
-                <label for="{field.key}" class="form-check-label form-label">{field.name}</label>
-            </div>
-        </f:case>
-        <f:defaultCase></f:defaultCase>
-    </f:switch>
-</f:section>
+</form>

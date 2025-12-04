@@ -39,6 +39,9 @@
             <trans-unit id="ckeditorKit.tab.settings">
                 <source>Settings</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.tab.dashboard">
+                <source>Dashboard</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.tab.card.btn_title">
                 <source>Configuration</source>
             </trans-unit>
@@ -1071,8 +1074,46 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.desc">
                 <source>The Side option is not supported when using the Sidebar type.</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.wproofreader.info.title">
+                <source>WProofreader Note</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.plugin.wproofreader.info.desc">
+                <source>The WProofreader plugin required to configure the service id and source url.</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.add_new">
                 <source>Add New</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.success.message">
+                <source>Synchronization completed successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.error.message">
+                <source>Synchronization failed. Please try again</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.reset.success.message">
+                <source>Reset completed successfully</source>
+            </trans-unit>
+             <trans-unit id="ckeditorKit.preset.reset.error.message">
+                <source>Reset failed. Please try again</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.error.no_feature">
+                <source>No features are currently available for synchronization.</source>
+            </trans-unit>
+            
+            <!-- Comments Notifications -->
+            <trans-unit id="comments.save.success.title">
+                <source>Comments</source>
+            </trans-unit>
+            <trans-unit id="comments.save.success.message">
+                <source>Comments successfully saved and archived</source>
+            </trans-unit>
+            <trans-unit id="comments.save.error.title">
+                <source>Comment Error</source>
+            </trans-unit>
+            <trans-unit id="comments.save.error.message">
+                <source>Failed to save comments. Please try again.</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.mention">
+                <source>Mention feature cannot be synchronized</source>
             </trans-unit>
         </body>
     </file>

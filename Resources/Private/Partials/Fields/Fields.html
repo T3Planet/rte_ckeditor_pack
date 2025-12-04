@@ -19,8 +19,14 @@
                 <f:else>
                     <f:variable name="fieldName">config[{mainKey}]<f:if condition="{field.key}">[{field.key}]</f:if></f:variable>
                     <div class="col-12">
-                        <f:render section="Field"
-                            arguments="{field:field, fieldName:fieldName,origValue: '{record.{mainKey}.{field.key}}'}" />
+                        <f:if condition="!{field.key}">
+                            <f:then>
+                                <f:render section="Field" arguments="{field:field, fieldName:fieldName,origValue: '{record.{mainKey}}'}" />
+                            </f:then>
+                            <f:else>
+                                <f:render section="Field" arguments="{field:field, fieldName:fieldName,origValue: '{record.{mainKey}.{field.key}}'}" />
+                            </f:else>
+                        </f:if>
                     </div>
                 </f:else>
             </f:if>

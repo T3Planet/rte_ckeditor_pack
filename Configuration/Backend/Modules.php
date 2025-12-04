@@ -11,9 +11,12 @@ return [
         'labels' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang.xlf',
         'parent' => 'web',
         'extensionName' => 'RteCkeditorPack',
-        'inheritNavigationComponentFromMainModule' => true,
+        'inheritNavigationComponentFromMainModule' => false,
         'controllerActions' => [
-            RteModuleController::class => 'main',
+            RteModuleController::class => [
+                'main',
+                'settings'
+            ]
         ],
     ],
 ];

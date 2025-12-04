@@ -23,3 +23,5 @@ Here is the list of features and updates introduced in this release: ::
  28-11-2025 [TASK] Performed code cleanup and optimization by removing deprecated or outdated code
  28-11-2025 [BUGFIX] Resolved minor frontend plugin functionality issue
  28-11-2025 [RELEASE] Released v2.0.0 major version
+
+

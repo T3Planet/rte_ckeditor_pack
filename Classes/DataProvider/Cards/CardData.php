@@ -105,7 +105,7 @@ class CardData
                 'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.spell_and_grammar_check.description', 'rte_ckeditor_pack'),
                 'icon' => 'actions-check-badge-alt',
                 'buttonTitle' => $this->btnTitle,
-                'modalSize' => 'small',
+                'modalSize' => 'large',
                 'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/spelling-and-grammar-checking.html#wproofreader-cloud',
             ],
             'Pagination' => [

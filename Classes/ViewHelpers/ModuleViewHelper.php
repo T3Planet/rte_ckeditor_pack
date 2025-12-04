@@ -9,7 +9,8 @@
 
 namespace T3Planet\RteCkeditorPack\ViewHelpers;
 
-use T3Planet\RteCkeditorPack\Domain\Repository\ConfigurationRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -21,48 +22,35 @@ class ModuleViewHelper extends AbstractViewHelper
     public function initializeArguments(): void
     {
         $this->registerArgument('key', 'string', '', true);
-        $this->registerArgument('preset', 'string', '', false);
+        $this->registerArgument('preset', 'int', '', false);
         $this->registerArgument('isToolbar', 'bool', '', false);
         $this->registerArgument('fieldConfiguration', 'bool', '', false);
 
     }
 
-    /**
-     * This method returns an bool based on the key
-     *
-     * @return bool
-     */
     public function render(): bool
     {
         $key = $this->arguments['key'];
-        $preset = $this->arguments['preset'] ?? '';
+        $presetUid = (int)$this->arguments['preset'] ?? 0;
         $isToolbar = $this->arguments['isToolbar'] ? true : false;
         $fieldConfiguration = $this->arguments['fieldConfiguration'] ? true : false;
 
-        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        $featureRepository = GeneralUtility::makeInstance(FeatureRepository::class);
+        $record = $featureRepository->findByPresetUidAndConfigKey($presetUid, $key);
         
-        if (!$preset) {
-            $record = $configurationRepository->findBy(['configKey' => $key])->getFirst();
-            if ($record && $fieldConfiguration) {
-                $fields = $record->getFields();
-                $fieldsTrimmed = trim($fields);
-                if (empty($fieldsTrimmed) || $fieldsTrimmed === '0' || $fieldsTrimmed === '0.0') {
-                    return false;
-                }
-                $firstChar = substr($fieldsTrimmed, 0, 1);
-                return $firstChar === '{' || $firstChar === '[';
+        if ($record && $fieldConfiguration) {
+            $fields = $record->getFields();
+            $fieldsTrimmed = trim($fields);
+            if (empty($fieldsTrimmed) || $fieldsTrimmed === '0' || $fieldsTrimmed === '0.0') {
+                return false;
             }
-        
-            return $record ? $record->isEnable() : false;
+            $firstChar = substr($fieldsTrimmed, 0, 1);
+            return $firstChar === '{' || $firstChar === '[';
         }
-        $results = $configurationRepository->findInvisibleRecord($key, $preset, $isToolbar);
-        $record = array_filter($results, function ($record) use ($preset, $isToolbar) {
-            $presetArray = GeneralUtility::trimExplode(',', $record->getPreset(), true);
-            return $isToolbar
-                ? !in_array($preset, $presetArray, true)
-                : in_array($preset, $presetArray, true);
-        });
-        return $record ? $record[0]->isEnable() : false;
+        if($isToolbar && $record){
+            return $record->isEnable() ? false : true;
+        }
+        return $record ? $record->isEnable() : false;
 
     }
 }

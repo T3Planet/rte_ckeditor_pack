@@ -3,273 +3,74 @@
     xmlns:ckit="http://typo3.org/ns/T3Planet/RteCkeditorPack/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:layout name="Default" />
 <f:section name="main">
-    <!-- 1. Toolbar (features) -->
     <div class="tab-pane fade {f:if(condition: '{currentModule} == features', then: 'show active')}" id="features-tab-pane" role="tabpanel" aria-labelledby="features-tab">
        <f:render partial="Dashboard/FeatureConfig" arguments="{_all}" />
     </div>
 
     <f:if condition="{availableModules}">
-        <!-- 2. Free Packages (plugins) -->
         <f:for each="{availableModules}" as="module" iteration="i">
-            <f:if condition="{module.key} == 'plugins'">
-                <div class="tab-pane fade {f:if(condition: '{module.key} == {currentModule}', then: 'show active')}" id="{module.key}-tab-pane" role="tabpanel" aria-labelledby="{module.key}-tab" tabindex="{i.index}">
-                    <h2 class="mb-3">{module.label}</h2>
-                    <div class="card-container">
-                        <f:if condition="{module.cards}">
-                            <f:for each="{module.cards}" as="card" iteration="j">
-                                <f:if condition="{card.details}">
-                                    <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: ' disabled')} {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'card--active')}">
-                                        <div class="card-header">
-                                            <div class="card-icon">
-                                                <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />
-                                            </div>
-                                            <div class="card-header-body">
-                                                <h2 class="card-title padding-right-lg">{card.details.title}</h2>
-                                                <span class="card-subtitle">{card.details.subtitle}</span>
-                                            </div>
+            <div class="tab-pane fade {f:if(condition: '{module.key} == {currentModule}', then: 'show active')}" id="{module.key}-tab-pane" role="tabpanel" aria-labelledby="{module.key}-tab" tabindex="{i.index}">
+                <h2 class="mb-3">{module.label}</h2>
+                <div class="card-container">
+                    <f:if condition="{module.cards}">
+                        <f:for each="{module.cards}" as="card" iteration="j">
+                            <f:if condition="{card.details}">
+                               <f:variable name="isActive">{f:if(condition: '{ckit:module(key: card.configuration.config_key, preset:activePreset)}', then: 'card--active')}</f:variable>
+                                <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: 'disabled')} {isActive}">
+                                    <div class="card-header">
+                                        <div class="card-icon">
+                                            <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />
                                         </div>
-                                        <div class="card-body">
-                                            <p class="card-text">{card.details.description}</p>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between align-items-center">
-                                            <f:if condition="{card.tab} == plugins">
-                                                <f:then>
-                                                    <f:if condition="{card.configuration}">
-                                                        <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                    </f:if>
-                                                </f:then>
-                                                <f:else>
-                                                    <f:if condition="{extSettings.licenseKey}">
-                                                        <f:then>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                        </f:then>
-                                                        <f:else>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:card.configuration.default}" />
-                                                        </f:else>
-                                                    </f:if>
-                                                </f:else>
-                                            </f:if>
-                                                                            
+                                        <div class="card-header-body">
+                                            <h2 class="card-title padding-right-lg">{card.details.title}</h2>
+                                            <span class="card-subtitle">{card.details.subtitle}</span>
                                         </div>
                                     </div>
-                                </f:if>
-                            </f:for>
-                        </f:if>
-                    </div>
-                    <div id="dataNotFound" class="d-none">
-                        <div class="typo3-messages">
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <core:icon identifier="actions-info-circle" size="medium" />
+                                    <div class="card-body">
+                                        <p class="card-text">{card.details.description}</p>
                                     </div>
-                                    <div class="media-body">
-                                        <h5 class="alert-title mb-0"><f:translate key="card.DataNotFound" extensionName="rte_ckeditor_pack" /></h5>
+                                    <div class="card-footer">
+                                        <f:if condition="{card.tab} == plugins">
+                                            <f:then>
+                                                <f:if condition="{card.configuration}">
+                                                    <f:render section="footerButtons" arguments="{card:card,isLicense:1, activePreset:activePreset}" />
+                                                </f:if>
+                                            </f:then>
+                                            <f:else>
+                                                <f:if condition="{extSettings.licenseKey}">
+                                                    <f:then>
+                                                        <f:render section="footerButtons" arguments="{card:card,isLicense:1, activePreset:activePreset}" />
+                                                    </f:then>
+                                                    <f:else>
+                                                        <f:render section="footerButtons" arguments="{card:card,isLicense:card.configuration.default,activePreset:activePreset}" />
+                                                    </f:else>
+                                                </f:if>
+                                            </f:else>
+                                        </f:if>
+                                                                        
                                     </div>
+                                </div>
+                            </f:if>
+                        </f:for>
+                    </f:if>
+                </div>
+                <div id="dataNotFound" class="d-none">
+                    <div class="typo3-messages">
+                        <div class="alert alert-info">
+                            <div class="media">
+                                <div class="media-left">
+                                    <core:icon identifier="actions-info-circle" size="medium" />
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="alert-title mb-0"><f:translate key="card.DataNotFound" extensionName="rte_ckeditor_pack" /></h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </f:if>
-        </f:for>
-        
-        <!-- 3. Productivity -->
-        <f:for each="{availableModules}" as="module" iteration="i">
-            <f:if condition="{module.key} == 'productivity'">
-                <div class="tab-pane fade {f:if(condition: '{module.key} == {currentModule}', then: 'show active')}" id="{module.key}-tab-pane" role="tabpanel" aria-labelledby="{module.key}-tab" tabindex="{i.index}">
-                    <h2 class="mb-3">{module.label}</h2>
-                    <div class="card-container">
-                        <f:if condition="{module.cards}">
-                            <f:for each="{module.cards}" as="card" iteration="j">
-                                <f:if condition="{card.details}">
-                                    <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: ' disabled')} {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'card--active')}">
-                                        <div class="card-header">
-                                            <div class="card-icon">
-                                                <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />
-                                            </div>
-                                            <div class="card-header-body">
-                                                <h2 class="card-title padding-right-lg">{card.details.title}</h2>
-                                                <span class="card-subtitle">{card.details.subtitle}</span>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="card-text">{card.details.description}</p>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between align-items-center">
-                                            <f:if condition="{card.tab} == plugins">
-                                                <f:then>
-                                                    <f:if condition="{card.configuration}">
-                                                        <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                    </f:if>
-                                                </f:then>
-                                                <f:else>
-                                                    <f:if condition="{extSettings.licenseKey}">
-                                                        <f:then>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                        </f:then>
-                                                        <f:else>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:card.configuration.default}" />
-                                                        </f:else>
-                                                    </f:if>
-                                                </f:else>
-                                            </f:if>
-                                                                            
-                                        </div>
-                                    </div>
-                                </f:if>
-                            </f:for>
-                        </f:if>
-                    </div>
-                    <div id="dataNotFound" class="d-none">
-                        <div class="typo3-messages">
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <core:icon identifier="actions-info-circle" size="medium" />
-                                    </div>
-                                    <div class="media-body">
-                                        <h5 class="alert-title mb-0"><f:translate key="card.DataNotFound" extensionName="rte_ckeditor_pack" /></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </f:if>
-        </f:for>
-        
-        <!-- 4. Features (premium/standalone) -->
-        <f:for each="{availableModules}" as="module" iteration="i">
-            <f:if condition="{module.key} == 'premium'">
-                <div class="tab-pane fade {f:if(condition: '{module.key} == {currentModule}', then: 'show active')}" id="{module.key}-tab-pane" role="tabpanel" aria-labelledby="{module.key}-tab" tabindex="{i.index}">
-                    <h2 class="mb-3">{module.label}</h2>
-                    <div class="card-container">
-                        <f:if condition="{module.cards}">
-                            <f:for each="{module.cards}" as="card" iteration="j">
-                                <f:if condition="{card.details}">
-                                    <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: ' disabled')} {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'card--active')}">
-                                        <div class="card-header">
-                                            <div class="card-icon">
-                                                <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />
-                                            </div>
-                                            <div class="card-header-body">
-                                                <h2 class="card-title padding-right-lg">{card.details.title}</h2>
-                                                <span class="card-subtitle">{card.details.subtitle}</span>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="card-text">{card.details.description}</p>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between align-items-center">
-                                            <f:if condition="{card.tab} == plugins">
-                                                <f:then>
-                                                    <f:if condition="{card.configuration}">
-                                                        <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                    </f:if>
-                                                </f:then>
-                                                <f:else>
-                                                    <f:if condition="{extSettings.licenseKey}">
-                                                        <f:then>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                        </f:then>
-                                                        <f:else>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:card.configuration.default}" />
-                                                        </f:else>
-                                                    </f:if>
-                                                </f:else>
-                                            </f:if>
-                                                                            
-                                        </div>
-                                    </div>
-                                </f:if>
-                            </f:for>
-                        </f:if>
-                    </div>
-                    <div id="dataNotFound" class="d-none">
-                        <div class="typo3-messages">
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <core:icon identifier="actions-info-circle" size="medium" />
-                                    </div>
-                                    <div class="media-body">
-                                        <h5 class="alert-title mb-0"><f:translate key="card.DataNotFound" extensionName="rte_ckeditor_pack" /></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </f:if>
-        </f:for>
-        
-        <!-- 5. Collaboration -->
-        <f:for each="{availableModules}" as="module" iteration="i">
-            <f:if condition="{module.key} == 'collaboration'">
-                <div class="tab-pane fade {f:if(condition: '{module.key} == {currentModule}', then: 'show active')}" id="{module.key}-tab-pane" role="tabpanel" aria-labelledby="{module.key}-tab" tabindex="{i.index}">
-                    <h2 class="mb-3">{module.label}</h2>
-                    <div class="card-container">
-                        <f:if condition="{module.cards}">
-                            <f:for each="{module.cards}" as="card" iteration="j">
-                                <f:if condition="{card.details}">
-                                    <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: ' disabled')} {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'card--active')}">
-                                        <div class="card-header">
-                                            <div class="card-icon">
-                                                <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />
-                                            </div>
-                                            <div class="card-header-body">
-                                                <h2 class="card-title padding-right-lg">{card.details.title}</h2>
-                                                <span class="card-subtitle">{card.details.subtitle}</span>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="card-text">{card.details.description}</p>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between align-items-center">
-                                            <f:if condition="{card.tab} == plugins">
-                                                <f:then>
-                                                    <f:if condition="{card.configuration}">
-                                                        <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                    </f:if>
-                                                </f:then>
-                                                <f:else>
-                                                    <f:if condition="{extSettings.licenseKey}">
-                                                        <f:then>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:1}" />
-                                                        </f:then>
-                                                        <f:else>
-                                                            <f:render section="footerButtons" arguments="{card:card,isLicense:card.configuration.default}" />
-                                                        </f:else>
-                                                    </f:if>
-                                                </f:else>
-                                            </f:if>
-                                                                            
-                                        </div>
-                                    </div>
-                                </f:if>
-                            </f:for>
-                        </f:if>
-                    </div>
-                    <div id="dataNotFound" class="d-none">
-                        <div class="typo3-messages">
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <core:icon identifier="actions-info-circle" size="medium" />
-                                    </div>
-                                    <div class="media-body">
-                                        <h5 class="alert-title mb-0"><f:translate key="card.DataNotFound" extensionName="rte_ckeditor_pack" /></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </f:if>
+            </div>
         </f:for>
     </f:if>
-
     <div class="tab-pane fade {f:if(condition: '{currentModule} == settings', then: 'show active')}" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab">
         <f:render partial="Dashboard/GeneralSettings" arguments="{_all}" />
     </div>
@@ -282,16 +83,17 @@
 </html>
     
 <f:section name="footerButtons">
+    <f:variable name="flag">{ckit:module(key: card.configuration.config_key, preset:activePreset)}</f:variable>
     <f:if condition="{card.is_toggle} && {isLicense}">
         <f:then>
             <div class="btn-group">
-                <label class="btn btn-sm {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'btn-default', else: 'btn-default')}" for="module-{card.configuration.config_key}">
+                <label class="btn btn-sm {f:if(condition: '{flag}', then: 'btn-default', else: 'btn-default')}" for="module-{card.configuration.config_key}">
                     <core:icon identifier="actions-toggle-off" size="small" />
                     <core:icon identifier="actions-toggle-on" size="small" />
                 </label>
                 <input type="hidden" name="modules[{card.configuration.config_key}]" value="0" />
                 <input id="module-{card.configuration.config_key}" value="1" class="btn-check btn-toggle feature-toggle" type="checkbox" 
-                name="modules[{card.configuration.config_key}]" {f:if(condition: '{ckit:module(key: card.configuration.config_key)}', then: 'checked')}/>
+                name="modules[{card.configuration.config_key}]" {f:if(condition: '{flag}', then: 'checked')}/>
                 <f:if condition="{card.details.docs}">
                     <a href="{card.details.docs}" target="_blank" class="btn btn-sm btn-default">
                         <core:icon identifier="actions-link" size="small" alternativeMarkupIdentifier="inline" />
@@ -300,7 +102,6 @@
             </div>
         </f:then>
         <f:else>
-            <f:variable name="flag">{ckit:module(key: card.configuration.config_key)}</f:variable>
             <f:if condition="!{isLicense}">
                 <f:then>
                     <div class="btn-group">
@@ -320,7 +121,7 @@
                         </label>
                         <input type="hidden" name="modules[{card.configuration.config_key}]" value="0" />
                         <input id="module-{card.configuration.config_key}" value="1" class="btn-check btn-toggle feature-toggle 
-                        {f:if(condition: '!{ckit:module(key: card.configuration.config_key,fieldConfiguration: 1)}', then: 'config-not-saved')}" type="checkbox" 
+                        {f:if(condition: '!{ckit:module(key: card.configuration.config_key,fieldConfiguration: 1,preset:activePreset)}', then: 'config-not-saved')}" type="checkbox" 
                         name="modules[{card.configuration.config_key}]" {f:if(condition: '{flag}', then: 'checked')}/>
                         <button type="button" class="btn btn-sm {f:if(condition: '{flag}', then: 'btn-default', else: 'btn-default')}"
                             data-identifier="ckeditorGlobalWizardButton" data-modal-size="{card.details.modalSize}"

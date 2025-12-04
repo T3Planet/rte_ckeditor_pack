@@ -97,14 +97,15 @@
 
 .ckeditor .dashboard-tab.active,
 .t3-ckeditor .dashboard-tab.active {
-  background: var(--token-color-primary-base);
-  color: #fff;
+  background: #f7f7f7;
+  color: #000;
+  border-bottom: 0;
 }
 
 .t3-ckeditor .dashboard-tab.active:focus,
 .t3-ckeditor .dashboard-tab.active:hover {
-  background: var(--token-color-primary-base);
-  color: #f2f2f2;
+  background: #f7f7f7;
+  color: #000;
   text-decoration: none;
 }
 
@@ -350,6 +351,7 @@
 .drag-item .toggle-btn {
   margin-bottom: 0;
   transition: all 0.3s ease 0s;
+  padding: 8px;
 }
 
 .toggle-label {
@@ -516,6 +518,11 @@
   min-width: 400px;
   max-width: 400px;
   min-height: 600px;
+  max-height: 650px;
+}
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs_maximized {
+  min-width: 484px;
+  max-width: 484px;
 }
 .ck.ck-tabs.ck-ai-tabs.ck-hidden {
   display: none;
@@ -545,4 +552,9 @@
 
 .t3-ckeditor, .btn-check+.btn:hover {
   --bs-btn-bg: var(--bs-btn-hover-bg);
+}
+
+.reset-preset *,
+.sync-preset * {
+    pointer-events: none;
 }

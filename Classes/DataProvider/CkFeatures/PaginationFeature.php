@@ -64,6 +64,16 @@ class PaginationFeature implements FeatureInterface
         ];
     }
 
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-pagination',
+                'exports' => 'Pagination',
+            ],
+        ];
+    }
+
     private function translateLabel(string $key): string
     {
         return LocalizationUtility::translate($key, 'RteCkeditorPack') ?? '';

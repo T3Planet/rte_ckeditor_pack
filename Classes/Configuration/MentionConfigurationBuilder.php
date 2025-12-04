@@ -123,3 +123,5 @@ class MentionConfigurationBuilder
         return $normalized;
     }
 }
+
+

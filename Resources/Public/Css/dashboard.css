@@ -22,7 +22,6 @@
 }
 
 /*Dashboard*/
-
 #dashboardTab h2 {
     margin-top: 0;
 }
@@ -42,11 +41,9 @@
     background-color: light-dark(#262626, #cdcdcd);
 }
 
-.ckeditor .dashboard-tab.active,
-.t3-ckeditor .dashboard-tab.active {
-    border-color:light-dark(var(--token-color-primary-base), #262626);
-    background: var(--token-color-primary-base);
-    color: #fff;
+.dashboard-tab.active {
+    background: #f7f7f7;
+    color: #000;
 }
 
 .t3-ckeditor .dashboard-tabs {
@@ -74,8 +71,8 @@
 .dashboard-tab.active:focus,
 .dashboard-tab.active:hover {
     text-decoration: none;
-    background: var(--token-color-primary-base);
-    color: #f2f2f2;
+    background: #f7f7f7;
+    color: #000;
 }
 
 .t3-ckeditor .card-header {

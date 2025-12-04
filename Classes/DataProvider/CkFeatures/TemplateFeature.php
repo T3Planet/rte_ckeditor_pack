@@ -52,4 +52,14 @@ class TemplateFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-template',
+                'exports' => 'Template',
+            ],
+        ];
+    }
 }

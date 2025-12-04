@@ -76,4 +76,14 @@ class IndentFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-indent',
+                'exports' => 'Indent,IndentBlock',
+            ],
+        ];
+    }
 }

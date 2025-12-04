@@ -22,4 +22,7 @@ interface FeatureInterface
      * @return array Feature configuration array
      */
     public function getConfiguration(): array;
+
+    public function getModules(): array;
+
 }

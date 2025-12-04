@@ -1,13 +1,13 @@
-[![Latest Stable Version](https://img.shields.io/badge/Stable-1.0-success)](https://extensions.typo3.org/extension/rte_ckeditor_pack/)
+[![Latest Stable Version](https://img.shields.io/badge/Stable-3.0-success)](https://extensions.typo3.org/extension/rte_ckeditor_pack/)
 [![CKEditor Github](https://img.shields.io/badge/CKEditor-Pack-informational?logo=github)](https://github.com/T3Planet/rte_ckeditor_pack)
-[![TYPO3 12](https://img.shields.io/badge/TYPO3-12-important.svg?logo=typo3)](https://get.typo3.org/version/12)
-[![TYPO3 13](https://img.shields.io/badge/TYPO3-13-important.svg?logo=typo3)](https://get.typo3.org/version/13)
 [![TYPO3 14](https://img.shields.io/badge/TYPO3-14-important.svg?logo=typo3)](https://get.typo3.org/version/14)
+[![TYPO3 13](https://img.shields.io/badge/TYPO3-13-important.svg?logo=typo3)](https://get.typo3.org/version/13)
+[![TYPO3 12](https://img.shields.io/badge/TYPO3-12-important.svg?logo=typo3)](https://get.typo3.org/version/12)
 [![JavaScript](https://img.shields.io/badge/JavaScript-gray?logo=javascript)](https://img.shields.io/badge/JavaScript-gray?logo=javascript)
 
 # TYPO3 Extension `rte_ckeditor_pack`
 
-![CKEditor Pack](Resources/Public/Images/Readme/readme.png)
+[![CKEditor Pack](Resources/Public/Images/Readme/readme.png)](https://extensions.typo3.org/extension/rte_ckeditor_pack/)
 
 This extension brings the powerful CKEditor feature-set to TYPO3 projects. It bundles curated toolbar presets, backend modules for configuration, preview helpers, and specialized middleware that keeps TYPO3 content clean while enabling modern collaboration flows.
 
@@ -54,11 +54,12 @@ It includes these features:
 
 ## Compatibility
 
-| CKEditor Pack | TYPO3 | CKEditor | PHP      | Support / Development                |
-|---------------|-------|----------|----------|--------------------------------------|
-| 2.0            | 14    | 47.2.0   | 8.1 - 8.4| Features, Bugfixes, Security Updates |
-| 1.0            | 13    | 47.2.0   | 8.1 - 8.4| Features, Bugfixes, Security Updates |
-| 1.0            | 12    | 47.1.0   | 8.1 - 8.4| Features, Bugfixes, Security Updates |
+| CKEditor Pack Version | TYPO3 Compatibility | CKEditor Version | PHP Version | Support Level                         |
+|-----------------------|---------------------|------------------|-------------|---------------------------------------|
+| v3.x                  | 12.4.25 - 14.4.99   | 47.2.0           | 8.1 - 8.4   | Re-strcture, Upgrade, Bugfixes        |
+| v2.x                  | 12.4.25 - 14.4.99   | 47.2.0           | 8.1 - 8.4   | Upgrade, Features, Bugfixes, Security |
+| v1.x                  | 12.4.25 - 13.4.20   | 47.2.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |
+| v1.x                  | 12.4.25 - 13.4.20   | 47.1.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |
 
 
 ## Notes

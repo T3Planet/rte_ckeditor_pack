@@ -46,4 +46,14 @@ class FontFeature implements FeatureInterface
                 ),
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-font',
+                'exports' => 'Font',
+            ],
+        ];
+    }
 }

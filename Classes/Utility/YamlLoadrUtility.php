@@ -14,10 +14,37 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use T3Planet\RteCkeditorPack\DataProvider\ToolbarIcons;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
-use TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator;
 
 class YamlLoadrUtility
 {
+
+    public function fetchToolBarItems(string $presetName): string
+    {
+        $configuration = $this->loadConfigurationFromPreset($presetName);
+
+        if(self::getTypo3MajorVersion() === 14){
+            $configuration = GeneralUtility::makeInstance(
+            \TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator::class,
+            $configuration
+            )->get();
+        } else{
+            $configuration = GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Configuration\CKEditor5Migrator::class,
+            $configuration
+            )->get();
+        }
+
+        if (isset($configuration['editor']['config']) && isset($configuration['editor']['config']['toolbar']['items'])) {
+
+            $items = $configuration['editor']['config']['toolbar']['items'];
+            if($items){
+               return implode(',',$items);
+            }
+        }
+        return '';
+    }
+
+
     public function fetchToolBar(string $presetName): array
     {
         $activeItemArray = [];
@@ -76,6 +103,29 @@ class YamlLoadrUtility
             }
         }
         return $configuration;
+    }
+
+    /**
+     * Load YAML configuration for a preset and migrate to CKEditor5 format
+     *
+     * @param string $presetKey
+     * @return array
+     */
+    public function loadYamlConfiguration(string $presetKey): array
+    {
+        $configuration =  $this->loadConfigurationFromPreset($presetKey);
+
+        if(self::getTypo3MajorVersion() === 14){
+            return GeneralUtility::makeInstance(
+            \TYPO3\CMS\RteCKEditor\Configuration\CKEditor5Migrator::class,
+            $configuration
+            )->get();
+        } else{
+            return GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Configuration\CKEditor5Migrator::class,
+            $configuration
+            )->get();
+        }
     }
 
     /**

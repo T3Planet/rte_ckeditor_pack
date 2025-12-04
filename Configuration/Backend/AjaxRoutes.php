@@ -25,11 +25,19 @@ return [
         'target' => RteModuleController::class . '::getToolBar',
     ],
     'new_preset' => [
-        'path' => '/add/_preset',
-        'target' => RteModuleController::class . '::addPreset',
+        'path' => '/manage/preset',
+        'target' => RteModuleController::class . '::managePreset',
     ],
     'save_feature_configuration' => [
         'path' => '/ckeditor/feature/configuration',
         'target' => RteModuleController::class . '::saveSettings',
+    ],
+    'sync_preset' => [
+        'path' => '/preset/sync',
+        'target' => RteModuleController::class . '::syncPreset',
+    ],
+    'reset_preset' => [
+        'path' => '/preset/reset',
+        'target' => RteModuleController::class . '::resetPreset',
     ],
 ];

@@ -16,4 +16,4 @@ Tag collaborators, groups, and relevant topics by typing a marker such as â€œ@â€
 
 .. rst-class:: horizbuttons-attention-m
 
-   - `View Interactive Guide <https://app.supademo.com/demo/cmi30fshg1sfyqnb9b0nnehir>`_
+   - `View Interactive Guide <https://app.supademo.com/demo/cmirchlwu113jl821m2nkoz1z?preview=true&step=2>`_

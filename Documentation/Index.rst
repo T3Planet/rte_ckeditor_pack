@@ -78,6 +78,10 @@ CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many 
       
        Release notes covering the latest changes
 
+   .. card:: :ref:`Migration <Migration>`
+      
+       Migration guide for major version upgrades.
+
 **Table of Contents**
 
 ..  toctree::
@@ -94,6 +98,7 @@ CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many 
    Support/Index
    Helpfullinks/Index
    ReleaseNotes/Index
+   Migration/Index
 
 ..  Meta Menu
 

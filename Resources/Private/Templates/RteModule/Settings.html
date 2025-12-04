@@ -6,6 +6,7 @@
 <f:section name="content">
 <f:be.pageRenderer includeJavaScriptModules="{0: '@t3planet/RteCkeditorPack/script.js'}"/>
     <form action="" method="post" class="ckeditor-modal-form">
+        <input type="hidden" name="preset" value="{selectedPreset}">
         <div id="ckeditor-modal" class="ckeditor modal d-block">
             <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
                 <div class="t3js-modal-body modal-body">
@@ -16,7 +17,7 @@
                             <f:render partial="Fields/Fields" arguments="{_all}"/>
                         </f:if>
                     </div>
-                    <f:if condition="{record.configKey} == 'RealTimeCollaboration'">
+                    <f:if condition="{configuration.config_key} == 'RealTimeCollaboration'">
                         <div class="callout callout-info mt-4">
                             <div class="callout-content">
                                 <div class="callout-title">
@@ -29,7 +30,7 @@
                             </div>
                         </div>    
                     </f:if>
-                    <f:if condition="{record.configKey} == 'ToggleAi'">
+                    <f:if condition="{configuration.config_key} == 'ToggleAi'">
                         <div class="callout callout-info mt-4">
                             <div class="callout-content">
                                 <div class="callout-title">
@@ -37,6 +38,18 @@
                                 </div>
                                 <div class="callout-body">
                                     <p><f:format.raw><f:translate key="ckeditorKit.plugin.ckeditor_ai.info.desc" extensionName="RteCkeditorPack"/></f:format.raw></p>
+                                </div>
+                            </div>
+                        </div>    
+                    </f:if>
+                    <f:if condition="{configuration.config_key} == 'WProofreader'">
+                        <div class="callout callout-info mt-4">
+                            <div class="callout-content">
+                                <div class="callout-title">
+                                    <h5 class="h3"><f:translate key="ckeditorKit.plugin.wproofreader.info.title" extensionName="RteCkeditorPack"/></h5>
+                                </div>
+                                <div class="callout-body">
+                                    <p><f:format.raw><f:translate key="ckeditorKit.plugin.wproofreader.info.desc" extensionName="RteCkeditorPack"/></f:format.raw></p>
                                 </div>
                             </div>
                         </div>    

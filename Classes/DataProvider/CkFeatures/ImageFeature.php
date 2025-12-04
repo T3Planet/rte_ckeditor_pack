@@ -43,4 +43,17 @@ class ImageFeature implements FeatureInterface
             ],
         ];
     }
+
+    public function getModules(): array
+    {
+        return [
+            [
+                'library' => '@ckeditor/ckeditor5-image',
+                'exports' => 'Image, ImageUpload, ImageToolbar, ImageCaption, ImageStyle',
+            ],
+            [
+                'library' => '@t3planet/RteCkeditorPack/typo3-image',
+            ],
+        ];
+    }
 }

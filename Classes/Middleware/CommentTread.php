@@ -51,6 +51,9 @@ class CommentTread implements MiddlewareInterface
         if (str_contains($request->getRequestTarget(), '/comments/delete/')) {
             $response = $this->deleteComment($request);
         }
+        if (str_contains($request->getRequestTarget(), '/comments/archive/')) {
+            $response = $this->archiveResolvedComments($request);
+        }
         if ($request->getRequestTarget() === '/comments') {
             $response = $this->addComment($request);
         }
@@ -244,6 +247,75 @@ class CommentTread implements MiddlewareInterface
                 ],
                 JSON_THROW_ON_ERROR
             ));
+
+            return $response;
+        }
+    }
+
+    /**
+     * Archive resolved comments
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    private function archiveResolvedComments(ServerRequestInterface $request): ResponseInterface
+    {
+        try {
+            $parsedBody = $request->getParsedBody();
+            $rteId = $parsedBody['rteId'] ?? null;
+            $resolvedDataJson = $parsedBody['resolvedData'] ?? null;
+
+            $response = $this->responseFactory->createResponse()
+                ->withHeader('Content-Type', 'application/json; charset=utf-8');
+
+            if (!$rteId || !$resolvedDataJson) {
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Missing required parameters'
+                ], JSON_THROW_ON_ERROR));
+                return $response;
+            }
+
+            $resolvedData = json_decode($resolvedDataJson, true);
+            
+            if (!is_array($resolvedData)) {
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Invalid resolved data format'
+                ], JSON_THROW_ON_ERROR));
+                return $response;
+            }
+
+            $archivedCount = 0;
+            foreach ($resolvedData as $threadData) {
+                $threadId = $threadData['threadId'] ?? null;
+                $resolvedAt = $threadData['resolvedAt'] ?? time();
+                $resolvedBy = $threadData['resolvedBy'] ?? $this->currentUser;
+
+                if ($threadId) {
+                    $this->commentRepository->markThreadAsResolved(
+                        $threadId,
+                        (int)$resolvedAt,
+                        (int)$resolvedBy
+                    );
+                    $archivedCount++;
+                }
+            }
+
+            $response->getBody()->write(json_encode([
+                'status' => 'success',
+                'message' => "Successfully archived {$archivedCount} comment thread(s)",
+                'archived' => $archivedCount
+            ], JSON_THROW_ON_ERROR));
+
+            return $response;
+        } catch (\Exception $e) {
+            $response = $this->responseFactory->createResponse(500)
+                ->withHeader('Content-Type', 'application/json; charset=utf-8');
+
+            $response->getBody()->write(json_encode([
+                'error' => true,
+                'message' => $e->getMessage()
+            ], JSON_THROW_ON_ERROR));
 
             return $response;
         }
