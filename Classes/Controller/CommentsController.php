@@ -34,8 +34,36 @@ class CommentsController
         $userId = $this->context->getPropertyFromAspect('backend.user', 'id');
         if ($threadData) {
             foreach ($threadData as $thread) {
+                // Handle resolved status at thread level
+                $isResolved = isset($thread['resolvedAt']) || isset($thread['resolvedBy']);
+                $resolvedAt = null;
+                $resolvedBy = null;
+                
+                if ($isResolved) {
+                    $resolvedAt = isset($thread['resolvedAt']) 
+                        ? strtotime($thread['resolvedAt']) 
+                        : time();
+                    // Cast resolvedBy to int - it comes as string from JSON
+                    $resolvedBy = isset($thread['resolvedBy']) 
+                        ? (int)$thread['resolvedBy'] 
+                        : $userId;
+                }
+                
                 foreach ($thread['comments'] as $comment) {
                     if ($this->commentRepository->checkExisting($comment['commentId'])) {
+                        // Update existing comment's resolved status
+                        if ($isResolved) {
+                            $this->commentRepository->markThreadAsResolved(
+                                $thread['threadId'],
+                                $resolvedAt,
+                                $resolvedBy
+                            );
+                        } else {
+                            // Comment was reopened from archive - mark as unresolved
+                            $this->commentRepository->markThreadAsUnresolved(
+                                $thread['threadId']
+                            );
+                        }
                         continue;
                     }
                     $data = [
@@ -45,6 +73,8 @@ class CommentsController
                         'id' => $comment['commentId'],
                         'content' => $comment['content'],
                         'created_at' => strtotime($comment['createdAt']),
+                        'resolved_at' => $resolvedAt ? (int)$resolvedAt : null,
+                        'resolved_by' => $resolvedBy ? (int)$resolvedBy : null,
                     ];
                     $this->commentRepository->saveComment($data);
                 }

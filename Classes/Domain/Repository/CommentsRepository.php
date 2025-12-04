@@ -95,4 +95,101 @@ class CommentsRepository
                 ],
             );
     }
+
+    /**
+     * Mark comments as resolved (archived)
+     * @param string $threadId
+     * @param int $resolvedAt
+     * @param int|null $resolvedBy
+     */
+    public function markThreadAsResolved(string $threadId, int $resolvedAt, ?int $resolvedBy = null): void
+    {
+        $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->update(
+                self::TABLE_NAME,
+                [
+                    'resolved_at' => $resolvedAt,
+                    'resolved_by' => $resolvedBy,
+                ],
+                [
+                    'thread_id' => $threadId,
+                ]
+            );
+    }
+
+    /**
+     * Mark comments as unresolved (reopen from archive)
+     * @param string $threadId
+     */
+    public function markThreadAsUnresolved(string $threadId): void
+    {
+        $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->update(
+                self::TABLE_NAME,
+                [
+                    'resolved_at' => null,
+                    'resolved_by' => null,
+                ],
+                [
+                    'thread_id' => $threadId,
+                ]
+            );
+    }
+
+    /**
+     * Fetch only unresolved comments by thread ID
+     * @param string $id
+     * @return array
+     */
+    public function fetchUnresolvedCommentsByThreadId(string $id): array
+    {
+        return $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->select(
+                ['*'],
+                self::TABLE_NAME,
+                [
+                    'thread_id' => $id,
+                    'resolved_at' => null,
+                ],
+            )->fetchAllAssociative();
+    }
+
+    /**
+     * Fetch all comments including resolved (for archive)
+     * @param string $rteId
+     * @return array
+     */
+    public function fetchAllCommentsByRteId(string $rteId): array
+    {
+        return $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->select(
+                ['*'],
+                self::TABLE_NAME,
+                ['rte_id' => $rteId],
+            )->fetchAllAssociative();
+    }
+
+    /**
+     * Fetch only resolved comments (for archive view)
+     * @param string $rteId
+     * @return array
+     */
+    public function fetchResolvedComments(string $rteId): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE_NAME);
+        
+        return $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('rte_id', $queryBuilder->createNamedParameter($rteId)),
+                $queryBuilder->expr()->isNotNull('resolved_at')
+            )
+            ->executeQuery()
+            ->fetchAllAssociative();
+    }
 }
