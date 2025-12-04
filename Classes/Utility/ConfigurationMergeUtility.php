@@ -109,6 +109,7 @@ class ConfigurationMergeUtility
 
     /**
      * Normalize array by recursively sorting keys to handle different key orders
+     * Also normalizes string values that should be arrays (like 'classes' field)
      *
      * @param mixed $data Data to normalize (array or other type)
      * @return mixed Normalized data
@@ -127,14 +128,61 @@ class ConfigurationMergeUtility
             ksort($data);
         }
         
-        // Recursively normalize nested arrays
+        // Recursively normalize nested arrays and normalize string values
         foreach ($data as $key => $value) {
             if (is_array($value)) {
-                $data[$key] = $this->normalizeArray($value);
+                // Special handling for 'classes' and 'options' arrays
+                if ($key === 'classes' || $key === 'options') {
+                    $data[$key] = $this->normalizeClassesOrOptions($value);
+                } else {
+                    $data[$key] = $this->normalizeArray($value);
+                }
+            } elseif (is_string($value) && ($key === 'classes' || $key === 'options')) {
+                // Normalize string values for 'classes' and 'options' fields to arrays
+                // Convert comma-separated strings to arrays
+                $normalized = array_filter(array_map('trim', explode(',', $value)));
+                $data[$key] = array_values($normalized);
+            } elseif (is_string($value) && $value === '') {
+                // Normalize empty strings to empty arrays for consistency
+                $data[$key] = [];
             }
         }
         
         return $data;
+    }
+
+    /**
+     * Normalize classes or options array - handle mixed string/array values
+     *
+     * @param array $value Array that may contain strings with commas
+     * @return array Normalized array
+     */
+    private function normalizeClassesOrOptions(array $value): array
+    {
+        $normalized = [];
+        
+        foreach ($value as $item) {
+            if (is_string($item)) {
+                // If string contains comma, split it
+                if (strpos($item, ',') !== false) {
+                    $split = array_filter(array_map('trim', explode(',', $item)));
+                    $normalized = array_merge($normalized, $split);
+                } else {
+                    $trimmed = trim($item);
+                    if ($trimmed !== '') {
+                        $normalized[] = $trimmed;
+                    }
+                }
+            } elseif (is_array($item)) {
+                // Recursively normalize nested arrays
+                $normalized = array_merge($normalized, $this->normalizeClassesOrOptions($item));
+            } elseif ($item !== null && $item !== '') {
+                $normalized[] = $item;
+            }
+        }
+        
+        // Remove duplicates and reindex
+        return array_values(array_unique($normalized));
     }
 
     /**
