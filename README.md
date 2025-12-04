@@ -1,4 +1,4 @@
-[![Latest Stable Version](https://img.shields.io/badge/Stable-2.0-success)](https://extensions.typo3.org/extension/rte_ckeditor_pack/)
+[![Latest Stable Version](https://img.shields.io/badge/Stable-3.0-success)](https://extensions.typo3.org/extension/rte_ckeditor_pack/)
 [![CKEditor Github](https://img.shields.io/badge/CKEditor-Pack-informational?logo=github)](https://github.com/T3Planet/rte_ckeditor_pack)
 [![TYPO3 14](https://img.shields.io/badge/TYPO3-14-important.svg?logo=typo3)](https://get.typo3.org/version/14)
 [![TYPO3 13](https://img.shields.io/badge/TYPO3-13-important.svg?logo=typo3)](https://get.typo3.org/version/13)
