@@ -1,4 +1,13 @@
+// Guard flag to prevent double initialization
+let isModuleFuncInitialized = false;
+
 function initModuleFunc(params) {
+    // Prevent double initialization
+    if (isModuleFuncInitialized) {
+        return;
+    }
+    isModuleFuncInitialized = true;
+    
     //Global ButtonBar functionality..
     const featureForm = document.getElementById('ckEditorModules');
     const settingsForm = document.getElementById('ckEditorSettings');
@@ -71,9 +80,8 @@ function initModuleFunc(params) {
         });
     }
     
-    
     const toggleModules = document.querySelectorAll('.feature-toggle');
-    if (toggleModules) {
+    if (toggleModules && toggleModules.length > 0) {
         const dashboardTabs = document.querySelector('.dashboard-tabs');
     
         toggleModules.forEach(function (element) {
@@ -97,17 +105,40 @@ function initModuleFunc(params) {
                             // Reset checkbox to unchecked state
                             element.checked = false;
                             
-                            // Trigger click on settings button to open modal
-                            settingsButton.click();
-                            return false;
+                            // Use setTimeout to ensure modal opens after event completes
+                            // This prevents race conditions in Chromium browsers
+                            setTimeout(() => {
+                                settingsButton.click();
+                            }, 0);
+                            
+                            // Exit the handler completely - do not proceed to form submission
+                            return;
                         }
                     }
                 }
                 
                 // Normal behavior - proceed with form submission
+                // Add null checks to prevent errors on reload
+                if (!featureForm) {
+                    console.warn('Feature form not found');
+                    return;
+                }
+                
+                if (!dashboardTabs) {
+                    console.warn('Dashboard tabs not found');
+                    return;
+                }
+                
+                const activeTab = dashboardTabs.querySelector('.dashboard-tab.active');
+                if (!activeTab) {
+                    console.warn('No active dashboard tab found');
+                    return;
+                }
+                
                 if(loaderDiv){
                     loaderDiv.classList.add("ns-show-overlay");
                 }
+                
                 let inputName = event.target.name;
                 let hiddenInput = featureForm.querySelector(`input[name="${inputName}"]`);
                 if (!hiddenInput) {
@@ -121,9 +152,6 @@ function initModuleFunc(params) {
                 let currentTab = document.createElement('input');
                 currentTab.type = 'hidden';
                 currentTab.name = 'active_tab';
-    
-                // active tab
-                let activeTab = dashboardTabs.querySelector('.dashboard-tab.active');
                 currentTab.value = activeTab.getAttribute('id').split('-tab')[0];
     
                 featureForm.appendChild(currentTab);
@@ -142,27 +170,38 @@ function initModuleFunc(params) {
     }
 }
 
-const cardCheck = document.querySelectorAll('.btn-toggle');
-
-if (cardCheck.length) {
-    cardCheck.forEach(element => {
-    if (element.closest('.card')) {
-      if (element.checked) {
-        element.closest('.card').classList.add('card--active');
-      } else {
-        element.closest('.card').classList.remove('card--active');
-      }
-      element.addEventListener('change', (event) => {
-        if (element.checked) {
-          element.closest('.card').classList.add('card--active');
-        } else {
-          element.closest('.card').classList.remove('card--active');
-        }
-      });
+// Initialize card toggle styling
+function initCardToggleStyle() {
+    const cardCheck = document.querySelectorAll('.btn-toggle');
+    
+    if (cardCheck.length) {
+        cardCheck.forEach(element => {
+            if (element.closest('.card')) {
+                if (element.checked) {
+                    element.closest('.card').classList.add('card--active');
+                } else {
+                    element.closest('.card').classList.remove('card--active');
+                }
+                element.addEventListener('change', (event) => {
+                    if (element.checked) {
+                        element.closest('.card').classList.add('card--active');
+                    } else {
+                        element.closest('.card').classList.remove('card--active');
+                    }
+                });
+            }
+        });
     }
-  });
 }
-initModuleFunc();
-document.addEventListener('DOMContentLoaded', () => {
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initModuleFunc();
+        initCardToggleStyle();
+    });
+} else {
+    // DOM is already ready
     initModuleFunc();
-});
+    initCardToggleStyle();
+}
