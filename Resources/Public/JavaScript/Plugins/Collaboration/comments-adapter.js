@@ -258,11 +258,15 @@ function saveComments(rteId, commentsData, evt) {
             const resolved = await response.resolve();
             const responseBody = JSON.parse(resolved);
             if (responseBody.status === 'OK') {
-                Notification.success('Comment', 'Comments successfully saved and archived');
+                const title = TYPO3.lang['comments.save.success.title'] || 'Comments';
+                const message = TYPO3.lang['comments.save.success.message'] || 'Comments successfully saved and archived';
+                Notification.success(title, message);
             }
         })
         .catch((error) => {
-            Notification.error('error', error);
+            const title = TYPO3.lang['comments.save.error.title'] || 'Comment Error';
+            const message = TYPO3.lang['comments.save.error.message'] || 'Failed to save comments';
+            Notification.error(title, error.message || message);
         });
 
     if (!window.commentSaved) {

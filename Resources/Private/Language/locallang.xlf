@@ -1092,6 +1092,20 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.preset.sync.error.no_feature">
                 <source>No features are currently available for synchronization.</source>
             </trans-unit>
+            
+            <!-- Comments Notifications -->
+            <trans-unit id="comments.save.success.title">
+                <source>Comments</source>
+            </trans-unit>
+            <trans-unit id="comments.save.success.message">
+                <source>Comments successfully saved and archived</source>
+            </trans-unit>
+            <trans-unit id="comments.save.error.title">
+                <source>Comment Error</source>
+            </trans-unit>
+            <trans-unit id="comments.save.error.message">
+                <source>Failed to save comments. Please try again.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
