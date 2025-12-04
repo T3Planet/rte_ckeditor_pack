@@ -221,6 +221,7 @@ class BaseToolBar
                 $toolBar = implode(',', $toolBarItems);
                 $preset->setToolbarItems($toolBar);
                 $this->presetRepository->update($preset);
+                $this->persistenceManager->persistAll();
             }
         }
     }

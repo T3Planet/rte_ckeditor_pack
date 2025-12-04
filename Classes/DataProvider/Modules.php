@@ -282,7 +282,7 @@ class Modules
                             'exports' => 'Comments',
                         ],
                     ],
-                    'toolBarItems' => 'comment, commentsArchive',
+                    'toolBarItems' => 'comment,commentsArchive',
                 ],
             ],
             [
@@ -845,8 +845,11 @@ class Modules
                 return $item;
             }
             if ($toolBar) {
-                if (isset($item['configuration']['toolBarItems']) && str_contains($item['configuration']['toolBarItems'], $configKey)) {
-                    return $item;
+                if (isset($item['configuration']['toolBarItems'])) {
+                    $toolBaritems = array_map('trim', explode(',', $item['configuration']['toolBarItems']));
+                    if (in_array($configKey, $toolBaritems, true)) {
+                        return $item;
+                    }
                 }
             }
         }

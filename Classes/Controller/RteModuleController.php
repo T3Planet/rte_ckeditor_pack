@@ -483,9 +483,9 @@ class RteModuleController extends ActionController
                                     // Remove Item from toolBar
                                     $this->baseToolBar->updateToolBar($module, $selectedPresetUid);
                                 }
-                            } elseif (!isset($moduleConfiguration['configuration']['toolBarItems'])) {
+                            } elseif (isset($moduleConfiguration['configuration']['toolBarItems'])) {
                                 // Remove Item from toolBar
-                                $this->baseToolBar->updateToolBar($module, $selectedPresetUid);
+                                $this->baseToolBar->updateToolBar($configKey, $selectedPresetUid);
                             }
 
                             $feature->setEnable(false);
