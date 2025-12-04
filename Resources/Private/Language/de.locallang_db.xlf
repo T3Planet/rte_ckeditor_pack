@@ -63,6 +63,64 @@
         <source>ToolBarItem Groups</source>
         <target state="final">Symbolleistenelement-Gruppen</target>
       </trans-unit>
+      <!-- Preset Table -->
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset">
+        <source>Preset</source>
+        <target state="needs-translation">Preset</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.tab.general">
+        <source>General</source>
+        <target state="needs-translation">General</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.tab.features">
+        <source>Features</source>
+        <target state="needs-translation">Features</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.preset_key">
+        <source>Preset Key</source>
+        <target state="needs-translation">Preset Key</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.preset_key.description">
+        <source>Unique identifier for this preset (e.g., default, minimal, full)</source>
+        <target state="needs-translation">Unique identifier for this preset (e.g., default, minimal, full)</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.features">
+        <source>Features</source>
+        <target state="needs-translation">Features</target>
+      </trans-unit>
+      <!-- Feature Table -->
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature">
+        <source>Feature</source>
+        <target state="needs-translation">Feature</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.tab.general">
+        <source>General</source>
+        <target state="needs-translation">General</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.enable">
+        <source>Enable</source>
+        <target state="needs-translation">Enable</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.config_key">
+        <source>Config Key</source>
+        <target state="needs-translation">Config Key</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.fields">
+        <source>Fields</source>
+        <target state="needs-translation">Fields</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.fields.description">
+        <source>JSON configuration for this feature</source>
+        <target state="needs-translation">JSON configuration for this feature</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.toolbar_items">
+        <source>Toolbar Items</source>
+        <target state="needs-translation">Toolbar Items</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.toolbar_items.description">
+        <source>Comma-separated list of toolbar items provided by this feature</source>
+        <target state="needs-translation">Comma-separated list of toolbar items provided by this feature</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
