@@ -9,6 +9,8 @@ CREATE TABLE tx_rteckeditorpack_domain_model_comment
     content text DEFAULT NULL,
     created_at bigint(20) DEFAULT '0' NOT NULL,
     created_id bigint(20) DEFAULT '0' NOT NULL,
+    resolved_at bigint(20) DEFAULT NULL,
+    resolved_by int(11) DEFAULT NULL,
 
     PRIMARY KEY (uid),
 );

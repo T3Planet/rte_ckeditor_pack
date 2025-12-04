@@ -132,15 +132,34 @@ export class CommentsAdapter extends Core.Plugin {
 
         saveBtn.addEventListener('click', evt => {
             const comments = editor.plugins.get('CommentsRepository');
-            const threads = comments.getCommentThreads({
+            const allThreads = comments.getCommentThreads({
                 skipNotAttached: true,
                 skipEmpty: true,
                 toJSON: true
             });
 
+            // Filter out resolved threads - only save unresolved comments
+            const unresolvedThreads = [];
+            const resolvedThreads = [];
+            
+            allThreads.forEach(thread => {
+                // A thread is resolved if it has a 'resolvedAt' property
+                if (thread.resolvedAt || thread.resolvedBy) {
+                    resolvedThreads.push(thread);
+                } else {
+                    unresolvedThreads.push(thread);
+                }
+            });
+
+            // Archive resolved comments (mark them as resolved in database)
+            if (resolvedThreads.length > 0) {
+                archiveResolvedComments(resolvedThreads, rteId);
+            }
+
+            // Save all comments (both resolved and unresolved) for archive access
             saveComments(
                 editor.sourceElement.getAttribute('name'),
-                JSON.stringify(threads),
+                JSON.stringify(allThreads),  // Save ALL threads
                 evt
             );
         });
@@ -172,6 +191,14 @@ export class CommentsAdapter extends Core.Plugin {
                     content: c.content,
                     createdAt: new Date(c.created_at * 1000)
                 }));
+                
+                // Add resolved status if available
+                if (data.length > 0 && data[0].resolved_at) {
+                    thread.resolvedAt = new Date(data[0].resolved_at * 1000);
+                    thread.resolvedBy = data[0].resolved_by?.toString();
+                    thread.isResolved = true;
+                }
+                
                 return thread;
             },
             updateComment(data) {
@@ -194,6 +221,31 @@ export class CommentsAdapter extends Core.Plugin {
 }
 
 /**
+ * Archive resolved comments (mark them as resolved in database)
+ */
+function archiveResolvedComments(resolvedThreads, rteId) {
+    const resolvedData = resolvedThreads.map(thread => ({
+        threadId: thread.threadId,
+        resolvedAt: thread.resolvedAt ? new Date(thread.resolvedAt).getTime() / 1000 : Math.floor(Date.now() / 1000),
+        resolvedBy: thread.resolvedBy || null,
+        comments: thread.comments.map(c => c.commentId)
+    }));
+
+    // Send resolved data to server to mark as archived
+    new AjaxRequest(TYPO3.settings.ajaxUrls['archive_comments'] || '/comments/archive/')
+        .post({
+            rteId: rteId,
+            resolvedData: JSON.stringify(resolvedData)
+        })
+        .then(async function (response) {
+            await response.resolve();
+        })
+        .catch(() => {
+            // Archive failed silently - comments will still be saved
+        });
+}
+
+/**
  * Save comments to server
  */
 function saveComments(rteId, commentsData, evt) {
@@ -206,7 +258,7 @@ function saveComments(rteId, commentsData, evt) {
             const resolved = await response.resolve();
             const responseBody = JSON.parse(resolved);
             if (responseBody.status === 'OK') {
-                Notification.success('Comment', 'Comment Successfully saved and retrieved');
+                Notification.success('Comment', 'Comments successfully saved and archived');
             }
         })
         .catch((error) => {
