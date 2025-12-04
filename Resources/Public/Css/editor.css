@@ -518,6 +518,11 @@
   min-width: 400px;
   max-width: 400px;
   min-height: 600px;
+  max-height: 650px;
+}
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs_maximized {
+  min-width: 484px;
+  max-width: 484px;
 }
 .ck.ck-tabs.ck-ai-tabs.ck-hidden {
   display: none;
