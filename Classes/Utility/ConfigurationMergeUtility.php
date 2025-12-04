@@ -44,12 +44,40 @@ class ConfigurationMergeUtility
                 $merged[$key] = $value;
             }
         }
-
+        
+        // Apply deduplication to nested numeric arrays in the final merged result
+        $merged = $this->deduplicateNestedArrays($merged);
+        
         return $merged;
     }
 
     /**
-     * Remove duplicate items from array based on 'model' field
+     * Recursively deduplicate numeric arrays in nested structures
+     *
+     * @param array $data Data to process
+     * @return array Processed data with duplicates removed
+     */
+    private function deduplicateNestedArrays(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                // Check if it's a numeric array
+                $isNumeric = array_keys($value) === range(0, count($value) - 1);
+                if ($isNumeric && !empty($value)) {
+                    // Deduplicate numeric arrays
+                    $data[$key] = $this->removeDuplicateModels($value);
+                } else {
+                    // Recursively process nested associative arrays
+                    $data[$key] = $this->deduplicateNestedArrays($value);
+                }
+            }
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Remove duplicate items from array by comparing all fields (handles multidimensional arrays)
      *
      * @param array $items Array of items to deduplicate
      * @return array Array with duplicates removed
@@ -60,22 +88,111 @@ class ConfigurationMergeUtility
         $seen = [];
         
         foreach ($items as $item) {
-            if (isset($item['model'])) {
-                if (in_array($item['model'], $seen, true)) {
-                    continue; // skip duplicate
-                }
-                $seen[] = $item['model'];
+            // Normalize the item by sorting keys recursively to handle different key orders
+            $normalized = $this->normalizeArray($item);
+            // Create a unique signature by serializing the normalized item
+            // Use md5 hash for faster comparison and to handle large arrays
+            $signature = md5(serialize($normalized));
+            
+            // Check if we've seen this exact item before using hash
+            if (isset($seen[$signature])) {
+                continue; // skip duplicate
             }
-            if (isset($item['languageCode'])) {
-                if (in_array($item['languageCode'], $seen, true)) {
-                    continue; // skip duplicate
-                }
-                $seen[] = $item['languageCode'];
-            }
+            
+            // Track this signature and add item to unique array
+            $seen[$signature] = true;
             $unique[] = $item;
         }
 
         return $unique;
     }
+
+    /**
+     * Normalize array by recursively sorting keys to handle different key orders
+     *
+     * @param mixed $data Data to normalize (array or other type)
+     * @return mixed Normalized data
+     */
+    private function normalizeArray($data)
+    {
+        if (!is_array($data)) {
+            return $data;
+        }
+        
+        // Check if it's a numeric array (preserve order) or associative (sort keys)
+        $isNumeric = array_keys($data) === range(0, count($data) - 1);
+        
+        if (!$isNumeric) {
+            // Sort keys for associative arrays only
+            ksort($data);
+        }
+        
+        // Recursively normalize nested arrays
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = $this->normalizeArray($value);
+            }
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Sync toolbar items: add new items from YAML that are available but not in preset
+     *
+     * @param array $yamlToolbarItems Array of toolbar items from YAML configuration
+     * @param string $presetToolbarItems Comma-separated string of toolbar items from preset
+     * @return string Comma-separated string of merged toolbar items
+     */
+    public function syncToolBar(array $yamlToolbarItems, string $presetToolbarItems): string
+    {
+        // Convert preset toolbar items string to array
+        $presetItems = !empty($presetToolbarItems) 
+            ? array_map('trim', explode(',', $presetToolbarItems))
+            : [];
+        $yamlItems = array_filter($yamlToolbarItems, 'is_string');
+        $newItems = array_diff($yamlItems, $presetItems);
+        $mergedItems = array_merge($presetItems, $newItems);
+        $mergedItems = array_filter($mergedItems, function($item) {
+            return !empty(trim($item));
+        });
+        return implode(',', $mergedItems);
+    }
+
+    public function parseOptions($options): array {
+        if (is_array($options)) {
+            return array_values($options); // REMOVE original keys
+        }
+
+        // Convert string → array and reindex
+        return array_values(array_filter(array_map('trim', explode(',', (string)$options))));
+    }
+
+    public function mergeOptionArrays(array ...$arrays): array {
+        $merged = [];
+
+        foreach ($arrays as $source) {
+            foreach ($source as $key => $value) {
+
+                $options = $this->parseOptions($value['options'] ?? []);
+
+                if (!isset($merged[$key])) {
+                    $merged[$key] = ['options' => $options];
+                } else {
+                    // merge + remove duplicates
+                    $merged[$key]['options'] = array_unique(
+                        array_merge($merged[$key]['options'], $options),
+                        SORT_REGULAR
+                    );
+                }
+
+                // ALWAYS remove all keys (0,1,2,…)
+                $merged[$key]['options'] = array_values($merged[$key]['options']);
+            }
+        }
+
+        return $merged;
+    }
+
 }
 

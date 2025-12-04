@@ -1089,6 +1089,9 @@ The authorization credentials are required for Real-time collaboration or Import
              <trans-unit id="ckeditorKit.preset.reset.error.message">
                 <source>Reset failed. Please try again</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.error.no_feature">
+                <source>No features are currently available for synchronization.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

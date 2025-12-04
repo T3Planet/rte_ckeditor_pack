@@ -50,7 +50,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required,unique',
+                'eval' => 'trim,,unique',
+                'required' => true,
                 'default' => '',
             ],
         ],
@@ -71,12 +72,6 @@ return [
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
-                'items' => [
-                    [
-                        0 => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.usage_source.yaml',
-                        1 => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.usage_source.pack',
-                    ],
-                ],
                 'default' => 0,
             ],
         ],

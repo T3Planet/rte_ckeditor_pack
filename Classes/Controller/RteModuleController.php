@@ -266,6 +266,11 @@ class RteModuleController extends ActionController
         $enable = $data['enable'] === '1' ? true : false;
         $notification = [];
         $presetUid = isset($data['preset']) && is_numeric($data['preset']) ? (int)$data['preset'] : 0;
+        $preset = $this->presetRepository->findByUid($presetUid);
+        
+        if (!$preset) {
+            throw new \Exception('Preset not found');
+        }
 
         try {
             if ($configKey) {
@@ -720,20 +725,30 @@ class RteModuleController extends ActionController
                 if (!$preset) {
                     throw new \Exception('Preset not found');
                 }
-
                 // Get preset key to load YAML configuration
                 $presetKey = $preset->getPresetKey();
-
                 // Load YAML configuration
                 $yamlLoader = GeneralUtility::makeInstance(YamlLoadrUtility::class);
                 $yamlConfig = $yamlLoader->loadYamlConfiguration($presetKey);
-
                 if (empty($yamlConfig) && isset($yamlConfig['editor']['config'])) {
                     throw new \Exception('YAML configuration not found for preset: ' . $presetKey);
                 }
                 $yamlConfiguration = $yamlConfig['editor']['config'];
-
+                $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
+                $toolBariteams = $yamlConfiguration['toolbar']['items'];
+                $syncData = $mergeUtility->syncToolBar($toolBariteams,$preset->getToolbarItems());
+                $preset->setToolbarItems($syncData);
+                $this->presetRepository->update($preset);
+                
                 $features = $this->featureRepository->findByPresetUid($presetUid);
+                if (empty($features)) {
+                    return new JsonResponse([
+                        'notifications' => [[
+                            'title' => 'ckeditorKit.preset.sync.error.no_feature',
+                            'severity' => 3,
+                        ]]
+                    ]);
+                }
 
                 foreach ($features as $feature) {
                     $yamlFeatureConfig = [];
@@ -742,15 +757,25 @@ class RteModuleController extends ActionController
                     if (empty($moduleConfiguration)) {
                         continue;
                     }
-
-                    if (!array_key_exists(strtolower($configKey), $yamlConfiguration)) {
-                        continue;
+                    
+                    $configKeyLower = strtolower($configKey);
+                    // Special handling for Font configKey - check 4 font items
+                    if ($configKey === 'Font') {
+                        $fontItems = ['fontFamily', 'fontSize'];
+                        $fontConfig = [];
+                        foreach ($fontItems as $item) {
+                            if (array_key_exists($item, $yamlConfiguration)) {
+                                $fontConfig[$item] = $yamlConfiguration[$item];
+                            }
+                        }
+                        $syncData = $mergeUtility->mergeOptionArrays($fontConfig, $moduleConfiguration);
+                    } else {
+                        if (!array_key_exists($configKeyLower, $yamlConfiguration)) {
+                            continue;
+                        }
+                        $yamlFeatureConfig[$configKeyLower] = $yamlConfiguration[$configKeyLower];
+                        $syncData = $mergeUtility->mergeRecursiveDistinct($yamlFeatureConfig, $moduleConfiguration);
                     }
-
-                    $yamlFeatureConfig[strtolower($configKey)] = $yamlConfiguration[strtolower($configKey)];
-                    $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
-                    $syncData = $mergeUtility->mergeRecursiveDistinct($yamlFeatureConfig, $moduleConfiguration);
-
                     if (empty($syncData)) {
                         continue;
                     }
