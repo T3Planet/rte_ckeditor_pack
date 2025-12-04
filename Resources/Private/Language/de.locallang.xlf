@@ -48,6 +48,10 @@
         <source>Settings</source>
         <target state="final">Einstellungen</target>
       </trans-unit>
+      <trans-unit id="ckeditorKit.tab.dashboard">
+        <source>Dashboard</source>
+        <target state="needs-translation">Dashboard</target>
+      </trans-unit>
       <trans-unit id="ckeditorKit.tab.card.btn_title" approved="yes">
         <source>Configuration</source>
         <target state="final">Konfiguration</target>
@@ -1271,6 +1275,59 @@ The authorization credentials are required for Real-time collaboration or Import
       <trans-unit id="ckeditorKit.plugin.ckeditor_ai.info.desc" approved="yes">
         <source>The Side option is not supported when using the Sidebar type.</source>
         <target state="final">Die Option "Seite" wird nicht unterstützt, wenn der Seitenleisten-Typ verwendet wird.</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.plugin.wproofreader.info.title">
+        <source>WProofreader Note</source>
+        <target state="needs-translation">WProofreader Note</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.plugin.wproofreader.info.desc">
+        <source>The WProofreader plugin required to configure the service id and source url.</source>
+        <target state="needs-translation">The WProofreader plugin required to configure the service id and source url.</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.add_new">
+        <source>Add New</source>
+        <target state="needs-translation">Add New</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.preset.sync.success.message">
+        <source>Synchronization completed successfully</source>
+        <target state="needs-translation">Synchronization completed successfully</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.preset.sync.error.message">
+        <source>Synchronization failed. Please try again</source>
+        <target state="needs-translation">Synchronization failed. Please try again</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.preset.reset.success.message">
+        <source>Reset completed successfully</source>
+        <target state="needs-translation">Reset completed successfully</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.preset.reset.error.message">
+        <source>Reset failed. Please try again</source>
+        <target state="needs-translation">Reset failed. Please try again</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.preset.sync.error.no_feature">
+        <source>No features are currently available for synchronization.</source>
+        <target state="needs-translation">No features are currently available for synchronization.</target>
+      </trans-unit>
+      <!-- Comments Notifications -->
+      <trans-unit id="comments.save.success.title">
+        <source>Comments</source>
+        <target state="needs-translation">Comments</target>
+      </trans-unit>
+      <trans-unit id="comments.save.success.message">
+        <source>Comments successfully saved and archived</source>
+        <target state="needs-translation">Comments successfully saved and archived</target>
+      </trans-unit>
+      <trans-unit id="comments.save.error.title">
+        <source>Comment Error</source>
+        <target state="needs-translation">Comment Error</target>
+      </trans-unit>
+      <trans-unit id="comments.save.error.message">
+        <source>Failed to save comments. Please try again.</source>
+        <target state="needs-translation">Failed to save comments. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="ckeditorKit.preset.sync.mention">
+        <source>Mention feature cannot be synchronized</source>
+        <target state="needs-translation">Mention feature cannot be synchronized</target>
       </trans-unit>
     </body>
   </file>
