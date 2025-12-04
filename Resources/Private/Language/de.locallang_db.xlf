@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf" date="2024-09-19T12:27:21Z" product-name="rte_ckeditor_pack" target-language="de">
+    <header/>
+    <body>
+      <trans-unit id="tx_rteckeditorpack_domain_model_modules" approved="yes">
+        <source>Modules</source>
+        <target state="final">Module</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration" approved="yes">
+        <source>Configuration</source>
+        <target state="final">Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.description" approved="yes">
+        <source>Configuration</source>
+        <target state="final">Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.config_key" approved="yes">
+        <source>Config Key</source>
+        <target state="final">Konfigurationsschlüssel</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_configuration.fields" approved="yes">
+        <source>Fields</source>
+        <target state="final">Felder</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label" approved="yes">
+        <source>Label</source>
+        <target state="final">Bezeichnung</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.label" approved="yes">
+        <source>Label</source>
+        <target state="final">Bezeichnung</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.tooltip">
+        <source>Tooltip</source>
+        <target state="needs-translation">Tooltip</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.icon" approved="yes">
+        <source>Icon</source>
+        <target state="final">Symbol</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.custom_icon" approved="yes">
+        <source>Custom Icon</source>
+        <target state="final">Benutzerdefiniertes Symbol</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups.items" approved="yes">
+        <source>Items</source>
+        <target state="final">Elemente</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.items" approved="yes">
+        <source>Items</source>
+        <target state="final">Elemente</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems.preset" approved="yes">
+        <source>Preset</source>
+        <target state="final">Voreinstellung</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbaritems" approved="yes">
+        <source>ToolBar Items</source>
+        <target state="final">Symbolleisten-Elemente</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_toolbargroups" approved="yes">
+        <source>ToolBarItem Groups</source>
+        <target state="final">Symbolleistenelement-Gruppen</target>
+      </trans-unit>
+      <!-- Preset Table -->
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset">
+        <source>Preset</source>
+        <target state="needs-translation">Preset</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.tab.general">
+        <source>General</source>
+        <target state="needs-translation">General</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.tab.features">
+        <source>Features</source>
+        <target state="needs-translation">Features</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.preset_key">
+        <source>Preset Key</source>
+        <target state="needs-translation">Preset Key</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.preset_key.description">
+        <source>Unique identifier for this preset (e.g., default, minimal, full)</source>
+        <target state="needs-translation">Unique identifier for this preset (e.g., default, minimal, full)</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_preset.features">
+        <source>Features</source>
+        <target state="needs-translation">Features</target>
+      </trans-unit>
+      <!-- Feature Table -->
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature">
+        <source>Feature</source>
+        <target state="needs-translation">Feature</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.tab.general">
+        <source>General</source>
+        <target state="needs-translation">General</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.enable">
+        <source>Enable</source>
+        <target state="needs-translation">Enable</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.config_key">
+        <source>Config Key</source>
+        <target state="needs-translation">Config Key</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.fields">
+        <source>Fields</source>
+        <target state="needs-translation">Fields</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.fields.description">
+        <source>JSON configuration for this feature</source>
+        <target state="needs-translation">JSON configuration for this feature</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.toolbar_items">
+        <source>Toolbar Items</source>
+        <target state="needs-translation">Toolbar Items</target>
+      </trans-unit>
+      <trans-unit id="tx_rteckeditorpack_domain_model_feature.toolbar_items.description">
+        <source>Comma-separated list of toolbar items provided by this feature</source>
+        <target state="needs-translation">Comma-separated list of toolbar items provided by this feature</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

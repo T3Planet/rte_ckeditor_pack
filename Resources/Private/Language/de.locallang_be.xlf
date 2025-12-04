@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_be.xlf" product-name="rte_ckeditor_pack" target-language="de">
+    <header/>
+    <body>
+      <trans-unit id="labels.ckeditor.cssclass" xml:space="preserve">
+				<source>Custom CSS class</source>
+			<target state="needs-translation">Custom CSS class</target></trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.yes" approved="yes">
+        <source>Yes, discard my changes.</source>
+        <target state="final">Ja, verwerfe meine Änderungen.</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.cancel" approved="yes">
+        <source>No, I will continue editing.</source>
+        <target state="final">Nein, ich werde weiter bearbeiten.</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.currentPage.modal.message" approved="yes">
+        <source>Are you sure you want to discard these changes?</source>
+        <target state="final">Sind Sie sicher, dass Sie diese Änderungen verwerfen möchten?</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.newPage.modal.header" approved="yes">
+        <source>Do you want to close without saving?</source>
+        <target state="final">Möchten Sie ohne Speichern schließen?</target>
+      </trans-unit>
+      <trans-unit id="NsRteCkeditorPack.confirmModal.InsertImage" approved="yes">
+        <source>Insert Image</source>
+        <target state="final">Bild einfügen</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
