@@ -36,8 +36,20 @@ return [
         'path' => '/preset/sync',
         'target' => RteModuleController::class . '::syncPreset',
     ],
+    'export_preset' => [
+        'path' => '/preset/export',
+        'target' => RteModuleController::class . '::exportPreset',
+    ],
     'reset_preset' => [
         'path' => '/preset/reset',
         'target' => RteModuleController::class . '::resetPreset',
+    ],
+    'import_preset' => [
+        'path' => '/preset/import',
+        'target' => RteModuleController::class . '::importPreset',
+    ],
+    'check_preset_exists' => [
+        'path' => '/preset/check-exists',
+        'target' => RteModuleController::class . '::checkPresetExists',
     ],
 ];

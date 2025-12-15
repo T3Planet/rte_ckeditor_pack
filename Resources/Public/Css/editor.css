@@ -555,6 +555,7 @@
 }
 
 .reset-preset *,
-.sync-preset * {
+.sync-preset *,
+.export-preset * {
     pointer-events: none;
 }

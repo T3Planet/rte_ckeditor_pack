@@ -22,6 +22,7 @@ use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
+use T3Planet\RteCkeditorPack\Service\ImportExportService;
 use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
 use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
@@ -30,9 +31,15 @@ use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
+use T3Planet\RteCkeditorPack\EventListener\SyncFeaturesBeforeExportListener;
+use Symfony\Component\Yaml\Yaml;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UploadedFileInterface;
 
 class RteModuleController extends ActionController
 {
+
     protected ModuleTemplate $moduleTemplate;
 
     protected UriBuilderUtility $urlBuilder;
@@ -63,6 +70,8 @@ class RteModuleController extends ActionController
         PresetRepository $presetRepository,
         PersistenceManager $persistenceManager,
         ToolbarGroupsRepository $groupsRepository,
+        protected readonly ImportExportService $importExportService,
+        protected readonly SyncFeaturesBeforeExportListener $syncFeaturesService,
     ) {
         $this->featureRepository = $featureRepository;
         $this->presetRepository = $presetRepository;
@@ -811,6 +820,231 @@ class RteModuleController extends ActionController
 
         return new JsonResponse([
             'notifications' => $notification,
+        ]);
+    }
+
+
+    /**
+     * Export preset configuration as YAML file
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function exportPreset(ServerRequestInterface $request): ResponseInterface
+    {
+        $data = $request->getParsedBody();
+        $presetUid = isset($data['presetUid']) && is_numeric($data['presetUid']) ? (int)$data['presetUid'] : 0;
+
+        try {
+            // Early validation before database queries
+            if ($presetUid <= 0) {
+                throw new \Exception('Invalid preset UID');
+            }
+
+            $preset = $this->presetRepository->findByUid($presetUid);
+            
+            if (!$preset) {
+                throw new \Exception('Preset not found');
+            }
+
+            $presetKey = $preset->getPresetKey();
+            $isCustom = $preset->getIsCustom();
+            
+            // Sync features before export
+            $this->syncFeaturesService->syncPresetFeatures($preset);
+            
+            // For core presets, load original YAML file and only add new database features
+            // For custom presets, build from database only
+            if (!$isCustom) {
+                // Load original YAML file content as-is
+                $yamlContent = $this->importExportService->loadAndEnhanceYamlFile($presetKey, $presetUid, $preset->getToolbarItems());
+            } else {
+                // For custom presets, build from database only
+                $yamlConfig = $this->importExportService->buildYamlConfiguration($presetUid, $preset->getToolbarItems(), null);
+                $yamlContent = $this->importExportService->formatYamlContent($yamlConfig, null);
+            }
+            
+            // Get response and stream factories (cached by GeneralUtility)
+            $responseFactory = GeneralUtility::makeInstance(ResponseFactoryInterface::class);
+            $streamFactory = GeneralUtility::makeInstance(StreamFactoryInterface::class);
+            
+            // Create stream with YAML content
+            $stream = $streamFactory->createStream($yamlContent);
+            $contentLength = strlen($yamlContent);
+            $filename = $presetKey . '.yaml';
+            
+            // Return file download response with optimized header building
+            return $responseFactory->createResponse()
+                ->withHeader('Content-Type', 'application/x-yaml; charset=utf-8')
+                ->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+                ->withHeader('Content-Length', (string)$contentLength)
+                ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->withHeader('Pragma', 'no-cache')
+                ->withHeader('Expires', '0')
+                ->withBody($stream);
+        } catch (\Exception $e) {
+            // Return error as JSON response
+            return new JsonResponse([
+                'notifications' => [[
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => $e->getMessage(),
+                    'severity' => 2,
+                ]]
+            ]);
+        }
+    }
+
+
+    /**
+     * Import preset configuration from YAML file
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function importPreset(ServerRequestInterface $request): ResponseInterface
+    {
+        $notification = [];
+        
+        try {
+            $uploadedFiles = $request->getUploadedFiles();
+            $yamlFile = $uploadedFiles['yamlFile'] ?? null;
+            
+            if (!$yamlFile || !($yamlFile instanceof UploadedFileInterface)) {
+                throw new \Exception('No file uploaded');
+            }
+            
+            if ($yamlFile->getError() !== UPLOAD_ERR_OK) {
+                throw new \Exception('File upload error: ' . $yamlFile->getError());
+            }
+            
+            // Get file content
+            $fileContent = $yamlFile->getStream()->getContents();
+            $fileName = $yamlFile->getClientFilename();
+            
+            // Extract preset key from filename (remove .yaml/.yml extension)
+            $presetKey = pathinfo($fileName, PATHINFO_FILENAME);
+            $presetKey = str_replace(' ', '_', trim(strtolower($presetKey)));
+            
+            if (empty($presetKey)) {
+                throw new \Exception('Invalid filename');
+            }
+            
+            // Parse YAML content
+            $yamlConfig = Yaml::parse($fileContent);
+            
+            if (empty($yamlConfig) || !isset($yamlConfig['editor']['config'])) {
+                throw new \Exception('Invalid YAML configuration: missing editor.config');
+            }
+            
+            $editorConfig = $yamlConfig['editor']['config'];
+            
+            // Extract toolbar items
+            $toolbarItems = [];
+            if (isset($editorConfig['toolbar']['items']) && is_array($editorConfig['toolbar']['items'])) {
+                $toolbarItems = $editorConfig['toolbar']['items'];
+            }
+            $toolbarItemsString = !empty($toolbarItems) ? implode(',', $toolbarItems) : '';
+            
+            // Check if preset already exists - if so, update it
+            $existingPreset = $this->presetRepository->findByPresetKey($presetKey);
+            $isUpdate = false;
+            
+            if ($existingPreset) {
+                // Update existing preset
+                $preset = $existingPreset;
+                $preset->setToolbarItems($toolbarItemsString);
+                $preset->setIsCustom(true);
+                $this->presetRepository->update($preset);
+                $presetUid = $preset->getUid();
+                $isUpdate = true;
+                
+                // Remove existing features before importing new ones
+                $this->featureRepository->removeByPresetId($presetUid);
+                $this->persistenceManager->persistAll();
+            } else {
+                // Check if preset exists in TYPO3 config (core preset)
+                $presetsData = $this->baseToolBar->findAvailablePresets();
+                $availablePresets = array_merge($presetsData['core'] ?? [], $presetsData['custom'] ?? []);
+
+                if (in_array($presetKey, array_keys($availablePresets))) {
+                    throw new \Exception('Cannot update core preset from YAML. Please use a different name.');
+                }
+                
+                // Create new preset
+                $preset = GeneralUtility::makeInstance(Preset::class);
+                $preset->setPresetKey($presetKey);
+                $preset->setIsCustom(true);
+                $preset->setToolbarItems($toolbarItemsString);
+                $this->presetRepository->add($preset);
+                $this->persistenceManager->persistAll();
+                $presetUid = $preset->getUid();
+            }
+            
+            // Process features from YAML config
+            $this->importExportService->importFeaturesFromYaml($presetUid, $editorConfig);
+            
+            $this->persistenceManager->persistAll();
+            $this->cache->flush();
+            
+            $notification[] = [
+                'title' => 'ckeditorKit.operation.success',
+                'message' => $isUpdate 
+                    ? 'ckeditorKit.preset.import.update.success.message' 
+                    : 'ckeditorKit.preset.import.success.message',
+                'severity' => 0,
+            ];
+            
+        } catch (\Exception $e) {
+            $notification[] = [
+                'title' => 'ckeditorKit.operation.error',
+                'message' => $e->getMessage(),
+                'severity' => 2,
+            ];
+        }
+        
+        return new JsonResponse([
+            'notifications' => $notification,
+        ]);
+    }
+
+    /**
+     * Check if preset exists by name
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function checkPresetExists(ServerRequestInterface $request): ResponseInterface
+    {
+        $data = $request->getParsedBody();
+        $presetKey = isset($data['presetKey']) ? trim(strtolower($data['presetKey'])) : '';
+        
+        $exists = false;
+        $isCore = false;
+        
+        if (!empty($presetKey)) {
+            // Normalize preset key (same as import does)
+            $presetKey = str_replace(' ', '_', $presetKey);
+            
+            // Check if it's a core preset
+            $presetsData = $this->baseToolBar->findAvailablePresets();
+            $availablePresets = array_merge($presetsData['core'] ?? [], $presetsData['custom'] ?? []);
+            
+            if (in_array($presetKey, array_keys($availablePresets))) {
+                $exists = true;
+                $isCore = in_array($presetKey, array_keys($presetsData['core'] ?? []));
+            } else {
+                // Check database
+                $existingPreset = $this->presetRepository->findByPresetKey($presetKey);
+                if ($existingPreset) {
+                    $exists = true;
+                }
+            }
+        }
+        
+        return new JsonResponse([
+            'exists' => $exists,
+            'isCore' => $isCore,
+            'presetKey' => $presetKey,
         ]);
     }
 
