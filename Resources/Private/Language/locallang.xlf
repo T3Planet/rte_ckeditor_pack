@@ -223,6 +223,14 @@
                 <source>Switch text between uppercase, lowercase, or title case with one click.</source>
             </trans-unit>
             
+            <trans-unit id="ckeditorKit.tab.productivity.editoria11y">
+                <source>Editoria11y</source>
+            </trans-unit>
+            
+            <trans-unit id="ckeditorKit.tab.productivity.editoria11y.description">
+                <source>Checks accessibility issues like headings, alternative text, and links while you edit.</source>
+            </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode">
                 <source>Full Screen Mode</source>
             </trans-unit>

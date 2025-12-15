@@ -777,6 +777,15 @@ class Modules
                 ],
             ],
             [
+                'tab' => Tabs::PRODUCTIVITY,
+                'details' => $cardDetails->getDetailsByKey('Editoria11y'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => false,
+                    'config_key' => 'Editoria11y',
+                ],
+            ],
+            [
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('RestrictedEditingMode'),
                 // 'is_toggle' => 1,

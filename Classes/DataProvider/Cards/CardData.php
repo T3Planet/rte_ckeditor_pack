@@ -226,6 +226,15 @@ class CardData
                 'modalSize' => 'small',
                 'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/case-change.html',
             ],
+            'Editoria11y' => [
+                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.editoria11y', 'rte_ckeditor_pack'),
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.editoria11y', 'rte_ckeditor_pack'),
+                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.productivity.editoria11y.description', 'rte_ckeditor_pack'),
+                'icon' => 'rte_editoria11y',
+                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.checkbox.enable', 'rte_ckeditor_pack'),
+                'modalSize' => 'medium',
+                'docs' => 'https://editoria11y.princeton.edu/',
+            ],
             'Images' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.images', 'rte_ckeditor_pack'),
                 'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.images', 'rte_ckeditor_pack'),
