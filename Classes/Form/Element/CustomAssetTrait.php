@@ -22,11 +22,11 @@ trait CustomAssetTrait
     {
         $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor.css';
         
-        $extPath = 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.css';
-        $absoluteWebPath = PathUtility::getAbsoluteWebPath(GeneralUtility::getFileAbsFileName($extPath));
-        $tempElement = '<div id="editoria11y-config" data-css-path="' . htmlspecialchars($absoluteWebPath) . '" style="display: none;"></div>';
-        $resultArray['html'] = $resultArray['html'] . $tempElement;
         if ($this->isEditoria11yEnabled()) {
+            $extPath = 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.css';
+            $absoluteWebPath = PathUtility::getAbsoluteWebPath(GeneralUtility::getFileAbsFileName($extPath));
+            $tempElement = '<div id="editoria11y-config" data-css-path="' . htmlspecialchars($absoluteWebPath) . '" style="display: none;"></div>';
+            $resultArray['html'] = $resultArray['html'] . $tempElement;
             $resultArray['javaScriptModules'][] = JavaScriptModuleInstruction::create('@t3planet/RteCkeditorPack/editoria11y-integration.js');
         }
         return $resultArray;
