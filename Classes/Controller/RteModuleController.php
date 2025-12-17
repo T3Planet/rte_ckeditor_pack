@@ -850,12 +850,10 @@ class RteModuleController extends ActionController
             $presetKey = $preset->getPresetKey();
             $isCustom = $preset->getIsCustom();
             
-            // Sync features before export
-            $this->syncFeaturesService->syncPresetFeatures($preset);
-            
-            // For core presets, load original YAML file and only add new database features
-            // For custom presets, build from database only
+            // Checking for the preset is custom or not
             if (!$isCustom) {
+                // Sync features before export
+                $this->syncFeaturesService->syncPresetFeatures($preset);
                 // Load original YAML file content as-is
                 $yamlContent = $this->importExportService->loadAndEnhanceYamlFile($presetKey, $presetUid, $preset->getToolbarItems());
             } else {
