@@ -478,14 +478,15 @@ class ImportExportService
         return $header . "editor:\n  config: {}\n";
     }
 
-    
+
     public function importFeaturesFromYaml(int $presetUid, array $editorConfig): void
     {
         // Map YAML keys to internal config_key names where they differ
         $yamlToConfigKeyMap = [
             'typing' => 'TextTransformation',
+            'sourceEditing' => 'SourceEditingEnhanced',
         ];
-
+        
         $fontPayload = [];
 
         foreach ($editorConfig as $key => $value) {
