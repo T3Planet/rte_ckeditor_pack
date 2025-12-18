@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Service;
 
+use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
+use T3Planet\RteCkeditorPack\DataProvider\Modules;
 use T3Planet\RteCkeditorPack\Domain\Model\Feature;
-use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
-use Symfony\Component\Yaml\Yaml;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 
 class ImportExportService
 {
@@ -42,8 +43,7 @@ class ImportExportService
 
     public function __construct(
         protected readonly FeatureRepository $featureRepository
-    ) {
-    }
+    ) {}
 
     /**
      * Get TYPO3 major version
@@ -64,12 +64,12 @@ class ImportExportService
     public function convertConfigKeyToYamlKey(string $configKey): string
     {
         $configKeyLower = strtolower($configKey);
-        
+
         // Check if we have a specific mapping
         if (isset(self::YAML_KEY_MAP[$configKeyLower])) {
             return self::YAML_KEY_MAP[$configKeyLower];
         }
-        
+
         // Convert PascalCase to camelCase
         // First letter lowercase, rest as-is
         return lcfirst($configKey);
@@ -111,14 +111,14 @@ class ImportExportService
 
         // Use optimized query to fetch only enabled features at database level
         $features = $this->featureRepository->findEnabledByPresetUid($presetUid);
-        
+
         // Map to track Font configurations (fontFamily and fontSize)
         $fontConfig = [];
         $mergeUtility = null;
-        
+
         foreach ($features as $feature) {
             $configKey = $feature->getConfigKey();
-            
+
             // Skip Mention feature as it's not supported in export
             if ($configKey === 'Mention') {
                 continue;
@@ -148,17 +148,17 @@ class ImportExportService
             } else {
                 // For other features, map ConfigKey to YAML key (preserves camelCase)
                 $yamlKey = $this->convertConfigKeyToYamlKey($configKey);
-                
+
                 if (isset($moduleConfiguration[$yamlKey]) && is_array($moduleConfiguration[$yamlKey])) {
                     $moduleConfiguration = $moduleConfiguration[$yamlKey];
                 }
-                
+
                 // If base YAML config exists and this key exists in base, merge them
                 if ($baseYamlConfig !== null && isset($baseYamlConfig[$yamlKey])) {
                     if ($mergeUtility === null) {
                         $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
                     }
-                    
+
                     $existingConfig = $config['editor']['config'][$yamlKey] ?? $baseYamlConfig[$yamlKey];
                     $config['editor']['config'][$yamlKey] = $mergeUtility->mergeRecursiveDistinct(
                         $existingConfig,
@@ -169,7 +169,7 @@ class ImportExportService
                 }
             }
         }
-        
+
         // Merge Font configuration if we collected any
         if (!empty($fontConfig)) {
             // If base YAML has font config, merge it
@@ -177,7 +177,7 @@ class ImportExportService
                 if ($mergeUtility === null) {
                     $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
                 }
-                
+
                 $yamlFontConfig = [];
                 if (isset($baseYamlConfig['fontFamily'])) {
                     $yamlFontConfig['fontFamily'] = $baseYamlConfig['fontFamily'];
@@ -185,7 +185,7 @@ class ImportExportService
                 if (isset($baseYamlConfig['fontSize'])) {
                     $yamlFontConfig['fontSize'] = $baseYamlConfig['fontSize'];
                 }
-                
+
                 if (!empty($yamlFontConfig)) {
                     // Use mergeRecursiveDistinct for Font config (database takes precedence)
                     $mergedFont = $mergeUtility->mergeRecursiveDistinct($yamlFontConfig, $fontConfig);
@@ -239,24 +239,24 @@ class ImportExportService
         if (empty($presetKey) || !isset($GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets'][$presetKey])) {
             throw new \Exception('YAML file not found for preset: ' . $presetKey);
         }
-        
+
         $yamlFilePath = $GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets'][$presetKey];
         $absoluteFilePath = GeneralUtility::getFileAbsFileName($yamlFilePath);
-        
+
         if (empty($absoluteFilePath) || !file_exists($absoluteFilePath)) {
             throw new \Exception('YAML file does not exist: ' . $absoluteFilePath);
         }
-        
+
         // Load original YAML file content (needed for preserving header)
         $originalContent = file_get_contents($absoluteFilePath);
         if ($originalContent === false) {
             throw new \Exception('Failed to read YAML file: ' . $absoluteFilePath);
         }
-        
+
         // Load configuration using YamlFileLoader
         $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
         $configuration = $fileLoader->load($yamlFilePath);
-        
+
         // Migrate configuration using CKEditor5Migrator
         if (self::getTypo3MajorVersion() === 14) {
             $configuration = GeneralUtility::makeInstance(
@@ -269,38 +269,38 @@ class ImportExportService
                 $configuration
             )->get();
         }
-        
+
         $originalEditorConfig = $configuration['editor']['config'] ?? [];
-        
+
         // Get database features
         $databaseFeatures = $this->getDatabaseFeatures($presetUid);
-        
+
         // Get database toolbar items if different from YAML
         $databaseToolbarItems = null;
         if (!empty($toolbarItems)) {
             $toolbarItemsArray = array_filter(array_map('trim', explode(',', $toolbarItems)));
             $yamlToolbarItems = $originalEditorConfig['toolbar']['items'] ?? [];
-            
+
             // Only use database toolbar if it's different
             if (!empty($toolbarItemsArray) && $toolbarItemsArray !== $yamlToolbarItems) {
                 $databaseToolbarItems = $toolbarItemsArray;
             }
         }
-        
+
         // Build enhanced config: start with original, but database features override YAML
         $enhancedConfig = $originalEditorConfig;
-        
+
         // Update toolbar if database has different items
         if ($databaseToolbarItems !== null) {
             $enhancedConfig['toolbar'] = ['items' => $databaseToolbarItems];
         }
-        
+
         // Override YAML features with database features if they exist in database
         // If a feature exists in both database and YAML, use database version
         foreach ($databaseFeatures as $yamlKey => $featureConfig) {
             $enhancedConfig[$yamlKey] = $featureConfig;
         }
-        
+
         // Rebuild YAML: preserve original structure, replace editor.config section
         return $this->rebuildYamlWithNewConfig($originalContent, $enhancedConfig);
     }
@@ -316,25 +316,25 @@ class ImportExportService
         $features = $this->featureRepository->findEnabledByPresetUid($presetUid);
         $databaseFeatures = [];
         $fontConfig = [];
-        
+
         foreach ($features as $feature) {
             $configKey = $feature->getConfigKey();
-            
+
             // Skip Mention feature as it's not supported in export
             if ($configKey === 'Mention') {
                 continue;
             }
-            
+
             $fields = $feature->getFields();
             if (empty($fields)) {
                 continue;
             }
-            
+
             $moduleConfiguration = json_decode($fields, true);
             if (!is_array($moduleConfiguration) || empty($moduleConfiguration)) {
                 continue;
             }
-            
+
             // Handle Font configKey
             if ($configKey === 'Font') {
                 if (isset($moduleConfiguration['fontFamily'])) {
@@ -346,16 +346,16 @@ class ImportExportService
             } else {
                 // Map ConfigKey to YAML key (preserves camelCase)
                 $yamlKey = $this->convertConfigKeyToYamlKey($configKey);
-                
+
                 // Handle nested structures
                 if (isset($moduleConfiguration[$yamlKey]) && is_array($moduleConfiguration[$yamlKey])) {
                     $moduleConfiguration = $moduleConfiguration[$yamlKey];
                 }
-                
+
                 $databaseFeatures[$yamlKey] = $moduleConfiguration;
             }
         }
-        
+
         // Add Font configuration
         if (!empty($fontConfig)) {
             if (isset($fontConfig['fontFamily'])) {
@@ -365,7 +365,7 @@ class ImportExportService
                 $databaseFeatures['fontSize'] = $fontConfig['fontSize'];
             }
         }
-        
+
         return $databaseFeatures;
     }
 
@@ -384,31 +384,31 @@ class ImportExportService
         $inConfigSection = false;
         $configIndent = 0;
         $editorSectionFound = false;
-        
+
         foreach ($lines as $line) {
             $trimmedLine = trim($line);
-            
+
             // Detect start of editor section
             if ($trimmedLine === 'editor:' || str_starts_with($trimmedLine, 'editor:')) {
                 $inEditorSection = true;
                 $result[] = $line;
                 continue;
             }
-            
+
             // Detect start of config section
             if ($inEditorSection && ($trimmedLine === 'config:' || str_starts_with($trimmedLine, 'config:'))) {
                 $inConfigSection = true;
                 $editorSectionFound = true;
                 $configIndent = strlen($line) - strlen(ltrim($line));
                 $result[] = $line;
-                
+
                 // Add new config content
                 $configYaml = Yaml::dump($newEditorConfig, 10, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
                 $indentedConfig = preg_replace('/^/m', str_repeat(' ', $configIndent + 2), $configYaml);
                 $result[] = $indentedConfig;
                 continue;
             }
-            
+
             // Skip lines inside config section (we're replacing it)
             if ($inConfigSection) {
                 $currentIndent = strlen($line) - strlen(ltrim($line));
@@ -422,11 +422,11 @@ class ImportExportService
                 // Skip all lines inside config
                 continue;
             }
-            
+
             // Add all other lines as-is
             $result[] = $line;
         }
-        
+
         // If we never found an editor:config section, append it at the end
         if (!$editorSectionFound) {
             $result[] = "editor:";
@@ -435,7 +435,7 @@ class ImportExportService
             $indentedConfig = preg_replace('/^/m', '    ', $configYaml);
             $result[] = $indentedConfig;
         }
-        
+
         return implode("\n", $result);
     }
 
@@ -450,23 +450,23 @@ class ImportExportService
     {
         // Use custom header from YAML file if provided, otherwise use static header
         $header = $yamlHeader ?? self::YAML_HEADER;
-        
+
         // Dump the editor config part with proper indentation
         $editorConfig = $config['editor']['config'] ?? [];
-        
+
         if (!empty($editorConfig)) {
             // Dump only the config part (without editor wrapper)
             $configYaml = Yaml::dump($editorConfig, 10, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
-            
+
             // Add editor and config keys with proper indentation
             $indentedConfig = preg_replace('/^/m', '    ', $configYaml);
-            
+
             // If header already contains 'editor:', just append the config
             // Otherwise, add 'editor:\n  config:\n' before the config
             if (str_contains($header, 'editor:')) {
                 return $header . $indentedConfig;
             }
-            
+
             return $header . "editor:\n  config:\n" . $indentedConfig;
         }
 
@@ -474,138 +474,64 @@ class ImportExportService
         if (str_contains($header, 'editor:')) {
             return $header . "  config: {}\n";
         }
-        
+
         return $header . "editor:\n  config: {}\n";
     }
 
-    /**
-     * Import features from YAML configuration
-     *
-     * @param int $presetUid
-     * @param array $editorConfig
-     * @return void
-     */
+    
     public function importFeaturesFromYaml(int $presetUid, array $editorConfig): void
     {
-        // Reverse mapping: YAML keys (lowercase) to ConfigKey names
-        // This is the inverse of the export mapping
-        $configKeyMap = [
-            'heading' => 'Heading',
-            'style' => 'Style',
-            'alignment' => 'Alignment',
-            'table' => 'Table',
-            'link' => 'Link',
-            'image' => 'Image',
-            'images' => 'Images',
-            'list' => 'List',
-            'listproperties' => 'ListProperties',
-            'blockquote' => 'BlockQuote',
-            'codeblock' => 'CodeBlock',
-            'code' => 'Code',
-            'htmlsupport' => 'HtmlSupport',
-            'htmlembed' => 'HtmlEmbed',
-            'typing' => 'Typing',
-            'texttransformation' => 'TextTransformation',
-            'highlight' => 'HighLight',
-            'multilevellist' => 'MultiLevelList',
-            'collaboration' => 'RealTimeCollaboration',
-            'sourceediting' => 'SourceEditingEnhanced',
-            'pastefromoffice' => 'PasteFromOfficeEnhanced',
-            'restrictedediting' => 'RestrictedEditingMode',
-            'tableofcontents' => 'TableOfContents',
-            'wordcount' => 'WordCount',
-            'menubar' => 'Menubar',
-            'balloontoolbar' => 'BalloonToolbar',
-            'blocktoolbar' => 'BlockToolbar',
-            'indentation' => 'Indentation',
-            'lineheight' => 'LineHeight',
-            'markdown' => 'Markdown',
-            'mediaembed' => 'MediaEmbed',
-            'pagebreak' => 'PageBreak',
-            'showblocks' => 'ShowBlocks',
-            'language' => 'Language',
-            'emoji' => 'Emoji',
-            'fullscreen' => 'FullScreen',
-            'footnotes' => 'Footnotes',
-            'wproofreader' => 'WProofreader',
-            'pagination' => 'Pagination',
-            'notification' => 'Notification',
-            'mathequations' => 'MathEquations',
-            'bookmark' => 'Bookmark',
-            'comments' => 'Comments',
-            'revisionhistory' => 'RevisionHistory',
-            'trackchanges' => 'TrackChanges',
-            'slashcommand' => 'SlashCommand',
-            'template' => 'Template',
-            'casechange' => 'CaseChange',
-            'mergefields' => 'MergeFields',
-            'documentoutline' => 'DocumentOutline',
-            'formatpainter' => 'FormatPainter',
+        // Map YAML keys to internal config_key names where they differ
+        $yamlToConfigKeyMap = [
+            'typing' => 'TextTransformation',
         ];
-        
-        // Handle Font separately (fontFamily and fontSize are separate keys in YAML)
-        $fontConfig = [];
-        if (isset($editorConfig['fontFamily'])) {
-            $fontConfig['fontFamily'] = $editorConfig['fontFamily'];
-        }
-        if (isset($editorConfig['fontSize'])) {
-            $fontConfig['fontSize'] = $editorConfig['fontSize'];
-        }
-        
-        if (!empty($fontConfig)) {
-            // Check if feature already exists
-            $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, 'Font');
-            
-            if ($feature) {
-                // Update existing feature
-                $feature->setEnable(true);
-                $feature->setFields(json_encode($fontConfig));
-                $this->featureRepository->update($feature);
-            } else {
-                // Create new feature
-                $feature = GeneralUtility::makeInstance(Feature::class);
-                $feature->setPresetUid($presetUid);
-                $feature->setConfigKey('Font');
-                $feature->setEnable(true);
-                $feature->setFields(json_encode($fontConfig));
-                $this->featureRepository->add($feature);
-            }
-        }
-        
-        // Process other features from YAML config
+
+        $fontPayload = [];
+
         foreach ($editorConfig as $key => $value) {
-            // Skip toolbar and font items (already handled)
-            if (in_array($key, ['toolbar', 'fontFamily', 'fontSize'])) {
+            // Translate YAML key (e.g. 'typing') to internal config_key when needed
+            $lookupKey = $yamlToConfigKeyMap[$key] ?? $key;
+
+            $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($lookupKey, true);
+            if (empty($moduleConfiguration)) {
                 continue;
             }
-            
-            // Skip if not an array (not a feature configuration)
-            if (!is_array($value) || empty($value)) {
+            $configKey = $moduleConfiguration['configuration']['config_key'];
+
+            // Collect all font-related keys first (fontFamily, fontSize, fontColor, fontBackgroundColor)
+            if ($configKey === 'Font') {
+                $fontPayload[$key] = $value;
                 continue;
             }
-            
-            // Determine config key - use mapping or capitalize first letter
-            $keyLower = strtolower($key);
-            $configKey = $configKeyMap[$keyLower] ?? ucfirst($key);
-            
-            // Wrap value with feature key to match proper structure: {"style":{"definitions":[...]}}
-            $wrappedConfig = [$key => $value];
-            
-            // Check if feature already exists
+
+            $wrapped = [$key => $value];
             $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
-            
             if ($feature) {
-                // Update existing feature
                 $feature->setEnable(true);
-                $feature->setFields(json_encode($wrappedConfig));
+                $feature->setFields(json_encode($wrapped));
                 $this->featureRepository->update($feature);
             } else {
-                // Create new feature
                 $feature = GeneralUtility::makeInstance(Feature::class);
                 $feature->setPresetUid($presetUid);
                 $feature->setConfigKey($configKey);
                 $feature->setEnable(true);
-                $feature->setFields(json_encode($wrappedConfig));
+                $feature->setFields(json_encode($wrapped));
+                $this->featureRepository->add($feature);
+            }
+        }
+
+        // Save Font once
+        if (!empty($fontPayload)) {
+            $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, 'Font')
+                ?? GeneralUtility::makeInstance(Feature::class);
+
+            $feature->setPresetUid($presetUid);
+            $feature->setConfigKey('Font');
+            $feature->setEnable(true);
+            $feature->setFields(json_encode($fontPayload));
+            if ($feature->getUid() ?? null) {
+                $this->featureRepository->update($feature);
+            } else {
                 $this->featureRepository->add($feature);
             }
         }
