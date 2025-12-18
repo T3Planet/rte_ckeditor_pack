@@ -383,6 +383,7 @@ class ImportExportService
         $inEditorSection = false;
         $inConfigSection = false;
         $configIndent = 0;
+        $editorSectionFound = false;
         
         foreach ($lines as $line) {
             $trimmedLine = trim($line);
@@ -397,6 +398,7 @@ class ImportExportService
             // Detect start of config section
             if ($inEditorSection && ($trimmedLine === 'config:' || str_starts_with($trimmedLine, 'config:'))) {
                 $inConfigSection = true;
+                $editorSectionFound = true;
                 $configIndent = strlen($line) - strlen(ltrim($line));
                 $result[] = $line;
                 
@@ -425,8 +427,8 @@ class ImportExportService
             $result[] = $line;
         }
         
-        // If we never found editor:config, append it at the end
-        if (!$inEditorSection) {
+        // If we never found an editor:config section, append it at the end
+        if (!$editorSectionFound) {
             $result[] = "editor:";
             $result[] = "  config:";
             $configYaml = Yaml::dump($newEditorConfig, 10, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
