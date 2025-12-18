@@ -1174,10 +1174,10 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>Exporting...</source>
             </trans-unit>
             <trans-unit id="js.export.started">
-                <source>Export Started</source>
+                <source>YAML is Exported</source>
             </trans-unit>
             <trans-unit id="js.export.started.message">
-                <source>YAML file download should start shortly</source>
+                <source>YAML file exported successfully</source>
             </trans-unit>
             <trans-unit id="js.import.file.select">
                 <source>Please select a YAML file to import</source>
@@ -1189,7 +1189,7 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>Update Existing Preset</source>
             </trans-unit>
             <trans-unit id="js.import.update.message">
-                <source>A preset with the name "%s" already exists. Do you want to update it? This will replace all existing configuration and features.</source>
+                <source>A preset with the name "%s" already exists. Do you want to import it? This will reset all existing customization.</source>
             </trans-unit>
             <trans-unit id="js.import.update.button">
                 <source>Update</source>

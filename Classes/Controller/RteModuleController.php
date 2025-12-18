@@ -951,11 +951,9 @@ class RteModuleController extends ActionController
                 // Update existing preset
                 $preset = $existingPreset;
                 $preset->setToolbarItems($toolbarItemsString);
-                $preset->setIsCustom(true);
                 $this->presetRepository->update($preset);
                 $presetUid = $preset->getUid();
                 $isUpdate = true;
-                
                 // Remove existing features before importing new ones
                 $this->featureRepository->removeByPresetId($presetUid);
                 $this->persistenceManager->persistAll();

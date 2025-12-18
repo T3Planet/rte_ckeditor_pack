@@ -534,7 +534,7 @@ class Modules
                     'config_key' => 'HighLight',
                     'default' => true,
                     'module' => $this->getModulesFromFeature(HighlightFeature::class),
-                    'toolBarItems' => 'Highlight',
+                    'toolBarItems' => 'highlight',
                 ],
                 'fields' => $this->getFieldsFromFeature(HighlightFeature::class),
             ],
