@@ -79,15 +79,6 @@
                                                             <core:icon identifier="actions-synchronize" size="small" />
                                                             <span class="ms-1"><f:translate key="presets.sync" extensionName="RteCkeditorPack" default="Sync"/></span>
                                                         </button>
-
-                                                        <button type="button" class="btn btn-sm btn-default export-preset {f:if(condition: '{item.usage_source}', then: 'disabled')}" 
-                                                                data-preset-uid="{item.uid}" 
-                                                                data-preset-key="{item.preset_key}"
-                                                                title="{f:translate(key: 'presets.export', extensionName: 'RteCkeditorPack', default: 'Export')}">
-                                                            <core:icon identifier="actions-file-t3d-download" size="small" />
-                                                            <span class="ms-1"><f:translate key="presets.export" extensionName="RteCkeditorPack" default="Export"/></span>
-                                                        </button>
-                                                        
                                                     </f:if>
                                                     <f:if condition="{item.uid} == 0">
                                                         <span class="text-muted"><f:translate key="presets.yaml_readonly" extensionName="RteCkeditorPack" default="YAML-based (read-only)"/></span>
@@ -138,13 +129,7 @@
                                             </td>
                                             <td class="text-end">
                                                 <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-sm btn-default export-preset me-2" 
-                                                            data-preset-uid="{item.uid}" 
-                                                            data-preset-key="{item.key}"
-                                                            title="{f:translate(key: 'presets.export', extensionName: 'RteCkeditorPack', default: 'Export')}">
-                                                        <core:icon identifier="actions-file-t3d-download" size="small" />
-                                                        <span class="ms-1"><f:translate key="presets.export" extensionName="RteCkeditorPack" default="Export"/></span>
-                                                    </button>
+                                                   
                                                     <button class="btn btn-sm btn-notice delete t3js-modal-trigger text-nowrap" 
                                                             href="{be:moduleLink(route:'tce_db', query:'cmd[tx_rteckeditorpack_domain_model_preset][{item.uid}][delete]=1', arguments:'{redirect: returnUrl}')}"
                                                             title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:delete')}"
@@ -164,7 +149,6 @@
                         </div>
                     </div>
                 </f:if>
-                
                 <f:if condition="{corePresets -> f:count()} == 0">
                     <f:if condition="{customPresets -> f:count()} == 0">
                         <div class="alert alert-info">
@@ -172,29 +156,6 @@
                         </div>
                     </f:if>
                 </f:if>
-
-                <div class="import-preset mt-4">
-                    <h4 class="mb-3"><f:translate key="presets.import" extensionName="RteCkeditorPack" /></h4>
-                    <div class="card">
-                        <div class="card-body">
-                            <form id="importPresetForm" enctype="multipart/form-data">
-                                <div class="form-group form-group-custom">
-                                    <label for="yaml-file" class="form-label">
-                                        <f:translate key="form.import_yaml_file" extensionName="RteCkeditorPack" />
-                                    </label>
-                                    <input type="file" id="yaml-file" name="yamlFile" class="form-control" accept=".yaml,.yml" required />
-                                    <div class="form-text">
-                                        <f:translate key="form.import_yaml_file.description" extensionName="RteCkeditorPack" />
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary" id="importPresetBtn" disabled>
-                                    <core:icon identifier="actions-file-t3d-upload" size="small" />
-                                    <span class="ms-1"><f:translate key="presets.import.button" extensionName="RteCkeditorPack" /></span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

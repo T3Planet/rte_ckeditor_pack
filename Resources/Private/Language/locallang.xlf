@@ -962,13 +962,16 @@ The authorization credentials are required for Real-time collaboration or Import
                 <source>Manage Presets</source>
             </trans-unit>
             <trans-unit id="presets.import">
-                <source>Import Preset from YAML</source>
+                <source>Import Preset</source>
             </trans-unit>
             <trans-unit id="presets.import.button">
                 <source>Import</source>
             </trans-unit>
             <trans-unit id="presets.export">
                 <source>Export</source>
+            </trans-unit>
+             <trans-unit id="presets.export.title">
+                <source>Export Preset</source>
             </trans-unit>
             <trans-unit id="form.preset_name">
                 <source>New Preset Name</source>

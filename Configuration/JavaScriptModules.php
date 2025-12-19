@@ -107,6 +107,7 @@ return [
         '@t3planet/RteCkeditorPack/wizard-manipulation.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/wizard-manipulation.js',
         '@t3planet/RteCkeditorPack/global-button.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/global-button.js',
         '@t3planet/RteCkeditorPack/script.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/script.js',
+        '@t3planet/RteCkeditorPack/import-export.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/import-export.js',
         '@t3planet/RteCkeditorPack/drag-and-drop.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/drag-and-drop.js',
         '@t3planet/RteCkeditorPack/module-functionality.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/module-functionality.js',
         '@t3planet/RteCkeditorPack/collaboration-storage.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/collaboration-storage.js',

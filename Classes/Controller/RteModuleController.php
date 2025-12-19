@@ -901,106 +901,115 @@ class RteModuleController extends ActionController
      */
     public function importPreset(ServerRequestInterface $request): ResponseInterface
     {
-        $notification = [];
-        
-        try {
-            $uploadedFiles = $request->getUploadedFiles();
-            $yamlFile = $uploadedFiles['yamlFile'] ?? null;
-            
-            if (!$yamlFile || !($yamlFile instanceof UploadedFileInterface)) {
-                throw new \Exception('No file uploaded');
-            }
-            
-            if ($yamlFile->getError() !== UPLOAD_ERR_OK) {
-                throw new \Exception('File upload error: ' . $yamlFile->getError());
-            }
-            
-            // Get file content
-            $fileContent = $yamlFile->getStream()->getContents();
-            $fileName = $yamlFile->getClientFilename();
-            
-            // Extract preset key from filename (remove .yaml/.yml extension)
-            $presetKey = pathinfo($fileName, PATHINFO_FILENAME);
-            $presetKey = str_replace(' ', '_', trim(strtolower($presetKey)));
-            
-            if (empty($presetKey)) {
-                throw new \Exception('Invalid filename');
-            }
-            
-            // Parse YAML content
-            $yamlConfig = Yaml::parse($fileContent);
-            
-            if (empty($yamlConfig) || !isset($yamlConfig['editor']['config'])) {
-                throw new \Exception('Invalid YAML configuration: missing editor.config');
-            }
-            
-            $editorConfig = $yamlConfig['editor']['config'];
-            
-            // Extract toolbar items
-            $toolbarItems = [];
-            if (isset($editorConfig['toolbar']['items']) && is_array($editorConfig['toolbar']['items'])) {
-                $toolbarItems = $editorConfig['toolbar']['items'];
-            }
-            $toolbarItemsString = !empty($toolbarItems) ? implode(',', $toolbarItems) : '';
-            
-            // Check if preset already exists - if so, update it
-            $existingPreset = $this->presetRepository->findByPresetKey($presetKey);
-            $isUpdate = false;
-            
-            if ($existingPreset) {
-                // Update existing preset
-                $preset = $existingPreset;
-                $preset->setToolbarItems($toolbarItemsString);
-                $this->presetRepository->update($preset);
-                $presetUid = $preset->getUid();
-                $isUpdate = true;
-                // Remove existing features before importing new ones
-                $this->featureRepository->removeByPresetId($presetUid);
-                $this->persistenceManager->persistAll();
-            } else {
-                // Check if preset exists in TYPO3 config (core preset)
-                $presetsData = $this->baseToolBar->findAvailablePresets();
-                $availablePresets = array_merge($presetsData['core'] ?? [], $presetsData['custom'] ?? []);
 
-                if (in_array($presetKey, array_keys($availablePresets))) {
-                    throw new \Exception('Cannot update core preset from YAML. Please use a different name.');
+        $uploadedFiles = $request->getUploadedFiles();
+        if ($uploadedFiles) {
+            try {
+
+                $yamlFile = $uploadedFiles['yamlFile'] ?? null;
+                
+                if (!$yamlFile || !($yamlFile instanceof UploadedFileInterface)) {
+                    throw new \Exception('No file uploaded');
                 }
                 
-                // Create new preset
-                $preset = GeneralUtility::makeInstance(Preset::class);
-                $preset->setPresetKey($presetKey);
-                $preset->setIsCustom(true);
-                $preset->setToolbarItems($toolbarItemsString);
-                $this->presetRepository->add($preset);
+                if ($yamlFile->getError() !== UPLOAD_ERR_OK) {
+                    throw new \Exception('File upload error: ' . $yamlFile->getError());
+                }
+                
+                // Get file content
+                $fileContent = $yamlFile->getStream()->getContents();
+                $fileName = $yamlFile->getClientFilename();
+            
+                // Extract preset key from filename (remove .yaml/.yml extension)
+                $presetKey = pathinfo($fileName, PATHINFO_FILENAME);
+                $presetKey = str_replace(' ', '_', trim(strtolower($presetKey)));
+                
+                if (empty($presetKey)) {
+                    throw new \Exception('Invalid filename');
+                }
+                
+                // Parse YAML content
+                $yamlConfig = Yaml::parse($fileContent);
+                
+                if (empty($yamlConfig) || !isset($yamlConfig['editor']['config'])) {
+                    throw new \Exception('Invalid YAML configuration: missing editor.config');
+                }
+            
+                $editorConfig = $yamlConfig['editor']['config'];
+                
+                // Extract toolbar items
+                $toolbarItems = [];
+                if (isset($editorConfig['toolbar']['items']) && is_array($editorConfig['toolbar']['items'])) {
+                    $toolbarItems = $editorConfig['toolbar']['items'];
+                }
+                $toolbarItemsString = !empty($toolbarItems) ? implode(',', $toolbarItems) : '';
+                
+                // Check if preset already exists - if so, update it
+                $existingPreset = $this->presetRepository->findByPresetKey($presetKey);
+                $isUpdate = false;
+            
+                if ($existingPreset) {
+                    // Update existing preset
+                    $preset = $existingPreset;
+                    $preset->setToolbarItems($toolbarItemsString);
+                    $this->presetRepository->update($preset);
+                    $presetUid = $preset->getUid();
+                    $isUpdate = true;
+                    // Remove existing features before importing new ones
+                    $this->featureRepository->removeByPresetId($presetUid);
+                    $this->persistenceManager->persistAll();
+                } else {
+                    // Check if preset exists in TYPO3 config (core preset)
+                    $presetsData = $this->baseToolBar->findAvailablePresets();
+                    $availablePresets = array_merge($presetsData['core'] ?? [], $presetsData['custom'] ?? []);
+
+                    if (in_array($presetKey, array_keys($availablePresets))) {
+                        throw new \Exception('Cannot update core preset from YAML. Please use a different name.');
+                    }
+                    
+                    // Create new preset
+                    $preset = GeneralUtility::makeInstance(Preset::class);
+                    $preset->setPresetKey($presetKey);
+                    $preset->setIsCustom(true);
+                    $preset->setToolbarItems($toolbarItemsString);
+                    $this->presetRepository->add($preset);
+                    $this->persistenceManager->persistAll();
+                    $presetUid = $preset->getUid();
+                }
+            
+                // Process features from YAML config
+                $this->importExportService->importFeaturesFromYaml($presetUid, $editorConfig);
                 $this->persistenceManager->persistAll();
-                $presetUid = $preset->getUid();
+                $this->cache->flush();
+            
+                $notification[] = [
+                    'title' => 'ckeditorKit.operation.success',
+                    'message' => $isUpdate
+                        ? 'ckeditorKit.preset.import.update.success.message'
+                        : 'ckeditorKit.preset.import.success.message',
+                    'severity' => 0,
+                ];
+
+            } catch (\Exception $e) {
+                $notification[] = [
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => $e->getMessage(),
+                    'severity' => 2,
+                ];
             }
             
-            // Process features from YAML config
-            $this->importExportService->importFeaturesFromYaml($presetUid, $editorConfig);
-            
-            $this->persistenceManager->persistAll();
-            $this->cache->flush();
-            
-            $notification[] = [
-                'title' => 'ckeditorKit.operation.success',
-                'message' => $isUpdate 
-                    ? 'ckeditorKit.preset.import.update.success.message' 
-                    : 'ckeditorKit.preset.import.success.message',
-                'severity' => 0,
-            ];
-            
-        } catch (\Exception $e) {
-            $notification[] = [
-                'title' => 'ckeditorKit.operation.error',
-                'message' => $e->getMessage(),
-                'severity' => 2,
-            ];
+            return new JsonResponse([
+                'notifications' => $notification,
+            ]);
         }
-        
-        return new JsonResponse([
-            'notifications' => $notification,
+        $this->moduleTemplate = $this->initializeModuleTemplate($request);
+        $ajaxUrl = $this->urlBuilder->generateBackendUrl('ajax_new_preset');
+        $this->moduleTemplate->assignMultiple([
+            'returnUrl' => $request->getAttribute('normalizedParams')->getRequestUri(),
+            'ajaxUrl' => $ajaxUrl,
         ]);
+        return $this->moduleTemplate->renderResponse('RteModule/ImportPreset');
+        
     }
 
     /**
@@ -1106,6 +1115,7 @@ class RteModuleController extends ActionController
         $this->pageRenderer->addCssFile('EXT:backend/Resources/Public/Css/backend.css');
         $this->pageRenderer->addCssFile('EXT:rte_ckeditor_pack/Resources/Public/Css/dashboard.css');
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/global-button.js');
+        $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/import-export.js');
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/wizard-manipulation.js');
         $this->pageRenderer->loadJavaScriptModule('@typo3/backend/multi-record-selection.js');
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/module-functionality.js');
