@@ -976,6 +976,30 @@ class RteModuleController extends ActionController
                     $this->persistenceManager->persistAll();
                     $presetUid = $preset->getUid();
                 }
+
+                $toolbarItemArray = explode(',', $toolbarItemsString);
+                foreach ($toolbarItemArray as $value) {
+                    
+                    if(strlen($value) > 1 && $presetUid){
+
+                        $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($value, true);
+
+                        if ($moduleConfiguration && isset($moduleConfiguration['configuration']['config_key'])) {
+                            $configKey = $moduleConfiguration['configuration']['config_key'];
+                            // Get or create feature for this preset and module
+                            $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
+                            if (!$feature) {
+                                // Create new feature
+                                $feature = GeneralUtility::makeInstance(Feature::class);
+                                $feature->setPresetUid($presetUid);
+                                $feature->setConfigKey($configKey);
+                                $feature->setEnable(true);
+                                $this->featureRepository->add($feature);
+                                $this->persistenceManager->persistAll();
+                            }
+                        }
+                    }
+                }
             
                 // Process features from YAML config
                 $this->importExportService->importFeaturesFromYaml($presetUid, $editorConfig);
