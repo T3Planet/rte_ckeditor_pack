@@ -19,6 +19,7 @@ Create and manage your content easily with tools that help you write, format, an
    Productivity&ContentInput/Index
    Collaboration&Metadata/Index
    EditorUI&ToolbarExperience/Index
+   AccessibilityFeatures/Index
 
 Premium Features
 ---------------------
