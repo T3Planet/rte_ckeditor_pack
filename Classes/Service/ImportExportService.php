@@ -111,9 +111,6 @@ class ImportExportService
 
         // Use optimized query to fetch only enabled features at database level
         $features = $this->featureRepository->findEnabledByPresetUid($presetUid);
-
-        // Map to track Font configurations (fontFamily and fontSize)
-        $fontConfig = [];
         $mergeUtility = null;
 
         foreach ($features as $feature) {
@@ -124,13 +121,11 @@ class ImportExportService
                 continue;
             }
 
-            // Get fields configuration from database
             $fields = $feature->getFields();
             if (empty($fields)) {
                 continue;
             }
 
-            // Decode JSON configuration from database
             $moduleConfiguration = json_decode($fields, true);
             if (!is_array($moduleConfiguration) || empty($moduleConfiguration)) {
                 continue;
@@ -138,13 +133,7 @@ class ImportExportService
 
             // Special handling for Font configKey - fontFamily and fontSize are separate in YAML
             if ($configKey === 'Font') {
-                // Collect fontFamily and fontSize configurations
-                if (isset($moduleConfiguration['fontFamily'])) {
-                    $fontConfig['fontFamily'] = $moduleConfiguration['fontFamily'];
-                }
-                if (isset($moduleConfiguration['fontSize'])) {
-                    $fontConfig['fontSize'] = $moduleConfiguration['fontSize'];
-                }
+                $config['editor']['config'] = array_merge($config['editor']['config'] ?? [],$moduleConfiguration);
             } else {
                 // For other features, map ConfigKey to YAML key (preserves camelCase)
                 $yamlKey = $this->convertConfigKeyToYamlKey($configKey);
@@ -169,60 +158,7 @@ class ImportExportService
                 }
             }
         }
-
-        // Merge Font configuration if we collected any
-        if (!empty($fontConfig)) {
-            // If base YAML has font config, merge it
-            if ($baseYamlConfig !== null) {
-                if ($mergeUtility === null) {
-                    $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
-                }
-
-                $yamlFontConfig = [];
-                if (isset($baseYamlConfig['fontFamily'])) {
-                    $yamlFontConfig['fontFamily'] = $baseYamlConfig['fontFamily'];
-                }
-                if (isset($baseYamlConfig['fontSize'])) {
-                    $yamlFontConfig['fontSize'] = $baseYamlConfig['fontSize'];
-                }
-
-                if (!empty($yamlFontConfig)) {
-                    // Use mergeRecursiveDistinct for Font config (database takes precedence)
-                    $mergedFont = $mergeUtility->mergeRecursiveDistinct($yamlFontConfig, $fontConfig);
-                    if (isset($mergedFont['fontFamily'])) {
-                        $config['editor']['config']['fontFamily'] = $mergedFont['fontFamily'];
-                    }
-                    if (isset($mergedFont['fontSize'])) {
-                        $config['editor']['config']['fontSize'] = $mergedFont['fontSize'];
-                    }
-                } else {
-                    // No YAML font config, use database config
-                    if (isset($fontConfig['fontFamily'])) {
-                        $config['editor']['config']['fontFamily'] = $fontConfig['fontFamily'];
-                    }
-                    if (isset($fontConfig['fontSize'])) {
-                        $config['editor']['config']['fontSize'] = $fontConfig['fontSize'];
-                    }
-                }
-            } else {
-                // Custom preset, use database font config directly
-                if (isset($fontConfig['fontFamily'])) {
-                    $config['editor']['config']['fontFamily'] = $fontConfig['fontFamily'];
-                }
-                if (isset($fontConfig['fontSize'])) {
-                    $config['editor']['config']['fontSize'] = $fontConfig['fontSize'];
-                }
-            }
-        } elseif ($baseYamlConfig !== null) {
-            // No database font config, keep YAML base if exists
-            if (isset($baseYamlConfig['fontFamily'])) {
-                $config['editor']['config']['fontFamily'] = $baseYamlConfig['fontFamily'];
-            }
-            if (isset($baseYamlConfig['fontSize'])) {
-                $config['editor']['config']['fontSize'] = $baseYamlConfig['fontSize'];
-            }
-        }
-
+        
         return $config;
     }
 
@@ -273,7 +209,7 @@ class ImportExportService
         $originalEditorConfig = $configuration['editor']['config'] ?? [];
 
         // Get database features
-        $databaseFeatures = $this->getDatabaseFeatures($presetUid);
+        $databaseFeatures = $this->getFeaturesFromDB($presetUid);
 
         // Get database toolbar items if different from YAML
         $databaseToolbarItems = null;
@@ -300,7 +236,7 @@ class ImportExportService
         foreach ($databaseFeatures as $yamlKey => $featureConfig) {
             $enhancedConfig[$yamlKey] = $featureConfig;
         }
-
+        
         // Rebuild YAML: preserve original structure, replace editor.config section
         return $this->rebuildYamlWithNewConfig($originalContent, $enhancedConfig);
     }
@@ -311,38 +247,27 @@ class ImportExportService
      * @param int $presetUid
      * @return array
      */
-    public function getDatabaseFeatures(int $presetUid): array
+    public function getFeaturesFromDB(int $presetUid): array
     {
         $features = $this->featureRepository->findEnabledByPresetUid($presetUid);
         $databaseFeatures = [];
-        $fontConfig = [];
-
         foreach ($features as $feature) {
             $configKey = $feature->getConfigKey();
-
             // Skip Mention feature as it's not supported in export
             if ($configKey === 'Mention') {
                 continue;
             }
-
             $fields = $feature->getFields();
             if (empty($fields)) {
                 continue;
             }
-
             $moduleConfiguration = json_decode($fields, true);
             if (!is_array($moduleConfiguration) || empty($moduleConfiguration)) {
                 continue;
             }
-
             // Handle Font configKey
             if ($configKey === 'Font') {
-                if (isset($moduleConfiguration['fontFamily'])) {
-                    $fontConfig['fontFamily'] = $moduleConfiguration['fontFamily'];
-                }
-                if (isset($moduleConfiguration['fontSize'])) {
-                    $fontConfig['fontSize'] = $moduleConfiguration['fontSize'];
-                }
+                $databaseFeatures = array_merge($databaseFeatures ?? [],$moduleConfiguration);
             } else {
                 // Map ConfigKey to YAML key (preserves camelCase)
                 $yamlKey = $this->convertConfigKeyToYamlKey($configKey);
@@ -355,17 +280,6 @@ class ImportExportService
                 $databaseFeatures[$yamlKey] = $moduleConfiguration;
             }
         }
-
-        // Add Font configuration
-        if (!empty($fontConfig)) {
-            if (isset($fontConfig['fontFamily'])) {
-                $databaseFeatures['fontFamily'] = $fontConfig['fontFamily'];
-            }
-            if (isset($fontConfig['fontSize'])) {
-                $databaseFeatures['fontSize'] = $fontConfig['fontSize'];
-            }
-        }
-
         return $databaseFeatures;
     }
 
