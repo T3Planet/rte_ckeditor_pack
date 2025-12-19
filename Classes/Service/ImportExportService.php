@@ -115,13 +115,8 @@ class ImportExportService
 
         foreach ($features as $feature) {
             $configKey = $feature->getConfigKey();
-
-            // Skip Mention feature as it's not supported in export
-            if ($configKey === 'Mention') {
-                continue;
-            }
-
             $fields = $feature->getFields();
+            
             if (empty($fields)) {
                 continue;
             }
@@ -210,7 +205,7 @@ class ImportExportService
 
         // Get database features
         $databaseFeatures = $this->getFeaturesFromDB($presetUid);
-
+        
         // Get database toolbar items if different from YAML
         $databaseToolbarItems = null;
         if (!empty($toolbarItems)) {
@@ -253,10 +248,6 @@ class ImportExportService
         $databaseFeatures = [];
         foreach ($features as $feature) {
             $configKey = $feature->getConfigKey();
-            // Skip Mention feature as it's not supported in export
-            if ($configKey === 'Mention') {
-                continue;
-            }
             $fields = $feature->getFields();
             if (empty($fields)) {
                 continue;
