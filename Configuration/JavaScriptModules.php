@@ -107,6 +107,7 @@ return [
         '@t3planet/RteCkeditorPack/wizard-manipulation.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/wizard-manipulation.js',
         '@t3planet/RteCkeditorPack/global-button.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/global-button.js',
         '@t3planet/RteCkeditorPack/script.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/script.js',
+        '@t3planet/RteCkeditorPack/import-export.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/import-export.js',
         '@t3planet/RteCkeditorPack/drag-and-drop.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/drag-and-drop.js',
         '@t3planet/RteCkeditorPack/module-functionality.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/module-functionality.js',
         '@t3planet/RteCkeditorPack/collaboration-storage.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/collaboration-storage.js',
@@ -134,5 +135,7 @@ return [
         '@t3planet/RteCkeditorPack/line-height-ui' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/line-height-ui.js',
         '@t3planet/RteCkeditorPack/line-height-utils' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/utils.js',
         '@t3planet/RteCkeditorPack/ckeditor5-error' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ErrorNotifications/error-notifications.js',
+        '@t3planet/RteCkeditorPack/editoria11y.min.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.js',
+        '@t3planet/RteCkeditorPack/editoria11y-integration.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y-integration.js',
     ],
 ];

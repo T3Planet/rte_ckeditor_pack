@@ -223,6 +223,14 @@
                 <source>Switch text between uppercase, lowercase, or title case with one click.</source>
             </trans-unit>
             
+            <trans-unit id="ckeditorKit.tab.productivity.editoria11y">
+                <source>Editoria11y</source>
+            </trans-unit>
+            
+            <trans-unit id="ckeditorKit.tab.productivity.editoria11y.description">
+                <source>Checks accessibility issues like headings, alternative text, and links while you edit.</source>
+            </trans-unit>
+            
             <trans-unit id="ckeditorKit.tab.productivity.full_screen_mode">
                 <source>Full Screen Mode</source>
             </trans-unit>
@@ -953,11 +961,29 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="new.presets">
                 <source>Manage Presets</source>
             </trans-unit>
+            <trans-unit id="presets.import">
+                <source>Import Preset</source>
+            </trans-unit>
+            <trans-unit id="presets.import.button">
+                <source>Import</source>
+            </trans-unit>
+            <trans-unit id="presets.export">
+                <source>Export</source>
+            </trans-unit>
+             <trans-unit id="presets.export.title">
+                <source>Export Preset</source>
+            </trans-unit>
             <trans-unit id="form.preset_name">
                 <source>New Preset Name</source>
             </trans-unit>
             <trans-unit id="form.preset_name.description">
                 <source>Enter a unique identifier without any spaces.</source>
+            </trans-unit>
+            <trans-unit id="form.import_yaml_file">
+                <source>Select YAML File</source>
+            </trans-unit>
+            <trans-unit id="form.import_yaml_file.description">
+                <source>Upload a YAML configuration file to import preset settings. (Name will be used as preset key and if already exists, it will be updated)</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.presert.success.message">
                 <source>New Preset is inserted successfully</source>
@@ -1098,6 +1124,12 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.preset.sync.error.no_feature">
                 <source>No features are currently available for synchronization.</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.preset.import.success.message">
+                <source>Preset imported successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.import.update.success.message">
+                <source>Preset updated successfully</source>
+            </trans-unit>
             
             <!-- Comments Notifications -->
             <trans-unit id="comments.save.success.title">
@@ -1114,6 +1146,77 @@ The authorization credentials are required for Real-time collaboration or Import
             </trans-unit>
             <trans-unit id="ckeditorKit.preset.sync.mention">
                 <source>Mention feature cannot be synchronized</source>
+            </trans-unit>
+            
+            <!-- JavaScript Labels -->
+            <trans-unit id="js.importing">
+                <source>Importing...</source>
+            </trans-unit>
+            <trans-unit id="js.import.error">
+                <source>Import Error</source>
+            </trans-unit>
+            <trans-unit id="js.import.error.message">
+                <source>An error occurred while importing the preset</source>
+            </trans-unit>
+            <trans-unit id="js.error">
+                <source>Error</source>
+            </trans-unit>
+            <trans-unit id="js.error.preset_uid_missing">
+                <source>Preset UID is missing</source>
+            </trans-unit>
+            <trans-unit id="js.syncing">
+                <source>Syncing...</source>
+            </trans-unit>
+            <trans-unit id="js.sync.error">
+                <source>Sync Error</source>
+            </trans-unit>
+            <trans-unit id="js.sync.error.message">
+                <source>Failed to sync preset</source>
+            </trans-unit>
+            <trans-unit id="js.exporting">
+                <source>Exporting...</source>
+            </trans-unit>
+            <trans-unit id="js.export.started">
+                <source>YAML is Exported</source>
+            </trans-unit>
+            <trans-unit id="js.export.started.message">
+                <source>YAML file exported successfully</source>
+            </trans-unit>
+            <trans-unit id="js.import.file.select">
+                <source>Please select a YAML file to import</source>
+            </trans-unit>
+            <trans-unit id="js.import.file.invalid">
+                <source>Invalid filename!</source>
+            </trans-unit>
+            <trans-unit id="js.import.update.title">
+                <source>Update Existing Preset</source>
+            </trans-unit>
+            <trans-unit id="js.import.update.message">
+                <source>A preset with the name "%s" already exists. Do you want to import it? This will reset all existing customization.</source>
+            </trans-unit>
+            <trans-unit id="js.import.update.button">
+                <source>Update</source>
+            </trans-unit>
+            <trans-unit id="js.reset.title">
+                <source>Reset Configuration</source>
+            </trans-unit>
+            <trans-unit id="js.reset.message">
+                <source>Are you sure you want to reset the configuration of selected preset?</source>
+            </trans-unit>
+            <trans-unit id="js.reset.error">
+                <source>Reset Error</source>
+            </trans-unit>
+            <trans-unit id="js.reset.error.message">
+                <source>Failed to reset preset</source>
+            </trans-unit>
+            <trans-unit id="js.configuration.error">
+                <source>Configuration Error</source>
+            </trans-unit>
+            <trans-unit id="js.configuration.error.ajax_url">
+                <source>AJAX URL for new_preset is not configured</source>
+            </trans-unit>
+            <trans-unit id="js.preset.create.error">
+                <source>An error occurred while creating the preset</source>
             </trans-unit>
         </body>
     </file>

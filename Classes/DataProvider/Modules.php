@@ -466,6 +466,15 @@ class Modules
             ],
             [
                 'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('Editoria11y'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => false,
+                    'config_key' => 'Editoria11y',
+                ],
+            ],
+            [
+                'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('BalloonToolbar'),
                 'configuration' => [
                     'config_key' => 'BalloonToolbar',
@@ -534,7 +543,7 @@ class Modules
                     'config_key' => 'HighLight',
                     'default' => true,
                     'module' => $this->getModulesFromFeature(HighlightFeature::class),
-                    'toolBarItems' => 'Highlight',
+                    'toolBarItems' => 'highlight',
                 ],
                 'fields' => $this->getFieldsFromFeature(HighlightFeature::class),
             ],

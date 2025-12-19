@@ -38,50 +38,59 @@
                                 </optgroup>
                             </f:if>
                         </select>
-                        <button type="button" class="btn btn-sm btn-notice text-nowrap" data-identifier="ckeditorGlobalWizardButton"
-                            data-modal-size="medium" title="{f:translate(key: 'new.presets')}" data-key="new_preset">
-                            <span class="ms-1">
-                                <f:translate key="new.presets" />
-                            </span>
-                        </button>
                     </div>
                 </f:form>
+                <button type="button" class="btn btn-sm btn-default export-preset"
+                    data-preset-uid="{activePreset}" data-preset-key="{sys_news}"
+                    title="{f:translate(key: 'presets.export.title', extensionName: 'RteCkeditorPack', default: 'Export')}">
+                    <core:icon identifier="actions-file-t3d-download" size="small" />
+                    <span class="ms-1">
+                        <f:translate key="presets.export" extensionName="RteCkeditorPack" default="Export" />
+                    </span>
+                </button>
+                <button type="button" class="btn btn-sm btn-notice text-nowrap"
+                    data-identifier="ckeditorGlobalWizardButton" data-modal-size="small"
+                    title="{f:translate(key: 'presets.import')}" data-key="import_preset">
+                    <span class="ms-1">
+                        <core:icon identifier="actions-file-t3d-upload" size="small" />
+                        <span class="ms-1">
+                            <f:translate key="presets.import.button" extensionName="RteCkeditorPack" />
+                        </span>
+                    </span>
+                </button>
             </f:then>
             <f:else>
                 <div class="d-flex align-items-center gap-2" style="min-width: 250px;">
-                    <h2 class="text-muted mb-0"><f:translate key="mlang_tabs_tab" /></h2>
+                    <h2 class="text-muted mb-0">
+                        <f:translate key="mlang_tabs_tab" />
+                    </h2>
                 </div>
             </f:else>
         </f:if>
-        <div class="dashboard-configuration btn-group my-1 ms-auto">
+        <div class="dashboard-configuration my-1 ms-auto">
+            <button type="button" class="btn btn-sm btn-default text-nowrap"
+                data-identifier="ckeditorGlobalWizardButton" data-modal-size="medium"
+                title="{f:translate(key: 'new.presets')}" data-key="new_preset">
+                <span class="ms-1">
+                    <f:translate key="new.presets" />
+                </span>
+            </button>
             <f:if condition="{activePreset}">
                 <f:then>
-                     <f:link.action action="settings" class="btn btn-sm btn-notice" title="{f:translate(key: 'btn.details')}" role="button">
+                    <f:link.action action="settings" class="btn btn-sm btn-notice"
+                        title="{f:translate(key: 'btn.details')}" role="button">
                         <core:icon identifier="actions-cog" size="small" alternativeMarkupIdentifier="inline" />
                         <f:translate key="ckeditorKit.tab.settings" />
                     </f:link.action>
                 </f:then>
                 <f:else>
-                    <a href="{f:be.uri(route: 'ckeditor_premium')}" class="btn btn-sm btn-notice" title="{f:translate(key: 'btn.details')}" role="button">
+                    <a href="{f:be.uri(route: 'ckeditor_premium')}" class="btn btn-sm btn-notice"
+                        title="{f:translate(key: 'btn.details')}" role="button">
                         <core:icon identifier="actions-house" size="small" alternativeMarkupIdentifier="inline" />
                         <f:translate key="ckeditorKit.tab.dashboard" />
                     </a>
                 </f:else>
             </f:if>
-            <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank"
-                class="btn btn-default btn-sm">
-                <core:icon identifier="actions-document-share" size="small" alternativeMarkupIdentifier="inline" />
-                <f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" />
-            </a>
-            <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank"
-            class="btn btn-default btn-sm">
-                <core:icon identifier="actions-file-view" size="small" alternativeMarkupIdentifier="inline" />
-                <f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" />
-            </a>
-            <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-default btn-sm">
-                <core:icon identifier="actions-file-video" size="small" alternativeMarkupIdentifier="inline" />
-                <f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" />
-            </a>
         </div>
     </div>
     <div class="module-body t3js-module-body">
@@ -133,15 +142,19 @@
                 </a>
             </li>
             <li>
-                <a class="btn btn-link p-0" href="https://github.com/T3Planet/rte_ckeditor_pack/issues" target="_blank">
-                    <f:translate key="t3editor.form.report_issues" extensionName="rte_ckeditor_pack" />
+                <a href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/" target="_blank"
+                    class="btn btn-link p-0">
+                    <f:translate key="t3editor.form.docs" extensionName="rte_ckeditor_pack" />
                 </a>
             </li>
             <li>
-                <a class="btn btn-link p-0"
-                    href="https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/Introduction/Contribution/Index.html"
-                    target="_blank">
-                    <f:translate key="t3editor.form.contribute" extensionName="rte_ckeditor_pack" />
+                <a href="https://app.supademo.com/showcase/cmi2zqurw02nhzj0i1dtuu5vr" target="_blank" class="btn btn-link p-0" >
+                    <f:translate key="t3editor.form.guide" extensionName="rte_ckeditor_pack" />
+                </a>
+            </li>
+            <li>
+                <a href="https://ckeditor.com/ckeditor-5/demo/" target="_blank" class="btn btn-link p-0">
+                    <f:translate key="t3editor.form.demos" extensionName="rte_ckeditor_pack" />
                 </a>
             </li>
             <li>

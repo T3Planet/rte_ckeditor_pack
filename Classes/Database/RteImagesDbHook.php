@@ -396,7 +396,7 @@ class RteImagesDbHook
                             // We insert this image into the user default upload folder
                             // $folder = $GLOBALS['BE_USER']->getDefaultUploadFolder();
                             $folder = GeneralUtility::makeInstance(DefaultUploadFolderResolver::class)->resolve($GLOBALS['BE_USER']);
-                            if ($folder) {
+                            if ($folder && $externalFile) {
                                 $fileObject = $folder->createFile($fileName)->setContents($externalFile);
                                 $imageConfiguration = [
                                     'width' => $attribArray['width'] ?? '',

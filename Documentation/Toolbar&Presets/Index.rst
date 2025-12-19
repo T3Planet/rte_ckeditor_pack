@@ -48,3 +48,41 @@ The Sync feature aligns configuration values between the default TYPO3 RTE YAML 
 
    - `View Interactive Guide <https://app.supademo.com/demo/cmirg3t7q15sll821k3ahlmmx?step=2>`_
 
+4. Import / Export Presets
+-------------------------
+
+The Import / Export Presets feature allows you to easily manage and share CKEditor presets between different TYPO3 environments. It helps you keep the same editor configuration across local, staging, and live systems without manual setup.
+
+Import Presets
+^^^^^^^^^^^^^^
+
+The Import Presets option lets you add CKEditor presets from a YAML file into your TYPO3 system.  
+This is useful when you receive a preset from another environment or project and want to reuse the same editor setup.
+
+Simply upload the YAML file, and the preset will be created automatically with all toolbar buttons, groups, and settings.
+
+.. rst-class:: horizbuttons-attention-m
+
+   - `View Interactive Guide <https://app.supademo.com/embed/cmjcvzsq24n7lf6zp2wlvrmgm?embed_v=2&utm_source=embed>`_
+
+Export Presets
+^^^^^^^^^^^^^^
+
+The Export Presets option allows you to download existing or custom CKEditor presets as a YAML file.  
+This makes it easy to share presets with other TYPO3 systems or team members.
+
+You can select a preset and export it, then import the same file into another TYPO3 installation to get the exact same configuration.
+
+.. rst-class:: horizbuttons-attention-m
+
+   - `View Interactive Guide <https://app.supademo.com/embed/cmjcvdeyg4mjzf6zpd00w121z?embed_v=2&utm_source=embed>`_
+
+.. note::
+
+   When exporting presets, the following features are **not included**
+   in the generated YAML file:
+
+   - Document Outline
+   - Paste Office Enhanced
+   - Editoria11y
+   - Markdown

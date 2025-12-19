@@ -4,6 +4,57 @@ import Modal from "@typo3/backend/modal.js";
 import DeferredAction from "@typo3/backend/action-button/deferred-action.js";
 import Severity from "@typo3/backend/severity.js";
 
+// Helper function to proceed with import
+function proceedWithImport(form, submitButton) {
+    const formData = new FormData(form);
+    submitButton.disabled = true;
+    submitButton.classList.add('is-loading');
+    const originalContent = submitButton.innerHTML;
+    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>' + (TYPO3.lang['js.importing'] || 'Importing...');
+    
+    new AjaxRequest(TYPO3.settings.ajaxUrls['import_preset'])
+        .post(formData)
+        .then(async (response) => {
+            const responseBody = await response.resolve();
+            
+            // Handle notifications
+            if (typeof responseBody === 'object' && responseBody.notifications && Array.isArray(responseBody.notifications)) {
+                responseBody.notifications.forEach((notification) => {
+                    const title = TYPO3.lang[notification.title] ?? notification.title ?? '';
+                    const message = TYPO3.lang[notification.message] ?? notification.message ?? '';
+                    const severity = notification.severity ?? 0;
+                    if (severity === 0) {
+                        Notification.success(title, message);
+                    } else if (severity === 1) {
+                        Notification.warning(title, message);
+                    } else if (severity === 2) {
+                        Notification.error(title, message);
+                    } else {
+                        Notification.info(title, message);
+                    }
+                });
+            }
+            
+            // Clear form and reload on success
+            if (responseBody.notifications && responseBody.notifications.length > 0 && responseBody.notifications[0].severity === 0) {
+                // Store flag to select last item after reload
+                sessionStorage.setItem('selectLastPreset', 'true');
+                
+                form.reset();
+                top.window.location.reload();
+            }
+        })
+        .catch((error) => {
+            console.error('AJAX Error:', error);
+            Notification.error(TYPO3.lang['js.import.error'] || 'Import Error', error.message ?? (TYPO3.lang['js.import.error.message'] || 'An error occurred while importing the preset'));
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+            submitButton.classList.remove('is-loading');
+            submitButton.innerHTML = originalContent;
+        });
+}
+
 document.addEventListener('click', (event) => {
     if (event.target.classList.contains('indent-feature-toggle')) {
         let classes = document.querySelectorAll('.use-indent-classes');
@@ -58,14 +109,14 @@ document.addEventListener('click', (event) => {
             const presetUid = button.getAttribute('data-preset-uid');
             
             if (!presetUid) {
-                Notification.error('Error', 'Preset UID is missing');
+                Notification.error(TYPO3.lang['js.error'] || 'Error', TYPO3.lang['js.error.preset_uid_missing'] || 'Preset UID is missing');
                 return;
             }
 
             // Disable button during request
             button.disabled = true;
             const originalContent = button.innerHTML;
-            button.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Syncing...';
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>' + (TYPO3.lang['js.syncing'] || 'Syncing...');
 
             const formData = new FormData();
             formData.append('presetUid', presetUid);
@@ -93,7 +144,7 @@ document.addEventListener('click', (event) => {
                     }
                 })
                 .catch((error) => {
-                    Notification.error('Sync Error', error.message ?? 'Failed to sync preset');
+                    Notification.error(TYPO3.lang['js.sync.error'] || 'Sync Error', error.message ?? (TYPO3.lang['js.sync.error.message'] || 'Failed to sync preset'));
                 })
                 .finally(() => {
                     button.disabled = false;
@@ -224,7 +275,7 @@ document.addEventListener('click', (event) => {
             const presetUid = button.getAttribute('data-preset-uid');
             
             if (!presetUid) {
-                Notification.error('Error', 'Preset UID is missing');
+                Notification.error(TYPO3.lang['js.error'] || 'Error', TYPO3.lang['js.error.preset_uid_missing'] || 'Preset UID is missing');
                 return;
             }
 
@@ -446,6 +497,7 @@ document.addEventListener('click', (event) => {
                 submitButton.classList.remove('is-loading');
             });
     }
+    
 }); 
 
 const newPresetBtn = document.getElementById('newPresetBtn');
@@ -471,8 +523,6 @@ document.addEventListener('input', (event) => {
         }
     }
 });
-
-
 
 let indentType = document.getElementById('indentType');
 
