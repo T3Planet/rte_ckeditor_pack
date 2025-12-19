@@ -466,6 +466,15 @@ class Modules
             ],
             [
                 'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('Editoria11y'),
+                'is_toggle' => 1,
+                'configuration' => [
+                    'default' => false,
+                    'config_key' => 'Editoria11y',
+                ],
+            ],
+            [
+                'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('BalloonToolbar'),
                 'configuration' => [
                     'config_key' => 'BalloonToolbar',
@@ -774,15 +783,6 @@ class Modules
                         ],
                     ],
                     'toolBarItems' => 'TableOfContents',
-                ],
-            ],
-            [
-                'tab' => Tabs::PRODUCTIVITY,
-                'details' => $cardDetails->getDetailsByKey('Editoria11y'),
-                'is_toggle' => 1,
-                'configuration' => [
-                    'default' => false,
-                    'config_key' => 'Editoria11y',
                 ],
             ],
             [
