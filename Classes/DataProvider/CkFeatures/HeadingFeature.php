@@ -41,6 +41,11 @@ class HeadingFeature implements FeatureInterface
                                 ->setType(FieldType::INPUT)
                                 ->setValue('h1'),
 
+                            (new Field())
+                                ->setName('Classes')
+                                ->setKey('class')
+                                ->setType(FieldType::INPUT)
+                                ->setValue('ck-heading_heading1'),
                         ],
                         [
                             (new Field())
@@ -61,6 +66,11 @@ class HeadingFeature implements FeatureInterface
                                 ->setType(FieldType::INPUT)
                                 ->setValue('h2'),
 
+                            (new Field())
+                                ->setName('Classes')
+                                ->setKey('class')
+                                ->setType(FieldType::INPUT)
+                                ->setValue('ck-heading_heading2'),
                         ],
                         [
                             (new Field())
@@ -81,6 +91,11 @@ class HeadingFeature implements FeatureInterface
                                 ->setType(FieldType::INPUT)
                                 ->setValue('h3'),
 
+                            (new Field())
+                                ->setName('Classes')
+                                ->setKey('class')
+                                ->setType(FieldType::INPUT)
+                                ->setValue('ck-heading_heading3'),
                         ],
                         [
                             (new Field())
@@ -101,6 +116,11 @@ class HeadingFeature implements FeatureInterface
                                 ->setType(FieldType::INPUT)
                                 ->setValue('h4'),
 
+                            (new Field())
+                                ->setName('Classes')
+                                ->setKey('class')
+                                ->setType(FieldType::INPUT)
+                                ->setValue('ck-heading_heading4'),
                         ],
                         [
                             (new Field())
@@ -121,6 +141,12 @@ class HeadingFeature implements FeatureInterface
                                 ->setType(FieldType::INPUT)
                                 ->setValue('h5'),
 
+                            (new Field())
+                                ->setName('Classes')
+                                ->setKey('class')
+                                ->setType(FieldType::INPUT)
+                                ->setValue('ck-heading_heading5'),
+
                         ],
                         [
                             (new Field())
@@ -140,6 +166,12 @@ class HeadingFeature implements FeatureInterface
                                 ->setKey('view')
                                 ->setType(FieldType::INPUT)
                                 ->setValue('h6'),
+                            
+                            (new Field())
+                                ->setName('Classes')
+                                ->setKey('class')
+                                ->setType(FieldType::INPUT)
+                                ->setValue('ck-heading_heading6'),
 
                         ],
                     ]),

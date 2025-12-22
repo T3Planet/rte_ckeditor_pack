@@ -21,7 +21,7 @@ return [
         '1' => [
             'showitem' => '
                 --div--;LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.tab.general,
-                preset_key,is_custom,usage_source,toolbar_items,
+                preset_key,is_custom,usage_source,toolbar_items,processing_config,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
                 hidden, deleted
             ',
@@ -85,6 +85,18 @@ return [
                 'rows' => 5,
                 'eval' => 'trim',
                 'default' => '',
+            ],
+        ],
+        'processing_config' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang_db.xlf:tx_rteckeditorpack_domain_model_preset.processing_config',
+            'config' => [
+                'type' => 'text',
+                'cols' => 50,
+                'rows' => 15,
+                'eval' => 'trim',
+                'default' => '',
+                'enableRichtext' => false,
             ],
         ],
     ],

@@ -60,6 +60,7 @@ CREATE TABLE tx_rteckeditorpack_domain_model_preset (
     pid int(11) DEFAULT '0' NOT NULL,
     preset_key varchar(255) NOT NULL,
     toolbar_items text NOT NULL DEFAULT '',
+    processing_config text DEFAULT NULL,
     deleted smallint(1) unsigned DEFAULT '0' NOT NULL,
     hidden smallint(1) unsigned DEFAULT '0' NOT NULL,
     tstamp int(11) unsigned DEFAULT '0' NOT NULL,

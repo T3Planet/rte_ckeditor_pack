@@ -1,0 +1,59 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/Core/Core/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+<f:layout name="Modals" />
+<f:section name="content">
+<div class="ckeditor-modal-form">
+    <div id="ckeditor-modal" class="ckeditor-modal-form ckeditor modal d-block">
+        <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
+            <form method="post">
+                <div class="t3js-modal-body modal-body">
+                    <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
+                    <div class="form-section-custom">
+                        <!-- Allowed Tags -->
+                        <div class="form-group">
+                            <label for="allowTags" class="form-label">
+                                <f:translate key="ckeditorKit.processing.allowTags" extensionName="RteCkeditorPack" />
+                            </label>
+                            <textarea id="allowTags" class="form-control" rows="3" cols="1000"
+                                name="processing[allowTags]">{config.allowTags}</textarea>
+                            <small class="form-text text-muted">
+                                <f:translate key="ckeditorKit.processing.allowTags.help" extensionName="RteCkeditorPack" />
+                            </small>
+                        </div>
+
+                        <!-- Allowed Tags Outside -->
+                        <div class="form-group">
+                            <label for="allowTagsOutside" class="form-label">
+                                <f:translate key="ckeditorKit.processing.allowTagsOutside" extensionName="RteCkeditorPack" />
+                            </label>
+                            <textarea id="allowTagsOutside" class="form-control" rows="2" cols="1000"
+                                name="processing[allowTagsOutside]">{config.allowTagsOutside}</textarea>
+                            <small class="form-text text-muted">
+                                <f:translate key="ckeditorKit.processing.allowTagsOutside.help" extensionName="RteCkeditorPack" />
+                            </small>
+                        </div>
+
+                        <!--Allowed Attributes -->
+                        <div class="form-group">
+                            <label for="allowAttributes" class="form-label">
+                                <f:translate key="ckeditorKit.processing.allowAttributes" extensionName="RteCkeditorPack" />
+                            </label>
+                            <textarea id="allowAttributes" class="form-control" rows="2" cols="1000"
+                                name="processing[allowAttributes]">{config.allowAttributes}</textarea>
+                            <small class="form-text text-muted">
+                                <f:translate key="ckeditorKit.processing.allowAttributes.help" extensionName="RteCkeditorPack" />
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="t3js-modal-footer modal-footer">
+                    <button type="submit" class="btn btn-primary processing-config-save"><f:translate key="features.settings.save" extensionName="RteCkeditorPack"/></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</f:section>
+</html>

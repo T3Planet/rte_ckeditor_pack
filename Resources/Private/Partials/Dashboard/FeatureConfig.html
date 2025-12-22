@@ -1,4 +1,6 @@
 <div class="row align-items-center mb-2 mt-2">
+                
+
     <div class="col-auto">
         <h2 class="mb-0"><f:translate key="ckeditorKit.module.feature" /></h2>
     </div>
@@ -13,7 +15,11 @@
                     data-key="toolbar_configuration">
                     <f:translate key="features.settings.group" />
                 </button>
-                
+                <button type="button" class="btn btn-sm btn-info" data-identifier="ckeditorGlobalWizardButton" 
+                    data-modal-size="medium" title="{f:translate(key: 'ckeditorKit.processing.config.button', default: 'Processing Configuration')}"
+                    data-key="processing_config" data-preset-uid="{activePreset}">
+                    <f:translate key="ckeditorKit.processing.config.button" extensionName="RteCkeditorPack" default="Processing Config" />
+                </button>
                 <input type="hidden" name="activePreset" value="{activePreset}"/>
                 <input type="hidden" name="enable" />
                 <input type="hidden" name="disabled" />

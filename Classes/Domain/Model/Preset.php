@@ -25,6 +25,8 @@ class Preset extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 
     protected string $toolbarItems = '';
 
+    protected string $processingConfig = '';
+
     public function getPresetKey(): string
     {
         return $this->presetKey;
@@ -87,5 +89,14 @@ class Preset extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->hidden ? 0 : 1;
     }
 
+    public function getProcessingConfig(): string
+    {
+        return $this->processingConfig;
+    }
+
+    public function setProcessingConfig(string $processingConfig): void
+    {
+        $this->processingConfig = $processingConfig;
+    }
 }
 
