@@ -11,6 +11,19 @@
                 <div class="t3js-modal-body modal-body">
                     <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
                     <div class="form-section-custom">
+
+                        <!-- Allowed class -->
+                        <div class="form-group">
+                            <label for="allowedClasses" class="form-label">
+                                <f:translate key="ckeditorKit.processing.allowedClasses" extensionName="RteCkeditorPack" />
+                            </label>
+                            <textarea id="allowedClasses" class="form-control" rows="3" cols="1000"
+                                name="processing[allowedClasses]">{config.allowedClasses}</textarea>
+                            <small class="form-text text-muted">
+                                <f:translate key="ckeditorKit.processing.allowedClasses.help" extensionName="RteCkeditorPack" />
+                            </small>
+                        </div>
+
                         <!-- Allowed Tags -->
                         <div class="form-group">
                             <label for="allowTags" class="form-label">

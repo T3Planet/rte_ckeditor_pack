@@ -85,7 +85,7 @@ class ProcessingConfigurationUtility
     /**
      * Convert comma-separated strings to arrays for specific processing config keys
      * 
-     * Keys like allowTags, allowTagsOutside, allowAttributes should be arrays,
+     * Keys like allowTags, allowTagsOutside, allowAttributes, allowedClasses should be arrays,
      * but might come from the database as comma-separated strings
      * 
      * @param array $config
@@ -94,7 +94,7 @@ class ProcessingConfigurationUtility
     private static function convertStringsToArrays(array $config): array
     {
         // Keys that should be arrays (comma-separated strings will be converted)
-        $arrayKeys = ['allowTags', 'allowTagsOutside', 'allowAttributes'];
+        $arrayKeys = ['allowTags', 'allowTagsOutside', 'allowAttributes', 'allowedClasses'];
         
         foreach ($arrayKeys as $key) {
             if (isset($config[$key]) && is_string($config[$key])) {

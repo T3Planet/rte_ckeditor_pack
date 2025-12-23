@@ -1218,6 +1218,9 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="js.preset.create.error">
                 <source>An error occurred while creating the preset</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.processing.config.button">
+                <source>Advanced Settings</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.processing.allowTags">
                 <source>Allowed Tags</source>
             </trans-unit>
@@ -1235,6 +1238,12 @@ The authorization credentials are required for Real-time collaboration or Import
             </trans-unit>
             <trans-unit id="ckeditorKit.processing.allowAttributes.help">
                 <source>Comma-separated list of HTML attributes allowed on tags (e.g., class, id, title, dir, lang, xml:lang)</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowedClasses">
+                <source>Allowed Classes</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowedClasses.help">
+                <source>Comma-separated list of CSS classes allowed in RTE content (e.g., text-center, text-muted, lead, btn-primary)</source>
             </trans-unit>
         </body>
     </file>
