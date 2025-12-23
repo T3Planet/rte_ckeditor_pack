@@ -1,9 +1,10 @@
 <?php
 
+use TYPO3\CMS\Core\Configuration\Richtext;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use T3Planet\RteCkeditorPack\Form\Element\RichTextElement;
 use T3Planet\RteCkeditorPack\Form\Element\RichTextElementV12;
-use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\RteCKEditor\Form\Element\RichTextElement as CoreElem;
 
 defined('TYPO3') or die();
@@ -41,8 +42,14 @@ switch ($majorVersion) {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][CoreElem::class] = [
             'className' => RichTextElementV12::class,
         ];
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][Richtext::class] = [
+            'className' => \T3Planet\RteCkeditorPack\Configuration\Richtext::class,
+        ];
         break;
     case 13:
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][Richtext::class] = [
+            'className' => \T3Planet\RteCkeditorPack\Configuration\Richtext::class,
+        ];
     case 14:
     default:
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][CoreElem::class] = [
