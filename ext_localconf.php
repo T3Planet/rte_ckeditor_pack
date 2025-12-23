@@ -10,7 +10,6 @@ use TYPO3\CMS\RteCKEditor\Form\Element\RichTextElement as CoreElem;
 defined('TYPO3') or die();
 
 $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_pack'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor.css';
-$GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_emoji'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/emoji.css';
 $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_notification'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/notification.css';
 
 $versionInformation = GeneralUtility::makeInstance(Typo3Version::class);

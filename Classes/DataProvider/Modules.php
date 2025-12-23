@@ -20,6 +20,7 @@ use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\BlockToolbarFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CaseChangeFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CodeBlockFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CollaborationFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\EmojiFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportPdfFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportWordFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FeatureInterface;
@@ -589,17 +590,14 @@ class Modules
             [
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('Emoji'),
-                'is_toggle' => 1,
+                // 'is_toggle' => 1,
                 'configuration' => [
                     'default' => true,
                     'config_key' => 'Emoji',
-                    'module' => [
-                        [
-                            'library' => '@t3planet/RteCkeditorPack/ckeditor5-emoji',
-                        ],
-                    ],
+                    'module' => $this->getModulesFromFeature(EmojiFeature::class),
                     'toolBarItems' => 'emoji',
                 ],
+                'fields' => $this->getFieldsFromFeature(EmojiFeature::class),
             ],
             [
                 'tab' => Tabs::CORE,
