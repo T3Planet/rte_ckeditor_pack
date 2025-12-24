@@ -89,10 +89,10 @@ class EditorConfigurationBuilder
             ],
         ];
 
-        if (isset($configuration['editor']['config']['htmlSupport']['allow'])) {
-            $configuration['editor']['config']['htmlSupport']['allow'] = array_merge($htmlSupport, $configuration['editor']['config']['htmlSupport']['allow']);
+        if (isset($configuration['htmlSupport']['allow'])) {
+            $configuration['htmlSupport']['allow'] = array_merge($htmlSupport, $configuration['htmlSupport']['allow']);
         } else {
-            $configuration['editor']['config']['htmlSupport']['allow'] = $htmlSupport;
+            $configuration['htmlSupport']['allow'] = $htmlSupport;
         }
 
         return $configuration;

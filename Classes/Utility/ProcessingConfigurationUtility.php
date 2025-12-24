@@ -47,6 +47,9 @@ class ProcessingConfigurationUtility
                 $customProcessingConfig = self::cleanEmptyStringValues($customProcessingConfig);
                 
                 if (!empty($customProcessingConfig)) {
+                    if (!isset($configuration['processing']['mode'])){
+                        $configuration['processing']['mode'] ='default';
+                    }
                     // Merge custom processing config with existing configuration
                     if (isset($configuration['processing']) && is_array($configuration['processing'])) {
                         // Use smart merge that preserves arrays when custom value is empty string
