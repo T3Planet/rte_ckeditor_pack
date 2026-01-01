@@ -11,39 +11,40 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\DataProvider;
 
-use T3Planet\RteCkeditorPack\DataProvider\Cards\CardData;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use T3Planet\RteCkeditorPack\DataProvider\Cards\Tabs;
+use T3Planet\RteCkeditorPack\DataProvider\Cards\CardData;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\AIFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\AlignmentFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\BalloonToolbarFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\BlockToolbarFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CaseChangeFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CodeBlockFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CollaborationFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\EmojiFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportPdfFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportWordFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FeatureInterface;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FontFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FootnotesFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\HeadingFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\HighlightFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\EmojiFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ImageFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ImportWordFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\StyleFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\IndentFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\LanguageFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\HeadingFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MentionFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MenuBarFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MergeFieldsFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\PaginationFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SlashCommandFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SourceEditingEnhancedFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\StyleFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\LanguageFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TemplateFeature;
-use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TransformationsFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\AlignmentFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CodeBlockFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportPdfFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FeatureInterface;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FootnotesFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\HighlightFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WordCountFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CaseChangeFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportWordFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ImportWordFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\PaginationFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\HtmlSupportFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MergeFieldsFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\BlockToolbarFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SlashCommandFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WProofreaderFeature;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CollaborationFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\BalloonToolbarFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\TransformationsFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\SourceEditingEnhancedFeature;
 
 class Modules
 {
@@ -807,6 +808,13 @@ class Modules
             [
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('SourceEditing'),
+            ],
+            [
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'htmlSupport',
+                ],
+                'fields' => $this->getFieldsFromFeature(HtmlSupportFeature::class),
             ],
         ];
     }

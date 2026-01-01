@@ -229,6 +229,9 @@ class RteModuleController extends ActionController
             }
 
             $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($moduleKey);
+            if (!isset($assign['configuration']) && isset($moduleConfiguration['configuration'])) {
+                $assign['configuration'] = $moduleConfiguration['configuration'];
+            }
             $assign['fields'] = $moduleConfiguration['fields'] ?? [];
         }
 
