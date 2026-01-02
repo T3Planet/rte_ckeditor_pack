@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Configuration;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Class EditorConfigurationBuilder
  *
@@ -27,7 +29,6 @@ class EditorConfigurationBuilder
     public function addImportantSettings(array $configuration): array
     {
         $configuration = $this->addProcessingSettings($configuration);
-        $configuration = $this->addHtmlSupportSettings($configuration);
         $configuration = $this->addCommentsEditorConfig($configuration);
         $configuration = $this->addDefaultSettings($configuration);
 
@@ -65,36 +66,26 @@ class EditorConfigurationBuilder
      * @param array $configuration
      * @return array
      */
-    private function addHtmlSupportSettings(array $configuration): array
+    public function addHtmlSupportSettings(array $configuration, array $htmlConfiguration): array
     {
-        $htmlSupport = [
-            [
-                'name' => '/^.*$/',
-                'styles' => true,
-                'attributes' => true,
-                'classes' => true,
-            ],
-            [
-                'name' => 'span',
-                'styles' => true,
-                'attributes' => true,
-                'classes' => true,
-            ],
-            [
-                'name' => 'p',
-                'classes' => true,
-                'attributes' => [
-                    'pattern' => 'data-.+',
-                ],
-            ],
-        ];
-
+        if (isset($htmlConfiguration['allow']) && is_array($htmlConfiguration['allow'])) {
+            $htmlAllow = [];
+            foreach ($htmlConfiguration['allow'] as $item) {
+                $htmlAllow[] = $this->normalizeBooleanStrings($item);
+            }
+        }
+        
         if (isset($configuration['htmlSupport']['allow'])) {
-            $configuration['htmlSupport']['allow'] = array_merge($htmlSupport, $configuration['htmlSupport']['allow']);
+            $configuration['htmlSupport']['allow'] = array_merge($htmlAllow, $configuration['htmlSupport']['allow']);
         } else {
-            $configuration['htmlSupport']['allow'] = $htmlSupport;
+            $configuration['htmlSupport']['allow'] = $htmlAllow;
         }
 
+        if(isset($configuration['allowEmpty'])){
+            $configuration['htmlSupport']['allowEmpty'] = $configuration['allowEmpty'].','.$htmlConfiguration['allowEmpty'];
+        }else{
+            $configuration['htmlSupport']['allowEmpty'] = $htmlConfiguration['allowEmpty'];
+        }
         return $configuration;
     }
 
@@ -138,4 +129,55 @@ class EditorConfigurationBuilder
 
         return $configuration;
     }
+
+    /**
+     * Normalize string boolean values to real booleans
+     * @param array $array
+     * @return array
+     */
+    private function normalizeBooleanStrings(array $array): array
+    {
+        foreach (['classes', 'attributes'] as $key) {
+            if (!isset($array[$key]) || !is_string($array[$key])) {
+                continue;
+            }
+            
+            $val = trim($array[$key]);
+            $lower = strtolower($val);
+            
+            if ($lower === 'true' || $lower === 'false') {
+                $array[$key] = $lower === 'true';
+                continue;
+            }
+
+            if (strpos($val, ',') !== false && !str_starts_with($val, '{') && !str_starts_with($val, '[')) {
+                $array[$key] = array_values(array_filter(array_map('trim', explode(',', $val))));
+                continue;
+            }
+
+            if ($key === 'attributes') {
+                if (str_starts_with($val, '{') || str_starts_with($val, '[')) {
+                    $decoded = json_decode($val, true);
+                    if ($decoded !== null) {
+                        $array[$key] = $decoded;
+                    }
+                } elseif (preg_match('/^\s*(\w+)\s*:\s*(.+)$/', $val, $m)) {
+                    $array[$key] = [trim($m[1]) => trim($m[2], "'\"")];
+                }
+            }
+        }
+
+        array_walk_recursive($array, function (&$value, $key) {
+            if (!in_array($key, ['classes', 'attributes'], true) && is_string($value)) {
+                $value = match (strtolower(trim($value))) {
+                    'true' => true,
+                    'false' => false,
+                    default => $value,
+                };
+            }
+        });
+
+        return $array;
+    }
+
 }

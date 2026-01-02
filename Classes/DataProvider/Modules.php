@@ -812,7 +812,7 @@ class Modules
             [
                 'configuration' => [
                     'default' => true,
-                    'config_key' => 'htmlSupport',
+                    'config_key' => 'HtmlSupport',
                 ],
                 'fields' => $this->getFieldsFromFeature(HtmlSupportFeature::class),
             ],

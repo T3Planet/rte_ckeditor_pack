@@ -27,26 +27,26 @@ class HtmlSupportFeature implements FeatureInterface
                                 ->setName('Name')
                                 ->setKey('name')
                                 ->setType(FieldType::INPUT)
-                                ->setValue('img'),
-
-                             (new Field())
+                                ->setValue('')
+                                ->setPlaceholder( "p"),
+                            (new Field())
                                 ->setName('Attributes')
                                 ->setKey('attributes')
-                                ->setType(FieldType::VALUE_LIST)
-                                ->setValue(['id,data-*']),
-
+                                ->setType(FieldType::INPUT)
+                                ->setValue('')
+                                ->setPlaceholder( " pattern: 'data-.+'"),
                             (new Field())
                                 ->setName('Classes')
                                 ->setKey('classes')
-                                ->setType(FieldType::BOOLEAN)
-                                ->setValue(true),
-
+                                ->setType(FieldType::INPUT)
+                                ->setValue('')
+                                ->setPlaceholder( "TRUE"),
                             (new Field())
                                 ->setName('Styles')
                                 ->setKey('styles')
-                                ->setType(FieldType::BOOLEAN)
-                                ->setValue(true),
-
+                                ->setType(FieldType::INPUT)
+                                ->setValue('')
+                                ->setPlaceholder( "TRUE"),
                         ],
                     ]),
                 (new Field())
