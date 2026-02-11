@@ -54,6 +54,25 @@ function proceedWithImport(form, submitButton) {
         });
 }
 
+document.addEventListener('change', (event) => {
+    if (event.target.id === 'presetImportExportSelect') {
+        const select = event.target;
+        const value = select.value;
+        if (value === 'export') {
+            const exportBtn = document.getElementById('presetExportTrigger');
+            if (exportBtn) {
+                exportBtn.click();
+            }
+        } else if (value === 'import') {
+            const importBtn = document.getElementById('presetImportTrigger');
+            if (importBtn) {
+                importBtn.click();
+            }
+        }
+        select.value = '';
+    }
+});
+
 document.addEventListener('click', (event) => {
     if (event.target.tagName === 'BUTTON') {
         if (event.target.classList.contains('export-preset')) {

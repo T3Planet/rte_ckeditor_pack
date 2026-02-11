@@ -462,7 +462,12 @@
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images.description">
                 <source>Insert, upload, resize, style, and caption images with full CKEditor support.</source>
             </trans-unit>
-            <!-- here -->
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.html_support">
+                <source>General HTML Support</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.html_support.description">
+                <source>Specify the allowed tags, attributes, classes, and styles by explicitly listing them.</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave">
                 <source>Autosave</source>
             </trans-unit>
@@ -972,6 +977,12 @@ The authorization credentials are required for Real-time collaboration or Import
             </trans-unit>
              <trans-unit id="presets.export.title">
                 <source>Export Preset</source>
+            </trans-unit>
+            <trans-unit id="presets.import_export">
+                <source>Import / Export</source>
+            </trans-unit>
+            <trans-unit id="presets.import_export.aria">
+                <source>Import or export preset</source>
             </trans-unit>
             <trans-unit id="form.preset_name">
                 <source>New Preset Name</source>

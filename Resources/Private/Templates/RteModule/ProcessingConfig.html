@@ -5,68 +5,91 @@
 <f:layout name="Modals" />
 <f:section name="content">
 <div class="ckeditor-modal-form">
-    <div id="ckeditor-modal" class="ckeditor-modal-form ckeditor modal d-block">
-        <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
-            <form method="post">
+    <form method="post">
+        <div id="ckeditor-modal" class="ckeditor modal d-block">
+            <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
                 <div class="t3js-modal-body modal-body">
                     <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
                     <div class="form-section-custom">
-
-                        <!-- Allowed class -->
-                        <div class="form-group">
-                            <label for="allowedClasses" class="form-label">
+                        <div class="form-group mb-3">
+                            <label for="allowedClasses" class="form-label fw-semibold">
                                 <f:translate key="ckeditorKit.processing.allowedClasses" extensionName="RteCkeditorPack" />
                             </label>
-                            <textarea id="allowedClasses" class="form-control" rows="3" cols="1000"
-                                name="processing[allowedClasses]">{config.allowedClasses}</textarea>
-                            <small class="form-text text-muted">
+                            <textarea id="allowedClasses" class="form-control form-control-sm" rows="3" cols="1000"
+                                name="processing[allowedClasses]" aria-describedby="allowedClasses-help">{config.allowedClasses}</textarea>
+                            <div id="allowedClasses-help" class="form-text text-muted mt-1 mb-0">
                                 <f:translate key="ckeditorKit.processing.allowedClasses.help" extensionName="RteCkeditorPack" />
-                            </small>
+                            </div>
                         </div>
 
-                        <!-- Allowed Tags -->
-                        <div class="form-group">
-                            <label for="allowTags" class="form-label">
+                        <div class="form-group mb-3">
+                            <label for="allowTags" class="form-label fw-semibold">
                                 <f:translate key="ckeditorKit.processing.allowTags" extensionName="RteCkeditorPack" />
                             </label>
-                            <textarea id="allowTags" class="form-control" rows="3" cols="1000"
-                                name="processing[allowTags]">{config.allowTags}</textarea>
-                            <small class="form-text text-muted">
+                            <f:if condition="{config.allowTags} !== ''">
+                                <f:then>
+                                    <f:variable name="allowTags" value="{config.allowTags}" />
+                                </f:then>                        
+                                <f:else>
+                                    <f:variable name="allowTags" value="a, abbr, acronym, address, article, big, blockquote, br, caption, cite, code, col, colgroup, dd, del, dfn, dl, div, dt, em, figure, figcaption, footer, header, h1, h2, h3, h4, h5, h6, hr, i, img, ins, kbd, label, li, mark, nav, ol, p, pre, q, s, samp, section, small, span, strong, sub, sup, table, thead, tbody, tfoot, td, th, tr, tt, u, ul, var" />
+                                </f:else>        
+                            </f:if>
+                            <textarea id="allowTags" class="form-control form-control-sm" rows="3" cols="1000"
+                                name="processing[allowTags]" aria-describedby="allowTags-help" value="{allowTags}">{allowTags}</textarea>
+                            <div id="allowTags-help" class="form-text text-muted mt-1 mb-0">
                                 <f:translate key="ckeditorKit.processing.allowTags.help" extensionName="RteCkeditorPack" />
-                            </small>
+                            </div>
                         </div>
 
-                        <!-- Allowed Tags Outside -->
-                        <div class="form-group">
-                            <label for="allowTagsOutside" class="form-label">
+                        <div class="form-group mb-3">
+                            <label for="allowTagsOutside" class="form-label fw-semibold">
                                 <f:translate key="ckeditorKit.processing.allowTagsOutside" extensionName="RteCkeditorPack" />
                             </label>
-                            <textarea id="allowTagsOutside" class="form-control" rows="2" cols="1000"
-                                name="processing[allowTagsOutside]">{config.allowTagsOutside}</textarea>
-                            <small class="form-text text-muted">
+                            
+                            <f:if condition="{config.allowTagsOutside} !== ''">
+                                <f:then>
+                                    <f:variable name="allowTagsOutside" value="{config.allowTagsOutside}" />
+                                </f:then>
+                                <f:else>
+                                    <f:variable name="allowTagsOutside" value="address, article, aside, blockquote, figure, figcaption, footer, header, hr, mark, nav, section, div" />
+                                </f:else>
+                            </f:if>
+                            <textarea id="allowTagsOutside" class="form-control form-control-sm" rows="2" cols="1000"
+                                name="processing[allowTagsOutside]" aria-describedby="allowTagsOutside-help">{allowTagsOutside}</textarea>
+                            <div id="allowTagsOutside-help" class="form-text text-muted mt-1 mb-0">
                                 <f:translate key="ckeditorKit.processing.allowTagsOutside.help" extensionName="RteCkeditorPack" />
-                            </small>
+                            </div>
                         </div>
 
-                        <!--Allowed Attributes -->
-                        <div class="form-group">
-                            <label for="allowAttributes" class="form-label">
+                        <div class="form-group mb-0">
+                            <label for="allowAttributes" class="form-label fw-semibold">
                                 <f:translate key="ckeditorKit.processing.allowAttributes" extensionName="RteCkeditorPack" />
                             </label>
-                            <textarea id="allowAttributes" class="form-control" rows="2" cols="1000"
-                                name="processing[allowAttributes]">{config.allowAttributes}</textarea>
-                            <small class="form-text text-muted">
+                            <f:if condition="{config.allowAttributes} !== ''">
+                                <f:then>
+                                    <f:variable name="allowAttributes" value="{config.allowAttributes}" />
+                                </f:then>
+                                <f:else>
+                                    <f:variable name="allowAttributes" value="class, id, title, dir, lang, xml:lang, itemscope, itemtype, itemprop" />
+                                </f:else>
+                            </f:if>
+                            <textarea id="allowAttributes" class="form-control form-control-sm" rows="2" cols="1000"
+                                name="processing[allowAttributes]" aria-describedby="allowAttributes-help">{allowAttributes}</textarea>
+                            <div id="allowAttributes-help" class="form-text text-muted mt-1 mb-0">
                                 <f:translate key="ckeditorKit.processing.allowAttributes.help" extensionName="RteCkeditorPack" />
-                            </small>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="t3js-modal-footer modal-footer">
-                    <button type="submit" class="btn btn-primary processing-config-save"><f:translate key="features.settings.save" extensionName="RteCkeditorPack"/></button>
+                <div class="t3js-modal-footer modal-footer d-flex justify-content-end gap-2 border-top">
+                    <button type="submit" class="btn btn-notice processing-config-save">
+                        <core:icon identifier="actions-document-save" size="small" />
+                        <span class="ms-1"><f:translate key="features.settings.save" extensionName="RteCkeditorPack"/></span>
+                    </button>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 </f:section>
 </html>

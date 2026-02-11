@@ -12,7 +12,7 @@
         <f:if condition="{groupedPresets}">
             <f:then>
                 <f:form action="main" method="post" id="presetForm">
-                    <div class="d-flex align-items-center gap-2" style="min-width: 250px;">
+                    <div class="d-flex align-items-center gap-2" style="min-width: 160px;">
                         <select name="activePresets" id="rtePresets" class="form-select form-control form-select-sm">
                             <f:if condition="{groupedPresets.yaml}">
                                 <optgroup label="Theme Presets">
@@ -40,27 +40,28 @@
                         </select>
                     </div>
                 </f:form>
-                <button type="button" class="btn btn-sm btn-default export-preset"
-                    data-preset-uid="{activePreset}" data-preset-key="{sys_news}"
-                    title="{f:translate(key: 'presets.export.title', extensionName: 'RteCkeditorPack', default: 'Export')}">
-                    <core:icon identifier="actions-file-t3d-download" size="small" />
-                    <span class="ms-1">
-                        <f:translate key="presets.export" extensionName="RteCkeditorPack" default="Export" />
-                    </span>
-                </button>
-                <button type="button" class="btn btn-sm btn-notice text-nowrap"
-                    data-identifier="ckeditorGlobalWizardButton" data-modal-size="small"
-                    title="{f:translate(key: 'presets.import')}" data-key="import_preset">
-                    <span class="ms-1">
+                <div class="d-flex align-items-center gap-2 preset-import-export" role="group" aria-label="Preset import and export">
+                    <select id="presetImportExportSelect" class="form-select form-control form-select-sm" style="min-width: 160px;" aria-label="{f:translate(key: 'presets.import_export.aria', extensionName: 'RteCkeditorPack', default: 'Import or export preset')}">
+                        <option value="">{f:translate(key: 'presets.import_export', extensionName: 'RteCkeditorPack', default: 'Import / Export')}</option>
+                        <option value="export"><f:translate key="presets.export.title" extensionName="RteCkeditorPack" default="Export" /></option>
+                        <option value="import"><f:translate key="presets.import" extensionName="RteCkeditorPack" /></option>
+                    </select>
+                    <button type="button" class="visually-hidden export-preset" id="presetExportTrigger"
+                        data-preset-uid="{activePreset}" data-preset-key="{sys_news}"
+                        title="{f:translate(key: 'presets.export.title', extensionName: 'RteCkeditorPack', default: 'Export')}" aria-hidden="true" tabindex="-1">
+                        <core:icon identifier="actions-file-t3d-download" size="small" />
+                        <span class="ms-1"><f:translate key="presets.export.title" extensionName="RteCkeditorPack" default="Export" /></span>
+                    </button>
+                    <button type="button" class="visually-hidden" id="presetImportTrigger"
+                        data-identifier="ckeditorGlobalWizardButton" data-modal-size="small"
+                        title="{f:translate(key: 'presets.import')}" data-key="import_preset" aria-hidden="true" tabindex="-1">
                         <core:icon identifier="actions-file-t3d-upload" size="small" />
-                        <span class="ms-1">
-                            <f:translate key="presets.import.button" extensionName="RteCkeditorPack" />
-                        </span>
-                    </span>
-                </button>
+                        <span class="ms-1"><f:translate key="presets.import" extensionName="RteCkeditorPack" /></span>
+                    </button>
+                </div>
             </f:then>
             <f:else>
-                <div class="d-flex align-items-center gap-2" style="min-width: 250px;">
+                <div class="d-flex align-items-center gap-2" style="min-width: 160px;">
                     <h2 class="text-muted mb-0">
                         <f:translate key="mlang_tabs_tab" />
                     </h2>

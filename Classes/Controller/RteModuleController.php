@@ -1157,6 +1157,11 @@ class RteModuleController extends ActionController
             $this->presetRepository->update($preset);
             $this->persistenceManager->persistAll();
             $this->cache->flush();
+            $this->notification->addFlashNotification([
+                'title' => 'ckeditorKit.operation.success',
+                'message' => 'ckeditorKit.plugin.setting_save.success.message',
+                'severity' => 0,
+            ]);
         }
 
         $processingConfig = $preset->getProcessingConfig();
