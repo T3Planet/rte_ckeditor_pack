@@ -477,6 +477,15 @@ class Modules
             ],
             [
                 'tab' => Tabs::CORE,
+                'details' => $cardDetails->getDetailsByKey('HtmlSupport'),
+                'configuration' => [
+                    'default' => true,
+                    'config_key' => 'HtmlSupport',
+                ],
+                'fields' => $this->getFieldsFromFeature(HtmlSupportFeature::class),
+            ],
+            [
+                'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('BalloonToolbar'),
                 'configuration' => [
                     'config_key' => 'BalloonToolbar',
@@ -809,13 +818,6 @@ class Modules
                 'tab' => Tabs::CORE,
                 'details' => $cardDetails->getDetailsByKey('SourceEditing'),
             ],
-            [
-                'configuration' => [
-                    'default' => true,
-                    'config_key' => 'HtmlSupport',
-                ],
-                'fields' => $this->getFieldsFromFeature(HtmlSupportFeature::class),
-            ],
         ];
     }
 
@@ -844,7 +846,9 @@ class Modules
                     'cards' => [],
                 ];
             }
-            $groupedModules[$tabKey]['cards'][] = $module;
+            $configKey = $module['configuration']['config_key'] ?? '';
+            $moduleWithData = array_merge($module, ['moduleData' => ['key' => $configKey]]);
+            $groupedModules[$tabKey]['cards'][] = $moduleWithData;
         }
         $priority = ['plugins', 'productivity', 'premium', 'collaboration'];
 
