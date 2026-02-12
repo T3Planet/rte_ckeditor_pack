@@ -20,6 +20,7 @@ Create and manage your content easily with tools that help you write, format, an
    Collaboration&Metadata/Index
    EditorUI&ToolbarExperience/Index
    AccessibilityFeatures/Index
+   GeneralHTMLSupport/Index
 
 Premium Features
 ---------------------
