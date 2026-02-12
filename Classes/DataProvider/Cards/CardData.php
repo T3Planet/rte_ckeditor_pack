@@ -244,6 +244,15 @@ class CardData
                 'modalSize' => 'small',
                 'docs' => 'https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/Features/Media&VisualContent/Index.html',
             ],
+            'HtmlSupport' => [
+                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.html_support', 'rte_ckeditor_pack'),
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.html_support', 'rte_ckeditor_pack'),
+                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.html_support.description', 'rte_ckeditor_pack'),
+                'icon' => 'actions-file-html',
+                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
+                'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/html/general-html-support.html',
+            ],
             'Indentation' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.block_indentation', 'rte_ckeditor_pack'),
                 'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.block_indentation', 'rte_ckeditor_pack'),

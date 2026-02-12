@@ -146,38 +146,51 @@ class RteConfigurationModifier
             $fieldConfig = $feature->getFields();
 
             if ($fieldConfig) {
-
                 $fieldConfigArray = json_decode($fieldConfig, true);
                 $fieldValues = $fieldConfigArray[array_key_first($fieldConfigArray)];
+                    
+                switch ($recordConfigKey) {
+                    case 'Images':
+                        unset($fieldValues['exports']);
+                        $configuration[array_key_first($fieldConfigArray)] = $fieldValues;
+                        break;
 
-                if ($recordConfigKey === 'Images') {
-                    unset($fieldValues['exports']);
-                    $configuration[array_key_first($fieldConfigArray)] = $fieldValues;
+                    case 'Style':
+                    case 'Indentation':
+                        array_walk_recursive($fieldConfigArray, function (&$value, $key) {
+                            if ($key === 'classes') {
+                                $value = array_filter(array_map('trim', explode(',', $value)));
+                            }
+                        });
 
-                } elseif ($recordConfigKey === 'Style' || $recordConfigKey === 'Indentation') {
-
-                    array_walk_recursive($fieldConfigArray, function (&$value, $key) {
-                        if ($key === 'classes') {
-                            $value = array_filter(array_map('trim', explode(',', $value)));
+                        if ($fieldConfigArray) {
+                            foreach ($fieldConfigArray as $key => $config) {
+                                $configuration[$key] = $fieldConfigArray[$key];
+                            }
                         }
-                    });
+                        break;
 
-                    if ($fieldConfigArray) {
-                        foreach ($fieldConfigArray as $key => $config) {
-                            $configuration[$key] = $fieldConfigArray[$key];
+                    case 'ToggleAi':
+                        $aiBuilder = GeneralUtility::makeInstance(AIConfigurationBuilder::class);
+                        $configuration = $aiBuilder->buildConfiguration($fieldConfigArray, $configuration);
+                        break;
+
+                    case 'HtmlSupport':
+                        if (isset($fieldConfigArray['htmlSupport']) && is_array($fieldConfigArray['htmlSupport'])) {
+                            $editorConfigBuilder = GeneralUtility::makeInstance(EditorConfigurationBuilder::class);
+                            $configuration = $editorConfigBuilder->addHtmlSupportSettings($configuration,$fieldConfigArray['htmlSupport']);
                         }
-                    }
-                } elseif ($recordConfigKey === 'ToggleAi') {
-                    // Special handling for AI configuration to properly merge nested structures
-                    $aiBuilder = GeneralUtility::makeInstance(AIConfigurationBuilder::class);
-                    $configuration = $aiBuilder->buildConfiguration($fieldConfigArray, $configuration);
-                } else {
-                    // Feature is already tied to the correct preset, so no need to check preset array
-                    $configuration = $this->processFieldConfiguration($fieldValues, $fieldConfigArray, $configuration, $recordConfigKey);
+                        break;
+
+                    default:
+                        $configuration = $this->processFieldConfiguration($fieldValues, $fieldConfigArray,
+                            $configuration,
+                        $recordConfigKey);
+                        break;
                 }
             }
         }
-
+        
         return $configuration;
     }
 

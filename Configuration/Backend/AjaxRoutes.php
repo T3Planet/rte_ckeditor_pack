@@ -52,4 +52,8 @@ return [
         'path' => '/preset/check-exists',
         'target' => RteModuleController::class . '::checkPresetExists',
     ],
+    'processing_config' => [
+        'path' => '/processing-config',
+        'target' => RteModuleController::class . '::processingConfigAction',
+    ],
 ];

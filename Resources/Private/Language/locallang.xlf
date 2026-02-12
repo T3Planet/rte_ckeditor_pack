@@ -462,7 +462,12 @@
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.images.description">
                 <source>Insert, upload, resize, style, and caption images with full CKEditor support.</source>
             </trans-unit>
-            <!-- here -->
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.html_support">
+                <source>General HTML Support</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.html_support.description">
+                <source>Specify the allowed tags, attributes, classes, and styles by explicitly listing them.</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.autosave">
                 <source>Autosave</source>
             </trans-unit>
@@ -973,6 +978,12 @@ The authorization credentials are required for Real-time collaboration or Import
              <trans-unit id="presets.export.title">
                 <source>Export Preset</source>
             </trans-unit>
+            <trans-unit id="presets.import_export">
+                <source>Import / Export</source>
+            </trans-unit>
+            <trans-unit id="presets.import_export.aria">
+                <source>Import or export preset</source>
+            </trans-unit>
             <trans-unit id="form.preset_name">
                 <source>New Preset Name</source>
             </trans-unit>
@@ -1217,6 +1228,33 @@ The authorization credentials are required for Real-time collaboration or Import
             </trans-unit>
             <trans-unit id="js.preset.create.error">
                 <source>An error occurred while creating the preset</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.config.button">
+                <source>Advanced Settings</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowTags">
+                <source>Allowed Tags</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowTags.help">
+                <source>Comma-separated list of HTML tags allowed in RTE content (e.g., a, p, strong, em, ul, ol, li)</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowTagsOutside">
+                <source>Allowed Tags Outside Paragraphs</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowTagsOutside.help">
+                <source>Tags that can appear outside of paragraph tags (e.g., address, article, aside, blockquote, figure, footer, header, hr, nav, section, div)</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowAttributes">
+                <source>Allowed Attributes</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowAttributes.help">
+                <source>Comma-separated list of HTML attributes allowed on tags (e.g., class, id, title, dir, lang, xml:lang)</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowedClasses">
+                <source>Allowed Classes</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.processing.allowedClasses.help">
+                <source>Comma-separated list of CSS classes allowed in RTE content (e.g., text-center, text-muted, lead, btn-primary)</source>
             </trans-unit>
         </body>
     </file>

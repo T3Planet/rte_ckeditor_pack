@@ -52,6 +52,12 @@ services:
         arguments:
           - '@T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler'
 
+  T3Planet\RteCkeditorPack\EventListener\ProcessingConfigurationModifier:
+    tags:
+      - name: event.listener
+        identifier: 'rte_ckeditor_pack_processing_configuration_modifier'
+        event: TYPO3\CMS\Core\Configuration\Event\AfterRichtextConfigurationPreparedEvent
+
 
   T3Planet\RteCkeditorPack\Controller\SelectImageController:
     tags: ['backend.controller']

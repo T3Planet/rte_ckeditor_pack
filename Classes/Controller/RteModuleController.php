@@ -229,6 +229,9 @@ class RteModuleController extends ActionController
             }
 
             $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($moduleKey);
+            if (!isset($assign['configuration']) && isset($moduleConfiguration['configuration'])) {
+                $assign['configuration'] = $moduleConfiguration['configuration'];
+            }
             $assign['fields'] = $moduleConfiguration['fields'] ?? [];
         }
 
@@ -1128,6 +1131,53 @@ class RteModuleController extends ActionController
         ]);
     }
 
+    /**
+     * Render processing configuration form
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function processingConfigAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $data = $request->getQueryParams();
+        $presetUid = isset($data['selectedPreset']) && is_numeric($data['selectedPreset']) ? (int)$data['selectedPreset'] : 0;
+        
+        if ($presetUid <= 0) {
+            throw new \Exception('Invalid preset UID');
+        }
+
+        $preset = $this->presetRepository->findByUid($presetUid);
+        if (!$preset) {
+            throw new \Exception('Preset not found');
+        }
+
+        $processing = $request->getParsedBody()['processing'] ?? [];
+        if($processing){
+            $preset->setProcessingConfig(json_encode($processing));
+            $this->presetRepository->update($preset);
+            $this->persistenceManager->persistAll();
+            $this->cache->flush();
+            $this->notification->addFlashNotification([
+                'title' => 'ckeditorKit.operation.success',
+                'message' => 'ckeditorKit.plugin.setting_save.success.message',
+                'severity' => 0,
+            ]);
+        }
+
+        $processingConfig = $preset->getProcessingConfig();
+        $configArray = [];
+        if ($processingConfig) {
+            $configArray = json_decode($processingConfig, true);
+        }
+
+        $this->moduleTemplate = $this->initializeModuleTemplate($request);
+        $this->moduleTemplate->assignMultiple([
+            'presetUid' => $presetUid,
+            'config' => $configArray,
+        ]);
+
+        return $this->moduleTemplate->renderResponse('RteModule/ProcessingConfig');
+    }
     protected function initializeModuleTemplate(ServerRequestInterface $request): ModuleTemplate
     {
         return $this->moduleTemplateFactory->create($request);

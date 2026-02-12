@@ -6,34 +6,32 @@
 <f:section name="content">
 <f:be.pageRenderer includeJavaScriptModules="{0: '@t3planet/RteCkeditorPack/import-export.js'}"/>
 <div class="ckeditor-modal-form">
-    <div id="ckeditor-modal" class="ckeditor-modal-form ckeditor modal d-block">
-        <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
-            <div class="t3js-modal-body modal-body">
-                <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
-                <div class="import-preset mt-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <form id="importPresetForm" enctype="multipart/form-data">
-                                <div class="form-group form-group-custom">
-                                    <label for="yaml-file" class="form-label">
-                                        <f:translate key="form.import_yaml_file" extensionName="RteCkeditorPack" />
-                                    </label>
-                                    <input type="file" id="yaml-file" name="yamlFile" class="form-control" accept=".yaml,.yml" required />
-                                    <div class="form-text">
-                                        <f:translate key="form.import_yaml_file.description" extensionName="RteCkeditorPack" />
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary" id="importPresetBtn" disabled>
-                                    <core:icon identifier="actions-file-t3d-upload" size="small" />
-                                    <span class="ms-1"><f:translate key="presets.import.button" extensionName="RteCkeditorPack" /></span>
-                                </button>
-                            </form>
+    <form id="importPresetForm" enctype="multipart/form-data">
+        <div id="ckeditor-modal" class="ckeditor modal d-block">
+            <div class="ckeditor-modal-content modal-content ckeditor__action-wrapper">
+                <div class="t3js-modal-body modal-body">
+                    <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
+                    <div class="import-preset form-section-custom">
+                        <div class="mb-0">
+                            <label for="yaml-file" class="form-label fw-semibold">
+                                <f:translate key="form.import_yaml_file" extensionName="RteCkeditorPack" />
+                            </label>
+                            <input type="file" id="yaml-file" name="yamlFile" class="form-control form-control-sm" accept=".yaml,.yml" required aria-describedby="yaml-file-help" />
+                            <div id="yaml-file-help" class="form-text text-muted mt-1 mb-0">
+                                <f:translate key="form.import_yaml_file.description" extensionName="RteCkeditorPack" />
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="t3js-modal-footer modal-footer d-flex justify-content-end gap-2 border-top">
+                    <button type="submit" class="btn btn-notice" id="importPresetBtn" disabled>
+                        <core:icon identifier="actions-file-t3d-upload" size="small" />
+                        <span class="ms-1"><f:translate key="presets.import.button" extensionName="RteCkeditorPack" /></span>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
- </div>
+    </form>
+</div>
 </f:section>
 </html>

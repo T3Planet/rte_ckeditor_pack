@@ -37,10 +37,9 @@ class ParsedHtmlForFrontend implements MiddlewareInterface
 
     private function parsedComment($content)
     {
-        $decoded_content = html_entity_decode($content);
-        $pattern_start = '/<comment-start[^>]*>/i';
-        $pattern_end = '/<\/comment-end[^>]*>/i';
-        return preg_replace([$pattern_start, $pattern_end], '', $decoded_content);
+        $content = preg_replace('/&lt;comment-start.*?&gt;&lt;\/comment-start&gt;/s', '', $content);
+        $content = preg_replace('/&lt;comment-end.*?&gt;&lt;\/comment-end&gt;/s', '', $content);
+        return $content;
     }
 
     /**
