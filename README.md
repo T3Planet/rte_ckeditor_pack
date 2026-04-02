@@ -62,6 +62,67 @@ It includes these features:
 | v1.x                  | 12.4.25 - 13.4.20   | 47.1.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |
 
 
+## Testing
+
+This extension includes unit and functional tests. To run the tests, use the following composer commands:
+
+### Prerequisites
+
+1. Install dependencies:
+   ```bash
+   composer install
+   ```
+
+### Running Tests
+
+**From inside the extension directory (in DDEV container):**
+
+```bash
+# Run all unit tests
+composer test
+
+# Run unit tests only
+composer test:unit
+
+# Run functional tests only
+composer test:functional
+
+# Run all tests (unit + functional)
+composer test:all
+```
+
+**From the project root (using DDEV):**
+
+```bash
+# Run unit tests
+ddev composer test --working-dir=packages/rte_ckeditor_pack
+
+# Run functional tests
+ddev composer test:functional --working-dir=packages/rte_ckeditor_pack
+
+# Run all tests
+ddev composer test:all --working-dir=packages/rte_ckeditor_pack
+```
+
+### Manual PHPUnit Execution
+
+You can also run PHPUnit directly:
+
+```bash
+# Inside container, from extension directory
+.Build/bin/phpunit -c Build/phpunit/UnitTests.xml
+.Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml
+
+# Run specific test file
+.Build/bin/phpunit Tests/Unit/Domain/Model/FeatureTest.php -c Build/phpunit/UnitTests.xml
+```
+
+### Test Structure
+
+- **Unit Tests:** `Tests/Unit/` - Fast, isolated tests with mocked dependencies
+- **Functional Tests:** `Tests/Functional/` - Integration tests with real database and TYPO3 environment
+- **Fixtures:** `Tests/Functional/*/Fixtures/` - CSV data fixtures for functional tests
+
 ## Notes
 
 - Credit: The image support in this extension is inspired by a fork of [rte_ckeditor_image](https://extensions.typo3.org/extension/rte_ckeditor_image). We built on the basic image upload functionality and combined it with enhanced capabilities from CKEditor's free packages, packaged as a no-code, editor-friendly plug-and-play solution. For more advanced, developer-oriented features, we recommend exploring EXT:rte_ckeditor_image directly.
