@@ -72,49 +72,21 @@ This extension includes unit and functional tests. To run the tests, use the fol
    ```bash
    composer install
    ```
+2. Ensure Docker or Podman is available (required by `runTests.sh`).
 
-### Running Tests
-
-**From inside the extension directory (in DDEV container):**
-
-```bash
-# Run all unit tests
-composer test
-
-# Run unit tests only
-composer test:unit
-
-# Run functional tests only
-composer test:functional
-
-# Run all tests (unit + functional)
-composer test:all
-```
-
-**From the project root (using DDEV):**
+### Running Tests (Recommended)
 
 ```bash
 # Run unit tests
-ddev composer test --working-dir=packages/rte_ckeditor_pack
+Build/Scripts/runTests.sh -t 13 -p 8.4 -s unit
 
-# Run functional tests
-ddev composer test:functional --working-dir=packages/rte_ckeditor_pack
+# Run functional tests (sqlite)
+Build/Scripts/runTests.sh -t 13 -p 8.4 -d sqlite -s functional
 
-# Run all tests
-ddev composer test:all --working-dir=packages/rte_ckeditor_pack
-```
-
-### Manual PHPUnit Execution
-
-You can also run PHPUnit directly:
-
-```bash
-# Inside container, from extension directory
-.Build/bin/phpunit -c Build/phpunit/UnitTests.xml
-.Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml
-
-# Run specific test file
-.Build/bin/phpunit Tests/Unit/Domain/Model/FeatureTest.php -c Build/phpunit/UnitTests.xml
+# Run all via composer scripts
+composer test
+composer test:functional
+composer test:all
 ```
 
 ### Test Structure

@@ -65,8 +65,8 @@
             "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
         ],
         "test": "@test:unit",
-        "test:unit": "php .Build/bin/phpunit -c Build/phpunit/UnitTests.xml",
-        "test:functional": "php .Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml",
+        "test:unit": "Build/Scripts/runTests.sh -t 13 -p 8.4 -s unit",
+        "test:functional": "Build/Scripts/runTests.sh -t 13 -p 8.4 -d sqlite -s functional",
         "test:all": [
             "@test:unit",
             "@test:functional"
@@ -78,10 +78,10 @@
         "csfix": "PHP_CS_FIXER_IGNORE_ENV=1 php ./.Build/bin/php-cs-fixer fix -v --config ./Build/php-cs-fixer/php-cs-fixer.php ./"
     },
     "scripts-descriptions": {
-      "test": "Run unit tests (alias for test:unit)",
-      "test:unit": "Run unit tests",
-      "test:functional": "Run functional tests",
-      "test:all": "Run all tests (unit + functional)",
+      "test": "Run unit tests in the containerized runTests setup (alias for test:unit)",
+      "test:unit": "Run unit tests via Build/Scripts/runTests.sh",
+      "test:functional": "Run functional tests via Build/Scripts/runTests.sh with sqlite",
+      "test:all": "Run all tests (unit + functional) via Build/Scripts/runTests.sh",
       "doc-init": "Initialize documentation rendering",
       "doc-make": "Render documentation",
       "doc-watch": "Render documentation including a watcher"
