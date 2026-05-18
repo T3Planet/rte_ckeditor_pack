@@ -12,18 +12,14 @@ declare(strict_types=1);
 namespace T3Planet\RteCkeditorPack\EventListener;
 
 use T3Planet\RteCkeditorPack\Utility\ProcessingConfigurationUtility;
-use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\Event\AfterRichtextConfigurationPreparedEvent;
 
 /**
- * Event listener to modify RTE processing configuration from database (TYPO3 v14 only)
- * 
- * This listener allows overriding the Processing.yaml configuration
- * with custom processing settings stored in the preset database table.
- * 
+ * Event listener to modify RTE processing configuration from database (TYPO3 v14+ only).
+ *
+ * Registered conditionally via Configuration/Services.php.
  * For TYPO3 v12 and v13, the Richtext class is extended instead.
  */
-#[AsEventListener('rte_ckeditor_pack/processing-configuration-modifier')]
 final class ProcessingConfigurationModifier
 {
     /**

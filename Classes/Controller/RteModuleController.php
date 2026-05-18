@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use T3Planet\RteCkeditorPack\Domain\Model\Preset;
@@ -1188,6 +1189,19 @@ class RteModuleController extends ActionController
         $this->pageRenderer->addCssFile('EXT:dashboard/Resources/Public/Css/dashboard.css');
         $this->pageRenderer->addCssFile('EXT:backend/Resources/Public/Css/backend.css');
         $this->pageRenderer->addCssFile('EXT:rte_ckeditor_pack/Resources/Public/Css/dashboard.css');
+        $this->pageRenderer->loadJavaScriptModule('@typo3/rte-ckeditor/dashboard-tabs.js');
+
+        $typo3VersionArray = VersionNumberUtility::convertVersionStringToArray(
+            VersionNumberUtility::getCurrentTypo3Version()
+        );
+        $typo3Major = (int)($typo3VersionArray['version_main'] ?? 0);
+
+        if ($typo3Major >= 14) {
+            $this->pageRenderer->loadJavaScriptModule('@typo3/backend/tab.js');
+        } else {
+            $this->pageRenderer->loadJavaScriptModule('@typo3/rte-ckeditor/dashboard-bootstrap-tabs.js');
+        }
+
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/global-button.js');
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/import-export.js');
         $this->pageRenderer->loadJavaScriptModule('@t3planet/RteCkeditorPack/wizard-manipulation.js');
