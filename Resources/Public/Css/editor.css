@@ -559,3 +559,7 @@
 .export-preset * {
     pointer-events: none;
 }
+
+.ckeditor-modal-content .rounded-0 {
+  border-radius: 0;
+}
