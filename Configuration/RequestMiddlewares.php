@@ -1,6 +1,5 @@
 <?php
 
-use T3Planet\RteCkeditorPack\Middleware\CommentTread;
 use T3Planet\RteCkeditorPack\Middleware\ParsedHtmlForFrontend;
 use T3Planet\RteCkeditorPack\Middleware\RevisionHistory;
 use T3Planet\RteCkeditorPack\Middleware\Suggestions;
@@ -8,12 +7,6 @@ use T3Planet\RteCkeditorPack\Middleware\TokenGenerate;
 
 return [
     'frontend' => [
-        't3planet/threadcomment' => [
-            'target' => CommentTread::class,
-            'before' => [
-                'typo3/cms-frontend/page-resolver',
-            ],
-        ],
         't3planet/parsedcommenthtml' => [
             'target' => ParsedHtmlForFrontend::class,
             'after' => [
@@ -39,12 +32,5 @@ return [
             ],
         ],
     ],
-    'backend' => [
-        't3planet/threadcomment' => [
-            'target' => CommentTread::class,
-            'before' => [
-                'typo3/cms-backend/authentication',
-            ],
-        ],
-    ],
+    'backend' => [],
 ];

@@ -4,10 +4,6 @@ services:
     autoconfigure: true
     public: false
 
-  T3Planet\RteCkeditorPack\:
-    resource: '../Classes/*'
-    exclude: '../Classes/Domain/Model/*'
-
   T3Planet\RteCkeditorPack\Controller\CommentsController:
     public: true
     arguments:
@@ -17,6 +13,12 @@ services:
     public: true
     arguments:
       - '@TYPO3\CMS\Core\Database\ConnectionPool'
+  T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository:
+    public: true
+  T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository:
+    public: true
+  T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository:
+    public: true
 
   T3Planet\RteCkeditorPack\Event\AppDataEvent:
     tags:
@@ -25,6 +27,33 @@ services:
         event: TYPO3\CMS\Backend\Controller\Event\AfterFormEnginePageInitializedEvent
 
   T3Planet\RteCkeditorPack\Controller\RteModuleController:
+    public: true
+
+  T3Planet\RteCkeditorPack\DataProvider\BaseToolBar:
+    public: true
+
+  T3Planet\RteCkeditorPack\DataProvider\Modules:
+    public: true
+
+  T3Planet\RteCkeditorPack\Service\ImportExportService:
+    public: true
+
+  T3Planet\RteCkeditorPack\Service\TokenUrlValidator:
+    public: true
+
+  T3Planet\RteCkeditorPack\EventListener\SyncFeaturesBeforeExportListener:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\EditorConfigurationBuilder:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\MentionConfigurationBuilder:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\AIConfigurationBuilder:
     public: true
 
   T3Planet\RteCkeditorPack\DataHandling\SoftReference\RteImageSoftReferenceParser:
