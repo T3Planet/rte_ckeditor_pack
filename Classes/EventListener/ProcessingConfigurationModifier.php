@@ -15,20 +15,16 @@ use T3Planet\RteCkeditorPack\Utility\ProcessingConfigurationUtility;
 use TYPO3\CMS\Core\Configuration\Event\AfterRichtextConfigurationPreparedEvent;
 
 /**
- * Event listener to modify RTE processing configuration from database (TYPO3 v14+ only).
+ * Applies RTE processing and HTML-support rules from the database (TYPO3 v14+ only).
  *
- * Registered conditionally via Configuration/Services.php.
  * For TYPO3 v12 and v13, the Richtext class is extended instead.
  */
 final class ProcessingConfigurationModifier
 {
-    /**
-     * Modify the RTE configuration by applying custom processing config from database
-     */
     public function __invoke(AfterRichtextConfigurationPreparedEvent $event): void
     {
-        $configuration = $event->getConfiguration();
-        $configuration = ProcessingConfigurationUtility::applyProcessingConfig($configuration);
-        $event->setConfiguration($configuration);
+        $event->setConfiguration(
+            ProcessingConfigurationUtility::applyAll($event->getConfiguration())
+        );
     }
 }

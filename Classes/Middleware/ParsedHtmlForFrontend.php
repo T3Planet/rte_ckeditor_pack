@@ -9,6 +9,7 @@
 
 namespace T3Planet\RteCkeditorPack\Middleware;
 
+use T3Planet\RteCkeditorPack\Utility\RteMarkupTransformationUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -29,17 +30,10 @@ class ParsedHtmlForFrontend implements MiddlewareInterface
             $stream = $response->getBody();
             $stream->rewind();
             $content = $stream->getContents();
-            $newBody = (new StreamFactory())->createStream($this->parsedComment($content));
+            $newBody = (new StreamFactory())->createStream(RteMarkupTransformationUtility::transform($content));
             $response = $response->withBody($newBody);
         }
         return $response;
-    }
-
-    private function parsedComment($content)
-    {
-        $content = preg_replace('/&lt;comment-start.*?&gt;&lt;\/comment-start&gt;/s', '', $content);
-        $content = preg_replace('/&lt;comment-end.*?&gt;&lt;\/comment-end&gt;/s', '', $content);
-        return $content;
     }
 
     /**

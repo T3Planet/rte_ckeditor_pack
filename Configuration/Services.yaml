@@ -47,6 +47,13 @@ services:
         arguments:
           - '@T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler'
 
+  T3Planet\RteCkeditorPack\EventListener\RtePreviewRendererRegistrar:
+    tags:
+      - name: event.listener
+        identifier: 'rte-ckeditor-pack/preview-renderer-registrar'
+        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
+        after: 'nr-rte-preview-renderer-registrar'
+
   T3Planet\RteCkeditorPack\EventListener\RteConfigurationModifier:
     tags:
       - name: event.listener

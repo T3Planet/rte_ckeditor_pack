@@ -29,9 +29,9 @@ class Richtext extends CoreRichtext
      */
     public function getConfiguration(string $table, string $field, int $pid, string $recordType, array $tcaFieldConf): array
     {
-        $configuration = parent::getConfiguration($table, $field, $pid, $recordType, $tcaFieldConf);
-        $configuration = ProcessingConfigurationUtility::applyProcessingConfig($configuration);
-        return $configuration;
+        return ProcessingConfigurationUtility::applyAll(
+            parent::getConfiguration($table, $field, $pid, $recordType, $tcaFieldConf)
+        );
     }
 }
 
