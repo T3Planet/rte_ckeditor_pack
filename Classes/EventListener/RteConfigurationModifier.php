@@ -53,14 +53,25 @@ class RteConfigurationModifier
 
         $data = $event->getData();
         if ($data) {
-            $pageTs = $this->getPageTsConfiguration($data['tableName'], $data['fieldName'], $data['effectivePid'], $data['recordTypeValue']);
+            $context = $this->resolveEditorContext($data);
+            $pageTs = $this->getPageTsConfiguration(
+                $context['table'],
+                $context['field'],
+                $context['pid'],
+                $context['recordType'],
+            );
             $this->selectedPreset = $pageTs['fieldSpecificPreset'] ?? $pageTs['generalPreset'] ?? 'default';
             unset($pageTs['fieldSpecificPreset']);
             unset($pageTs['generalPreset']);
 
             $configuration = $event->getConfiguration();
             $configuration['importModules'][] = '@t3planet/RteCkeditorPack/ckeditor5-error';
-            $configuration = $this->ensureCollaborationChannelConfiguration($configuration, $data);
+            $configuration = $this->ensureCollaborationChannelConfiguration($configuration, array_merge($data, [
+                'tableName' => $context['table'],
+                'fieldName' => $context['field'],
+                'effectivePid' => $context['pid'],
+                'recordTypeValue' => $context['recordType'],
+            ]));
             
             // Get preset UID from preset key
             $preset = $this->presetRepository->findByUsage($this->selectedPreset);
@@ -89,6 +100,7 @@ class RteConfigurationModifier
             $this->pageRenderer->addInlineSetting(null, 'ckeditor5Premium', $configuration);
             $editorConfigBuilder = GeneralUtility::makeInstance(EditorConfigurationBuilder::class);
             $configuration = $editorConfigBuilder->addImportantSettings($configuration);
+            $configuration = $this->normalizeImportModules($configuration);
             $event->setConfiguration($configuration);
         }
 
@@ -394,6 +406,47 @@ class RteConfigurationModifier
     private function cacheConfiguration(string $cacheIdentifier, array $configuration): void
     {
         $this->cache->set($cacheIdentifier, $configuration, [], 3600); // Cache for 1 hour
+    }
+
+    /**
+     * Visual Editor expects importModules as arrays with a module key (see TextViewHelper).
+     */
+    private function normalizeImportModules(array $configuration): array
+    {
+        if (!isset($configuration['importModules']) || !is_array($configuration['importModules'])) {
+            return $configuration;
+        }
+
+        $normalized = [];
+        foreach ($configuration['importModules'] as $importModule) {
+            if (is_string($importModule)) {
+                if ($importModule !== '') {
+                    $normalized[] = ['module' => $importModule, 'exports' => ['default']];
+                }
+                continue;
+            }
+            if (is_array($importModule) && isset($importModule['module']) && is_string($importModule['module'])) {
+                $normalized[] = $importModule;
+            }
+        }
+
+        $configuration['importModules'] = $normalized;
+        return $configuration;
+    }
+
+    /**
+     * Normalize editor context from FormEngine or Visual Editor event data.
+     *
+     * @return array{table: string, field: string, pid: int, recordType: string}
+     */
+    private function resolveEditorContext(array $data): array
+    {
+        return [
+            'table' => (string)($data['tableName'] ?? ''),
+            'field' => (string)($data['fieldName'] ?? ''),
+            'pid' => (int)($data['effectivePid'] ?? $data['pid'] ?? $data['databaseRow']['pid'] ?? 0),
+            'recordType' => (string)($data['recordTypeValue'] ?? $data['CType'] ?? $data['databaseRow']['CType'] ?? ''),
+        ];
     }
 
     /**
