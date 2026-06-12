@@ -24,6 +24,7 @@ use T3Planet\RteCkeditorPack\Configuration\MentionConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\AIConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
+use T3Planet\RteCkeditorPack\Utility\ProcessingConfigurationUtility;
 use TYPO3\CMS\RteCKEditor\Form\Element\Event\BeforePrepareConfigurationForEditorEvent;
 
 class RteConfigurationModifier
@@ -60,11 +61,13 @@ class RteConfigurationModifier
                 $context['pid'],
                 $context['recordType'],
             );
-            $this->selectedPreset = $pageTs['fieldSpecificPreset'] ?? $pageTs['generalPreset'] ?? 'default';
+            $configuration = $event->getConfiguration();
+            $this->selectedPreset = $pageTs['fieldSpecificPreset']
+                ?? $pageTs['generalPreset']
+                ?? ($configuration[ProcessingConfigurationUtility::RICH_TEXT_PRESET_METADATA_KEY] ?? null)
+                ?? 'default';
             unset($pageTs['fieldSpecificPreset']);
             unset($pageTs['generalPreset']);
-
-            $configuration = $event->getConfiguration();
             $configuration['importModules'][] = '@t3planet/RteCkeditorPack/ckeditor5-error';
             $configuration = $this->ensureCollaborationChannelConfiguration($configuration, array_merge($data, [
                 'tableName' => $context['table'],
@@ -101,6 +104,7 @@ class RteConfigurationModifier
             $editorConfigBuilder = GeneralUtility::makeInstance(EditorConfigurationBuilder::class);
             $configuration = $editorConfigBuilder->addImportantSettings($configuration);
             $configuration = $this->normalizeImportModules($configuration);
+            unset($configuration[ProcessingConfigurationUtility::RICH_TEXT_PRESET_METADATA_KEY]);
             $event->setConfiguration($configuration);
         }
 

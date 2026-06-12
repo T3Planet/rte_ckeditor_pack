@@ -22,6 +22,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ProcessingConfigurationUtility
 {
     /**
+     * Internal metadata key forwarded via editor.config for Visual Editor compatibility.
+     */
+    public const RICH_TEXT_PRESET_METADATA_KEY = '_rtePreset';
+
+    /**
      * Apply custom processing configuration from database to the configuration array
      * 
      * @param array $configuration The RTE configuration array
@@ -78,8 +83,39 @@ class ProcessingConfigurationUtility
     public static function applyAll(array $configuration): array
     {
         $configuration = self::applyProcessingConfig($configuration);
+        $configuration = self::applyHtmlSupportConfig($configuration);
 
-        return self::applyHtmlSupportConfig($configuration);
+        return self::ensureEditorConfigurationStructure($configuration);
+    }
+
+    /**
+     * Ensure editor structure required by Visual Editor and database-only presets.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function ensureEditorConfigurationStructure(array $configuration): array
+    {
+        if (!isset($configuration['editor']) || !is_array($configuration['editor'])) {
+            $configuration['editor'] = [];
+        }
+        if (!isset($configuration['editor']['config']) || !is_array($configuration['editor']['config'])) {
+            $configuration['editor']['config'] = [];
+        }
+        if (!isset($configuration['editor']['externalPlugins']) || !is_array($configuration['editor']['externalPlugins'])) {
+            $configuration['editor']['externalPlugins'] = [];
+        }
+
+        if (
+            isset($configuration['preset'])
+            && is_string($configuration['preset'])
+            && $configuration['preset'] !== ''
+            && !isset($configuration['editor']['config'][self::RICH_TEXT_PRESET_METADATA_KEY])
+        ) {
+            $configuration['editor']['config'][self::RICH_TEXT_PRESET_METADATA_KEY] = $configuration['preset'];
+        }
+
+        return $configuration;
     }
 
     /**
@@ -98,8 +134,32 @@ class ProcessingConfigurationUtility
         }
 
         $configuration = HtmlSupportProcessingUtility::syncProcessing($configuration);
+        $configuration = self::ensureDefaultProcessingMode($configuration);
 
         return self::rebuildProcFromProcessing($configuration);
+    }
+
+    /**
+     * Ensure RteHtmlParser receives a transformation mode (matches core Richtext fallback).
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function ensureDefaultProcessingMode(array $configuration): array
+    {
+        if (!isset($configuration['processing']) || !is_array($configuration['processing'])) {
+            $configuration['processing'] = [];
+        }
+
+        $hasProcessingMode = isset($configuration['processing']['mode']) && $configuration['processing']['mode'] !== '';
+        $hasProcessingOverruleMode = isset($configuration['processing']['overruleMode'])
+            && $configuration['processing']['overruleMode'] !== '';
+
+        if (!$hasProcessingMode && !$hasProcessingOverruleMode) {
+            $configuration['processing']['mode'] = 'default';
+        }
+
+        return $configuration;
     }
 
     /**
@@ -112,6 +172,13 @@ class ProcessingConfigurationUtility
     {
         if (is_array($configuration['processing'] ?? null)) {
             $configuration['proc.'] = self::convertPlainArrayToTypoScriptArray($configuration['processing']);
+        }
+
+        if (
+            !isset($configuration['proc.']['mode'])
+            && !isset($configuration['proc.']['overruleMode'])
+        ) {
+            $configuration['proc.']['overruleMode'] = 'default';
         }
 
         return $configuration;
