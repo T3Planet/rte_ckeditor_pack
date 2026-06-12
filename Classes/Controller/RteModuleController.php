@@ -499,7 +499,11 @@ class RteModuleController extends ActionController
                                 // Remove Item from toolBar
                                 $this->baseToolBar->updateToolBar($configKey, $selectedPresetUid);
                             }
-                            if (!isset($data['operation'])) {
+                            $operation = $data['operation'] ?? [];
+                            $isToolbarOnlyOperation = isset($operation['targetGrid'])
+                                && in_array($operation['targetGrid'], ['grid-1', 'grid-2'], true);
+
+                            if (!isset($data['operation']) || !$isToolbarOnlyOperation) {
                                 $feature->setEnable(false);
                             }
                         }
