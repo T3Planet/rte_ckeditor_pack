@@ -1,0 +1,8 @@
+####################################################
+# TypoScript Setup for RTE CKEditor Pack Site Set
+####################################################
+# This file is automatically loaded when the site set
+# "t3planet/rte-ckeditor-pack" is included in
+# a site configuration's dependencies.
+
+@import 'EXT:rte_ckeditor_pack/Configuration/TypoScript/setup.typoscript'
