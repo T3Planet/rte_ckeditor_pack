@@ -855,8 +855,9 @@ class Modules
         return array_replace(array_flip($priority), $groupedModules);
     }
 
-    public function getItemByConfigKey(string $configKey, bool $toolBar = false): array
+    public function getItemByConfigKey(string|int $configKey, bool $toolBar = false): array
     {
+        $configKey = (string)$configKey;
         foreach ($this->ckeditorModules as $item) {
             if (isset($item['configuration']['config_key']) && strtolower($item['configuration']['config_key']) == strtolower($configKey)) {
                 return $item;

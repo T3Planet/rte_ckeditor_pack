@@ -205,14 +205,14 @@ class RteModuleController extends ActionController
     {
         $data = $request->getQueryParams();
         $assign = [];
-        $moduleKey = $data['moduleKey'] ?? '';
+        $moduleKey = (string)($data['moduleKey'] ?? '');
         $selectedPresetUid = isset($data['selectedPreset']) && is_numeric($data['selectedPreset']) ? (int)$data['selectedPreset'] : 0;
 
         if (isset($data['additionalParams'])) {
             $configuration = $data['additionalParams'] ? json_decode($data['additionalParams'], true) : '';
             $assign['additionalParams'] = $data['additionalParams'] ?? '';
             if (isset($configuration['config_key'])) {
-                $moduleKey = $configuration['config_key'];
+                $moduleKey = (string)$configuration['config_key'];
             }
             $assign['configuration'] = $configuration;
         }
@@ -395,16 +395,24 @@ class RteModuleController extends ActionController
 
         if ($enableModules) {
             foreach ($enableModules as $module) {
-                if ($module === 'RealTimeCollaboration') {
+                $moduleKey = (string)$module;
+                if ($moduleKey === '' || ctype_digit($moduleKey)) {
+                    continue;
+                }
+                if ($moduleKey === 'RealTimeCollaboration') {
                     $updatedModules['SourceEditing'] = false;
                 }
-                $updatedModules[$module] = true;
+                $updatedModules[$moduleKey] = true;
             }
         }
 
         if ($disabledModules) {
             foreach ($disabledModules as $module) {
-                $updatedModules[$module] = false;
+                $moduleKey = (string)$module;
+                if ($moduleKey === '' || ctype_digit($moduleKey)) {
+                    continue;
+                }
+                $updatedModules[$moduleKey] = false;
             }
         }
 
@@ -415,13 +423,20 @@ class RteModuleController extends ActionController
                 if (!$preset) {
                     throw new \Exception('Preset not found');
                 }
-                $feature = null;
                 foreach ($updatedModules as $module => $value) {
-                    $enable = $value == 'true' ? true : false;
+                    $moduleKey = (string)$module;
+
+                    // Skip legacy numeric toolbar indices (from k.cycle data-id)
+                    if ($moduleKey !== '' && ctype_digit($moduleKey)) {
+                        continue;
+                    }
+
+                    $feature = null;
+                    $enable = $value === true || $value === 'true' || $value === '1' || $value === 1;
 
                     // Get module configuration to find the correct config_key
-                    $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($module, true);
-                    $configKey = $module;
+                    $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($moduleKey, true);
+                    $configKey = $moduleKey;
 
                     if ($moduleConfiguration && isset($moduleConfiguration['configuration']['config_key'])) {
                         $configKey = $moduleConfiguration['configuration']['config_key'];
@@ -442,7 +457,7 @@ class RteModuleController extends ActionController
                     if ($feature) {
                         if ($enable) {
                             // Handle special cases when enabling
-                            if ($module === 'SourceEditing') {
+                            if ($moduleKey === 'SourceEditing') {
                                 // Check if RealTimeCollaboration is enabled for this preset
                                 $realTimeFeature = $this->featureRepository->findByPresetUidAndConfigKey($selectedPresetUid, 'RealTimeCollaboration');
                                 if ($realTimeFeature && $realTimeFeature->isEnable()) {
@@ -454,7 +469,7 @@ class RteModuleController extends ActionController
                                 }
                             }
 
-                            if ($module === 'RealTimeCollaboration') {
+                            if ($moduleKey === 'RealTimeCollaboration') {
                                 $fieldConfiguration = [];
                                 $webSocketUrl = ExtensionConfigurationUtility::get('webSocketUrl', '');
                                 if ($webSocketUrl) {
@@ -473,7 +488,7 @@ class RteModuleController extends ActionController
                                 $this->notification->addFlashNotification($notification);
                             }
 
-                            if ($module === 'Menubar') {
+                            if ($moduleKey === 'Menubar') {
                                 $fieldConfiguration = ['menuBar' => ['isVisible' => true]];
                                 $fieldData = json_encode($fieldConfiguration);
                                 $feature->setFields($fieldData);
@@ -482,7 +497,7 @@ class RteModuleController extends ActionController
                             $feature->setEnable($enable);
                         } else {
                             // Handle disabling
-                            if ($module === 'Menubar') {
+                            if ($moduleKey === 'Menubar') {
                                 $feature->setFields('');
                             }
                             // Check if toolbar items should be removed
@@ -493,7 +508,7 @@ class RteModuleController extends ActionController
                                 $match = array_intersect($toolBarItemArray, $toolBarItems);
                                 if (!$match) {
                                     // Remove Item from toolBar
-                                    $this->baseToolBar->updateToolBar($module, $selectedPresetUid);
+                                    $this->baseToolBar->updateToolBar($moduleKey, $selectedPresetUid);
                                 }
                             } elseif (isset($moduleConfiguration['configuration']['toolBarItems'])) {
                                 // Remove Item from toolBar
@@ -507,10 +522,11 @@ class RteModuleController extends ActionController
                                 $feature->setEnable(false);
                             }
                         }
+
+                        $this->featureRepository->update($feature);
+                        $this->persistenceManager->persistAll();
+                        $this->cache->flush();
                     }
-                    $this->featureRepository->update($feature);
-                    $this->persistenceManager->persistAll();
-                    $this->cache->flush();
                 }
 
                 $notification['title'] = 'ckeditorKit.operation.success';
