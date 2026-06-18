@@ -70,10 +70,35 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
      */
     protected function renderTextWithHtml(string $input): string
     {
+        $input = $this->stripCollaborationMarkup($input);
+
         // Allow only <img> and <p>-tags in preview, to prevent possible HTML mismatch
         $input = strip_tags($input, '<img><p>');
 
         return $this->truncate($input, 1500);
+    }
+
+    /**
+     * Remove CKEditor collaboration markers from backend previews.
+     */
+    private function stripCollaborationMarkup(string $content): string
+    {
+        $patterns = [
+            '/<comment-start\b[^>]*>(?:<\/comment-start>)?/is',
+            '/<comment-end\b[^>]*>(?:<\/comment-end>)?/is',
+            '/<suggestion-start\b[^>]*>(?:<\/suggestion-start>)?/is',
+            '/<suggestion-end\b[^>]*>(?:<\/suggestion-end>)?/is',
+            '/&lt;comment-start\b.*?&gt;(?:&lt;\/comment-start&gt;)?/is',
+            '/&lt;comment-end\b.*?&gt;(?:&lt;\/comment-end&gt;)?/is',
+            '/&lt;suggestion-start\b.*?&gt;(?:&lt;\/suggestion-start&gt;)?/is',
+            '/&lt;suggestion-end\b.*?&gt;(?:&lt;\/suggestion-end&gt;)?/is',
+        ];
+
+        foreach ($patterns as $pattern) {
+            $content = (string)preg_replace($pattern, '', $content);
+        }
+
+        return $content;
     }
 
     /**
