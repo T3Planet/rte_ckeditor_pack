@@ -71,20 +71,12 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
      */
     protected function renderTextWithHtml(string $input): string
     {
-        $input = $this->stripCollaborationMarkup($input);
+        $input = RteMarkupTransformationUtility::stripCollaborationMarkup($input);
 
         // Allow only <img> and <p>-tags in preview, to prevent possible HTML mismatch
         $input = strip_tags($input, '<img><p>');
 
         return $this->truncate($input, 1500);
-    }
-
-    /**
-     * Remove CKEditor collaboration markers from backend previews.
-     */
-    private function stripCollaborationMarkup(string $content): string
-    {
-        return RteMarkupTransformationUtility::stripCollaborationMarkup($content);
     }
 
     /**

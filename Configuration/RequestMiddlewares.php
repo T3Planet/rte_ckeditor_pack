@@ -5,6 +5,7 @@ use T3Planet\RteCkeditorPack\Middleware\ParsedHtmlForFrontend;
 use T3Planet\RteCkeditorPack\Middleware\RevisionHistory;
 use T3Planet\RteCkeditorPack\Middleware\Suggestions;
 use T3Planet\RteCkeditorPack\Middleware\TokenGenerate;
+use T3Planet\RteCkeditorPack\Middleware\VisualEditorStylesMiddleware;
 
 return [
     'frontend' => [
@@ -17,6 +18,12 @@ return [
         't3planet/parsedcommenthtml' => [
             'target' => ParsedHtmlForFrontend::class,
             'after' => [
+                'typo3/cms-frontend/prepare-tsfe-rendering',
+            ],
+        ],
+        't3planet/visual-editor-styles' => [
+            'target' => VisualEditorStylesMiddleware::class,
+            'before' => [
                 'typo3/cms-frontend/prepare-tsfe-rendering',
             ],
         ],
