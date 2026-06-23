@@ -18,17 +18,29 @@ class RealtimeAdapter extends Core.Plugin {
         this._loaderEl = null;
 
         const config = this.editor.config._config || (this.editor.config._config = {});
-        const channelId = config.collaboration?.channelId || this._ensureChannelId(this.channelElement);
-        
-        if (!channelId) return;
+        let channelId = config.collaboration?.channelId || this._ensureChannelId(this.channelElement);
+
+        if (!channelId && config.presenceList) {
+            channelId = this._generateFallbackId();
+        }
+
+        if (!channelId) {
+            return;
+        }
 
         this.channelId = channelId;
         this.channelSelector = `#${channelId}`;
 
         // Setup collaboration config
         config.collaboration = { ...(config.collaboration || {}), channelId };
-        if (!config.cloudServices) config.cloudServices = {};
-        if (!config.cloudServices.documentId) config.cloudServices.documentId = channelId;
+        if (!config.cloudServices) {
+            config.cloudServices = {};
+        }
+        if (!config.cloudServices.documentId) {
+            config.cloudServices.documentId = channelId;
+        }
+
+        this._ensureInitialDataForRtc(config);
 
         this._showLoader({
             channelId,
@@ -154,6 +166,10 @@ class RealtimeAdapter extends Core.Plugin {
         }
 
         this._configureCommentMentionFeeds();
+
+        if (editor.plugins.has('RealTimeCollaborativeEditing')) {
+            this._applyVisualEditorRtcCompat(editor);
+        }
     }
 
     /**
@@ -197,44 +213,87 @@ class RealtimeAdapter extends Core.Plugin {
         const cfg = this.editor.config._config.presenceList;
         if (!cfg) return;
 
-        if (!cfg.container) {
+        if (!cfg.container || !(cfg.container instanceof HTMLElement)) {
             const presenceListContainerId = `${this.channelId}presence-list-container`;
             const existing = document.getElementById(presenceListContainerId);
 
             if (existing) {
                 cfg.container = existing;
             } else {
-                const formItem = (this.channelElement || document.querySelector(this.channelSelector))
-                    ?.closest('.form-control-wrap');
-                
-                if (formItem) {
+                const mount = this._resolveMountContainer();
+                if (mount) {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'ck-presence-list-container';
                     wrapper.id = presenceListContainerId;
-                    formItem.insertBefore(wrapper, formItem.firstChild);
-                    this.editor.config._config.presenceList = { container: wrapper };
+                    mount.insertBefore(wrapper, mount.firstChild);
+                    cfg.container = wrapper;
                 }
             }
         }
 
-        if (!cfg.collapseAt) cfg.collapseAt = 1;
+        if (!cfg.collapseAt) {
+            cfg.collapseAt = 4;
+        }
     }
 
-    checkIfInitialDataChanged() {
-        const initialData = this.editor.config._config.initialData;
-        this.editor.on('ready', () => {
-            if (initialData !== this.editor.getData()) {
-                this.editor.sourceElement.setAttribute('data-editor-value-is-changed', 'true');
+    /**
+     * Real-time collaboration forbids editor.setData() after init.
+     * Visual Editor syncs via dataHandlerStore and must not call setData in RTC mode.
+     */
+    _applyVisualEditorRtcCompat(editor) {
+        editor.setData = () => Promise.resolve();
+
+        editor.once('ready', () => {
+            const host = editor.sourceElement?.closest('ve-editable-rich-text');
+            if (!host?.table) {
+                return;
             }
+
+            // Visual Editor is TYPO3 v13+ only; dynamic import keeps v12 backend unaffected.
+            import('@typo3/visual-editor/Frontend/stores/data-handler-store.js')
+                .then(({ dataHandlerStore }) => {
+                    const value = editor.getData({ skipListItemIds: true });
+                    dataHandlerStore.setInitialData(host.table, host.uid, host.field, value);
+                })
+                .catch(() => {});
         });
     }
 
-    /* ----------------------- Loader Helpers ----------------------- */
+    /**
+     * Resolve a stable parent for collaboration UI (presence list, loader, etc.).
+     * Supports backend FormEngine and Visual Editor (ve-editable-rich-text).
+     */
+    _resolveMountContainer() {
+        const anchor = this.channelElement
+            || (this.channelSelector ? document.querySelector(this.channelSelector) : null)
+            || this.editor.sourceElement
+            || null;
+
+        if (!anchor) {
+            return null;
+        }
+
+        const mountSelectors = [
+            '.form-control-wrap',
+            've-editable-rich-text',
+            '.form-wizards-item-element',
+        ];
+
+        for (const selector of mountSelectors) {
+            const mount = anchor.closest(selector);
+            if (mount) {
+                return mount;
+            }
+        }
+
+        return anchor.parentElement || null;
+    }
 
     _getMountContainer() {
-        const fromForm = this.channelElement?.closest('.form-control-wrap') || null;
-        const parent = fromForm || this.channelElement?.parentElement || this.editor.sourceElement?.parentElement;
-        if (!parent) return null;
+        const parent = this._resolveMountContainer();
+        if (!parent) {
+            return null;
+        }
 
         const style = window.getComputedStyle(parent);
         if (style.position === 'static') {
@@ -287,6 +346,31 @@ class RealtimeAdapter extends Core.Plugin {
     }
 
     /* ----------------------- Channel ID Helpers ----------------------- */
+
+    /**
+     * RTC requires initial document content at create time (setData is forbidden after init).
+     * Visual Editor stores HTML on the wrapper element before CKEditor starts.
+     */
+    _ensureInitialDataForRtc(config) {
+        if (config.initialData) {
+            return;
+        }
+
+        const hasRtc = (config.importModules || []).some((entry) => {
+            const moduleName = typeof entry === 'string' ? entry : entry?.module;
+            return typeof moduleName === 'string' && moduleName.includes('real-time-collaboration');
+        });
+
+        if (!hasRtc) {
+            return;
+        }
+
+        const source = this.channelElement;
+        const html = source?.innerHTML?.trim();
+        if (html) {
+            config.initialData = source.innerHTML;
+        }
+    }
 
     _ensureChannelId(element) {
         if (!element) return null;

@@ -9,6 +9,7 @@ services:
     exclude:
       - '../Classes/Domain/Model/*'
       - '../Classes/Configuration/Richtext.php'
+      - '../Classes/Configuration/RichtextV14.php'
       - '../Classes/EventListener/ProcessingConfigurationModifier.php'
 
   T3Planet\RteCkeditorPack\Controller\CommentsController:

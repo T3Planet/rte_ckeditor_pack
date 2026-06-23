@@ -17,6 +17,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use T3Planet\RteCkeditorPack\DataProvider\Modules;
 use T3Planet\RteCkeditorPack\Utility\ChannelIdUtility;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
+use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
 use T3Planet\RteCkeditorPack\Configuration\EditorConfigurationBuilder;
@@ -25,6 +26,9 @@ use T3Planet\RteCkeditorPack\Configuration\AIConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Utility\ProcessingConfigurationUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Http\ApplicationType;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\RteCKEditor\Form\Element\Event\BeforePrepareConfigurationForEditorEvent;
 
 class RteConfigurationModifier
@@ -54,14 +58,14 @@ class RteConfigurationModifier
 
         $data = $event->getData();
         if ($data) {
-            $context = $this->resolveEditorContext($data);
+            $configuration = $event->getConfiguration();
+            $context = $this->resolveEditorContext($data, $configuration);
             $pageTs = $this->getPageTsConfiguration(
                 $context['table'],
                 $context['field'],
                 $context['pid'],
                 $context['recordType'],
             );
-            $configuration = $event->getConfiguration();
             $this->selectedPreset = $pageTs['fieldSpecificPreset']
                 ?? $pageTs['generalPreset']
                 ?? ($configuration[ProcessingConfigurationUtility::RICH_TEXT_PRESET_METADATA_KEY] ?? null)
@@ -69,12 +73,13 @@ class RteConfigurationModifier
             unset($pageTs['fieldSpecificPreset']);
             unset($pageTs['generalPreset']);
             $configuration['importModules'][] = '@t3planet/RteCkeditorPack/ckeditor5-error';
-            $configuration = $this->ensureCollaborationChannelConfiguration($configuration, array_merge($data, [
-                'tableName' => $context['table'],
-                'fieldName' => $context['field'],
-                'effectivePid' => $context['pid'],
-                'recordTypeValue' => $context['recordType'],
-            ]));
+            $collaborationContext = $this->buildCollaborationContext($data, $context);
+            if ($this->hasEnabledCollaborationChannelFeature()) {
+                $configuration = $this->ensureCollaborationChannelConfiguration($configuration, $collaborationContext);
+            }
+            if ($this->isEnableRealTimeCollaboration()) {
+                $configuration = $this->ensureCollaborationUserConfiguration($configuration);
+            }
             
             // Get preset UID from preset key
             $preset = $this->presetRepository->findByUsage($this->selectedPreset);
@@ -100,11 +105,14 @@ class RteConfigurationModifier
             } else {
                 $this->addExtensionSettings($configuration);
             }
-            $this->pageRenderer->addInlineSetting(null, 'ckeditor5Premium', $configuration);
+            if ($this->isBackendRequest()) {
+                $this->pageRenderer->addInlineSetting(null, 'ckeditor5Premium', $configuration);
+            }
             $editorConfigBuilder = GeneralUtility::makeInstance(EditorConfigurationBuilder::class);
             $configuration = $editorConfigBuilder->addImportantSettings($configuration);
             $configuration = $this->normalizeImportModules($configuration);
             unset($configuration[ProcessingConfigurationUtility::RICH_TEXT_PRESET_METADATA_KEY]);
+            unset($configuration[ProcessingConfigurationUtility::RICH_TEXT_EDITOR_CONTEXT_KEY]);
             $event->setConfiguration($configuration);
         }
 
@@ -388,20 +396,47 @@ class RteConfigurationModifier
      */
     private function isEnableRealTimeCollaboration(): bool
     {
-        // Get preset UID from preset key
-        $preset = $this->presetRepository->findByPresetKey($this->selectedPreset);
+        return $this->isCollaborationFeatureEnabled('RealTimeCollaboration');
+    }
+
+    /**
+     * Whether any cloud collaboration feature is enabled for the active preset.
+     */
+    private function hasEnabledCollaborationChannelFeature(): bool
+    {
+        foreach (['RealTimeCollaboration', 'Comments', 'RevisionHistory', 'TrackChanges'] as $configKey) {
+            if ($this->isCollaborationFeatureEnabled($configKey)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isCollaborationFeatureEnabled(string $configKey): bool
+    {
+        $preset = $this->resolveActivePreset();
         if (!$preset) {
             return false;
         }
-        
-        $presetUid = $preset->getUid();
-        $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, 'RealTimeCollaboration');
-        
-        if (!$feature || !$feature->isEnable()) {
-            return false;
-        }
 
-        return true;
+        $feature = $this->featureRepository->findByPresetUidAndConfigKey($preset->getUid(), $configKey);
+
+        return $feature !== null && $feature->isEnable();
+    }
+
+    private function resolveActivePreset(): ?Preset
+    {
+        return $this->presetRepository->findByUsage($this->selectedPreset)
+            ?? $this->presetRepository->findByPresetKey($this->selectedPreset);
+    }
+
+    private function isBackendRequest(): bool
+    {
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+
+        return $request instanceof ServerRequestInterface
+            && ApplicationType::fromRequest($request)->isBackend();
     }
 
     /**
@@ -441,16 +476,55 @@ class RteConfigurationModifier
     /**
      * Normalize editor context from FormEngine or Visual Editor event data.
      *
-     * @return array{table: string, field: string, pid: int, recordType: string}
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $configuration
+     * @return array{table: string, field: string, pid: int, recordType: string, recordUid: int}
      */
-    private function resolveEditorContext(array $data): array
+    private function resolveEditorContext(array $data, array $configuration = []): array
     {
+        $editorContext = $configuration[ProcessingConfigurationUtility::RICH_TEXT_EDITOR_CONTEXT_KEY] ?? [];
+        if (!is_array($editorContext)) {
+            $editorContext = [];
+        }
+
+        $recordUid = (int)(
+            $data['recordUid']
+            ?? $data['databaseRow']['uid']
+            ?? $data['uid']
+            ?? 0
+        );
+
         return [
-            'table' => (string)($data['tableName'] ?? ''),
-            'field' => (string)($data['fieldName'] ?? ''),
-            'pid' => (int)($data['effectivePid'] ?? $data['pid'] ?? $data['databaseRow']['pid'] ?? 0),
-            'recordType' => (string)($data['recordTypeValue'] ?? $data['CType'] ?? $data['databaseRow']['CType'] ?? ''),
+            'table' => (string)($data['tableName'] ?? $data['table'] ?? $editorContext['table'] ?? ''),
+            'field' => (string)($data['fieldName'] ?? $data['field'] ?? $editorContext['field'] ?? ''),
+            'pid' => (int)($data['effectivePid'] ?? $data['pid'] ?? $data['databaseRow']['pid'] ?? $editorContext['pid'] ?? 0),
+            'recordType' => (string)($data['recordTypeValue'] ?? $data['CType'] ?? $data['databaseRow']['CType'] ?? $editorContext['recordType'] ?? ''),
+            'recordUid' => $recordUid,
         ];
+    }
+
+    /**
+     * Build normalized collaboration context shared by FormEngine and Visual Editor.
+     *
+     * @param array<string, mixed> $data
+     * @param array{table: string, field: string, pid: int, recordType: string, recordUid: int} $context
+     * @return array<string, mixed>
+     */
+    private function buildCollaborationContext(array $data, array $context): array
+    {
+        $databaseRow = $data['databaseRow'] ?? null;
+        if (!is_array($databaseRow) && isset($data['uid'])) {
+            $databaseRow = $data;
+        }
+
+        return array_merge($data, [
+            'tableName' => $context['table'],
+            'fieldName' => $context['field'],
+            'effectivePid' => $context['pid'],
+            'recordTypeValue' => $context['recordType'],
+            'recordUid' => $context['recordUid'],
+            'databaseRow' => is_array($databaseRow) ? $databaseRow : ($data['databaseRow'] ?? []),
+        ]);
     }
 
     /**
@@ -604,6 +678,54 @@ class RteConfigurationModifier
         if (!isset($configuration['cloudServices']['documentId'])) {
             $configuration['cloudServices']['documentId'] = $channelId;
         }
+
+        return $configuration;
+    }
+
+    /**
+     * Provide stable collaboration user identity (required for presence list, especially in Visual Editor).
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    private function ensureCollaborationUserConfiguration(array $configuration): array
+    {
+        if (!$this->isEnableRealTimeCollaboration()) {
+            return $configuration;
+        }
+
+        $backendUser = $GLOBALS['BE_USER'] ?? null;
+        if (!$backendUser instanceof BackendUserAuthentication) {
+            return $configuration;
+        }
+
+        $userId = (int)($backendUser->user['uid'] ?? 0);
+        if ($userId <= 0) {
+            return $configuration;
+        }
+
+        $userName = trim((string)($backendUser->user['realName'] ?? ''));
+        if ($userName === '') {
+            $userName = (string)($backendUser->user['username'] ?? ('User ' . $userId));
+        }
+
+        $collaborationUser = [
+            'id' => (string)$userId,
+            'name' => $userName,
+        ];
+
+        $account = BackendUtility::getRecord('be_users', $userId);
+        if ($account && !empty($account['avatar'])) {
+            $fileRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\FileRepository::class);
+            $fileObjects = $fileRepository->findByRelation('be_users', 'avatar', $userId);
+            if ($fileObjects && isset($fileObjects[0]) && $fileObjects[0]->getPublicUrl()) {
+                $collaborationUser['avatar'] = (string)$fileObjects[0]->getPublicUrl();
+            }
+        }
+
+        $configuration['collaboration']['userId'] = (string)$userId;
+        $configuration['collaboration']['userName'] = $userName;
+        $configuration['collaboration']['users'] = [$collaborationUser];
 
         return $configuration;
     }

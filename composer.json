@@ -1,7 +1,7 @@
 {
     "name": "t3planet/rte-ckeditor-pack",
     "type": "typo3-cms-extension",
-    "description": "CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many optimized features, accessibility tools, AI assistance, and collaboration-friendly options—all without managing scattered YAML files. Built for stability and clean integration, it streamlines editing workflows and enhances TYPO3 content quality.",
+    "description": "CKEditor Pack - CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many optimized features, accessibility tools, AI assistance, and collaboration-friendly options—all without managing scattered YAML files. Built for stability and clean integration, it streamlines editing workflows and enhances TYPO3 content quality.",
     "homepage": "https://t3planet.de/ckeditor-pack",
     "authors": [
         {

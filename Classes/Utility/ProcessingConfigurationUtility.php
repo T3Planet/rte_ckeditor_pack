@@ -27,6 +27,11 @@ class ProcessingConfigurationUtility
     public const RICH_TEXT_PRESET_METADATA_KEY = '_rtePreset';
 
     /**
+     * Internal metadata key with table/field context for cross-editor collaboration channel IDs.
+     */
+    public const RICH_TEXT_EDITOR_CONTEXT_KEY = '_rteEditorContext';
+
+    /**
      * Apply custom processing configuration from database to the configuration array
      * 
      * @param array $configuration The RTE configuration array
@@ -114,6 +119,30 @@ class ProcessingConfigurationUtility
         ) {
             $configuration['editor']['config'][self::RICH_TEXT_PRESET_METADATA_KEY] = $configuration['preset'];
         }
+
+        return $configuration;
+    }
+
+    /**
+     * Attach table/field context to editor config (used by Visual Editor and FormEngine).
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function injectEditorContext(
+        array $configuration,
+        string $table,
+        string $field,
+        int $pid,
+        string $recordType,
+    ): array {
+        $configuration = self::ensureEditorConfigurationStructure($configuration);
+        $configuration['editor']['config'][self::RICH_TEXT_EDITOR_CONTEXT_KEY] = [
+            'table' => $table,
+            'field' => $field,
+            'pid' => $pid,
+            'recordType' => $recordType,
+        ];
 
         return $configuration;
     }
