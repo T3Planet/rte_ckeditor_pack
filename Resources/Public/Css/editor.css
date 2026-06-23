@@ -286,17 +286,59 @@
 }
 
 .revision_viewer_container {
-  display: flex !important;
-  flex-wrap: wrap-reverse;
-}
-.revision_viewer_container .ck-editor {
-  flex: 0 0 calc(100% - 295px);
-  max-width: calc(100% - 295px);
+  display: none;
+  position: relative;
+  width: 100%;
 }
 
-.revision_viewer_sidebar {
-  margin-top: 3px;
-  max-width: 295px;
+.revision_viewer_container[style*="display: block"],
+.revision_viewer_container[style*="display:block"] {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+.revision_viewer_editor-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: relative;
+  width: 100%;
+  align-items: stretch;
+}
+
+.revision_viewer_container .revision_viewer_editor {
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+}
+
+.revision_viewer_container .ck-editor {
+  flex: 1 1 auto;
+  max-width: none;
+  width: auto;
+}
+
+.revision_viewer_sidebar,
+.revision_viewer_container .sidebar-container {
+  flex: 0 0 295px;
+  width: 295px;
+  min-width: 295px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 0;
+  align-self: stretch;
+  background: var(--ck-color-toolbar-background, var(--token-color-neutral-0, #fff));
+  border: 1px solid var(--ck-color-toolbar-border, var(--token-color-neutral-15, #ccc));
+}
+
+.revision_viewer_sidebar .ck.ck-revision-history-sidebar,
+.revision_viewer_container .sidebar-container .ck.ck-revision-history-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
 }
 
 /*Drag & Drop Feature*/

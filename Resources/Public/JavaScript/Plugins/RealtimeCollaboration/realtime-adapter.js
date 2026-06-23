@@ -122,16 +122,21 @@ class RealtimeAdapter extends Core.Plugin {
         }
 
         // Revision History containers
-        if (editor.plugins.has('RevisionHistory') && channelElement) {
-            const container = channelElement.closest('.form-wizards-item-element');
+        if (editor.plugins.has('RevisionHistory')) {
+            const container = this._resolveMountContainer();
             if (container) {
                 const { channelId } = this;
-                container.insertAdjacentHTML('afterend', `
-                    <div id="${channelId}revision_viewer_container" class="revision_viewer_container">
-                        <div id="${channelId}revision_viewer_editor" class="revision_viewer_editor"></div>
-                        <div id="${channelId}revision_viewer_sidebar" class="revision_viewer_sidebar"></div>
-                    </div>
-                `);
+                const viewerContainerId = `${channelId}revision_viewer_container`;
+                if (!document.getElementById(viewerContainerId)) {
+                    container.insertAdjacentHTML('afterend', `
+                        <div id="${viewerContainerId}" class="revision_viewer_container">
+                            <div class="revision_viewer_editor-container">
+                                <div id="${channelId}revision_viewer_editor" class="revision_viewer_editor"></div>
+                                <div id="${channelId}revision_viewer_sidebar" class="revision_viewer_sidebar sidebar-container"></div>
+                            </div>
+                        </div>
+                    `);
+                }
             }
         }
 
@@ -158,11 +163,19 @@ class RealtimeAdapter extends Core.Plugin {
 
         // Revision History viewer wiring
         if (editor.plugins.has('RevisionHistory')) {
-            const revisionConfig = editor.config._config.revisionHistory;
-            revisionConfig.editorContainer = channelElement?.closest('.form-wizards-item-element') ?? null;
-            revisionConfig.viewerContainer = document.getElementById(`${channelId}revision_viewer_container`);
-            revisionConfig.viewerEditorElement = document.getElementById(`${channelId}revision_viewer_editor`);
-            revisionConfig.viewerSidebarContainer = document.getElementById(`${channelId}revision_viewer_sidebar`);
+            const editorContainer = this._resolveMountContainer();
+            const containers = {
+                editorContainer,
+                viewerContainer: document.getElementById(`${channelId}revision_viewer_container`),
+                viewerEditorElement: document.getElementById(`${channelId}revision_viewer_editor`),
+                viewerSidebarContainer: document.getElementById(`${channelId}revision_viewer_sidebar`),
+            };
+
+            Object.entries(containers).forEach(([key, value]) => {
+                if (value) {
+                    editor.config.set(`revisionHistory.${key}`, value);
+                }
+            });
         }
 
         this._configureCommentMentionFeeds();

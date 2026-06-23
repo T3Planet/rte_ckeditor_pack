@@ -8,9 +8,116 @@ class RevisionHistoryTrackerAdapter extends Core.Plugin {
     constructor(editor, editorId) {
         super();
         this.editor = editor;
-        this.editorId = this.editor.sourceElement.id;
+        this._veHost = editor.sourceElement?.closest('ve-editable-rich-text') || null;
+        this.editorId = this._resolveEditorId();
         this.storage = new CollaborationStorage(this.editor);
         this.cms = new CheckForm();
+    }
+
+    _resolveEditorId() {
+        const sourceEl = this.editor.sourceElement;
+        if (sourceEl?.id) {
+            return sourceEl.id;
+        }
+
+        const veHost = this._veHost || this._findVeEditableHost();
+        if (veHost?.table && veHost.uid !== undefined && veHost.field) {
+            return `ve-${veHost.table}-${veHost.uid}-${veHost.field}`;
+        }
+
+        return `ck-revision-${Math.random().toString(36).slice(2, 11)}`;
+    }
+
+    _findVeEditableHost() {
+        if (this._veHost?.isConnected) {
+            return this._veHost;
+        }
+
+        const anchor = this.editor.ui?.element || this.editor.sourceElement;
+        const host = anchor?.closest?.('ve-editable-rich-text');
+        if (host) {
+            this._veHost = host;
+            return host;
+        }
+
+        const match = typeof this.editorId === 'string' && this.editorId.match(/^ve-(.+)-(\d+)-(.+)$/);
+        if (match) {
+            const [, table, uid, field] = match;
+            const found = document.querySelector(
+                `ve-editable-rich-text[table="${CSS.escape(table)}"][uid="${uid}"][field="${CSS.escape(field)}"]`
+            );
+            if (found) {
+                this._veHost = found;
+                return found;
+            }
+        }
+
+        return null;
+    }
+
+    _resolveEditorContainer() {
+        const veHost = this._findVeEditableHost();
+        if (veHost) {
+            return veHost;
+        }
+
+        const mountSelectors = [
+            '.form-wizards-item-element',
+            've-editable-rich-text',
+            '.form-control-wrap',
+        ];
+
+        const anchors = [
+            this.editor.ui?.element,
+            this.editor.sourceElement,
+        ].filter(Boolean);
+
+        for (const anchor of anchors) {
+            for (const selector of mountSelectors) {
+                const mount = anchor.closest(selector);
+                if (mount) {
+                    return mount;
+                }
+            }
+        }
+
+        return anchors[0]?.parentElement || null;
+    }
+
+    _applyRevisionHistoryContainers() {
+        if (!this.editor.plugins.has('RevisionHistory')) {
+            return;
+        }
+
+        const editorContainer = this._resolveEditorContainer();
+        if (!editorContainer) {
+            return;
+        }
+
+        const viewerContainerId = `${this.editorId}revision_viewer_container`;
+        if (!document.getElementById(viewerContainerId)) {
+            editorContainer.insertAdjacentHTML('afterend', `
+                <div id="${viewerContainerId}" class="revision_viewer_container">
+                    <div class="revision_viewer_editor-container">
+                        <div id="${this.editorId}revision_viewer_editor" class="revision_viewer_editor"></div>
+                        <div id="${this.editorId}revision_viewer_sidebar" class="revision_viewer_sidebar sidebar-container"></div>
+                    </div>
+                </div>
+            `);
+        }
+
+        const containers = {
+            editorContainer,
+            viewerContainer: document.getElementById(viewerContainerId),
+            viewerEditorElement: document.getElementById(`${this.editorId}revision_viewer_editor`),
+            viewerSidebarContainer: document.getElementById(`${this.editorId}revision_viewer_sidebar`),
+        };
+
+        Object.entries(containers).forEach(([key, value]) => {
+            if (value) {
+                this.editor.config.set(`revisionHistory.${key}`, value);
+            }
+        });
     }
 
     static get pluginName() {
@@ -21,11 +128,18 @@ class RevisionHistoryTrackerAdapter extends Core.Plugin {
         return ['RevisionHistory', 'RevisionTracker']
     }
 
+    init() {
+        this.editor.once('ready', () => {
+            this._applyRevisionHistoryContainers();
+        });
+    }
+
     afterInit() {
+        this._applyRevisionHistoryContainers();
+
         if (this.storage.processRevisionDisable()) {
             return;
         }
-        this._initWrappers();
         // Initialize revision history settings.
         if (typeof TYPO3.settings.ckeditor5Premium == "undefined") {
             return;
@@ -55,30 +169,13 @@ class RevisionHistoryTrackerAdapter extends Core.Plugin {
         }
 
         const saveBtn = document.querySelector("button[name='_savedok']");
-        saveBtn.addEventListener('click', evt => {
-            this.updateStorage(revisionHistoryPlugin, revisionTrackerPlugin, revisionHistoryElement, true, evt)
-        });
-
-
-    }
-
-    _initWrappers() {
-        if (this.editor.plugins.has('RevisionHistory')) {
-            let revisionHistoryContainer = document.querySelector('#' + this.editorId).closest('.form-wizards-item-element');
-            if (revisionHistoryContainer) {
-                revisionHistoryContainer.insertAdjacentHTML('afterend', `
-                 <div id="` + this.editorId + `revision_viewer_container" class="revision_viewer_container">
-                    <div id="` + this.editorId + `revision_viewer_editor" class="revision_viewer_editor"></div>
-                    <div id="` + this.editorId + `revision_viewer_sidebar" class="revision_viewer_sidebar"></div>
-                </div>
-			`);
-            }
-
-            this.editor.config._config.revisionHistory.editorContainer = document.querySelector('#' + this.editorId).closest('.form-wizards-item-element');
-            this.editor.config._config.revisionHistory.viewerContainer = document.querySelector('#' + this.editorId + 'revision_viewer_container');
-            this.editor.config._config.revisionHistory.viewerEditorElement = document.querySelector('#' + this.editorId + 'revision_viewer_editor');
-            this.editor.config._config.revisionHistory.viewerSidebarContainer = document.querySelector('#' + this.editorId + 'revision_viewer_sidebar');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', evt => {
+                this.updateStorage(revisionHistoryPlugin, revisionTrackerPlugin, revisionHistoryElement, true, evt)
+            });
         }
+
+
     }
 
     async updateStorage(plugin, tracker, storageElement, addRevisionOnSubmit, evt) {

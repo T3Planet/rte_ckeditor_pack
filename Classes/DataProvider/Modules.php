@@ -310,7 +310,7 @@ class Modules
                         ],
                         [
                             'library' => '@ckeditor/ckeditor5-revision-history',
-                            'exports' => 'RevisionHistory',
+                            'exports' => 'RevisionHistory,RevisionTracker',
                         ],
 
                     ],
