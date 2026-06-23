@@ -270,6 +270,10 @@ class Modules
                         ],
                         'NonRealTime' => [
                             [
+                                'library' => '@ckeditor/ckeditor5-collaboration-core',
+                                'exports' => 'Users,Permissions',
+                            ],
+                            [
                                 'library' => '@t3planet/RteCkeditorPack/user-adapter.js',
                             ],
                             [
@@ -305,6 +309,10 @@ class Modules
                                 'library' => '@t3planet/RteCkeditorPack/revision-history-tracker-adapter.js',
                             ],
                             [
+                                'library' => '@ckeditor/ckeditor5-collaboration-core',
+                                'exports' => 'Users,Permissions',
+                            ],
+                            [
                                 'library' => '@t3planet/RteCkeditorPack/user-adapter.js',
                             ],
                         ],
@@ -334,6 +342,10 @@ class Modules
                         ],
                         'NonRealTime' => [
                             [
+                                'library' => '@ckeditor/ckeditor5-collaboration-core',
+                                'exports' => 'Users,Permissions',
+                            ],
+                            [
                                 'library' => '@t3planet/RteCkeditorPack/user-adapter.js',
                             ],
                             [
@@ -342,6 +354,7 @@ class Modules
                             ],
                             [
                                 'library' => '@t3planet/RteCkeditorPack/track-changes-integration.js',
+                                'exports' => 'TrackChangesIntegration',
                             ],
                         ],
                         [

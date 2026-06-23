@@ -34,11 +34,47 @@ final class RteMarkupTransformationUtility
 
     public static function transform(string $content): string
     {
-        $content = preg_replace('/&lt;comment-start.*?&gt;&lt;\/comment-start&gt;/s', '', $content) ?? $content;
-        $content = preg_replace('/&lt;comment-end.*?&gt;&lt;\/comment-end&gt;/s', '', $content) ?? $content;
+        $content = self::stripCollaborationMarkup($content);
         $content = self::transformOembedTags($content);
 
         return self::transformIframeTags($content);
+    }
+
+    /**
+     * Strip CKEditor collaboration markers for frontend and preview output.
+     *
+     * Insertions and other suggestions keep their text; pending deletions are removed entirely.
+     */
+    public static function stripCollaborationMarkup(string $content): string
+    {
+        $content = (string)preg_replace(
+            '/<suggestion-start\b[^>]*\bname=(["\'])deletion:[^"\']*\1[^>]*>(?:<\/suggestion-start>)?.*?<suggestion-end\b[^>]*\bname=\1deletion:[^"\']*\1[^>]*>(?:<\/suggestion-end>)?/is',
+            '',
+            $content
+        );
+
+        $content = (string)preg_replace(
+            '/&lt;suggestion-start\b[^&]*\bname=(&quot;|&#34;|")deletion:[^&]*\1[^&]*&gt;(?:&lt;\/suggestion-start&gt;)?.*?&lt;suggestion-end\b[^&]*\bname=\1deletion:[^&]*\1[^&]*&gt;(?:&lt;\/suggestion-end&gt;)?/is',
+            '',
+            $content
+        );
+
+        $patterns = [
+            '/<comment-start\b[^>]*>(?:<\/comment-start>)?/is',
+            '/<comment-end\b[^>]*>(?:<\/comment-end>)?/is',
+            '/<suggestion-start\b[^>]*>(?:<\/suggestion-start>)?/is',
+            '/<suggestion-end\b[^>]*>(?:<\/suggestion-end>)?/is',
+            '/&lt;comment-start\b.*?&gt;(?:&lt;\/comment-start&gt;)?/is',
+            '/&lt;comment-end\b.*?&gt;(?:&lt;\/comment-end&gt;)?/is',
+            '/&lt;suggestion-start\b.*?&gt;(?:&lt;\/suggestion-start&gt;)?/is',
+            '/&lt;suggestion-end\b.*?&gt;(?:&lt;\/suggestion-end&gt;)?/is',
+        ];
+
+        foreach ($patterns as $pattern) {
+            $content = (string)preg_replace($pattern, '', $content);
+        }
+
+        return $content;
     }
 
     private static function transformOembedTags(string $content): string

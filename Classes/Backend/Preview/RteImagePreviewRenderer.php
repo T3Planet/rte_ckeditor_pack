@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Backend\Preview;
 
+use T3Planet\RteCkeditorPack\Utility\RteMarkupTransformationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
@@ -83,22 +84,7 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
      */
     private function stripCollaborationMarkup(string $content): string
     {
-        $patterns = [
-            '/<comment-start\b[^>]*>(?:<\/comment-start>)?/is',
-            '/<comment-end\b[^>]*>(?:<\/comment-end>)?/is',
-            '/<suggestion-start\b[^>]*>(?:<\/suggestion-start>)?/is',
-            '/<suggestion-end\b[^>]*>(?:<\/suggestion-end>)?/is',
-            '/&lt;comment-start\b.*?&gt;(?:&lt;\/comment-start&gt;)?/is',
-            '/&lt;comment-end\b.*?&gt;(?:&lt;\/comment-end&gt;)?/is',
-            '/&lt;suggestion-start\b.*?&gt;(?:&lt;\/suggestion-start&gt;)?/is',
-            '/&lt;suggestion-end\b.*?&gt;(?:&lt;\/suggestion-end&gt;)?/is',
-        ];
-
-        foreach ($patterns as $pattern) {
-            $content = (string)preg_replace($pattern, '', $content);
-        }
-
-        return $content;
+        return RteMarkupTransformationUtility::stripCollaborationMarkup($content);
     }
 
     /**
