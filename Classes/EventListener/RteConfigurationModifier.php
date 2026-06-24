@@ -73,6 +73,7 @@ class RteConfigurationModifier
             unset($pageTs['fieldSpecificPreset']);
             unset($pageTs['generalPreset']);
             $configuration['importModules'][] = '@t3planet/RteCkeditorPack/ckeditor5-error';
+            $configuration['importModules'][] = '@t3planet/RteCkeditorPack/export-download-adapter.js';
             $collaborationContext = $this->buildCollaborationContext($data, $context);
             if ($this->hasEnabledCollaborationChannelFeature()) {
                 $configuration = $this->ensureCollaborationChannelConfiguration($configuration, $collaborationContext);
