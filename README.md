@@ -1,4 +1,4 @@
-[![Latest Stable Version](https://img.shields.io/badge/Stable-3.1-success)](https://extensions.typo3.org/extension/rte_ckeditor_pack/)
+[![Latest Stable Version](https://img.shields.io/badge/Stable-3.2-success)](https://extensions.typo3.org/extension/rte_ckeditor_pack)
 [![CKEditor Github](https://img.shields.io/badge/CKEditor-Pack-informational?logo=github)](https://github.com/T3Planet/rte_ckeditor_pack)
 [![TYPO3 14](https://img.shields.io/badge/TYPO3-14-important.svg?logo=typo3)](https://get.typo3.org/version/14)
 [![TYPO3 13](https://img.shields.io/badge/TYPO3-13-important.svg?logo=typo3)](https://get.typo3.org/version/13)
@@ -19,7 +19,7 @@ It includes these features:
 
 * **Enhanced media workflows:** Custom controllers and preview renderers make inserting and managing images from within the RTE straightforward.
 
-* **Productivity helpers:** 
+* **Productivity helpers:**
   * Find and Replace
   * Fullscreen Mode
   * Page Break & Templates
@@ -56,8 +56,8 @@ It includes these features:
 
 | CKEditor Pack Version | TYPO3 Compatibility | CKEditor Version | PHP Version | Support Level                         |
 |-----------------------|---------------------|------------------|-------------|---------------------------------------|
-| v3.x                  | 12.4.25 - 14.4.99   | 47.2.0           | 8.1 - 8.4   | Re-strcture, Upgrade, Bugfixes        |
-| v2.x                  | 12.4.25 - 14.4.99   | 47.2.0           | 8.1 - 8.4   | Upgrade, Features, Bugfixes, Security |
+| v3.x                  | 12.4.25 - 14.3.99   | 47.6.0           | 8.1 - 8.5   | Visual editor, Re-strcture, Upgrade, Bugfixes        |
+| v2.x                  | 12.4.25 - 14.3.99   | 47.2.0           | 8.1 - 8.4   | Upgrade, Features, Bugfixes, Security |
 | v1.x                  | 12.4.25 - 13.4.20   | 47.2.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |
 | v1.x                  | 12.4.25 - 13.4.20   | 47.1.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |
 

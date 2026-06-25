@@ -58,6 +58,10 @@ CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many 
 
        Explore the key features and tools included.
 
+   .. card:: :ref:`Visual Editor <visualeditor>`
+
+       Use CKEditor Pack presets and premium features inside TYPO3 Visual Editor.
+
    .. card:: :ref:`CKEditor AI <ckeditorai>`
 
        AI capabilities in the RTE to improve writing and editing workflows.
@@ -93,6 +97,7 @@ CKEditor Pack TYPO3 extension provides a modern, integrated CKEditor build many 
    Screenshots/Index
    Toolbar&Presets/Index
    Features/Index
+   VisualEditor/Index
    CKEditorAI/Index
    Updating/Index
    Support/Index
