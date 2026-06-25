@@ -40,11 +40,39 @@ Activate the Extension
   composer mode.
 * Confirm that the dashboard module becomes available under **RTE CKEditor**.
 
-Include TypoScript
-==================
+Add TypoScript or Site Set
+==========================
 
 The extension ships TypoScript setup that registers the RTE presets and
-backend modules. Include it globally via the site package:
+backend modules. Choose one of the following integration methods.
+
+Via Site Set (recommended for TYPO3 v13.1+)
+-------------------------------------------
+
+Include the site set ``t3planet/rte-ckeditor-pack`` (label: *EXT:rte_ckeditor_pack :: Frontend*)
+in your site configuration:
+
+.. code-block:: yaml
+
+   # config/sites/my-site/config.yaml
+   dependencies:
+     - t3planet/rte-ckeditor-pack
+
+If your project uses a custom site package, you can also add the dependency in
+your site set's configuration:
+
+.. code-block:: yaml
+
+   # EXT:my_site_package/Configuration/Sets/MySite/config.yaml
+   dependencies:
+     - t3planet/rte-ckeditor-pack
+
+The site set automatically loads the packaged TypoScript setup.
+
+Via TypoScript
+--------------
+
+Alternatively, import the setup globally via your site package:
 
 .. code-block:: typoscript
 

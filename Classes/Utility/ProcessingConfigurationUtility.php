@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Utility;
 
+use T3Planet\RteCkeditorPack\Configuration\EditorConfigurationBuilder;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -19,6 +21,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProcessingConfigurationUtility
 {
+    /**
+     * Internal metadata key forwarded via editor.config for Visual Editor compatibility.
+     */
+    public const RICH_TEXT_PRESET_METADATA_KEY = '_rtePreset';
+
+    /**
+     * Internal metadata key with table/field context for cross-editor collaboration channel IDs.
+     */
+    public const RICH_TEXT_EDITOR_CONTEXT_KEY = '_rteEditorContext';
+
     /**
      * Apply custom processing configuration from database to the configuration array
      * 
@@ -69,6 +81,137 @@ class ProcessingConfigurationUtility
         
         return $configuration;
     }
+
+    /**
+     * Apply database processing config and HTML-support processing rules.
+     */
+    public static function applyAll(array $configuration): array
+    {
+        $configuration = self::applyProcessingConfig($configuration);
+        $configuration = self::applyHtmlSupportConfig($configuration);
+
+        return self::ensureEditorConfigurationStructure($configuration);
+    }
+
+    /**
+     * Ensure editor structure required by Visual Editor and database-only presets.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function ensureEditorConfigurationStructure(array $configuration): array
+    {
+        if (!isset($configuration['editor']) || !is_array($configuration['editor'])) {
+            $configuration['editor'] = [];
+        }
+        if (!isset($configuration['editor']['config']) || !is_array($configuration['editor']['config'])) {
+            $configuration['editor']['config'] = [];
+        }
+        if (!isset($configuration['editor']['externalPlugins']) || !is_array($configuration['editor']['externalPlugins'])) {
+            $configuration['editor']['externalPlugins'] = [];
+        }
+
+        if (
+            isset($configuration['preset'])
+            && is_string($configuration['preset'])
+            && $configuration['preset'] !== ''
+            && !isset($configuration['editor']['config'][self::RICH_TEXT_PRESET_METADATA_KEY])
+        ) {
+            $configuration['editor']['config'][self::RICH_TEXT_PRESET_METADATA_KEY] = $configuration['preset'];
+        }
+
+        return $configuration;
+    }
+
+    /**
+     * Attach table/field context to editor config (used by Visual Editor and FormEngine).
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function injectEditorContext(
+        array $configuration,
+        string $table,
+        string $field,
+        int $pid,
+        string $recordType,
+    ): array {
+        $configuration = self::ensureEditorConfigurationStructure($configuration);
+        $configuration['editor']['config'][self::RICH_TEXT_EDITOR_CONTEXT_KEY] = [
+            'table' => $table,
+            'field' => $field,
+            'pid' => $pid,
+            'recordType' => $recordType,
+        ];
+
+        return $configuration;
+    }
+
+    /**
+     * Merge General HTML Support from the database and sync embed tags to processing.
+     */
+    public static function applyHtmlSupportConfig(array $configuration): array
+    {
+        $htmlSupport = self::resolveHtmlSupportFromDatabase($configuration);
+        if ($htmlSupport !== null) {
+            $configuration = GeneralUtility::makeInstance(EditorConfigurationBuilder::class)
+                ->addHtmlSupportSettings($configuration, $htmlSupport);
+        }
+
+        if (!isset($configuration['processing']) || !is_array($configuration['processing'])) {
+            $configuration['processing'] = [];
+        }
+
+        $configuration = HtmlSupportProcessingUtility::syncProcessing($configuration);
+        $configuration = self::ensureDefaultProcessingMode($configuration);
+
+        return self::rebuildProcFromProcessing($configuration);
+    }
+
+    /**
+     * Ensure RteHtmlParser receives a transformation mode (matches core Richtext fallback).
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function ensureDefaultProcessingMode(array $configuration): array
+    {
+        if (!isset($configuration['processing']) || !is_array($configuration['processing'])) {
+            $configuration['processing'] = [];
+        }
+
+        $hasProcessingMode = isset($configuration['processing']['mode']) && $configuration['processing']['mode'] !== '';
+        $hasProcessingOverruleMode = isset($configuration['processing']['overruleMode'])
+            && $configuration['processing']['overruleMode'] !== '';
+
+        if (!$hasProcessingMode && !$hasProcessingOverruleMode) {
+            $configuration['processing']['mode'] = 'default';
+        }
+
+        return $configuration;
+    }
+
+    /**
+     * Rebuild proc. TypoScript array from the processing configuration array.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function rebuildProcFromProcessing(array $configuration): array
+    {
+        if (is_array($configuration['processing'] ?? null)) {
+            $configuration['proc.'] = self::convertPlainArrayToTypoScriptArray($configuration['processing']);
+        }
+
+        if (
+            !isset($configuration['proc.']['mode'])
+            && !isset($configuration['proc.']['overruleMode'])
+        ) {
+            $configuration['proc.']['overruleMode'] = 'default';
+        }
+
+        return $configuration;
+    }
     
     /**
      * Try to detect the preset name from configuration or backend context
@@ -78,10 +221,48 @@ class ProcessingConfigurationUtility
      */
     private static function detectPresetName(array $configuration): string
     {
-        if (isset($configuration['preset']) && is_string($configuration['preset'])) {
+        if (isset($configuration['preset']) && is_string($configuration['preset']) && $configuration['preset'] !== '') {
             return $configuration['preset'];
         }
+
         return 'default';
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private static function resolveHtmlSupportFromDatabase(array $configuration): ?array
+    {
+        $presetRepository = GeneralUtility::makeInstance(PresetRepository::class);
+        $featureRepository = GeneralUtility::makeInstance(FeatureRepository::class);
+        $presetName = self::detectPresetName($configuration);
+
+        $preset = $presetRepository->findByPresetKey($presetName)
+            ?? $presetRepository->findByUsage($presetName);
+
+        if ($preset === null) {
+            return null;
+        }
+
+        foreach ($featureRepository->findEnabledByPresetUid($preset->getUid()) as $feature) {
+            if ($feature->getConfigKey() !== 'HtmlSupport' || !$feature->isEnable()) {
+                continue;
+            }
+
+            $fields = $feature->getFields();
+            if ($fields === '') {
+                return null;
+            }
+
+            $decoded = json_decode($fields, true);
+            if (!is_array($decoded['htmlSupport'] ?? null)) {
+                return null;
+            }
+
+            return $decoded['htmlSupport'];
+        }
+
+        return null;
     }
     
     

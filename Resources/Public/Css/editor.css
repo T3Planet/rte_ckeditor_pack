@@ -285,19 +285,7 @@
   width: 100vw;
 }
 
-.revision_viewer_container {
-  display: flex !important;
-  flex-wrap: wrap-reverse;
-}
-.revision_viewer_container .ck-editor {
-  flex: 0 0 calc(100% - 295px);
-  max-width: calc(100% - 295px);
-}
-
-.revision_viewer_sidebar {
-  margin-top: 3px;
-  max-width: 295px;
-}
+@import url("revision-viewer.css");
 
 /*Drag & Drop Feature*/
 .drag-grid {
@@ -558,4 +546,8 @@
 .sync-preset *,
 .export-preset * {
     pointer-events: none;
+}
+
+.ckeditor-modal-content .rounded-0 {
+  border-radius: 0;
 }

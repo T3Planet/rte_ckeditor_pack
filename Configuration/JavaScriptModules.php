@@ -5,7 +5,7 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 $typo3VersionArray = VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
 
 $contrib = 'Contrib-12';
-if (version_compare($typo3VersionArray['version_main'], 12, '>=')) {
+if (version_compare($typo3VersionArray['version_main'], 12, '>')) {
     $contrib = 'Contrib';
 }
 
@@ -113,6 +113,7 @@ return [
         '@t3planet/RteCkeditorPack/module-functionality.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/module-functionality.js',
         '@t3planet/RteCkeditorPack/collaboration-storage.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/collaboration-storage.js',
         '@t3planet/RteCkeditorPack/realtime-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/realtime-adapter.js',
+        '@t3planet/RteCkeditorPack/users-collaboration-guard.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/users-collaboration-guard.js',
         '@t3planet/RteCkeditorPack/user-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/user-adapter.js',
         '@t3planet/RteCkeditorPack/common.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/common.js',
         '@t3planet/RteCkeditorPack/track-changes-integration.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/Collaboration/track-changes-integration.js',
@@ -123,6 +124,7 @@ return [
         '@t3planet/RteCkeditorPack/line-height-ui' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/line-height-ui.js',
         '@t3planet/RteCkeditorPack/line-height-utils' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/utils.js',
         '@t3planet/RteCkeditorPack/ckeditor5-error' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ErrorNotifications/error-notifications.js',
+        '@t3planet/RteCkeditorPack/export-download-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/export-download-adapter.js',
         '@t3planet/RteCkeditorPack/editoria11y.min.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.js',
         '@t3planet/RteCkeditorPack/editoria11y-integration.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y-integration.js',
     ],

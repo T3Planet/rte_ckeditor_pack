@@ -100,16 +100,16 @@
                 <f:for each="{availableModules}" as="module" iteration="i">
                     <f:if condition="{module.key} == 'plugins'">
                         <button class="dashboard-tab {f:if(condition: '{currentModule} == features', then: 'active')}"
-                            id="features-tab" data-bs-toggle="tab" data-bs-target="#features-tab-pane" type="button"
-                            role="tab" aria-controls="features-pane"
+                            id="features-tab" data-bs-toggle="tab" data-bs-target="#features-tab-pane" data-typo3-tab="#features-tab-pane" type="button"
+                            role="tab" aria-controls="features-tab-pane"
                             aria-selected="{f:if(condition: '{currentModule} == features', then: 'true', else: 'false')}">
                             <f:translate key="ckeditorKit.module.feature" />
                         </button>
                     </f:if>
                     <button
                         class="dashboard-tab {f:if(condition: '{module.key} == {currentModule}', then: 'active')} {f:if(condition: '{tabKey} == wishlist', then: 'disabled')}"
-                        id="{module.key}-tab" data-bs-toggle="tab" data-bs-target="#{module.key}-tab-pane" type="button"
-                        role="tab" aria-controls="{module.key}-pane"
+                        id="{module.key}-tab" data-bs-toggle="tab" data-bs-target="#{module.key}-tab-pane" data-typo3-tab="#{module.key}-tab-pane" type="button"
+                        role="tab" aria-controls="{module.key}-tab-pane"
                         aria-selected="{f:if(condition: '{module.key} == {currentModule}', then: 'true', else: 'false')}">{module.label}</button>
                 </f:for>
             </f:if>

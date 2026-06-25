@@ -68,25 +68,71 @@ class EditorConfigurationBuilder
      */
     public function addHtmlSupportSettings(array $configuration, array $htmlConfiguration): array
     {
+        $htmlAllow = [];
         if (isset($htmlConfiguration['allow']) && is_array($htmlConfiguration['allow'])) {
-            $htmlAllow = [];
             foreach ($htmlConfiguration['allow'] as $item) {
-                $htmlAllow[] = $this->normalizeBooleanStrings($item);
+                if (is_array($item)) {
+                    $htmlAllow[] = $this->normalizeBooleanStrings($item);
+                }
             }
         }
-        
-        if (isset($configuration['htmlSupport']['allow'])) {
-            $configuration['htmlSupport']['allow'] = array_merge($htmlAllow, $configuration['htmlSupport']['allow']);
-        } else {
-            $configuration['htmlSupport']['allow'] = $htmlAllow;
+
+        $normalizedHtmlSupport = $htmlConfiguration;
+        if ($htmlAllow !== []) {
+            $normalizedHtmlSupport['allow'] = $htmlAllow;
         }
 
-        if(isset($configuration['allowEmpty'])){
-            $configuration['htmlSupport']['allowEmpty'] = $configuration['allowEmpty'].','.$htmlConfiguration['allowEmpty'];
-        }else{
-            $configuration['htmlSupport']['allowEmpty'] = $htmlConfiguration['allowEmpty'];
+        return $this->mergeHtmlSupportIntoConfiguration($configuration, $normalizedHtmlSupport);
+    }
+
+    /**
+     * @param array<string, mixed> $configuration
+     * @param array<string, mixed> $htmlSupport
+     * @return array<string, mixed>
+     */
+    private function mergeHtmlSupportIntoConfiguration(array $configuration, array $htmlSupport): array
+    {
+        if (isset($configuration['editor']['config']) && is_array($configuration['editor']['config'])) {
+            $configuration['editor']['config']['htmlSupport'] = $this->mergeHtmlSupportConfig(
+                $configuration['editor']['config']['htmlSupport'] ?? [],
+                $htmlSupport
+            );
         }
+
+        $configuration['htmlSupport'] = $this->mergeHtmlSupportConfig(
+            $configuration['htmlSupport'] ?? [],
+            $htmlSupport
+        );
+
         return $configuration;
+    }
+
+    /**
+     * @param array<string, mixed> $existing
+     * @param array<string, mixed> $htmlSupport
+     * @return array<string, mixed>
+     */
+    private function mergeHtmlSupportConfig(array $existing, array $htmlSupport): array
+    {
+        if (isset($htmlSupport['allow']) && is_array($htmlSupport['allow'])) {
+            $existing['allow'] = array_merge(
+                $htmlSupport['allow'],
+                $existing['allow'] ?? []
+            );
+        }
+
+        if (isset($htmlSupport['allowEmpty'])) {
+            $existing['allowEmpty'] = $htmlSupport['allowEmpty'];
+        }
+
+        if (isset($htmlSupport['disallow']) && is_array($htmlSupport['disallow'])) {
+            $existing['disallow'] = array_merge(
+                $htmlSupport['disallow'],
+                $existing['disallow'] ?? []
+            );
+        }
+
+        return $existing;
     }
 
     /**
