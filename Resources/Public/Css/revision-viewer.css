@@ -93,3 +93,230 @@ ve-editable-rich-text.rte-ckeditor-document-outline > div {
   flex: 1 1 auto;
   min-width: 0;
 }
+
+/* Visual Editor: AI sidebar — editor column (toolbar + content) | AI panel */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative !important;
+  isolation: isolate;
+  min-height: 280px;
+  overflow: visible !important;
+}
+
+/* Editor column: toolbar above content; overflow visible so Quick Actions aren’t clipped */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar > .rte-ckeditor-ai-editor-column {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+  /* Above the AI column so dropdowns/balloons can paint over it when they open rightward */
+  z-index: 3;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+/* Initializing overlay must cover RTE only — never become a flex column */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar > .ck-rt-loader,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .rte-ckeditor-ai-editor-column > .ck-rt-loader,
+ve-editable-rich-text > .ck-rt-loader {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1000;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, Canvas 70%, transparent);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+ve-editable-rich-text .ck-rt-loader__box {
+  min-width: 220px;
+  max-width: 320px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  display: grid;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+ve-editable-rich-text .ck-rt-loader__row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+ve-editable-rich-text .ck-rt-loader__spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-top-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  animation: ck-rt-spin 0.8s linear infinite;
+}
+
+ve-editable-rich-text .ck-rt-loader__title {
+  font: 600 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #111;
+}
+
+ve-editable-rich-text .ck-rt-loader__desc {
+  font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #555;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-editor,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-editor {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+/*
+ * Override Visual Editor floating toolbar (z-index: 20000, position absolute)
+ * so AI mode uses a normal stacked layout: toolbar → editor → AI on the side.
+ */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-editor__top,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-editor__top {
+  display: block !important;
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  z-index: 5 !important;
+  overflow: visible !important;
+  border: 1px solid var(--ck-color-toolbar-border, var(--ck-color-base-border, #ccced1));
+  border-bottom: none;
+  background: var(--ck-color-toolbar-background, var(--ck-color-base-background, #fff));
+  box-sizing: border-box;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-editor__main,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-editor__main {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  overflow: visible;
+  border: 1px solid var(--ck-color-base-border, #ccced1);
+  background: var(--ck-color-base-background, #fff);
+  box-sizing: border-box;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-content {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Quick Actions panels only (not the toolbar control) — full panel above AI column */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-ai-quick-actions-dropdown > .ck-dropdown__panel,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown.ck-ai-quick-actions-dropdown .ck-dropdown__panel {
+  z-index: 10050 !important;
+  overflow: visible !important;
+  background: var(--ck-color-base-background, #fff);
+  border: 1px solid var(--ck-color-base-border, #ccced1);
+  border-radius: var(--ck-border-radius, 2px);
+  box-shadow: var(--ck-drop-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown > .ck-dropdown__panel > .ck-ai-quick-actions {
+  max-width: var(--ck-ai-quick-actions-dropdown-max-width, 309px);
+  width: var(--ck-ai-quick-actions-dropdown-max-width, 309px);
+  box-sizing: border-box;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar > .ck-ai-sidebar-container {
+  flex: 0 0 400px;
+  width: 400px;
+  max-width: min(400px, 42vw);
+  min-width: 280px;
+  min-height: 280px;
+  align-self: stretch;
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  height: auto;
+  max-height: none;
+  overflow: hidden;
+  background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
+  border: 1px solid var(--ck-color-base-border, #ccced1);
+  box-sizing: border-box;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-tabs.ck-ai-tabs {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  min-height: 280px;
+  max-height: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  background: var(--ck-color-base-background, #fff);
+  overflow: auto;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-tabs.ck-ai-tabs.ck-ai-tabs_maximized {
+  min-width: 0;
+  max-width: 100%;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-tabs.ck-ai-tabs.ck-hidden {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  ve-editable-rich-text.rte-ckeditor-ai-sidebar {
+    flex-wrap: wrap !important;
+  }
+
+  ve-editable-rich-text.rte-ckeditor-ai-sidebar > .ck-ai-sidebar-container {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    order: 2;
+  }
+
+  ve-editable-rich-text.rte-ckeditor-ai-sidebar > .rte-ckeditor-ai-editor-column {
+    flex: 1 1 100%;
+    order: 1;
+  }
+}
+
+/* Visual Editor: min height / legacy overlay host (do NOT override sidebar flex) */
+ve-editable-rich-text.rte-ckeditor-ai-overlay:not(.rte-ckeditor-ai-sidebar),
+ve-editable-rich-text.rte-ckeditor-ai-min-height:not(.rte-ckeditor-ai-sidebar) {
+  display: block !important;
+  position: relative !important;
+  overflow: visible !important;
+  isolation: isolate;
+  min-height: 280px;
+  box-sizing: border-box;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar.rte-ckeditor-ai-min-height {
+  min-height: 280px;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-overlay.rte-ckeditor-ai-overlay-active {
+  outline: 2px solid #743ccd;
+  outline-offset: 2px;
+  border-radius: 2px;
+}

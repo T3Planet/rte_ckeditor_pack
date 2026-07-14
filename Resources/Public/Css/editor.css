@@ -404,6 +404,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000; /* above ck-toolbar/content while loading */
+  background: rgba(255, 255, 255, 0.7);
   background: color-mix(in srgb, Canvas 70%, transparent);
   backdrop-filter: blur(2px);
 }
@@ -486,34 +487,247 @@
   .ck-rt-loader__spinner { animation: none; border-top-color: rgba(0,0,0,.6); }
 }
 
-/* AI Configuration */
-.rte-ckeditor-ai-sidebar .form-wizards-wrap>.form-wizards-item-element,
-.rte-ckeditor-ai-sidebar .form-wizards-wrap>.revision_viewer_container[style*="display: block"] {
-  width: 100%;
-}
+/* AI Configuration — FormEngine: editor column | AI sidebar (no overlap) */
 .rte-ckeditor-ai-sidebar .form-wizards-wrap {
   display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 8px;
+  isolation: isolate;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 280px;
+  overflow: visible;
+}
+
+/* Default / right: RTE left, AI right (DOM: sidebar then editor → reverse) */
+.rte-ckeditor-ai-sidebar .form-wizards-wrap,
+.rte-ckeditor-ai-sidebar .form-wizards-wrap.rte-ckeditor-ai-side-right,
+.rte-ckeditor-ai-sidebar.rte-ckeditor-ai-side-right .form-wizards-wrap {
   flex-direction: row-reverse;
-  gap: 3px;
+}
+
+.rte-ckeditor-ai-sidebar .form-wizards-wrap.rte-ckeditor-ai-side-left,
+.rte-ckeditor-ai-sidebar.rte-ckeditor-ai-side-left .form-wizards-wrap {
+  flex-direction: row;
+}
+
+.rte-ckeditor-ai-sidebar .form-wizards-wrap > .form-wizards-item-element,
+.rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display: block"],
+.rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display:block"] {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+  /* Above AI sidebar so Quick Actions dropdown can extend over it */
+  z-index: 3;
+  overflow: visible;
+}
+
+/* Loader covers RTE column only in FormEngine split layout */
+.rte-ckeditor-ai-sidebar .form-wizards-wrap > .ck-rt-loader,
+.rte-ckeditor-ai-sidebar .form-wizards-item-element > .ck-rt-loader {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1000;
 }
 
 .form-wizards-wrap .ck-ai-sidebar-container {
-  position: sticky;
-  top: 0;
+  flex: 0 0 400px;
+  width: 400px;
+  max-width: min(400px, 42vw);
+  min-width: 280px;
+  min-height: 280px;
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  align-self: stretch;
+  height: auto;
+  max-height: none;
+  overflow: hidden;
+  background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
+  box-sizing: border-box;
+}
+
+.rte-ckeditor-ai-sidebar .ck-editor,
+.rte-ckeditor-ai-sidebar .ck.ck-editor {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.rte-ckeditor-ai-sidebar .ck-editor__top,
+.rte-ckeditor-ai-sidebar .ck.ck-editor__top {
+  position: relative !important;
+  z-index: 5;
+  width: 100% !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  overflow: visible !important;
+}
+
+/* Quick Actions: stack panels above the AI column — do not restyle the toolbar widget itself */
+.rte-ckeditor-ai-sidebar .ck-ai-quick-actions-dropdown > .ck-dropdown__panel,
+.rte-ckeditor-ai-sidebar .ck-dropdown.ck-ai-quick-actions-dropdown .ck-dropdown__panel {
+  z-index: 10050 !important;
+  overflow: visible !important;
+}
+
+.ck-body-wrapper .ck-ai-quick-actions-group-panel,
+.ck-body-wrapper .ck-balloon-panel.ck-ai-quick-actions-group-panel,
+.ck-body-wrapper .ck-balloon-panel.ck-dropdown-menu__nested-menu__panel {
+  z-index: 10050 !important;
+  overflow: visible !important;
+}
+
+/* Restore CK AI Quick Actions chrome (TYPO3 / VE hosts can dilute panel styles) */
+:root {
+  --ck-ai-quick-actions-button-color: #743ccd;
+  --ck-ai-quick-actions-button-background-color: #f3ebff;
+  --ck-ai-quick-actions-list-max-height: 300px;
+  --ck-ai-quick-actions-list-item-group-row-color: #707070;
+  --ck-ai-quick-actions-dropdown-max-width: 309px;
+}
+
+.ck-dropdown > .ck-dropdown__panel > .ck-ai-quick-actions {
+  max-width: var(--ck-ai-quick-actions-dropdown-max-width);
+  width: var(--ck-ai-quick-actions-dropdown-max-width);
+  box-sizing: border-box;
+}
+
+.ck-dropdown > .ck-dropdown__panel > .ck-ai-quick-actions ul {
+  max-height: var(--ck-ai-quick-actions-list-max-height);
+  overflow: auto;
+}
+
+.ck-ai-quick-actions-dropdown > .ck-dropdown__panel,
+.ck-body-wrapper .ck-ai-quick-actions-group-panel {
+  background: var(--ck-color-base-background, #fff);
+  border: 1px solid var(--ck-color-base-border, #ccced1);
+  border-radius: var(--ck-border-radius, 2px);
+  box-shadow: var(--ck-drop-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
+  box-sizing: border-box;
+}
+
+.ck-ai-quick-actions-dropdown .ck.ck-button:not(.ck-dropdown__button),
+.ck-ai-quick-actions-group-panel .ck.ck-button:not(.ck-dropdown__button) {
+  border-color: transparent;
+  box-shadow: none;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.ck-toolbar__items > .ck-ai-quick-actions-dropdown > .ck.ck-button,
+.ck-toolbar__items > .ck.ck-button.ck-ai-quick-actions-button {
+  --ck-color-button-on-background: #f2ebff;
+  --ck-color-button-on-hover-background: #e8dbff;
+  --ck-color-button-on-color: #743ccd;
+}
+
+.ck-ai-quick-actions-dropdown,
+.ck-ai-quick-actions-group-panel {
+  --ck-color-list-button-hover-background: var(--ck-ai-quick-actions-button-background-color);
+  --ck-color-button-default-hover-background: var(--ck-ai-quick-actions-button-background-color);
+  --ck-color-button-on-background: var(--ck-ai-quick-actions-button-background-color);
+}
+
+.ck-ai-quick-actions-group-panel > .ck-ai-quick-actions-group-list {
+  max-width: var(--ck-ai-quick-actions-dropdown-max-width);
+  width: var(--ck-ai-quick-actions-dropdown-max-width);
+  box-sizing: border-box;
 }
 
 .ck.ck-tabs.ck-ai-tabs {
-  min-width: 400px;
-  max-width: 400px;
-  min-height: 600px;
-  max-height: 650px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  min-height: 280px;
+  max-height: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  background: var(--ck-color-base-background, #fff);
+  overflow: auto;
 }
+
 .ck.ck-tabs.ck-ai-tabs.ck-ai-tabs_maximized {
-  min-width: 484px;
-  max-width: 484px;
+  min-width: 0;
+  max-width: 100%;
 }
+
 .ck.ck-tabs.ck-ai-tabs.ck-hidden {
   display: none;
+}
+
+/* Overlay host: contain panel via absolute positioning; keep overflow visible for Quick Actions */
+.rte-ckeditor-ai-overlay:not(.rte-ckeditor-ai-sidebar),
+.rte-ckeditor-ai-min-height:not(.rte-ckeditor-ai-sidebar) {
+  position: relative !important;
+  overflow: visible !important;
+  isolation: isolate;
+  min-height: 280px;
+}
+
+.rte-ckeditor-ai-sidebar.rte-ckeditor-ai-min-height {
+  min-height: 280px;
+  overflow: visible !important;
+}
+
+.form-control-wrap.rte-ckeditor-ai-overlay:not(.rte-ckeditor-ai-sidebar),
+.form-control-wrap.rte-ckeditor-ai-overlay:not(.rte-ckeditor-ai-sidebar) .form-wizards-wrap,
+.form-control-wrap.rte-ckeditor-ai-overlay:not(.rte-ckeditor-ai-sidebar) .form-wizards-item-element {
+  overflow: visible !important;
+}
+
+.rte-ckeditor-ai-overlay.rte-ckeditor-ai-overlay-active {
+  outline: 2px solid #743ccd;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs__overlay.rte-ckeditor-ai-overlay-panel {
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  height: auto !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  max-width: min(400px, 42vw) !important;
+  background: var(--ck-color-base-background, #fff);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--ck-color-base-border, #ccc);
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  z-index: 40 !important;
+}
+
+/* Hide until JS has synced bounds to the RTE (avoids full-page flash on init) */
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs__overlay.rte-ckeditor-ai-overlay-panel--pending,
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs__overlay.rte-ckeditor-ai-overlay-panel:not(.rte-ckeditor-ai-overlay-panel--ready) {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs__overlay.rte-ckeditor-ai-overlay-panel--ready {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs__overlay.rte-ckeditor-ai-overlay-panel.ck-tabs_right {
+  border-right: 0 !important;
+}
+
+.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs__overlay.rte-ckeditor-ai-overlay-panel.ck-tabs_left {
+  border-left: 0 !important;
 }
 
 /* Premium Badge */

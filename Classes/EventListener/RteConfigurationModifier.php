@@ -401,11 +401,14 @@ class RteConfigurationModifier
     }
 
     /**
-     * Whether any cloud collaboration feature is enabled for the active preset.
+     * Whether a stable collaboration.channelId is required for the active preset.
+     *
+     * Channel IDs are used by realtime collaboration stores and by CKEditor AI chat
+     * history (AI throws ai-chat-missing-channel-id without one).
      */
     private function hasEnabledCollaborationChannelFeature(): bool
     {
-        foreach (['RealTimeCollaboration', 'Comments', 'RevisionHistory', 'TrackChanges'] as $configKey) {
+        foreach (['RealTimeCollaboration', 'Comments', 'RevisionHistory', 'TrackChanges', 'ToggleAi'] as $configKey) {
             if ($this->isCollaborationFeatureEnabled($configKey)) {
                 return true;
             }
