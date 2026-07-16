@@ -249,12 +249,45 @@
   display: flex;
   flex-wrap: wrap;
 }
+/* Presence list — FormEngine sits above the toolbox; VE overrides below in revision-viewer.css */
 .ck-presence-list-container {
-  margin-bottom: 10px;
-}
-.rte-ckeditor-document-outline .ck-presence-list-container {
-  order: -1;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
   width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
+  border: 1px solid var(--ck-color-base-border, var(--token-color-neutral-15, #ccced1));
+  border-bottom: none;
+  border-radius: var(--ck-border-radius, 2px) var(--ck-border-radius, 2px) 0 0;
+}
+
+.ck-presence-list-container .ck.ck-presence-list,
+.ck-presence-list-container .ck-presence-list__balloon,
+.ck-presence-list-container .ck-dropdown__panel {
+  z-index: 6;
+}
+
+.form-wizards-item-element > .ck-presence-list-container {
+  flex: 0 0 auto;
+  width: 100%;
+  order: -1;
+}
+
+/* VE AI column: presence below the editor, matching editor width */
+.rte-ckeditor-ai-editor-column > .ck-presence-list-container {
+  flex: 0 0 auto;
+  width: 100%;
+  order: 99;
+  border-bottom: 1px solid var(--ck-color-base-border, var(--token-color-neutral-15, #ccced1));
+  border-top: none;
+  border-radius: 0 0 var(--ck-border-radius, 2px) var(--ck-border-radius, 2px);
 }
 .rte-ckeditor-document-outline .ck-document-outline-container {
   align-self: self-start;
@@ -396,28 +429,55 @@
   position: static;
 }
 
-/* Realtime RTE loader */
+/* Shared RTE loader (AI + Realtime) */
 .ck-rt-loader {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* above ck-toolbar/content while loading */
-  background: rgba(255, 255, 255, 0.7);
-  background: color-mix(in srgb, Canvas 70%, transparent);
-  backdrop-filter: blur(2px);
+  box-sizing: border-box;
+  padding: 12px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, Canvas 72%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+.rte-ckeditor-loader-host {
+  position: relative;
+  min-height: 100px;
+}
+
+/* Hide AI chrome under the frosted loader (matches FormEngine blur feel) */
+.rte-ckeditor-loader-host > .ck-ai-sidebar-container,
+.rte-ckeditor-loader-host .ck-ai-tabs__overlay,
+.form-wizards-wrap.rte-ckeditor-loader-host > .ck-ai-sidebar-container,
+.form-control-wrap.rte-ckeditor-loader-host .ck-ai-sidebar-container {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .ck-rt-loader__box {
-  min-width: 220px;
-  max-width: 320px;
-  padding: 16px 18px;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: min(220px, calc(100% - 24px));
+  max-width: min(320px, calc(100% - 24px));
+  margin: 0;
+  padding: 18px 22px;
   border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  border: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.14));
+  background: light-dark(#fff, #2a2a2a);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.4) inset;
   display: grid;
   gap: 10px;
+  pointer-events: auto;
 }
 
 .ck-rt-loader__row {
@@ -430,8 +490,8 @@
 .ck-rt-loader__spinner {
   width: 22px;
   height: 22px;
-  border: 2px solid rgba(0,0,0,.15);
-  border-top-color: rgba(0,0,0,.6);
+  border: 2px solid light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.18));
+  border-top-color: light-dark(rgba(0, 0, 0, 0.65), rgba(255, 255, 255, 0.85));
   border-radius: 50%;
   animation: ck-rt-spin 0.8s linear infinite;
 }
@@ -440,12 +500,12 @@
 
 .ck-rt-loader__title {
   font: 600 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color: #111;
+  color: light-dark(#111, #f2f2f2);
 }
 
 .ck-rt-loader__desc {
   font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color: #555;
+  color: light-dark(#555, #b5b5b5);
 }
 
 .t3-ckeditor .module-footer {
@@ -492,12 +552,15 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 8px;
+  align-content: stretch;
+  column-gap: 2px;
+  row-gap: 0;
+  gap: 0 2px;
   isolation: isolate;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  min-height: 280px;
+  min-height: 0;
   overflow: visible;
 }
 
@@ -516,39 +579,50 @@
 .rte-ckeditor-ai-sidebar .form-wizards-wrap > .form-wizards-item-element,
 .rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display: block"],
 .rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display:block"] {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   width: auto;
+  gap: 0;
   min-width: 0;
   max-width: 100%;
   position: relative;
-  /* Above AI sidebar so Quick Actions dropdown can extend over it */
   z-index: 3;
   overflow: visible;
 }
 
-/* Loader covers RTE column only in FormEngine split layout */
-.rte-ckeditor-ai-sidebar .form-wizards-wrap > .ck-rt-loader,
-.rte-ckeditor-ai-sidebar .form-wizards-item-element > .ck-rt-loader {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 1000;
-}
-
 .form-wizards-wrap .ck-ai-sidebar-container {
-  flex: 0 0 400px;
-  width: 400px;
-  max-width: min(400px, 42vw);
-  min-width: 280px;
-  min-height: 280px;
+  flex: 0 0 min(360px, 38%);
+  width: min(360px, 38%);
+  max-width: 360px;
+  min-width: 260px;
+  min-height: 0;
   position: relative;
   z-index: 2;
   isolation: isolate;
+  /* Match editor + presence combined height */
   align-self: stretch;
   height: auto;
   max-height: none;
   overflow: hidden;
   background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
   box-sizing: border-box;
+}
+
+/* Toggle AI off: collapse the bordered sidebar shell (not only the tabs) */
+.ck-ai-sidebar-container.ck-ai-sidebar-container--collapsed,
+.ck-ai-sidebar-container:has(.ck.ck-tabs.ck-ai-tabs.ck-hidden),
+.ck-ai-sidebar-container:has(.ck-ai-tabs.ck-hidden) {
+  display: none !important;
+  flex: 0 0 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .rte-ckeditor-ai-sidebar .ck-editor,
@@ -647,8 +721,8 @@
   min-width: 0;
   width: 100%;
   max-width: 100%;
-  min-height: 280px;
-  max-height: 100%;
+  min-height: 100%;
+  max-height: none;
   height: 100%;
   position: relative;
   z-index: 1;
@@ -675,7 +749,7 @@
 }
 
 .rte-ckeditor-ai-sidebar.rte-ckeditor-ai-min-height {
-  min-height: 280px;
+  min-height: 0;
   overflow: visible !important;
 }
 

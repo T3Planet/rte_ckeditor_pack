@@ -1,4 +1,14 @@
 import { Plugin } from '@ckeditor/ckeditor5-core';
+import {
+    LoaderOwner,
+    showSharedLoader,
+    hideSharedLoader,
+    reparentSharedLoader,
+} from '@t3planet/RteCkeditorPack/ck-shared-loader.js';
+import {
+    resolveRteMount,
+    placePresenceListInMount,
+} from '@t3planet/RteCkeditorPack/ck-presence-placement.js';
 
 /**
  * Shared registry of AISidebar instances (multi-CE VE / FormEngine).
@@ -25,7 +35,6 @@ class AISidebar extends Plugin {
     constructor(editor) {
         super(editor);
         this.editor = editor;
-        this._loaderEl = null;
         this._revisionObserver = null;
         this._editorDomId = null;
         this._isRevisionViewer = this._detectRevisionViewerEditor();
@@ -56,8 +65,8 @@ class AISidebar extends Plugin {
             if (domId) {
                 this._showLoader({
                     channelId: domId,
-                    title: this._translate('ai.sidebar.loader.title', 'Loading AI features…'),
-                    desc: this._translate('ai.sidebar.loader.description', 'Initializing AI assistant…')
+                    title: this._translate('ai.sidebar.loader.title', 'Initializing AI assistant…'),
+                    desc: this._translate('ai.sidebar.loader.description', 'Preparing AI features and connecting to services.'),
                 });
             }
         }
@@ -68,6 +77,18 @@ class AISidebar extends Plugin {
             return;
         }
         this._setupContainer({ allowOverlayFallback: true });
+
+        // VE host may resolve more reliably after UI bootstraps.
+        if (this._isAIEnabled()) {
+            const domId = this._resolveEditorId();
+            if (domId) {
+                this._showLoader({
+                    channelId: domId,
+                    title: this._translate('ai.sidebar.loader.title', 'Initializing AI assistant…'),
+                    desc: this._translate('ai.sidebar.loader.description', 'Preparing AI features and connecting to services.'),
+                });
+            }
+        }
     }
 
     afterInit() {
@@ -81,6 +102,7 @@ class AISidebar extends Plugin {
                 this._initOverlayBehavior();
             } else {
                 this._finalizeSidebarLayout();
+                this._initSidebarVisibilitySync();
             }
         });
         this.editor.on('error', () => this._hideLoader());
@@ -105,7 +127,10 @@ class AISidebar extends Plugin {
 
         mount.classList.add('rte-ckeditor-ai-sidebar');
         this._applySideToMount(mount);
-        this._ensureHostMinHeight(mount);
+        // Clear any leftover overlay min-height that would leave empty space above presence.
+        if (mount.style.minHeight) {
+            mount.style.minHeight = '';
+        }
         this._ensureStackSeparation();
 
         // VE: wrap toolbar + content in one column beside the AI panel.
@@ -127,20 +152,54 @@ class AISidebar extends Plugin {
                 editorColumn.appendChild(child);
             });
 
-            // Keep the initializing overlay on the RTE column, not beside the sidebar.
-            if (this._loaderEl?.isConnected && this._loaderEl.parentElement !== editorColumn) {
-                if (getComputedStyle(editorColumn).position === 'static') {
-                    editorColumn.style.position = 'relative';
-                }
-                editorColumn.appendChild(this._loaderEl);
-            }
+            // Loader covers full CE (editor + AI); keep presence under the editor column.
+            reparentSharedLoader(mount);
+            placePresenceListInMount(mount, editorColumn);
 
             this._placeSidebarBySide(mount, this._aiContainerEl, editorColumn);
-            // Force row layout in case VE host styles fight the stylesheet.
+            // Editor | AI side-by-side; VE presence under the editor inside the editor column.
             mount.style.setProperty('display', 'flex', 'important');
             mount.style.setProperty('flex-direction', 'row', 'important');
             mount.style.setProperty('flex-wrap', 'nowrap', 'important');
             mount.style.setProperty('align-items', 'stretch', 'important');
+        } else {
+            // FormEngine (v12–v14): keep presence above toolbox and loader on the editor item.
+            placePresenceListInMount(mount);
+            reparentSharedLoader(mount);
+        }
+    }
+
+    /**
+     * Toggle AI off must hide the whole sidebar shell (border/background), not only the tabs.
+     */
+    _initSidebarVisibilitySync() {
+        const toggleCmd = this.editor.commands.get('toggleAi');
+        const container = this._aiContainerEl;
+        if (!toggleCmd || !container) {
+            return;
+        }
+
+        const sync = () => {
+            const visible = !!toggleCmd.value;
+            container.classList.toggle('ck-ai-sidebar-container--collapsed', !visible);
+            container.setAttribute('aria-hidden', visible ? 'false' : 'true');
+        };
+
+        sync();
+        this.listenTo(toggleCmd, 'change:value', sync);
+        this.listenTo(toggleCmd, 'execute', () => {
+            requestAnimationFrame(sync);
+        });
+
+        // Also follow AI tabs visibility when CK toggles .ck-hidden.
+        if (this.editor.plugins.has('AITabs')) {
+            const aiTabs = this.editor.plugins.get('AITabs');
+            if (aiTabs.view && typeof aiTabs.view.on === 'function') {
+                this.listenTo(aiTabs.view, 'change:isVisible', (evt, name, value) => {
+                    container.classList.toggle('ck-ai-sidebar-container--collapsed', !value);
+                    container.setAttribute('aria-hidden', value ? 'false' : 'true');
+                });
+            }
         }
     }
 
@@ -253,32 +312,11 @@ class AISidebar extends Plugin {
     }
 
     _resolveMountContainer() {
-        const veHost = this._findVeEditableHost();
-        if (veHost) {
-            return veHost;
-        }
-
-        const sourceEl = this.editor.sourceElement;
-        if (sourceEl?.id) {
-            const formItem = document.getElementById(sourceEl.id)?.closest('.form-control-wrap');
-            if (formItem) {
-                return formItem;
-            }
-        }
-
-        const anchors = [this.editor.ui?.element, this.editor.sourceElement].filter(Boolean);
-        const mountSelectors = ['.form-control-wrap', '.form-wizards-item-element'];
-
-        for (const anchor of anchors) {
-            for (const selector of mountSelectors) {
-                const mount = anchor.closest(selector);
-                if (mount) {
-                    return mount;
-                }
-            }
-        }
-
-        return anchors[0]?.parentElement || null;
+        return resolveRteMount(
+            this._findVeEditableHost(),
+            this.editor.ui?.element,
+            this.editor.sourceElement,
+        );
     }
 
     _generateFallbackChannelId() {
@@ -605,11 +643,12 @@ class AISidebar extends Plugin {
     }
 
     /**
-     * Grow the RTE host so a short field still has room for the AI panel.
-     * Layout (document flow + stack separation) keeps the next CE below this one.
+     * Grow the RTE host for overlay mode so a short field still fits the AI panel.
+     * Sidebar mode uses flex stretch — do not force a tall empty host (creates gaps
+     * between editor | AI and the presence list).
      */
     _ensureHostMinHeight(mount) {
-        if (!mount) {
+        if (!mount || !this._overlayMode) {
             return;
         }
         const minHeight = this._aiMinHeight;
@@ -829,6 +868,8 @@ class AISidebar extends Plugin {
 
         // Place children by configured side (DOM order + flex-row): left → AI|RTE, right → RTE|AI.
         this._placeSidebarBySide(mount, sidebarElement, editorColumn);
+        placePresenceListInMount(mount, editorColumn);
+        reparentSharedLoader(mount);
     }
 
     /**
@@ -941,66 +982,22 @@ class AISidebar extends Plugin {
         }
     }
 
-    _getMountContainer() {
-        const parent = this._resolveMountContainer();
-        if (!parent) {
-            return null;
-        }
-
-        const style = window.getComputedStyle(parent);
-        if (style.position === 'static') {
-            parent.style.position = 'relative';
-        }
-        return parent;
-    }
-
     _showLoader({ channelId, title, desc }) {
-        const mount = this._getMountContainer();
-        if (!mount || this._loaderEl?.isConnected) return;
-
-        const el = document.createElement('div');
-        el.className = 'ck-rt-loader';
-        el.setAttribute('role', 'status');
-        el.setAttribute('aria-live', 'polite');
-        el.id = `${channelId}-ai-loader`;
-
-        el.innerHTML = `
-            <div class="ck-rt-loader__box" aria-label="AI is loading">
-                <div class="ck-rt-loader__row">
-                    <div class="ck-rt-loader__spinner" aria-hidden="true"></div>
-                    <div class="ck-rt-loader__title">${title || 'Loading AI Chat…'}</div>
-                </div>
-                <div class="ck-rt-loader__desc">${desc || ''}</div>
-            </div>
-        `;
-
-        // Cover the RTE only (not a third flex column beside the AI sidebar).
-        const editorColumn = mount.querySelector?.(':scope > .rte-ckeditor-ai-editor-column');
-        const formEditor = mount.querySelector?.('.form-wizards-item-element');
-        const host = editorColumn || formEditor || mount;
-        if (getComputedStyle(host).position === 'static') {
-            host.style.position = 'relative';
-        }
-        host.appendChild(el);
-        this._loaderEl = el;
-    }
-
-    _updateLoaderDesc(text) {
-        const descEl = this._loaderEl?.querySelector('.ck-rt-loader__desc');
-        if (descEl) descEl.textContent = text || '';
+        const mount = this._resolveMountContainer() || this._findVeEditableHost();
+        showSharedLoader(mount, {
+            owner: LoaderOwner.AI,
+            channelId,
+            title: title || 'Initializing AI assistant…',
+            desc: desc || '',
+        });
     }
 
     _hideLoader() {
-        if (this._loaderEl?.parentNode) {
-            this._loaderEl.parentNode.removeChild(this._loaderEl);
-        }
-        this._loaderEl = null;
+        hideSharedLoader(this._resolveMountContainer() || this._findVeEditableHost(), LoaderOwner.AI);
     }
 
     _translate(key, fallback = '') {
-        const scope = typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : {});
-        const translations = scope?.TYPO3?.lang;
-        const value = translations?.[key];
+        const value = globalThis?.TYPO3?.lang?.[key];
         return typeof value === 'string' && value.trim() !== '' ? value : fallback;
     }
 }

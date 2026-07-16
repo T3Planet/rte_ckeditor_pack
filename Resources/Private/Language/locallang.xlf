@@ -593,6 +593,12 @@
             <trans-unit id="ai.sidebar.loader.description">
                 <source>Preparing AI features and connecting to services.</source>
             </trans-unit>
+            <trans-unit id="shared.loader.title">
+                <source>Preparing editor…</source>
+            </trans-unit>
+            <trans-unit id="shared.loader.description">
+                <source>Connecting AI assistant and realtime collaboration…</source>
+            </trans-unit>
 
             <trans-unit id="feature_form.submit">
                 <source>Save Changes</source>
