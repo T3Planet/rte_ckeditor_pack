@@ -398,7 +398,7 @@ class ImportExportService
 
         foreach ($editorConfig as $key => $value) {
             // Translate YAML key (e.g. 'typing') to internal config_key when needed
-            $lookupKey = $yamlToConfigKeyMap[$key] ?? $key;
+            $lookupKey = (string)($yamlToConfigKeyMap[$key] ?? $key);
 
             $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)->getItemByConfigKey($lookupKey, true);
             if (empty($moduleConfiguration)) {

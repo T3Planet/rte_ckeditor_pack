@@ -30,6 +30,13 @@ class CollaborationFeature implements FeatureInterface
     {
         return [
             [
+                'library' => '@ckeditor/ckeditor5-collaboration-core',
+                'exports' => 'Users',
+            ],
+            [
+                'library' => '@t3planet/RteCkeditorPack/users-collaboration-guard.js',
+            ],
+            [
                 'library' => '@t3planet/RteCkeditorPack/realtime-adapter.js',
             ],
             [

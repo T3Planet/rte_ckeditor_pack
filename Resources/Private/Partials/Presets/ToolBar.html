@@ -51,7 +51,7 @@
                         <div class="drag-item {f:if(condition: '{item.toolBar} == | || {item.toolBar} == -' , then: 'drag-separator-item')}">
                             <button class="toggle-btn w-100 text-start justify-content-start 
                             {f:if(condition: '{item.toolBar} == | || {item.toolBar} == -' , then: 'btn border btn-bg-white', else: 'btn btn-default')}" 
-                                data-id="{k.cycle}" data-items="{item.toolBar}" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" 
+                                data-id="{item.toolBar}" data-items="{item.toolBar}" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" 
                                 data-bs-placement="top" data-bs-content="{item.items}" data-bs-title="{f:if(condition: '{item.label}' , then: '{item.label}', else:'{item.toolBar}')}">
                                 <f:if condition="{item.toolBar} == '|'">
                                     <f:then><core:icon identifier="actions-viewmode-compare" size="small" alternativeMarkupIdentifier="inline" /></f:then>

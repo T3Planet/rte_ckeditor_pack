@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Backend\Preview;
 
+use T3Planet\RteCkeditorPack\Utility\RteMarkupTransformationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
@@ -70,6 +71,8 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
      */
     protected function renderTextWithHtml(string $input): string
     {
+        $input = RteMarkupTransformationUtility::stripCollaborationMarkup($input);
+
         // Allow only <img> and <p>-tags in preview, to prevent possible HTML mismatch
         $input = strip_tags($input, '<img><p>');
 

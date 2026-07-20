@@ -237,7 +237,7 @@ class EventHandlers {
     // Update arrays based on source grid
     if (sourceGrid === "grid-2" || sourceGrid === "grid-5") {
       this.state.removeItemFromArray(this.state.enabledItems, dataId);
-      this.state.addItemToArray(this.state.disabledItems, dataItems);
+      this.state.addItemToArray(this.state.disabledItems, dataId);
     } else if (sourceGrid === "grid-4") {
       this.state.removeItemFromArray(this.state.disabledItems, dataId);
     }

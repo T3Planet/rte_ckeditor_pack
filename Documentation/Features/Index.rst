@@ -8,6 +8,8 @@ Features
 
 Create and manage your content easily with tools that help you write, format, and organize your work. From text editing to media, code, collaboration, and layout, everything is designed to keep your workflow smooth. These features make it simple to create clear, structured, and professional content without extra effort.
 
+For page-based editing with TYPO3 Visual Editor, see :ref:`visualeditor`.
+
 
 .. toctree::
    :maxdepth: 5

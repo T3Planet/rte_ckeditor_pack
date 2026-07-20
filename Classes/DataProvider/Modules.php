@@ -270,6 +270,10 @@ class Modules
                         ],
                         'NonRealTime' => [
                             [
+                                'library' => '@ckeditor/ckeditor5-collaboration-core',
+                                'exports' => 'Users,Permissions',
+                            ],
+                            [
                                 'library' => '@t3planet/RteCkeditorPack/user-adapter.js',
                             ],
                             [
@@ -305,12 +309,16 @@ class Modules
                                 'library' => '@t3planet/RteCkeditorPack/revision-history-tracker-adapter.js',
                             ],
                             [
+                                'library' => '@ckeditor/ckeditor5-collaboration-core',
+                                'exports' => 'Users,Permissions',
+                            ],
+                            [
                                 'library' => '@t3planet/RteCkeditorPack/user-adapter.js',
                             ],
                         ],
                         [
                             'library' => '@ckeditor/ckeditor5-revision-history',
-                            'exports' => 'RevisionHistory',
+                            'exports' => 'RevisionHistory,RevisionTracker',
                         ],
 
                     ],
@@ -334,6 +342,10 @@ class Modules
                         ],
                         'NonRealTime' => [
                             [
+                                'library' => '@ckeditor/ckeditor5-collaboration-core',
+                                'exports' => 'Users,Permissions',
+                            ],
+                            [
                                 'library' => '@t3planet/RteCkeditorPack/user-adapter.js',
                             ],
                             [
@@ -342,6 +354,7 @@ class Modules
                             ],
                             [
                                 'library' => '@t3planet/RteCkeditorPack/track-changes-integration.js',
+                                'exports' => 'TrackChangesIntegration',
                             ],
                         ],
                         [
@@ -855,8 +868,9 @@ class Modules
         return array_replace(array_flip($priority), $groupedModules);
     }
 
-    public function getItemByConfigKey(string $configKey, bool $toolBar = false): array
+    public function getItemByConfigKey(string|int $configKey, bool $toolBar = false): array
     {
+        $configKey = (string)$configKey;
         foreach ($this->ckeditorModules as $item) {
             if (isset($item['configuration']['config_key']) && strtolower($item['configuration']['config_key']) == strtolower($configKey)) {
                 return $item;

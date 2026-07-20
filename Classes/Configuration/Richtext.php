@@ -15,23 +15,21 @@ use T3Planet\RteCkeditorPack\Utility\ProcessingConfigurationUtility;
 use TYPO3\CMS\Core\Configuration\Richtext as CoreRichtext;
 
 /**
- * Extended Richtext class for TYPO3 v12 and v13
- * 
- * This class extends the core Richtext class to apply custom processing
- * configuration from the database before the configuration is returned.
- * 
- * For TYPO3 v14, use the AfterRichtextConfigurationPreparedEvent instead.
+ * TYPO3 v12/v13 Richtext extension for processing config and editor context metadata.
  */
 class Richtext extends CoreRichtext
 {
-    /**
-     * Override getConfiguration to apply custom processing config
-     */
     public function getConfiguration(string $table, string $field, int $pid, string $recordType, array $tcaFieldConf): array
     {
         $configuration = parent::getConfiguration($table, $field, $pid, $recordType, $tcaFieldConf);
-        $configuration = ProcessingConfigurationUtility::applyProcessingConfig($configuration);
-        return $configuration;
+        $configuration = ProcessingConfigurationUtility::injectEditorContext(
+            $configuration,
+            $table,
+            $field,
+            $pid,
+            $recordType,
+        );
+
+        return ProcessingConfigurationUtility::applyAll($configuration);
     }
 }
-

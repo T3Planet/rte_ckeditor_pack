@@ -4,6 +4,14 @@ services:
     autoconfigure: true
     public: false
 
+  T3Planet\RteCkeditorPack\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Domain/Model/*'
+      - '../Classes/Configuration/Richtext.php'
+      - '../Classes/Configuration/RichtextV14.php'
+      - '../Classes/EventListener/ProcessingConfigurationModifier.php'
+
   T3Planet\RteCkeditorPack\Controller\CommentsController:
     public: true
     arguments:
@@ -73,6 +81,13 @@ services:
         arguments:
           - '@T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler'
 
+  T3Planet\RteCkeditorPack\EventListener\RtePreviewRendererRegistrar:
+    tags:
+      - name: event.listener
+        identifier: 'rte-ckeditor-pack/preview-renderer-registrar'
+        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
+        after: 'nr-rte-preview-renderer-registrar'
+
   T3Planet\RteCkeditorPack\EventListener\RteConfigurationModifier:
     tags:
       - name: event.listener
@@ -81,16 +96,8 @@ services:
         arguments:
           - '@T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler'
 
-  T3Planet\RteCkeditorPack\EventListener\ProcessingConfigurationModifier:
-    tags:
-      - name: event.listener
-        identifier: 'rte_ckeditor_pack_processing_configuration_modifier'
-        event: TYPO3\CMS\Core\Configuration\Event\AfterRichtextConfigurationPreparedEvent
-
-
   T3Planet\RteCkeditorPack\Controller\SelectImageController:
     tags: ['backend.controller']
-
 
   T3Planet\RteCkeditorPack\Domain\Repository\SuggestionRepository:
     public: true

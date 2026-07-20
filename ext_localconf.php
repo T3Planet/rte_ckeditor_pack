@@ -46,11 +46,17 @@ switch ($majorVersion) {
         ];
         break;
     case 13:
+        // TYPO3 v13: custom Richtext processing + custom RichTextElement (intentional fall-through).
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][Richtext::class] = [
             'className' => \T3Planet\RteCkeditorPack\Configuration\Richtext::class,
         ];
     case 14:
     default:
+        if ($majorVersion >= 14) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][Richtext::class] = [
+                'className' => \T3Planet\RteCkeditorPack\Configuration\RichtextV14::class,
+            ];
+        }
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][CoreElem::class] = [
             'className' => RichTextElement::class,
         ];

@@ -16,73 +16,91 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 
 /**
- * Class ChannelIdUtility
- *
  * Utility class for building channel IDs for CKEditor collaboration features.
  */
 class ChannelIdUtility
 {
-    private static int $instanceCounter = 0;
-
     /**
      * Build a channel ID from data array
      *
-     * Creates a unique channel ID based on record information, field name,
-     * language, workspace, site identifier, and instance identifier.
+     * Creates a stable channel ID based on record information, field name,
+     * language, workspace, and site identifier. DOM-specific identifiers are
+     * intentionally excluded so Visual Editor and FormEngine share one channel.
      *
-     * @param array $data Data array containing record information
+     * @param array<string, mixed> $data Data array containing record information
      * @return string Channel ID in format 'ckdoc-{hash}'
      */
     public static function buildChannelIdFromData(array $data): string
     {
-        $recordIdentifier = $data['databaseRow']['uid']
-            ?? $data['recordUid']
-            ?? $data['inlineParentUid']
-            ?? $data['effectivePid']
-            ?? '0';
-
-        // Get site identifier for domain-wise unique collaboration
         $siteIdentifier = self::getSiteIdentifier($data);
 
         $parts = [
-            $data['tableName'] ?? 'table',
-            $recordIdentifier,
-            $data['fieldName'] ?? 'field',
-            $data['languageId'] ?? $data['sys_language_uid'] ?? '0',
+            $data['tableName'] ?? $data['table'] ?? 'table',
+            self::resolveRecordIdentifier($data),
+            $data['fieldName'] ?? $data['field'] ?? 'field',
+            self::resolveLanguageId($data),
             $data['workspaceId'] ?? $data['workspace'] ?? 'live',
             $siteIdentifier,
         ];
-
-        $instanceIdentifier = $data['domElementId']
-            ?? $data['formElementName']
-            ?? $data['elementIdentifier']
-            ?? (++self::$instanceCounter);
 
         $payload = implode('|', array_map(static function ($value) {
             $value = (string)($value ?? '');
             return trim($value) !== '' ? trim($value) : '0';
         }, $parts));
-        $payload .= '|' . (string)$instanceIdentifier;
 
         $hash = substr(hash('sha1', $payload), 0, 40);
         return 'ckdoc-' . $hash;
     }
 
     /**
+     * @param array<string, mixed> $data
+     */
+    private static function resolveRecordIdentifier(array $data): string
+    {
+        $candidates = [
+            $data['recordUid'] ?? null,
+            $data['databaseRow']['uid'] ?? null,
+            $data['uid'] ?? null,
+            $data['inlineParentUid'] ?? null,
+        ];
+
+        foreach ($candidates as $candidate) {
+            if ($candidate === null || $candidate === '' || (string)$candidate === '0') {
+                continue;
+            }
+
+            return (string)$candidate;
+        }
+
+        return (string)($data['effectivePid'] ?? $data['pid'] ?? $data['databaseRow']['pid'] ?? '0');
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private static function resolveLanguageId(array $data): string
+    {
+        $languageId = $data['languageId']
+            ?? $data['sys_language_uid']
+            ?? $data['databaseRow']['sys_language_uid']
+            ?? '0';
+
+        if (is_array($languageId)) {
+            $languageId = $languageId[0] ?? '0';
+        }
+
+        return (string)(int)$languageId;
+    }
+
+    /**
      * Get site identifier from data array
      *
-     * Attempts to resolve the TYPO3 site identifier based on the page ID from the data array.
-     * Falls back to 'default' if no site can be found.
-     *
-     * @param array $data Data array containing record information
-     * @return string Site identifier or 'default' as fallback
+     * @param array<string, mixed> $data
      */
     private static function getSiteIdentifier(array $data): string
     {
-        // Try to get page ID from various sources
         $pageId = $data['effectivePid'] ?? $data['databaseRow']['pid'] ?? $data['pid'] ?? 0;
-        
-        // Also check if site is already provided in data
+
         if (isset($data['site']) && is_object($data['site']) && method_exists($data['site'], 'getIdentifier')) {
             try {
                 return $data['site']->getIdentifier();
@@ -101,8 +119,6 @@ class ChannelIdUtility
             }
         }
 
-        // Fallback to default if no site can be determined
         return 'default';
     }
 }
-

@@ -155,6 +155,21 @@ class AIConfigurationBuilder
             unset($config['chat']['chat']);
         }
 
+        // Container defaults for FormEngine + Visual Editor (v12–v14).
+        if (!isset($config['container']) || !is_array($config['container'])) {
+            $config['container'] = [];
+        }
+        if (($config['container']['type'] ?? '') === '') {
+            $config['container']['type'] = 'sidebar';
+        }
+        if (($config['container']['side'] ?? '') === '') {
+            $config['container']['side'] = 'right';
+        }
+        $side = strtolower((string)$config['container']['side']);
+        $config['container']['side'] = $side === 'left' ? 'left' : 'right';
+        $type = strtolower((string)$config['container']['type']);
+        $config['container']['type'] = $type === 'overlay' ? 'overlay' : 'sidebar';
+
         return $config;
     }
 

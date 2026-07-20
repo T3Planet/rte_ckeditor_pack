@@ -1,0 +1,380 @@
+/**
+ * Revision history viewer styles (backend FormEngine + Visual Editor).
+ *
+ * Inline editors hide .ck-editor__top by default; the revision viewer needs its
+ * toolbar visible for "Back to editing", "Restore this revision", etc.
+ */
+.revision_viewer_container .ck-editor__top,
+.revision_viewer_container .ck.ck-editor__top,
+ve-editable-rich-text .revision_viewer_container .ck-editor__top,
+ve-editable-rich-text .revision_viewer_container .ck.ck-editor__top,
+typo3-rte-ckeditor-ckeditor5 .revision_viewer_container .ck-editor__top,
+typo3-rte-ckeditor-ckeditor5 .revision_viewer_container .ck.ck-editor__top,
+.t3js-formengine-placeholder-placeholder typo3-rte-ckeditor-ckeditor5 .revision_viewer_container .ck.ck-editor__top {
+  display: block !important;
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+.revision_viewer_container {
+  display: none;
+  position: relative;
+  width: 100%;
+}
+
+.revision_viewer_container[style*="display: block"],
+.revision_viewer_container[style*="display:block"] {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+.revision_viewer_editor-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: relative;
+  width: 100%;
+  align-items: stretch;
+}
+
+.revision_viewer_container .revision_viewer_editor {
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+}
+
+.revision_viewer_container .ck-editor {
+  flex: 1 1 auto;
+  max-width: none;
+  width: auto;
+}
+
+.revision_viewer_sidebar,
+.revision_viewer_container .sidebar-container {
+  flex: 0 0 295px;
+  width: 295px;
+  min-width: 295px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 0;
+  align-self: stretch;
+  background: var(--ck-color-toolbar-background, var(--token-color-neutral-0, #fff));
+  border: 1px solid var(--ck-color-toolbar-border, var(--token-color-neutral-15, #ccc));
+}
+
+.revision_viewer_sidebar .ck.ck-revision-history-sidebar,
+.revision_viewer_container .sidebar-container .ck.ck-revision-history-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+}
+
+/* Visual Editor: document outline sidebar */
+ve-editable-rich-text.rte-ckeditor-document-outline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+ve-editable-rich-text.rte-ckeditor-document-outline .ck-document-outline-container {
+  align-self: self-start;
+  flex: 0 0 250px;
+  max-width: 250px;
+  position: sticky;
+  top: 0;
+}
+
+ve-editable-rich-text.rte-ckeditor-document-outline > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Presence under the editor — same width as the editor column (not full page) */
+ve-editable-rich-text > .ck-presence-list-container,
+ve-editable-rich-text .ck-presence-list-container {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
+  border: 1px solid var(--ck-color-base-border, var(--token-color-neutral-15, #ccced1));
+  border-top: none;
+  border-radius: 0 0 var(--ck-border-radius, 2px) var(--ck-border-radius, 2px);
+}
+
+/* Inside editor column with AI: presence is part of the left stack (editor width only) */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .rte-ckeditor-ai-editor-column > .ck-presence-list-container {
+  flex: 0 0 auto;
+  width: 100%;
+  order: 99;
+  margin-top: 0;
+}
+
+/*
+ * Visual Editor default (editable.css) hides .ck-editor__top and floats it with
+ * position:absolute; bottom:100% — that often clips under CE chrome / presence.
+ * When the CE is active, keep the toolbar as a normal bar ABOVE the content.
+ */
+ve-editable-rich-text {
+  position: relative;
+  overflow: visible !important;
+}
+
+ve-editable-rich-text:focus-within .ck-editor__top,
+ve-editable-rich-text:focus-within .ck.ck-editor__top,
+ve-editable-rich-text[highlighted] .ck-editor__top,
+ve-editable-rich-text[highlighted] .ck.ck-editor__top,
+ve-editable-rich-text .ck.ck-editor:has(.ck-focused) > .ck-editor__top,
+ve-editable-rich-text .ck-editor__top:has(+ .ck-editor__main .ck-focused),
+ve-editable-rich-text .ck-editor__top:has(+ * .ck-focused),
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-editor__top,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-editor__top,
+ve-editable-rich-text.rte-ckeditor-ai-overlay .ck-editor__top,
+ve-editable-rich-text.rte-ckeditor-ai-overlay .ck.ck-editor__top {
+  display: block !important;
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  z-index: 30 !important;
+  overflow: visible !important;
+  box-sizing: border-box;
+  background: var(--ck-color-toolbar-background, var(--ck-color-base-background, #fff));
+  border: 1px solid var(--ck-color-toolbar-border, var(--ck-color-base-border, #ccced1));
+  border-bottom: none;
+  margin: 0;
+}
+
+ve-editable-rich-text:focus-within .ck-editor__main,
+ve-editable-rich-text[highlighted] .ck-editor__main,
+ve-editable-rich-text .ck.ck-editor:has(.ck-focused) > .ck-editor__main,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-editor__main,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-editor__main {
+  border: 1px solid var(--ck-color-base-border, #ccced1);
+  background: var(--ck-color-base-background, #fff);
+  box-sizing: border-box;
+}
+
+/* Visual Editor: AI sidebar — editor column (toolbar + content + presence) | AI panel */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch;
+  column-gap: 2px;
+  row-gap: 0;
+  gap: 0 2px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative !important;
+  isolation: isolate;
+  min-height: 0;
+  overflow: visible !important;
+}
+
+/* Editor column: toolbar → content → presence (same width); AI stretches to this height */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar > .rte-ckeditor-ai-editor-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+  gap: 0;
+  position: relative;
+  z-index: 3;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+/*
+ * VE loader: stay inside <ve-editable-rich-text>.
+ * display:!important keeps empty CEs visible while VE would hide them.
+ */
+ve-editable-rich-text.rte-ckeditor-loader-host,
+ve-editable-rich-text .rte-ckeditor-ai-editor-column.rte-ckeditor-loader-host {
+  position: relative !important;
+  display: block !important;
+  min-height: 100px !important;
+}
+
+ve-editable-rich-text > .ck-rt-loader,
+ve-editable-rich-text .rte-ckeditor-ai-editor-column > .ck-rt-loader {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 20100 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100px !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  background: color-mix(in srgb, Canvas 78%, transparent) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  pointer-events: none !important;
+}
+
+/* Keep AI sidebar/overlay under the frosted loader (Camino / VE) */
+ve-editable-rich-text.rte-ckeditor-loader-host > .ck-ai-sidebar-container,
+ve-editable-rich-text.rte-ckeditor-loader-host .ck-ai-tabs__overlay,
+ve-editable-rich-text.rte-ckeditor-loader-host .ck.ck-tabs.ck-ai-tabs.ck-ai-tabs__overlay {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+ve-editable-rich-text .ck-rt-loader__box {
+  border: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.14)) !important;
+  background: light-dark(#fff, #2a2a2a) !important;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.4) inset !important;
+  border-radius: 12px !important;
+  padding: 18px 22px !important;
+  box-sizing: border-box !important;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-editor,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-editor {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-content {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Quick Actions panels only (not the toolbar control) — full panel above AI column */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-ai-quick-actions-dropdown > .ck-dropdown__panel,
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown.ck-ai-quick-actions-dropdown .ck-dropdown__panel {
+  z-index: 10050 !important;
+  overflow: visible !important;
+  background: var(--ck-color-base-background, #fff);
+  border: 1px solid var(--ck-color-base-border, #ccced1);
+  border-radius: var(--ck-border-radius, 2px);
+  box-shadow: var(--ck-drop-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown > .ck-dropdown__panel > .ck-ai-quick-actions {
+  max-width: var(--ck-ai-quick-actions-dropdown-max-width, 309px);
+  width: var(--ck-ai-quick-actions-dropdown-max-width, 309px);
+  box-sizing: border-box;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar > .ck-ai-sidebar-container {
+  flex: 0 0 min(360px, 38%);
+  width: min(360px, 38%);
+  max-width: 360px;
+  min-width: 260px;
+  min-height: 0;
+  /* Stretch to editor + presence combined height */
+  align-self: stretch;
+  height: auto;
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  max-height: none;
+  overflow: hidden;
+  background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
+  border: 1px solid var(--ck-color-base-border, #ccced1);
+  box-sizing: border-box;
+}
+
+/* Toggle AI off: remove the empty bordered sidebar column */
+ve-editable-rich-text .ck-ai-sidebar-container.ck-ai-sidebar-container--collapsed,
+ve-editable-rich-text .ck-ai-sidebar-container:has(.ck.ck-tabs.ck-ai-tabs.ck-hidden),
+ve-editable-rich-text .ck-ai-sidebar-container:has(.ck-ai-tabs.ck-hidden) {
+  display: none !important;
+  flex: 0 0 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-tabs.ck-ai-tabs {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  max-height: none;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  background: var(--ck-color-base-background, #fff);
+  overflow: auto;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-tabs.ck-ai-tabs.ck-ai-tabs_maximized {
+  min-width: 0;
+  max-width: 100%;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck.ck-tabs.ck-ai-tabs.ck-hidden {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  ve-editable-rich-text.rte-ckeditor-ai-sidebar {
+    flex-wrap: wrap !important;
+  }
+
+  ve-editable-rich-text.rte-ckeditor-ai-sidebar > .ck-ai-sidebar-container {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    order: 2;
+  }
+
+  ve-editable-rich-text.rte-ckeditor-ai-sidebar > .rte-ckeditor-ai-editor-column {
+    flex: 1 1 100%;
+    order: 1;
+  }
+}
+
+/* Visual Editor: min height / legacy overlay host (do NOT override sidebar flex) */
+ve-editable-rich-text.rte-ckeditor-ai-overlay:not(.rte-ckeditor-ai-sidebar),
+ve-editable-rich-text.rte-ckeditor-ai-min-height:not(.rte-ckeditor-ai-sidebar) {
+  display: block !important;
+  position: relative !important;
+  overflow: visible !important;
+  isolation: isolate;
+  min-height: 280px;
+  box-sizing: border-box;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-sidebar.rte-ckeditor-ai-min-height {
+  min-height: 0;
+}
+
+ve-editable-rich-text.rte-ckeditor-ai-overlay.rte-ckeditor-ai-overlay-active {
+  outline: 2px solid #743ccd;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
