@@ -1,0 +1,54 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature for CKEditor Pack (`rte_ckeditor_pack`)!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: A clear description of the feature you'd like
+      placeholder: Describe the feature...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe the problem this would solve
+      placeholder: I want to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions you've considered
+    validations:
+      required: false
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Toolbar & Presets
+        - Visual Editor / Dashboard
+        - CKEditor features (general)
+        - Media / Images
+        - Collaboration / Track Changes / Comments
+        - CKEditor AI
+        - Premium features (Word / PDF / etc.)
+        - Accessibility
+        - Middleware / content processing
+        - Backend module
+        - Documentation
+        - Other
+    validations:
+      required: true
