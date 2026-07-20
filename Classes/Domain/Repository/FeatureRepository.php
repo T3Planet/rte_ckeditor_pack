@@ -119,9 +119,13 @@ class FeatureRepository extends Repository
     public function removeByPresetId(int $presetUid): bool
     {
         $features = $this->findByPresetUid($presetUid);
+        if (empty($features)) {
+            return false;
+        }
         foreach ($features as $feature) {
             $this->remove($feature);
         }
+        $this->persistenceManager->persistAll();
         return true;
     }
 }

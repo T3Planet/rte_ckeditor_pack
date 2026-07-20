@@ -162,10 +162,14 @@ class ProcessingConfigurationUtility
             $configuration['processing'] = [];
         }
 
-        $configuration = HtmlSupportProcessingUtility::syncProcessing($configuration);
-        $configuration = self::ensureDefaultProcessingMode($configuration);
+        if ($htmlSupport !== null || self::hasHtmlSupportConfiguration($configuration)) {
+            $configuration = HtmlSupportProcessingUtility::syncProcessing($configuration);
+            $configuration = self::ensureDefaultProcessingMode($configuration);
 
-        return self::rebuildProcFromProcessing($configuration);
+            return self::rebuildProcFromProcessing($configuration);
+        }
+
+        return $configuration;
     }
 
     /**
@@ -244,7 +248,12 @@ class ProcessingConfigurationUtility
             return null;
         }
 
-        foreach ($featureRepository->findEnabledByPresetUid($preset->getUid()) as $feature) {
+        $presetUid = $preset->getUid();
+        if ($presetUid === null || $presetUid <= 0) {
+            return null;
+        }
+
+        foreach ($featureRepository->findEnabledByPresetUid($presetUid) as $feature) {
             if ($feature->getConfigKey() !== 'HtmlSupport' || !$feature->isEnable()) {
                 continue;
             }
@@ -263,6 +272,19 @@ class ProcessingConfigurationUtility
         }
 
         return null;
+    }
+
+    /**
+     * @param array<string, mixed> $configuration
+     */
+    private static function hasHtmlSupportConfiguration(array $configuration): bool
+    {
+        if (isset($configuration['htmlSupport']) && is_array($configuration['htmlSupport'])) {
+            return true;
+        }
+
+        return isset($configuration['editor']['config']['htmlSupport'])
+            && is_array($configuration['editor']['config']['htmlSupport']);
     }
     
     

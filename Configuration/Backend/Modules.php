@@ -9,7 +9,7 @@ return [
         'path' => '/ckeditor/premium',
         'iconIdentifier' => 'ckeditor_module',
         'labels' => 'LLL:EXT:rte_ckeditor_pack/Resources/Private/Language/locallang.xlf',
-        'parent' => 'web',
+        'parent' => 'system',
         'extensionName' => 'RteCkeditorPack',
         'inheritNavigationComponentFromMainModule' => false,
         'controllerActions' => [

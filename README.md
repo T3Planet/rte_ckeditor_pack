@@ -62,6 +62,39 @@ It includes these features:
 | v1.x                  | 12.4.25 - 13.4.20   | 47.1.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |
 
 
+## Testing
+
+This extension includes unit and functional tests. To run the tests, use the following composer commands:
+
+### Prerequisites
+
+1. Install dependencies:
+   ```bash
+   composer install
+   ```
+2. Ensure Docker or Podman is available (required by `runTests.sh`).
+
+### Running Tests (Recommended)
+
+```bash
+# Run unit tests
+Build/Scripts/runTests.sh -t 13 -p 8.4 -s unit
+
+# Run functional tests (sqlite)
+Build/Scripts/runTests.sh -t 13 -p 8.4 -d sqlite -s functional
+
+# Run all via composer scripts
+composer test
+composer test:functional
+composer test:all
+```
+
+### Test Structure
+
+- **Unit Tests:** `Tests/Unit/` - Fast, isolated tests with mocked dependencies
+- **Functional Tests:** `Tests/Functional/` - Integration tests with real database and TYPO3 environment
+- **Fixtures:** `Tests/Functional/*/Fixtures/` - CSV data fixtures for functional tests
+
 ## Notes
 
 - Credit: The image support in this extension is inspired by a fork of [rte_ckeditor_image](https://extensions.typo3.org/extension/rte_ckeditor_image). We built on the basic image upload functionality and combined it with enhanced capabilities from CKEditor's free packages, packaged as a no-code, editor-friendly plug-and-play solution. For more advanced, developer-oriented features, we recommend exploring EXT:rte_ckeditor_image directly.
