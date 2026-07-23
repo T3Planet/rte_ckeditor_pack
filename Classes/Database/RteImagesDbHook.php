@@ -494,10 +494,13 @@ class RteImagesDbHook
     public function processDatamap_afterDatabaseOperations($status, $table, $id, &$fieldArray, DataHandler $pObj)
     {
         if ($status === 'new') {
-            $oldString = (string)key($pObj->substNEWwithIDs);
-            $newString = (string)$pObj->substNEWwithIDs[key($pObj->substNEWwithIDs)];
-            if (trim($oldString)  && trim($newString)) {
-                $this->revisionHistoryRepository->replaceSubstNEWwithIDs($oldString, $newString);
+            $oldString = key($pObj->substNEWwithIDs);
+            if ($oldString !== null && isset($pObj->substNEWwithIDs[$oldString])) {
+                $newString = (string)$pObj->substNEWwithIDs[$oldString];
+                $oldString = (string)$oldString;
+                if (trim($oldString) !== '' && trim($newString) !== '') {
+                    $this->revisionHistoryRepository->replaceSubstNEWwithIDs($oldString, $newString);
+                }
             }
         }
     }
