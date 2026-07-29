@@ -33,7 +33,9 @@ The Load from YAML feature retrieves the default RTE configuration directly from
 2. Reset
 -----------------
 
-The Reset feature restores all modified configuration settings to their default state. This provides a clean baseline and helps prevent issues caused by incorrect or experimental changes.
+The Reset feature clears database overrides for a preset (toolbar items and stored
+feature configuration rows). After a reset, the editor falls back to the YAML
+preset definition. Use this when experimental UI changes should be discarded.
 
 .. rst-class:: horizbuttons-attention-m
 
@@ -42,11 +44,84 @@ The Reset feature restores all modified configuration settings to their default 
 3. Sync
 -----------------
 
-The Sync feature aligns configuration values between the default TYPO3 RTE YAML file and the extension’s custom YAML file. It ensures both remain consistent, reduces conflicts, and keeps behavior uniform across environments.
+The Sync feature performs an **additive** merge:
+
+- Keeps the current database toolbar order
+- Appends toolbar items that exist in YAML but are missing in the database
+- Merges feature field configuration from YAML into existing database feature rows
+
+Sync does **not** replace the database configuration with YAML verbatim. If YAML
+must be the single source of truth, use **strict** mode via the CLI (see below).
 
 .. rst-class:: horizbuttons-attention-m
 
    - `View Interactive Guide <https://app.supademo.com/demo/cmirg3t7q15sll821k3ahlmmx?step=2>`_
+
+CLI: Sync presets from YAML
+---------------------------
+
+Preset sync logic is available as a reusable service and console command so you
+can update ``tx_rteckeditorpack_domain_model_preset`` without using the backend
+module.
+
+.. code-block:: bash
+
+   # Additive sync (same behaviour as the backend Sync button) for all DB presets
+   vendor/bin/typo3 rteckeditorpack:presets:sync
+
+   # Sync one preset by key
+   vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset
+
+   # Preserve DB-only tools and insert missing YAML tools near their YAML position
+   vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset --mode=ordered
+
+   # YAML is authoritative (toolbar + feature configs written from YAML)
+   vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset --strict
+
+   # Clear DB overrides (same idea as the backend Reset button)
+   vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset --mode=reset
+
+======== ================================ ===============================================
+Mode     Option                           Behaviour
+======== ================================ ===============================================
+additive ``--mode=additive`` (default)    Keep DB order; append missing YAML items
+ordered  ``--mode=ordered``               Keep DB-only items; position new YAML items
+strict   ``--strict`` / ``--mode=strict`` YAML wins verbatim in the database
+reset    ``--mode=reset``                 Clear DB toolbar + feature rows for the preset
+======== ================================ ===============================================
+
+Strict versus Reset
+^^^^^^^^^^^^^^^^^^^^
+
+Although both modes can make the editor behave according to YAML, they update
+the database differently:
+
+**Strict**
+   Copies the YAML toolbar and feature configuration into the existing database
+   rows. The database remains populated and matches YAML immediately. Use this
+   whenever YAML must be the authoritative configuration.
+
+**Reset**
+   Clears the toolbar override and removes the stored feature rows. It does
+   **not** copy YAML into the database. The editor falls back to the registered
+   YAML preset when it loads. Use this to discard backend customizations and
+   return to default behavior.
+
+For example, when YAML contains ``bold,italic``:
+
+.. code-block:: text
+
+   strict  -> DB toolbar: "bold,italic"
+   reset   -> DB toolbar: ""
+
+Use **strict** to write YAML into the database. Use **reset**
+for an administrator's "undo my backend changes" action.
+
+The command flushes the ``rte_ckeditor_config`` cache after a successful sync.
+Custom database-only presets are always excluded from sync and reset because
+they have no YAML source. When syncing all presets, other database rows without
+a currently registered YAML source are also reported as skipped. Skipped rows
+do not cause the command to fail.
 
 4. Import / Export Presets
 -------------------------

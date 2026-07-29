@@ -11,6 +11,8 @@ services:
       - '../Classes/Configuration/Richtext.php'
       - '../Classes/Configuration/RichtextV14.php'
       - '../Classes/EventListener/ProcessingConfigurationModifier.php'
+      - '../Classes/Service/SyncMode.php'
+      - '../Classes/Service/SyncResult.php'
 
   T3Planet\RteCkeditorPack\Controller\CommentsController:
     public: true
@@ -44,6 +46,9 @@ services:
     public: true
 
   T3Planet\RteCkeditorPack\Service\ImportExportService:
+    public: true
+
+  T3Planet\RteCkeditorPack\Service\PresetSyncService:
     public: true
 
   T3Planet\RteCkeditorPack\Service\TokenUrlValidator:
