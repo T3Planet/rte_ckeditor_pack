@@ -330,6 +330,9 @@
             <trans-unit id="ckeditorKit.operation.success">
                 <source>Success</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.operation.warning">
+                <source>Warning</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.operation.error">
                 <source>Error Occured</source>
             </trans-unit>
@@ -1134,6 +1137,9 @@ The authorization credentials are required for Real-time collaboration or Import
             </trans-unit>
             <trans-unit id="ckeditorKit.preset.reset.success.message">
                 <source>Reset completed successfully</source>
+            </trans-unit>
+            <trans-unit id="ckeditorKit.preset.reset.no_features.message">
+                <source>Preset reset; no active feature overrides were present.</source>
             </trans-unit>
              <trans-unit id="ckeditorKit.preset.reset.error.message">
                 <source>Reset failed. Please try again</source>

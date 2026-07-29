@@ -105,7 +105,8 @@ the database differently:
    Clears the toolbar override and removes the stored feature rows. It does
    **not** copy YAML into the database. The editor falls back to the registered
    YAML preset when it loads. Use this to discard backend customizations and
-   return to default behavior.
+   return to default behavior. Reset is idempotent: if no active overrides
+   remain, the command reports a warning and still exits successfully.
 
 For example, when YAML contains ``bold,italic``:
 

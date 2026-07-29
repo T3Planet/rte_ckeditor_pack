@@ -192,6 +192,25 @@ final class PresetSyncServiceTest extends BaseTestCase
     }
 
     #[Test]
+    public function resetWithoutFeatureOverridesSucceedsWithWarning(): void
+    {
+        $preset = $this->createPreset(4, 'already-reset', '');
+        $this->presetRepository->method('findByUid')->with(4)->willReturn($preset);
+        $this->featureRepository->expects(self::once())
+            ->method('removeByPresetId')
+            ->with(4)
+            ->willReturn(false);
+        $this->cache->expects(self::once())->method('flush');
+
+        $result = $this->subject->syncPreset(4, SyncMode::Reset);
+
+        self::assertTrue($result->success);
+        self::assertFalse($result->skipped);
+        self::assertSame('Preset reset; no active feature overrides were present', $result->message);
+        self::assertSame(1, $result->notifications[0]['severity']);
+    }
+
+    #[Test]
     public function customDatabasePresetIsSkippedForReset(): void
     {
         $preset = $this->createPreset(8, 'nst3ai', 'custom,toolbar');

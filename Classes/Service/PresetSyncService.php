@@ -178,15 +178,15 @@ class PresetSyncService
         $this->cache->flush();
 
         if (!$removed) {
-            return SyncResult::failure(
-                'No features to reset for preset: ' . $presetKey,
-                SyncMode::Reset,
+            return SyncResult::success(
                 $presetKey,
                 $presetUid,
+                SyncMode::Reset,
+                'Preset reset; no active feature overrides were present',
                 [[
-                    'title' => 'ckeditorKit.operation.error',
-                    'message' => 'ckeditorKit.preset.reset.error.message',
-                    'severity' => 2,
+                    'title' => 'ckeditorKit.operation.warning',
+                    'message' => 'ckeditorKit.preset.reset.no_features.message',
+                    'severity' => 1,
                 ]]
             );
         }

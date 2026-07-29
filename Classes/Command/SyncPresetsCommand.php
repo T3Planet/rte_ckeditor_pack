@@ -80,6 +80,15 @@ final class SyncPresetsCommand extends Command
                 return Command::SUCCESS;
             }
 
+            if ($result->success && $this->hasWarning($result->notifications)) {
+                $io->warning(sprintf(
+                    'Preset "%s": %s',
+                    $result->presetKey !== '' ? $result->presetKey : (string)$presetOption,
+                    $result->message
+                ));
+                return Command::SUCCESS;
+            }
+
             if ($result->success) {
                 $io->success(sprintf(
                     'Synced preset "%s" (uid=%s): %s',
@@ -103,6 +112,8 @@ final class SyncPresetsCommand extends Command
             $label = $result->presetKey !== '' ? $result->presetKey : (string)($result->presetUid ?? '?');
             if ($result->skipped) {
                 $io->writeln(sprintf('<comment>–</comment> %s — %s', $label, $result->message));
+            } elseif ($result->success && $this->hasWarning($result->notifications)) {
+                $io->writeln(sprintf('<comment>!</comment> %s — %s', $label, $result->message));
             } elseif ($result->success) {
                 $io->writeln(sprintf('<info>✓</info> %s — %s', $label, $result->message));
             } else {
@@ -131,5 +142,18 @@ final class SyncPresetsCommand extends Command
             $batch['failed']
         ));
         return Command::FAILURE;
+    }
+
+    /**
+     * @param list<array{title: string, message?: string, severity: int}> $notifications
+     */
+    private function hasWarning(array $notifications): bool
+    {
+        foreach ($notifications as $notification) {
+            if (($notification['severity'] ?? 0) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
