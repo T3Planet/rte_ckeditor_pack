@@ -76,10 +76,14 @@ module.
    vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset --mode=ordered
 
    # YAML is authoritative (toolbar + feature configs written from YAML)
+   # Prompts for confirmation; use --force to skip in scripts
    vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset --strict
 
    # Clear DB overrides (same idea as the backend Reset button)
    vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset --mode=reset
+
+   # Non-interactive / CI: skip the confirmation prompt
+   vendor/bin/typo3 rteckeditorpack:presets:sync --preset=editing-preset --strict --force
 
 ======== ================================ ===============================================
 Mode     Option                           Behaviour
@@ -89,6 +93,10 @@ ordered  ``--mode=ordered``               Keep DB-only items; position new YAML 
 strict   ``--strict`` / ``--mode=strict`` YAML wins verbatim in the database
 reset    ``--mode=reset``                 Clear DB toolbar + feature rows for the preset
 ======== ================================ ===============================================
+
+**Confirmation:** ``strict`` and ``reset`` show a short warning and ask
+*Are you sure you want to proceed?* before changing data. Use ``--force``
+(or ``-f``) to skip the prompt in scripts / CI.
 
 Strict versus Reset
 ^^^^^^^^^^^^^^^^^^^^

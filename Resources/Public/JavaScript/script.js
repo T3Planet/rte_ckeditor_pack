@@ -284,7 +284,7 @@ document.addEventListener('click', (event) => {
             }
             Modal.confirm(
                 'Reset Configuration',
-                'Are you sure you want to reset the configuration of selected preset?',
+                'Are you sure you want to proceed? This clears database toolbar overrides and feature settings for the selected preset. The editor will fall back to the YAML defaults.',
                 Severity.warning,
                 [
                     {

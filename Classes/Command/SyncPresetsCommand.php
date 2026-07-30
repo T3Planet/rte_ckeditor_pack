@@ -46,6 +46,12 @@ final class SyncPresetsCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Shortcut for --mode=strict (YAML is authoritative)'
+            )
+            ->addOption(
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Skip confirmation prompt for destructive modes (strict, reset)'
             );
     }
 
@@ -64,6 +70,10 @@ final class SyncPresetsCommand extends Command
 
         $presetOption = $input->getOption('preset');
         $io->title(sprintf('CKEditor Pack preset sync (%s)', $mode->value));
+
+        if (!$this->confirmDestructiveMode($io, $input, $mode, $presetOption)) {
+            return Command::SUCCESS;
+        }
 
         if ($presetOption !== null && $presetOption !== '') {
             $result = $this->presetSyncService->syncPreset(
@@ -159,6 +169,51 @@ final class SyncPresetsCommand extends Command
             $batch['failed']
         ));
         return Command::FAILURE;
+    }
+
+    /**
+     * Ask for confirmation before strict (overwrites DB from YAML) or reset (clears DB overrides).
+     */
+    private function confirmDestructiveMode(
+        SymfonyStyle $io,
+        InputInterface $input,
+        SyncMode $mode,
+        mixed $presetOption
+    ): bool {
+        if ($mode !== SyncMode::Strict && $mode !== SyncMode::Reset) {
+            return true;
+        }
+
+        if ($input->getOption('force')) {
+            return true;
+        }
+
+        $scope = ($presetOption !== null && $presetOption !== '')
+            ? sprintf('preset "%s"', (string)$presetOption)
+            : 'all database presets';
+
+        if ($mode === SyncMode::Strict) {
+            $io->warning(sprintf(
+                'Strict mode overwrites database toolbar and feature configuration from YAML for %s. Custom DB-only changes may be lost.',
+                $scope
+            ));
+        } else {
+            $io->warning(sprintf(
+                'Reset clears database toolbar overrides and stored feature rows for %s. The editor will fall back to YAML until you configure it again.',
+                $scope
+            ));
+        }
+
+        if ($input->isInteractive()) {
+            if (!$io->confirm('Are you sure you want to proceed?', false)) {
+                $io->note('Operation cancelled.');
+                return false;
+            }
+            return true;
+        }
+
+        $io->note('Non-interactive mode: re-run with --force to proceed without confirmation.');
+        return false;
     }
 
     /**
