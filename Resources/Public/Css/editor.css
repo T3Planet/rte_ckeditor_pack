@@ -600,6 +600,15 @@
   overflow: hidden;
   background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
   box-sizing: border-box;
+  transition: flex-basis 0.2s ease, width 0.2s ease, max-width 0.2s ease, min-width 0.2s ease;
+}
+
+/* AI Maximize (sidebar): expand Chat column to ~50% of the editor row */
+.form-wizards-wrap .ck-ai-sidebar-container:has(.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs_maximized) {
+  flex: 0 0 50%;
+  width: 50%;
+  max-width: 50%;
+  min-width: 0;
 }
 
 /* Toggle AI off: collapse the bordered sidebar shell (not only the tabs) */
@@ -679,11 +688,6 @@
   border-radius: var(--ck-border-radius, 2px);
   box-shadow: var(--ck-drop-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
   box-sizing: border-box;
-}
-
-/* JS-anchored Quick Actions panel (AiQuickActionsPositioning). */
-.ck-ai-quick-actions-dropdown > .ck-dropdown__panel.rte-ckeditor-ai-qa-panel--anchored {
-  margin: 0 !important;
 }
 
 .ck-ai-quick-actions-dropdown .ck.ck-button:not(.ck-dropdown__button),

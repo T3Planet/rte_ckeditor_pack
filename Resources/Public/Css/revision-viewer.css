@@ -318,11 +318,6 @@ ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown.ck-ai-quick-actions-d
   box-shadow: var(--ck-drop-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
 }
 
-ve-editable-rich-text .ck-ai-quick-actions-dropdown > .ck-dropdown__panel.rte-ckeditor-ai-qa-panel--anchored,
-.ck-ai-quick-actions-dropdown > .ck-dropdown__panel.rte-ckeditor-ai-qa-panel--anchored {
-  margin: 0 !important;
-}
-
 ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown > .ck-dropdown__panel > .ck-ai-quick-actions {
   max-width: var(--ck-ai-quick-actions-dropdown-max-width, 309px);
   box-sizing: border-box;
@@ -345,6 +340,15 @@ ve-editable-rich-text.rte-ckeditor-ai-sidebar > .ck-ai-sidebar-container {
   background: var(--ck-color-base-background, var(--token-color-neutral-0, #fff));
   border: 1px solid var(--ck-color-base-border, #ccced1);
   box-sizing: border-box;
+  transition: flex-basis 0.2s ease, width 0.2s ease, max-width 0.2s ease, min-width 0.2s ease;
+}
+
+/* AI Maximize (sidebar): expand Chat column to ~50% of the editor row */
+ve-editable-rich-text.rte-ckeditor-ai-sidebar > .ck-ai-sidebar-container:has(.ck.ck-tabs.ck-ai-tabs.ck-ai-tabs_maximized) {
+  flex: 0 0 50%;
+  width: 50%;
+  max-width: 50%;
+  min-width: 0;
 }
 
 /* Toggle AI off: remove the empty bordered sidebar column */
