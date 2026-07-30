@@ -78,6 +78,10 @@ class Modules
                             'exports' => 'AISidebar'
                         ],
                         [
+                            'library' => '@t3planet/RteCkeditorPack/ai-quick-actions-positioning',
+                            'exports' => 'AiQuickActionsPositioning'
+                        ],
+                        [
                             'library' => '@ckeditor/ckeditor5-cloud-services',
                             'exports' => 'CloudServices'
                         ],

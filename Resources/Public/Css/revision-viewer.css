@@ -59,7 +59,10 @@ typo3-rte-ckeditor-ckeditor5 .revision_viewer_container .ck.ck-editor__top,
   width: 295px;
   min-width: 295px;
   position: relative;
-  overflow: hidden;
+  /* Do not clip the revision item actions dropdown (CK DropdownView is
+     position:absolute inside the timeline). Scrolling belongs on the
+     official .ck-revision-history-sidebar__timeline element. */
+  overflow: visible;
   margin-top: 0;
   align-self: stretch;
   background: var(--ck-color-toolbar-background, var(--token-color-neutral-0, #fff));
@@ -72,6 +75,45 @@ typo3-rte-ckeditor-ckeditor5 .revision_viewer_container .ck.ck-editor__top,
   flex-direction: column;
   height: 100%;
   min-height: 100%;
+  overflow: visible;
+}
+
+/* Keep the revision list scrollable without clipping open action menus */
+.revision_viewer_sidebar .ck.ck-revision-history-sidebar__timeline,
+.revision_viewer_container .sidebar-container .ck.ck-revision-history-sidebar__timeline {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.revision_viewer_sidebar .ck.ck-revision-history-sidebar__timeline:has(.ck-revision-history-sidebar__actions_dropdown_open),
+.revision_viewer_sidebar .ck.ck-revision-history-sidebar__timeline:has(.ck-dropdown__panel-visible),
+.revision_viewer_container .sidebar-container .ck.ck-revision-history-sidebar__timeline:has(.ck-revision-history-sidebar__actions_dropdown_open),
+.revision_viewer_container .sidebar-container .ck.ck-revision-history-sidebar__timeline:has(.ck-dropdown__panel-visible) {
+  overflow: visible;
+}
+
+/* Stack the open actions dropdown above neighboring revision cards */
+.revision_viewer_sidebar .ck-revision-history-sidebar__revision.ck-revision-history-sidebar__actions_dropdown_open,
+.revision_viewer_container .ck-revision-history-sidebar__revision.ck-revision-history-sidebar__actions_dropdown_open {
+  position: relative;
+  z-index: 10050;
+}
+
+.revision_viewer_sidebar .ck-revision-history-sidebar__revision__actions .ck-dropdown,
+.revision_viewer_container .ck-revision-history-sidebar__revision__actions .ck-dropdown {
+  position: relative;
+  z-index: 10050;
+}
+
+.revision_viewer_sidebar .ck-revision-history-sidebar__revision__actions .ck-dropdown__panel,
+.revision_viewer_container .ck-revision-history-sidebar__revision__actions .ck-dropdown__panel {
+  z-index: 10050;
+  overflow: visible;
+  background: var(--ck-color-dropdown-panel-background, var(--ck-color-base-background, #fff));
+  border: 1px solid var(--ck-color-dropdown-panel-border, var(--ck-color-base-border, #ccced1));
+  box-shadow: var(--ck-drop-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
 }
 
 /* Visual Editor: document outline sidebar */
@@ -276,9 +318,13 @@ ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown.ck-ai-quick-actions-d
   box-shadow: var(--ck-drop-shadow, 0 2px 8px rgba(0, 0, 0, 0.15));
 }
 
+ve-editable-rich-text .ck-ai-quick-actions-dropdown > .ck-dropdown__panel.rte-ckeditor-ai-qa-panel--anchored,
+.ck-ai-quick-actions-dropdown > .ck-dropdown__panel.rte-ckeditor-ai-qa-panel--anchored {
+  margin: 0 !important;
+}
+
 ve-editable-rich-text.rte-ckeditor-ai-sidebar .ck-dropdown > .ck-dropdown__panel > .ck-ai-quick-actions {
   max-width: var(--ck-ai-quick-actions-dropdown-max-width, 309px);
-  width: var(--ck-ai-quick-actions-dropdown-max-width, 309px);
   box-sizing: border-box;
 }
 
@@ -377,4 +423,154 @@ ve-editable-rich-text.rte-ckeditor-ai-overlay.rte-ckeditor-ai-overlay-active {
   outline: 2px solid #743ccd;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+.ck.ck-toolbar .ck.ck-button:not(.ck-disabled):hover,
+.ck.ck-toolbar a.ck.ck-button:not(.ck-disabled):hover,
+.ck.ck-button:not(.ck-disabled):hover,
+a.ck.ck-button:not(.ck-disabled):hover {
+  color: var(--ck-color-text, var(--typo3-rte-base-text, inherit));
+}
+
+/*
+ * AI sidebar: CK AI ships light-only tokens while chat copy inherits --ck-color-text.
+ * In TYPO3 dark mode that yields light text on light panels. Retheme the full palette.
+ */
+.ck-ai-sidebar-container,
+.ck.ck-tabs.ck-ai-tabs {
+  --ck-color-base-background: light-dark(#fff, #2a2a2a);
+  --ck-color-base-border: light-dark(#ccced1, #555);
+  --ck-tabs-panels-container-background: light-dark(#fff, #2a2a2a);
+  --ck-color-tabs-buttons-container-background: light-dark(#f5f5f5, #1f1f1f);
+  --ck-color-tab-button-icon: light-dark(#707070, #c8c8c8);
+  --ck-color-tab-button-active-icon: light-dark(#743ccd, #b794f6);
+  --ck-color-tab-button-active-border: light-dark(#743ccd, #b794f6);
+  --ck-color-tab-button-active-background: light-dark(#e8e8e8, #3a3a3a);
+
+  --ck-ai-border-color-main: light-dark(#ccced1, #555);
+  --ck-ai-chat-color-icon: light-dark(#707070, #c8c8c8);
+  --ck-ai-chat-button-hover-color: light-dark(#333, #f2f2f2);
+  --ck-ai-chat-button-active-background-color: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-chat-button-active-color: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-chat-user-context-background: light-dark(#fafafa, #333);
+  --ck-ai-chat-feed-item-color-text: light-dark(#000, #f2f2f2);
+  --ck-ai-chat-feed-item-color-background: light-dark(#f5f5f5, #3a3a3a);
+  --ck-ai-chat-feed-item-color-background-secondary: light-dark(#f5f5f5, #3a3a3a);
+  --ck-ai-chat-feed-interaction-header-capabilities-color-text: light-dark(#707070, #b5b5b5);
+  --ck-ai-chat-feed-item-color-show-changes-toggle-hover-background: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-chat-feed-item-color-show-changes-toggle-on-background: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-chat-feed-item-color-show-changes-toggle-active-background: light-dark(#f2ebff, #3d2a5c);
+
+  --ck-ai-button-secondary-background-color: light-dark(#fff, #2a2a2a);
+  --ck-ai-button-secondary-color: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-button-secondary-hover-background-color: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-button-secondary-active-background-color: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-button-tertiary-color: light-dark(#707070, #c8c8c8);
+  --ck-ai-button-tertiary-hover-background-color: light-dark(#f0f0f0, #3a3a3a);
+  --ck-ai-button-tertiary-hover-color: light-dark(#707070, #c8c8c8);
+  --ck-ai-button-tertiary-active-background-color: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-button-tertiary-active-color: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-button-tertiary-hover-active-background-color: light-dark(#e8dbff, #4a3580);
+  --ck-ai-button-tertiary-hover-active-color: light-dark(#743ccd, #c4a8ff);
+
+  --ck-ai-disclaimer-background-color: light-dark(#f5f5f5, #333);
+  --ck-ai-disclaimer-border-color: light-dark(#ced0d4, #555);
+  --ck-ai-disclaimer-text-color: light-dark(#707070, #b5b5b5);
+  --ck-ai-form-content-background: light-dark(#f9f9f9, #333);
+  --ck-ai-notification-color-text: light-dark(#333, #f2f2f2);
+
+  --ck-ai-header-color-icon: light-dark(#707070, #c8c8c8);
+  --ck-form-header-small-icon-color: light-dark(#333, #ddd);
+
+  /* Review tab: titles use --ck-color-text which stays dark on dark panels. */
+  --ck-ai-review-check-list-item-title-color: light-dark(#333, #f2f2f2);
+  --ck-ai-review-check-list-item-description-color: light-dark(#707070, #b5b5b5);
+  --ck-ai-review-check-list-item-title-icon-color: light-dark(#707070, #c8c8c8);
+  --ck-ai-review-color-icon: light-dark(#707070, #c8c8c8);
+  /* Hover/active: light lavender + purple text in light; dark purple + white text in dark. */
+  --ck-ai-review-check-list-model-dropdown-hover-background-color: light-dark(#f2ebff, #582aa2);
+  --ck-ai-review-check-list-model-dropdown-active-color: light-dark(#743ccd, #fff);
+
+  color: light-dark(#333, #f2f2f2);
+  background: light-dark(#fff, #2a2a2a);
+}
+
+/* Portaled AI dropdowns (model list, etc.) — variables only, no shell paint. */
+.ck-body-wrapper {
+  --ck-ai-chat-color-icon: light-dark(#707070, #c8c8c8);
+  --ck-ai-button-secondary-hover-background-color: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-button-secondary-active-background-color: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-button-tertiary-hover-background-color: light-dark(#f0f0f0, #3a3a3a);
+  --ck-ai-button-tertiary-hover-color: light-dark(#707070, #c8c8c8);
+  --ck-ai-button-tertiary-active-background-color: light-dark(#f2ebff, #3d2a5c);
+  --ck-ai-button-tertiary-active-color: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-button-tertiary-hover-active-background-color: light-dark(#e8dbff, #4a3580);
+  --ck-ai-button-tertiary-hover-active-color: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-review-check-list-model-dropdown-hover-background-color: light-dark(#f2ebff, #582aa2);
+  --ck-ai-review-check-list-model-dropdown-active-color: light-dark(#743ccd, #fff);
+  --ck-ai-review-color-icon: light-dark(#707070, #c8c8c8);
+}
+
+.ck.ck-tabs.ck-ai-tabs .ck-tabs__panels-container,
+.ck.ck-tabs.ck-ai-tabs .ck-ai-chat,
+.ck.ck-tabs.ck-ai-tabs .ck-ai-chat-history,
+.ck.ck-tabs.ck-ai-tabs .ck-ai-chat__feed,
+.ck.ck-tabs.ck-ai-tabs .ck-ai-review {
+  color: inherit;
+  background-color: var(--ck-tabs-panels-container-background);
+}
+
+.ck.ck-form__header.ck-ai-header.ck-ai-header_chat,
+.ck.ck-form__header.ck-ai-header.ck-ai-header_chat .ck-form__header__label {
+  color: inherit;
+}
+
+/* CK defines feed text token but does not always apply it to message copy. */
+.ck.ck-ai-chat__feed__item,
+.ck.ck-ai-chat__feed__item.ck-ai-chat__feed__user-message p,
+.ck.ck-ai-chat__feed__item .ck-ai-chat__feed__ai-reply-container,
+.ck.ck-ai-chat-history .ck-ai-chat-history__item-title,
+.ck.ck-ai-chat-history .ck-ai-chat-history__empty-message {
+  color: var(--ck-ai-chat-feed-item-color-text, inherit);
+}
+
+.ck.ck-ai-chat-history .ck-ai-chat-history__item:hover {
+  color: var(--ck-ai-chat-button-hover-color, inherit);
+}
+
+/* Model selector hover: keep title readable on lavender / dark-purple hover fill. */
+.ck-ai-chat-controls__model-selection .ck-list > .ck-list__item > .ck-button:hover:not(.ck-disabled),
+.ck-body-wrapper .ck-ai-chat-controls__model-selection .ck-list > .ck-list__item > .ck-button:hover:not(.ck-disabled) {
+  color: light-dark(#333, #f2f2f2);
+}
+
+.ck-ai-chat-controls__model-selection .ck-list > .ck-list__item > .ck-button:hover:not(.ck-disabled)
+  .ck-ai-chat-controls__model-selection__item-description > span,
+.ck-ai-chat-controls__model-selection .ck-list > .ck-list__item > .ck-button:hover:not(.ck-disabled)
+  .ck-ai-chat-controls__model-selection__item-capabilities > span,
+.ck-body-wrapper .ck-ai-chat-controls__model-selection .ck-list > .ck-list__item > .ck-button:hover:not(.ck-disabled)
+  .ck-ai-chat-controls__model-selection__item-description > span,
+.ck-body-wrapper .ck-ai-chat-controls__model-selection .ck-list > .ck-list__item > .ck-button:hover:not(.ck-disabled)
+  .ck-ai-chat-controls__model-selection__item-capabilities > span {
+  color: light-dark(#555, #c8c8c8);
+}
+
+/* Review custom command: model-name uses --ck-color-base-text (stays dark on dark panels). */
+.ck.ck-ai-review .ck-ai_review__check-list-item-model-name {
+  color: light-dark(#333, #f2f2f2);
+}
+
+/* Hide duplicate Auto label when the model dropdown is shown. */
+.ck.ck-ai-review .ck-ai_review__check-list-item-custom-actions-footer:has(.ck-dropdown:not(.ck-hidden))
+  .ck-ai_review__check-list-item-model-name {
+  display: none;
+}
+
+/* Default Auto button: readable brand purple on dark panels (CK only styles hover/active). */
+.ck.ck-ai-review .ck-ai_review__check-list-item-model-dropdown > .ck.ck-button.ck-dropdown__button {
+  color: light-dark(#743ccd, #c4a8ff);
+}
+
+.ck.ck-ai-review .ck-ai_review__check-list-item-model-dropdown > .ck.ck-button.ck-dropdown__button .ck-dropdown__arrow {
+  color: inherit;
 }

@@ -91,6 +91,7 @@ return [
         '@t3planet/RteCkeditorPack/spell-check' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/SpellCheck/spell-check.js',
         '@t3planet/RteCkeditorPack/typo3-image' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/Typo3Image/typo3-image.js',
         '@t3planet/RteCkeditorPack/ai-sidebar' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ai-sidebar.js',
+        '@t3planet/RteCkeditorPack/ai-quick-actions-positioning' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ai-quick-actions-positioning.js',
         '@t3planet/RteCkeditorPack/ck-shared-loader.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ck-shared-loader.js',
         '@t3planet/RteCkeditorPack/ck-presence-placement.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ck-presence-placement.js',
         '@ckeditor/ckeditor5-ai' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-ai.js',
