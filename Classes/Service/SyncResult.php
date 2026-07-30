@@ -20,6 +20,7 @@ final class SyncResult
         public readonly array $notifications = [],
         public readonly SyncMode $mode = SyncMode::Additive,
         public readonly bool $skipped = false,
+        public readonly bool $changed = true,
     ) {}
 
     /**
@@ -45,7 +46,20 @@ final class SyncResult
         ?int $presetUid = null,
         array $notifications = []
     ): self {
-        return new self(false, $presetKey, $presetUid, $message, $notifications, $mode);
+        return new self(false, $presetKey, $presetUid, $message, $notifications, $mode, false, false);
+    }
+
+    /**
+     * @param list<array{title: string, message?: string, severity: int}> $notifications
+     */
+    public static function unchanged(
+        string $presetKey,
+        int $presetUid,
+        SyncMode $mode,
+        string $message = 'Nothing to sync',
+        array $notifications = []
+    ): self {
+        return new self(true, $presetKey, $presetUid, $message, $notifications, $mode, false, false);
     }
 
     public static function skipped(
@@ -55,6 +69,6 @@ final class SyncResult
         string $message,
         array $notifications = []
     ): self {
-        return new self(true, $presetKey, $presetUid, $message, $notifications, $mode, true);
+        return new self(true, $presetKey, $presetUid, $message, $notifications, $mode, true, false);
     }
 }

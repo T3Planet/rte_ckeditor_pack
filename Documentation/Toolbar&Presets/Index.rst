@@ -106,7 +106,7 @@ the database differently:
    **not** copy YAML into the database. The editor falls back to the registered
    YAML preset when it loads. Use this to discard backend customizations and
    return to default behavior. Reset is idempotent: if no active overrides
-   remain, the command reports a warning and still exits successfully.
+   remain, the command still reports a successful reset.
 
 For example, when YAML contains ``bold,italic``:
 
@@ -122,7 +122,10 @@ The command flushes the ``rte_ckeditor_config`` cache after a successful sync.
 Custom database-only presets are always excluded from sync and reset because
 they have no YAML source. When syncing all presets, other database rows without
 a currently registered YAML source are also reported as skipped. Skipped rows
-do not cause the command to fail.
+do not cause the command to fail. Sync compares the resulting toolbar and
+feature configuration with the stored database values. It reports
+``Nothing to sync`` when no values changed and reports a successful sync only
+when it updated the preset.
 
 4. Import / Export Presets
 -------------------------

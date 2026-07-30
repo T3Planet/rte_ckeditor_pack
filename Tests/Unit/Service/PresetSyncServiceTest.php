@@ -137,6 +137,39 @@ final class PresetSyncServiceTest extends BaseTestCase
         self::assertTrue($result->success);
         self::assertSame('bold,customButton,horizontalLine,italic', $preset->getToolbarItems());
         self::assertSame(SyncMode::Ordered, $result->mode);
+        self::assertSame('Preset synced (ordered)', $result->message);
+        self::assertSame(0, $result->notifications[0]['severity']);
+    }
+
+    #[Test]
+    public function orderedSyncReportsNothingToSyncWhenConfigurationIsUnchanged(): void
+    {
+        $preset = $this->createPreset(6, 'ordered', 'bold,sourceEditing');
+        $this->presetRepository->method('findByUid')->with(6)->willReturn($preset);
+        $this->yamlLoader->method('hasRegisteredPreset')->with('ordered')->willReturn(true);
+        $this->yamlLoader->method('loadYamlConfiguration')->with('ordered')->willReturn([
+            'editor' => [
+                'config' => [
+                    'toolbar' => ['items' => ['bold', 'sourceEditing']],
+                ],
+            ],
+        ]);
+
+        $this->mergeUtility->expects(self::once())
+            ->method('syncToolbarOrdered')
+            ->with(['bold', 'sourceEditing'], 'bold,sourceEditing')
+            ->willReturn('bold,sourceEditing');
+
+        $this->presetRepository->expects(self::never())->method('update');
+        $this->featureRepository->method('findByPresetUid')->with(6)->willReturn([]);
+        $this->persistenceManager->expects(self::never())->method('persistAll');
+        $this->cache->expects(self::never())->method('flush');
+
+        $result = $this->subject->syncPreset(6, SyncMode::Ordered);
+
+        self::assertTrue($result->success);
+        self::assertFalse($result->changed);
+        self::assertSame('Nothing to sync', $result->message);
     }
 
     #[Test]
@@ -192,7 +225,7 @@ final class PresetSyncServiceTest extends BaseTestCase
     }
 
     #[Test]
-    public function resetWithoutFeatureOverridesSucceedsWithWarning(): void
+    public function resetWithoutFeatureOverridesSucceeds(): void
     {
         $preset = $this->createPreset(4, 'already-reset', '');
         $this->presetRepository->method('findByUid')->with(4)->willReturn($preset);
@@ -206,8 +239,8 @@ final class PresetSyncServiceTest extends BaseTestCase
 
         self::assertTrue($result->success);
         self::assertFalse($result->skipped);
-        self::assertSame('Preset reset; no active feature overrides were present', $result->message);
-        self::assertSame(1, $result->notifications[0]['severity']);
+        self::assertSame('Preset reset successfully', $result->message);
+        self::assertSame(0, $result->notifications[0]['severity']);
     }
 
     #[Test]
@@ -261,6 +294,7 @@ final class PresetSyncServiceTest extends BaseTestCase
 
         self::assertTrue($batch['success']);
         self::assertSame(2, $batch['synced']);
+        self::assertSame(0, $batch['unchanged']);
         self::assertSame(0, $batch['skipped']);
         self::assertSame(0, $batch['failed']);
         self::assertCount(2, $batch['results']);
@@ -294,6 +328,7 @@ final class PresetSyncServiceTest extends BaseTestCase
 
         self::assertTrue($batch['success']);
         self::assertSame(1, $batch['synced']);
+        self::assertSame(0, $batch['unchanged']);
         self::assertSame(1, $batch['skipped']);
         self::assertSame(0, $batch['failed']);
         self::assertTrue($batch['results'][1]->skipped);
@@ -326,6 +361,7 @@ final class PresetSyncServiceTest extends BaseTestCase
 
         self::assertTrue($batch['success']);
         self::assertSame(1, $batch['synced']);
+        self::assertSame(0, $batch['unchanged']);
         self::assertSame(1, $batch['skipped']);
         self::assertTrue($batch['results'][1]->skipped);
         self::assertSame('nst3ai', $batch['results'][1]->presetKey);

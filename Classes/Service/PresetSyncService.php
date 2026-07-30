@@ -95,12 +95,13 @@ class PresetSyncService
      *
      * Custom DB-only presets and presets without a registered YAML source are skipped.
      *
-     * @return array{success: bool, synced: int, skipped: int, failed: int, results: list<SyncResult>}
+     * @return array{success: bool, synced: int, unchanged: int, skipped: int, failed: int, results: list<SyncResult>}
      */
     public function syncAll(SyncMode $mode = SyncMode::Additive): array
     {
         $results = [];
         $synced = 0;
+        $unchanged = 0;
         $skipped = 0;
         $failed = 0;
 
@@ -113,6 +114,8 @@ class PresetSyncService
             $results[] = $result;
             if ($result->skipped) {
                 $skipped++;
+            } elseif ($result->success && !$result->changed) {
+                $unchanged++;
             } elseif ($result->success) {
                 $synced++;
             } else {
@@ -123,6 +126,7 @@ class PresetSyncService
         return [
             'success' => $failed === 0,
             'synced' => $synced,
+            'unchanged' => $unchanged,
             'skipped' => $skipped,
             'failed' => $failed,
             'results' => $results,
@@ -172,24 +176,10 @@ class PresetSyncService
         $preset->setToolbarItems('');
         $this->presetRepository->update($preset);
 
-        $removed = $this->featureRepository->removeByPresetId($presetUid);
+        $this->featureRepository->removeByPresetId($presetUid);
         // removeByPresetId already persists when features exist; always persist toolbar clear.
         $this->persistenceManager->persistAll();
         $this->cache->flush();
-
-        if (!$removed) {
-            return SyncResult::success(
-                $presetKey,
-                $presetUid,
-                SyncMode::Reset,
-                'Preset reset; no active feature overrides were present',
-                [[
-                    'title' => 'ckeditorKit.operation.warning',
-                    'message' => 'ckeditorKit.preset.reset.no_features.message',
-                    'severity' => 1,
-                ]]
-            );
-        }
 
         return SyncResult::success(
             $presetKey,
@@ -229,31 +219,38 @@ class PresetSyncService
             ),
             default => $this->mergeUtility->syncToolBar($yamlToolbarItems, $preset->getToolbarItems()),
         };
-        $preset->setToolbarItems($toolbarString);
-        $this->presetRepository->update($preset);
-
-        $features = $this->featureRepository->findByPresetUid($presetUid);
-        if (empty($features)) {
-            $this->persistenceManager->persistAll();
-            $this->cache->flush();
-
-            return SyncResult::success(
-                $presetKey,
-                $presetUid,
-                $mode,
-                'Toolbar synced; no feature rows to update',
-                [[
-                    'title' => 'ckeditorKit.preset.sync.error.no_feature',
-                    'severity' => 3,
-                ]]
-            );
+        $changed = $toolbarString !== $preset->getToolbarItems();
+        if ($changed) {
+            $preset->setToolbarItems($toolbarString);
+            $this->presetRepository->update($preset);
         }
 
+        $successMessage = match ($mode) {
+            SyncMode::Strict => 'Preset applied from YAML (strict)',
+            SyncMode::Ordered => 'Preset synced (ordered)',
+            default => 'Preset synced (additive)',
+        };
+
+        $features = $this->featureRepository->findByPresetUid($presetUid);
         foreach ($features as $feature) {
             if (!$feature instanceof Feature) {
                 continue;
             }
-            $this->syncFeature($feature, $yamlConfiguration, $mode, $notifications);
+            $changed = $this->syncFeature($feature, $yamlConfiguration, $mode, $notifications) || $changed;
+        }
+
+        if (!$changed) {
+            return SyncResult::unchanged(
+                $presetKey,
+                $presetUid,
+                $mode,
+                'Nothing to sync',
+                [[
+                    'title' => 'ckeditorKit.operation.success',
+                    'message' => 'ckeditorKit.preset.sync.nothing.message',
+                    'severity' => 3,
+                ]]
+            );
         }
 
         $this->persistenceManager->persistAll();
@@ -269,11 +266,7 @@ class PresetSyncService
             $presetKey,
             $presetUid,
             $mode,
-            match ($mode) {
-                SyncMode::Strict => 'Preset applied from YAML (strict)',
-                SyncMode::Ordered => 'Preset synced (ordered; DB-only items preserved)',
-                default => 'Preset synced (additive)',
-            },
+            $successMessage,
             $notifications
         );
     }
@@ -287,14 +280,14 @@ class PresetSyncService
         array $yamlConfiguration,
         SyncMode $mode,
         array &$notifications
-    ): void {
+    ): bool {
         $configKey = $feature->getConfigKey();
         if ($configKey === 'Mention') {
             $notifications[] = [
                 'title' => 'ckeditorKit.preset.sync.mention',
                 'severity' => 3,
             ];
-            return;
+            return false;
         }
 
         $moduleConfiguration = $feature->getFields() !== ''
@@ -302,7 +295,7 @@ class PresetSyncService
             : [];
 
         if ($mode !== SyncMode::Strict && empty($moduleConfiguration)) {
-            return;
+            return false;
         }
 
         $configKeyLower = strtolower($configKey);
@@ -323,7 +316,7 @@ class PresetSyncService
             }
         } else {
             if (!array_key_exists($configKeyLower, $yamlConfiguration)) {
-                return;
+                return false;
             }
             $yamlFeatureConfig = [$configKeyLower => $yamlConfiguration[$configKeyLower]];
             if ($mode === SyncMode::Strict) {
@@ -334,10 +327,15 @@ class PresetSyncService
         }
 
         if (empty($syncData)) {
-            return;
+            return false;
+        }
+
+        if ($syncData == $moduleConfiguration) {
+            return false;
         }
 
         $feature->setFields(json_encode($syncData));
         $this->featureRepository->update($feature);
+        return true;
     }
 }

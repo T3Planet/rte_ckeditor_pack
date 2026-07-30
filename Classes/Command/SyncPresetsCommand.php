@@ -80,6 +80,15 @@ final class SyncPresetsCommand extends Command
                 return Command::SUCCESS;
             }
 
+            if ($result->success && !$result->changed) {
+                $io->note(sprintf(
+                    'Preset "%s" (uid=%s): Nothing to sync',
+                    $result->presetKey !== '' ? $result->presetKey : (string)$presetOption,
+                    (string)($result->presetUid ?? '-')
+                ));
+                return Command::SUCCESS;
+            }
+
             if ($result->success && $this->hasWarning($result->notifications)) {
                 $io->warning(sprintf(
                     'Preset "%s": %s',
@@ -112,6 +121,8 @@ final class SyncPresetsCommand extends Command
             $label = $result->presetKey !== '' ? $result->presetKey : (string)($result->presetUid ?? '?');
             if ($result->skipped) {
                 $io->writeln(sprintf('<comment>–</comment> %s — %s', $label, $result->message));
+            } elseif ($result->success && !$result->changed) {
+                $io->writeln(sprintf('<comment>–</comment> %s — Nothing to sync', $label));
             } elseif ($result->success && $this->hasWarning($result->notifications)) {
                 $io->writeln(sprintf('<comment>!</comment> %s — %s', $label, $result->message));
             } elseif ($result->success) {
@@ -121,15 +132,21 @@ final class SyncPresetsCommand extends Command
             }
         }
 
-        if ($batch['synced'] === 0 && $batch['skipped'] === 0 && $batch['failed'] === 0) {
+        if (
+            $batch['synced'] === 0
+            && $batch['unchanged'] === 0
+            && $batch['skipped'] === 0
+            && $batch['failed'] === 0
+        ) {
             $io->warning('No presets found in the database.');
             return Command::SUCCESS;
         }
 
         if ($batch['success']) {
             $io->success(sprintf(
-                'Synced %d preset(s); skipped %d. Cache flushed.',
+                'Synced %d preset(s); nothing to sync for %d; skipped %d.',
                 $batch['synced'],
+                $batch['unchanged'],
                 $batch['skipped']
             ));
             return Command::SUCCESS;

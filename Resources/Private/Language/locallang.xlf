@@ -1132,20 +1132,17 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.preset.sync.success.message">
                 <source>Synchronization completed successfully</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.nothing.message">
+                <source>Nothing to sync</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.preset.sync.error.message">
                 <source>Synchronization failed. Please try again</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.preset.reset.success.message">
                 <source>Reset completed successfully</source>
             </trans-unit>
-            <trans-unit id="ckeditorKit.preset.reset.no_features.message">
-                <source>Preset reset; no active feature overrides were present.</source>
-            </trans-unit>
              <trans-unit id="ckeditorKit.preset.reset.error.message">
                 <source>Reset failed. Please try again</source>
-            </trans-unit>
-            <trans-unit id="ckeditorKit.preset.sync.error.no_feature">
-                <source>No features are currently available for synchronization.</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.preset.sync.skipped.custom">
                 <source>Custom database-only presets are not changed by YAML synchronization or reset.</source>
