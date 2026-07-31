@@ -11,6 +11,7 @@ services:
       - '../Classes/Configuration/Richtext.php'
       - '../Classes/Configuration/RichtextV14.php'
       - '../Classes/EventListener/ProcessingConfigurationModifier.php'
+      - '../Classes/EventListener/StripCollaborationMarkupFromPreviewListener.php'
       - '../Classes/Service/SyncMode.php'
       - '../Classes/Service/SyncResult.php'
 
@@ -92,6 +93,12 @@ services:
         identifier: 'rte-ckeditor-pack/preview-renderer-registrar'
         event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
         after: 'nr-rte-preview-renderer-registrar'
+
+  T3Planet\RteCkeditorPack\EventListener\StripCollaborationMarkupBeforePreviewListener:
+    tags:
+      - name: event.listener
+        identifier: 'rte-ckeditor-pack/strip-collaboration-markup-before-preview'
+        event: TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent
 
   T3Planet\RteCkeditorPack\EventListener\RteConfigurationModifier:
     tags:
