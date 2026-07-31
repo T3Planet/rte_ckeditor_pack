@@ -27,18 +27,19 @@ typo3-rte-ckeditor-ckeditor5 .revision_viewer_container .ck.ck-editor__top,
 .revision_viewer_container[style*="display: block"],
 .revision_viewer_container[style*="display:block"] {
   display: flex !important;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   align-items: stretch;
 }
 
 .revision_viewer_editor-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   position: relative;
   width: 100%;
   align-items: stretch;
+  box-sizing: border-box;
 }
 
 .revision_viewer_container .revision_viewer_editor {

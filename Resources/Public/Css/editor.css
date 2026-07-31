@@ -569,11 +569,24 @@
   flex-direction: row;
 }
 
-.rte-ckeditor-ai-sidebar .form-wizards-wrap > .form-wizards-item-element,
-.rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display: block"],
-.rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display:block"] {
+.rte-ckeditor-ai-sidebar .form-wizards-wrap > .form-wizards-item-element {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  width: auto;
+  gap: 0;
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+  z-index: 3;
+  overflow: visible;
+}
+
+/* Keep RH content | sidebar side-by-side (same as Visual Editor) */
+.rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display: block"],
+.rte-ckeditor-ai-sidebar .form-wizards-wrap > .revision_viewer_container[style*="display:block"] {
+  display: flex !important;
+  flex-direction: row !important;
   flex: 1 1 auto;
   width: auto;
   gap: 0;
@@ -984,3 +997,43 @@
   border-radius: 0;
 }
 
+/* FormEngine RH layout (revision-viewer.css also loaded via CustomAssetTrait).
+ * Mid-file @import of revision-viewer.css is ignored by browsers, so keep a
+ * FormEngine mirror here as a safety net for content | sidebar side-by-side. */
+.revision_viewer_container[style*="display: block"],
+.revision_viewer_container[style*="display:block"],
+.form-wizards-wrap > .revision_viewer_container[style*="display: block"],
+.form-wizards-wrap > .revision_viewer_container[style*="display:block"] {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.revision_viewer_editor-container {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.revision_viewer_container .revision_viewer_editor {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  position: relative;
+}
+
+.revision_viewer_sidebar,
+.revision_viewer_container .sidebar-container {
+  flex: 0 0 295px !important;
+  width: 295px !important;
+  min-width: 295px !important;
+  max-width: 295px !important;
+  position: relative;
+  overflow: visible;
+  align-self: stretch;
+}
