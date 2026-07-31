@@ -94,6 +94,13 @@ strict   ``--strict`` / ``--mode=strict`` YAML wins verbatim in the database
 reset    ``--mode=reset``                 Clear DB toolbar + feature rows for the preset
 ======== ================================ ===============================================
 
+.. note::
+
+   **Ordered** keeps the relative order of items that are already stored in the
+   database. It only inserts **missing** YAML items near their YAML neighbours.
+   It does **not** reorder existing toolbar items to match YAML. If the full YAML
+   toolbar order must be applied, use **strict**.
+
 **Confirmation:** ``strict`` and ``reset`` show a short warning and ask
 *Are you sure you want to proceed?* before changing data. Use ``--force``
 (or ``-f``) to skip the prompt in scripts / CI.
