@@ -869,8 +869,14 @@
 
   --ck-ai-button-secondary-background-color: light-dark(#fff, #2a2a2a);
   --ck-ai-button-secondary-color: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-button-secondary-border-color: light-dark(#c5b2e6, #8b6bc7);
   --ck-ai-button-secondary-hover-background-color: light-dark(#f2ebff, #3d2a5c);
   --ck-ai-button-secondary-active-background-color: light-dark(#f2ebff, #3d2a5c);
+  /* "+ New chat" / history start: CK header tokens stay brand-purple (too dark on dark panels). */
+  --ck-ai-header-color-text: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-header-border-color-button: light-dark(#c5b2e6, #8b6bc7);
+  --ck-ai-chat-color-text: light-dark(#743ccd, #c4a8ff);
+  --ck-ai-border-color-button: light-dark(#c5b2e6, #8b6bc7);
   --ck-ai-button-tertiary-color: light-dark(#707070, #c8c8c8);
   --ck-ai-button-tertiary-hover-background-color: light-dark(#f0f0f0, #3a3a3a);
   --ck-ai-button-tertiary-hover-color: light-dark(#707070, #c8c8c8);
@@ -888,14 +894,27 @@
   --ck-ai-header-color-icon: light-dark(#707070, #c8c8c8);
   --ck-form-header-small-icon-color: light-dark(#333, #ddd);
 
+  /* Skeleton loader bars (Review / Chat) — CK ships a light-only gradient. */
+  --ck-ai-skeleton-item-background: light-dark(
+    linear-gradient(90deg, #fafafa, #f0f0f0 50%, #fafafa),
+    linear-gradient(90deg, #3a3a3a, #2a2a2a 50%, #3a3a3a)
+  );
+
   /* Review tab: titles use --ck-color-text which stays dark on dark panels. */
   --ck-ai-review-check-list-item-title-color: light-dark(#333, #f2f2f2);
   --ck-ai-review-check-list-item-description-color: light-dark(#707070, #b5b5b5);
   --ck-ai-review-check-list-item-title-icon-color: light-dark(#707070, #c8c8c8);
   --ck-ai-review-color-icon: light-dark(#707070, #c8c8c8);
+  --ck-ai-review-color-text: light-dark(#743ccd, #c4a8ff);
   /* Hover/active: light lavender + purple text in light; dark purple + white text in dark. */
   --ck-ai-review-check-list-model-dropdown-hover-background-color: light-dark(#f2ebff, #582aa2);
   --ck-ai-review-check-list-model-dropdown-active-color: light-dark(#743ccd, #fff);
+  /* Diff chips in Review results: keep readable contrast on dark panels. */
+  --ck-ai-suggestion-marker-insertion-background-color: light-dark(rgba(102, 229, 119, 0.35), rgba(37, 218, 61, 0.35));
+  --ck-ai-suggestion-marker-insertion-border-color: light-dark(rgba(30, 174, 49, 0.35), rgba(102, 229, 119, 0.55));
+  --ck-ai-suggestion-marker-deletion-background-color: light-dark(rgba(229, 102, 134, 0.35), rgba(218, 37, 82, 0.35));
+  --ck-ai-suggestion-marker-deletion-border-color: light-dark(rgba(174, 30, 66, 0.35), rgba(229, 102, 134, 0.55));
+  --ck-ai-suggestion-marker-deletion-stroke-color: light-dark(rgba(87, 15, 33, 0.5), rgba(255, 160, 180, 0.75));
 
   color: light-dark(#333, #f2f2f2);
   background: light-dark(#fff, #2a2a2a);
@@ -963,6 +982,18 @@
 /* Review custom command: model-name uses --ck-color-base-text (stays dark on dark panels). */
 .ck.ck-ai-review .ck-ai_review__check-list-item-model-name {
   color: light-dark(#333, #f2f2f2);
+}
+
+/*
+ * Review result snippets reuse .ck-content, which is forced light-only for the RTE.
+ * Re-enable light/dark here so context text stays readable on dark AI panels.
+ */
+.ck.ck-ai-review .ck-ai_review__check-run-result-response.ck-content,
+.ck.ck-balloon-panel .ck-ai_review-balloon-panel-suggestion .ck-ai_review__check-run-result-response.ck-content {
+  color-scheme: light dark;
+  color: light-dark(#333, #f2f2f2);
+  --ck-color-text: light-dark(#333, #f2f2f2);
+  --ck-color-base-text: light-dark(#333, #f2f2f2);
 }
 
 /* Hide duplicate Auto label when the model dropdown is shown. */
