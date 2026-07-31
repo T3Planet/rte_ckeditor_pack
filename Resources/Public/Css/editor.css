@@ -885,6 +885,15 @@
   --ck-ai-button-secondary-border-color: light-dark(#c5b2e6, #8b6bc7);
   --ck-ai-button-secondary-hover-background-color: light-dark(#f2ebff, #3d2a5c);
   --ck-ai-button-secondary-active-background-color: light-dark(#f2ebff, #3d2a5c);
+  /* Primary / Submit: keep white label on brand purple (panel text must not inherit). */
+  --ck-ai-button-primary-color: #fff;
+  --ck-ai-button-primary-disabled-color: #fff;
+  --ck-ai-button-primary-background-color: #743ccd;
+  --ck-ai-button-primary-hover-background-color: #582aa2;
+  --ck-ai-button-primary-active-background-color: #582aa2;
+  --ck-ai-form-submit-button-text-color: #fff;
+  --ck-ai-font-color-action-button: #fff;
+  --ck-ai-background-color-action-button: #743ccd;
   /* "+ New chat" / history start: CK header tokens stay brand-purple (too dark on dark panels). */
   --ck-ai-header-color-text: light-dark(#743ccd, #c4a8ff);
   --ck-ai-header-border-color-button: light-dark(#c5b2e6, #8b6bc7);
@@ -1022,6 +1031,26 @@
 
 .ck.ck-ai-review .ck-ai_review__check-list-item-model-dropdown > .ck.ck-button.ck-dropdown__button .ck-dropdown__arrow {
   color: inherit;
+}
+
+/* Review / Chat primary actions (Submit, Accept all, send): white on purple in light + dark. */
+.ck.ck-ai-review .ck-ai-button-primary,
+.ck.ck-ai-review .ck-ai-form__submit,
+.ck.ck-ai-review .ck-button-action,
+.ck.ck-ai-tabs .ck-ai-button-primary,
+.ck.ck-ai-tabs .ck-ai-form__submit,
+.ck.ck-ai-tabs .ck-button-action,
+.ck.ck-ai-chat__prompt-submit-button {
+  color: #fff;
+}
+
+.ck.ck-ai-review .ck-ai-button-primary .ck-button__label,
+.ck.ck-ai-review .ck-ai-form__submit .ck-button__label,
+.ck.ck-ai-review .ck-button-action .ck-button__label,
+.ck.ck-ai-tabs .ck-ai-button-primary .ck-button__label,
+.ck.ck-ai-tabs .ck-ai-form__submit .ck-button__label,
+.ck.ck-ai-tabs .ck-button-action .ck-button__label {
+  color: #fff;
 }
 
 .ckeditor-modal-content .rounded-0 {
