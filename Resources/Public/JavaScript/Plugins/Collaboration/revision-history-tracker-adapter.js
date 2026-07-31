@@ -147,7 +147,7 @@ class RevisionHistoryTrackerAdapter extends Core.Plugin {
         const revisionHistoryPlugin = this.editor.plugins.get('RevisionHistory');
         const revisionTrackerPlugin = this.editor.plugins.get('RevisionTracker');
         const revisionHistoryElement = document.querySelector('[data-ckeditor5-premium-element-id="' + this.editorId + '"]');
-        const revisions = JSON.parse(revisionHistoryElement?.value);
+        const revisions = revisionHistoryElement?.value ? JSON.parse(revisionHistoryElement.value) : [];
         
         let create_new_draft = false;
         if (revisions) {

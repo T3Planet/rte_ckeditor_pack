@@ -11,6 +11,11 @@ services:
       - '../Classes/Configuration/Richtext.php'
       - '../Classes/Configuration/RichtextV14.php'
       - '../Classes/EventListener/ProcessingConfigurationModifier.php'
+      - '../Classes/EventListener/StripCollaborationMarkupFromPreviewListener.php'
+      - '../Classes/EventListener/RestoreCollaborationMarkersListener.php'
+      - '../Classes/Html/RteHtmlParser.php'
+      - '../Classes/Service/SyncMode.php'
+      - '../Classes/Service/SyncResult.php'
 
   T3Planet\RteCkeditorPack\Controller\CommentsController:
     public: true
@@ -21,6 +26,12 @@ services:
     public: true
     arguments:
       - '@TYPO3\CMS\Core\Database\ConnectionPool'
+  T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository:
+    public: true
+  T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository:
+    public: true
+  T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository:
+    public: true
 
   T3Planet\RteCkeditorPack\Event\AppDataEvent:
     tags:
@@ -29,6 +40,36 @@ services:
         event: TYPO3\CMS\Backend\Controller\Event\AfterFormEnginePageInitializedEvent
 
   T3Planet\RteCkeditorPack\Controller\RteModuleController:
+    public: true
+
+  T3Planet\RteCkeditorPack\DataProvider\BaseToolBar:
+    public: true
+
+  T3Planet\RteCkeditorPack\DataProvider\Modules:
+    public: true
+
+  T3Planet\RteCkeditorPack\Service\ImportExportService:
+    public: true
+
+  T3Planet\RteCkeditorPack\Service\PresetSyncService:
+    public: true
+
+  T3Planet\RteCkeditorPack\Service\TokenUrlValidator:
+    public: true
+
+  T3Planet\RteCkeditorPack\EventListener\SyncFeaturesBeforeExportListener:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\EditorConfigurationBuilder:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\MentionConfigurationBuilder:
+    public: true
+
+  T3Planet\RteCkeditorPack\Configuration\AIConfigurationBuilder:
     public: true
 
   T3Planet\RteCkeditorPack\DataHandling\SoftReference\RteImageSoftReferenceParser:
@@ -54,6 +95,12 @@ services:
         identifier: 'rte-ckeditor-pack/preview-renderer-registrar'
         event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
         after: 'nr-rte-preview-renderer-registrar'
+
+  T3Planet\RteCkeditorPack\EventListener\StripCollaborationMarkupBeforePreviewListener:
+    tags:
+      - name: event.listener
+        identifier: 'rte-ckeditor-pack/strip-collaboration-markup-before-preview'
+        event: TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent
 
   T3Planet\RteCkeditorPack\EventListener\RteConfigurationModifier:
     tags:

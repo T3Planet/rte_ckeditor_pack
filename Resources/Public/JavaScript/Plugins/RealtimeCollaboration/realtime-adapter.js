@@ -1,4 +1,14 @@
 import * as Core from "@ckeditor/ckeditor5-core";
+import {
+    LoaderOwner,
+    showSharedLoader,
+    hideSharedLoader,
+    updateSharedLoaderDesc,
+} from '@t3planet/RteCkeditorPack/ck-shared-loader.js';
+import {
+    resolveRteMount,
+    placePresenceList,
+} from '@t3planet/RteCkeditorPack/ck-presence-placement.js';
 
 /**
  * RealtimeAdapter - Handles real-time collaboration setup and comment editor configuration
@@ -15,7 +25,6 @@ class RealtimeAdapter extends Core.Plugin {
         super();
         this.editor = editor;
         this.channelElement = this.editor.sourceElement || null;
-        this._loaderEl = null;
 
         const config = this.editor.config._config || (this.editor.config._config = {});
         let channelId = config.collaboration?.channelId || this._ensureChannelId(this.channelElement);
@@ -42,11 +51,12 @@ class RealtimeAdapter extends Core.Plugin {
 
         this._ensureInitialDataForRtc(config);
 
-        this._showLoader({
+        this._loaderCopy = {
             channelId,
             title: this._translate('realtime.adapter.loader.title', 'Connecting to collaboration…'),
-            desc: this._translate('realtime.adapter.loader.description', 'Preparing editor and syncing realtime session.')
-        });
+            desc: this._translate('realtime.adapter.loader.description', 'Preparing editor and syncing realtime session.'),
+        };
+        this._showLoader(this._loaderCopy);
 
         this.setPresenceListContainer();
         this._configureCommentsPlugins();
@@ -113,6 +123,11 @@ class RealtimeAdapter extends Core.Plugin {
             this.channelElement = channelElement;
         }
 
+        // VE/FormEngine mount may not be ready in the constructor — ensure loader is visible.
+        if (this._loaderCopy) {
+            this._showLoader(this._loaderCopy);
+        }
+
         // Handle incompatible plugins
         const hasRTC = editor.plugins.has('RealTimeCollaborativeEditing');
         const hasSourceEditing = editor.plugins.has('SourceEditing');
@@ -121,24 +136,9 @@ class RealtimeAdapter extends Core.Plugin {
             editor.plugins.get('SourceEditing').forceDisabled('SourceEditing');
         }
 
-        // Revision History containers
-        if (editor.plugins.has('RevisionHistory')) {
-            const container = this._resolveMountContainer();
-            if (container) {
-                const { channelId } = this;
-                const viewerContainerId = `${channelId}revision_viewer_container`;
-                if (!document.getElementById(viewerContainerId)) {
-                    container.insertAdjacentHTML('afterend', `
-                        <div id="${viewerContainerId}" class="revision_viewer_container">
-                            <div class="revision_viewer_editor-container">
-                                <div id="${channelId}revision_viewer_editor" class="revision_viewer_editor"></div>
-                                <div id="${channelId}revision_viewer_sidebar" class="revision_viewer_sidebar sidebar-container"></div>
-                            </div>
-                        </div>
-                    `);
-                }
-            }
-        }
+        // Revision History containers — must be siblings of editorContainer.
+        // Nesting the viewer inside editorContainer hides it when RH opens.
+        this._applyRevisionHistoryContainers();
 
         // RTC connection events
         if (hasRTC) {
@@ -161,27 +161,13 @@ class RealtimeAdapter extends Core.Plugin {
         editor.on('error', () => this._hideLoader());
         editor.on('destroy', () => this._hideLoader());
 
-        // Revision History viewer wiring
-        if (editor.plugins.has('RevisionHistory')) {
-            const editorContainer = this._resolveMountContainer();
-            const containers = {
-                editorContainer,
-                viewerContainer: document.getElementById(`${channelId}revision_viewer_container`),
-                viewerEditorElement: document.getElementById(`${channelId}revision_viewer_editor`),
-                viewerSidebarContainer: document.getElementById(`${channelId}revision_viewer_sidebar`),
-            };
-
-            Object.entries(containers).forEach(([key, value]) => {
-                if (value) {
-                    editor.config.set(`revisionHistory.${key}`, value);
-                }
-            });
-        }
+        // Revision History viewer wiring (sibling of editorContainer, never nested)
+        this._applyRevisionHistoryContainers();
 
         this._configureCommentMentionFeeds();
 
         if (editor.plugins.has('RealTimeCollaborativeEditing')) {
-            this._applyVisualEditorRtcCompat(editor);
+            this._applyRtcSetDataGuard(editor);
         }
     }
 
@@ -238,22 +224,32 @@ class RealtimeAdapter extends Core.Plugin {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'ck-presence-list-container';
                     wrapper.id = presenceListContainerId;
-                    mount.insertBefore(wrapper, mount.firstChild);
+                    mount.appendChild(wrapper);
                     cfg.container = wrapper;
                 }
             }
         }
 
+        this._ensurePresenceListPlacement(cfg.container);
+
         if (!cfg.collapseAt) {
             cfg.collapseAt = 4;
         }
+
+        this.editor.once('ready', () => {
+            this._ensurePresenceListPlacement(cfg.container);
+        });
+    }
+
+    _ensurePresenceListPlacement(container) {
+        placePresenceList(container);
     }
 
     /**
      * Real-time collaboration forbids editor.setData() after init.
-     * Visual Editor syncs via dataHandlerStore and must not call setData in RTC mode.
+     * On Visual Editor (v13+), sync initial data via dataHandlerStore instead.
      */
-    _applyVisualEditorRtcCompat(editor) {
+    _applyRtcSetDataGuard(editor) {
         editor.setData = () => Promise.resolve();
 
         editor.once('ready', () => {
@@ -273,89 +269,117 @@ class RealtimeAdapter extends Core.Plugin {
     }
 
     /**
-     * Resolve a stable parent for collaboration UI (presence list, loader, etc.).
-     * Supports backend FormEngine and Visual Editor (ve-editable-rich-text).
+     * Element CKEditor hides when Revision History opens.
+     * Prefer the editor item itself (not .form-control-wrap) so the viewer
+     * can sit as a sibling and remain visible.
      */
-    _resolveMountContainer() {
-        const anchor = this.channelElement
-            || (this.channelSelector ? document.querySelector(this.channelSelector) : null)
-            || this.editor.sourceElement
-            || null;
-
-        if (!anchor) {
-            return null;
+    _resolveRevisionEditorContainer() {
+        const veHost = this.editor.sourceElement?.closest?.('ve-editable-rich-text')
+            || this.editor.ui?.element?.closest?.('ve-editable-rich-text')
+            || this.channelElement?.closest?.('ve-editable-rich-text');
+        if (veHost) {
+            return veHost;
         }
 
-        const mountSelectors = [
-            '.form-control-wrap',
-            've-editable-rich-text',
-            '.form-wizards-item-element',
-        ];
+        const anchors = [
+            this.editor.ui?.element,
+            this.editor.sourceElement,
+            this.channelElement,
+        ].filter(Boolean);
 
-        for (const selector of mountSelectors) {
-            const mount = anchor.closest(selector);
-            if (mount) {
-                return mount;
+        for (const anchor of anchors) {
+            const item = anchor.closest?.('.form-wizards-item-element');
+            if (item) {
+                return item;
             }
         }
 
-        return anchor.parentElement || null;
+        return this._resolveMountContainer();
     }
 
-    _getMountContainer() {
-        const parent = this._resolveMountContainer();
-        if (!parent) {
-            return null;
+    /**
+     * Create + wire revisionHistory.* containers.
+     * Viewer must never be a descendant of editorContainer.
+     */
+    _applyRevisionHistoryContainers() {
+        const editor = this.editor;
+        if (!editor.plugins.has('RevisionHistory')) {
+            return;
         }
 
-        const style = window.getComputedStyle(parent);
-        if (style.position === 'static') {
-            parent.style.position = 'relative';
+        const editorContainer = this._resolveRevisionEditorContainer();
+        if (!editorContainer) {
+            return;
         }
-        return parent;
+
+        const { channelId } = this;
+        const viewerContainerId = `${channelId}revision_viewer_container`;
+        if (!document.getElementById(viewerContainerId)) {
+            editorContainer.insertAdjacentHTML('afterend', `
+                <div id="${viewerContainerId}" class="revision_viewer_container">
+                    <div class="revision_viewer_editor-container">
+                        <div id="${channelId}revision_viewer_editor" class="revision_viewer_editor"></div>
+                        <div id="${channelId}revision_viewer_sidebar" class="revision_viewer_sidebar sidebar-container"></div>
+                    </div>
+                </div>
+            `);
+        }
+
+        const containers = {
+            editorContainer,
+            viewerContainer: document.getElementById(viewerContainerId),
+            viewerEditorElement: document.getElementById(`${channelId}revision_viewer_editor`),
+            viewerSidebarContainer: document.getElementById(`${channelId}revision_viewer_sidebar`),
+        };
+
+        Object.entries(containers).forEach(([key, value]) => {
+            if (value) {
+                editor.config.set(`revisionHistory.${key}`, value);
+            }
+        });
+    }
+
+    /**
+     * Resolve a stable parent for collaboration UI (presence list, loader, etc.).
+     * Supports backend FormEngine (v12–v14) and Visual Editor (ve-editable-rich-text, v13+).
+     */
+    _resolveMountContainer() {
+        return resolveRteMount(
+            this.channelElement,
+            this.channelSelector ? document.querySelector(this.channelSelector) : null,
+            this.editor.sourceElement,
+            this.editor.ui?.element,
+        );
+    }
+
+    _resolveLoaderMount() {
+        return this._resolveMountContainer()
+            || this.editor?.sourceElement?.closest?.('ve-editable-rich-text')
+            || this.editor?.ui?.element?.closest?.('ve-editable-rich-text')
+            || this.channelElement?.closest?.('ve-editable-rich-text')
+            || null;
     }
 
     _showLoader({ channelId, title, desc }) {
-        const mount = this._getMountContainer();
-        if (!mount || this._loaderEl?.isConnected) return;
-
-        const el = document.createElement('div');
-        el.className = 'ck-rt-loader';
-        el.setAttribute('role', 'status');
-        el.setAttribute('aria-live', 'polite');
-        el.id = `${channelId}-rt-loader`;
-
-        el.innerHTML = `
-            <div class="ck-rt-loader__box" aria-label="Editor is loading">
-                <div class="ck-rt-loader__row">
-                    <div class="ck-rt-loader__spinner" aria-hidden="true"></div>
-                    <div class="ck-rt-loader__title">${title || 'Loading editor…'}</div>
-                </div>
-                <div class="ck-rt-loader__desc">${desc || ''}</div>
-            </div>
-        `;
-
-        mount.appendChild(el);
-        this._loaderEl = el;
+        showSharedLoader(this._resolveLoaderMount(), {
+            owner: LoaderOwner.REALTIME,
+            channelId,
+            title: title || 'Connecting to collaboration…',
+            desc: desc || '',
+        });
     }
 
     _updateLoaderDesc(text) {
-        const descEl = this._loaderEl?.querySelector('.ck-rt-loader__desc');
-        if (descEl) descEl.textContent = text || '';
+        updateSharedLoaderDesc(this._resolveLoaderMount(), LoaderOwner.REALTIME, text || '');
     }
 
     _hideLoader() {
-        if (this._loaderEl?.parentNode) {
-            this._loaderEl.parentNode.removeChild(this._loaderEl);
-        }
-        this._loaderEl = null;
+        hideSharedLoader(this._resolveLoaderMount(), LoaderOwner.REALTIME);
     }
 
     _translate(key, fallback = '') {
-        const scope = typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : {});
-        const translations = scope?.TYPO3?.lang;
-        const value = translations?.[key];
-        return (typeof value === 'string' && value.trim() !== '') ? value : fallback;
+        const value = globalThis?.TYPO3?.lang?.[key];
+        return typeof value === 'string' && value.trim() !== '' ? value : fallback;
     }
 
     /* ----------------------- Channel ID Helpers ----------------------- */

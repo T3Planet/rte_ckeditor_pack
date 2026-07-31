@@ -1,6 +1,7 @@
 <?php
 
 use TYPO3\CMS\Core\Configuration\Richtext;
+use TYPO3\CMS\Core\Html\RteHtmlParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use T3Planet\RteCkeditorPack\Form\Element\RichTextElement;
@@ -43,6 +44,10 @@ switch ($majorVersion) {
         ];
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][Richtext::class] = [
             'className' => \T3Planet\RteCkeditorPack\Configuration\Richtext::class,
+        ];
+        // Transform-text events are v13+; restore escaped comment/suggestion markers here.
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][RteHtmlParser::class] = [
+            'className' => \T3Planet\RteCkeditorPack\Html\RteHtmlParser::class,
         ];
         break;
     case 13:

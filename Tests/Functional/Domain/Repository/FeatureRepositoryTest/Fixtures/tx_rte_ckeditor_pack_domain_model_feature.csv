@@ -1,0 +1,8 @@
+tx_rteckeditorpack_domain_model_feature,,,,,,,,,
+,uid,pid,preset_uid,enable,config_key,fields,toolbar_item,sorting
+,1,0,1,1,"test_feature_1","field1,field2","bold,italic",10
+,2,0,1,0,"test_feature_2","field3","underline",20
+,3,0,2,1,"common_feature","common_field","common_toolbar",10
+,4,0,2,1,"another_feature","another_field","another_toolbar",20
+,5,0,3,0,"disabled_feature","disabled_field","disabled_toolbar",10
+

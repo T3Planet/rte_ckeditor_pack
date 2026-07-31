@@ -330,6 +330,9 @@
             <trans-unit id="ckeditorKit.operation.success">
                 <source>Success</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.operation.warning">
+                <source>Warning</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.operation.error">
                 <source>Error Occured</source>
             </trans-unit>
@@ -592,6 +595,12 @@
             </trans-unit>
             <trans-unit id="ai.sidebar.loader.description">
                 <source>Preparing AI features and connecting to services.</source>
+            </trans-unit>
+            <trans-unit id="shared.loader.title">
+                <source>Preparing editor…</source>
+            </trans-unit>
+            <trans-unit id="shared.loader.description">
+                <source>Connecting AI assistant and realtime collaboration…</source>
             </trans-unit>
 
             <trans-unit id="feature_form.submit">
@@ -1123,6 +1132,9 @@ The authorization credentials are required for Real-time collaboration or Import
             <trans-unit id="ckeditorKit.preset.sync.success.message">
                 <source>Synchronization completed successfully</source>
             </trans-unit>
+            <trans-unit id="ckeditorKit.preset.sync.nothing.message">
+                <source>Nothing to sync</source>
+            </trans-unit>
             <trans-unit id="ckeditorKit.preset.sync.error.message">
                 <source>Synchronization failed. Please try again</source>
             </trans-unit>
@@ -1132,8 +1144,8 @@ The authorization credentials are required for Real-time collaboration or Import
              <trans-unit id="ckeditorKit.preset.reset.error.message">
                 <source>Reset failed. Please try again</source>
             </trans-unit>
-            <trans-unit id="ckeditorKit.preset.sync.error.no_feature">
-                <source>No features are currently available for synchronization.</source>
+            <trans-unit id="ckeditorKit.preset.sync.skipped.custom">
+                <source>Custom database-only presets are not changed by YAML synchronization or reset.</source>
             </trans-unit>
             <trans-unit id="ckeditorKit.preset.import.success.message">
                 <source>Preset imported successfully</source>

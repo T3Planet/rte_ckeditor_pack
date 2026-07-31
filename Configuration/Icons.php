@@ -3,6 +3,12 @@
 declare(strict_types=1);
 
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
+use TYPO3\CMS\Core\Information\Typo3Version;
+
+$isTypo3V14OrHigher = (new Typo3Version())->getMajorVersion() >= 14;
+$ckeditorModuleIconSource = $isTypo3V14OrHigher
+    ? 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ckeditor_module_v14.svg'
+    : 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ckeditor_module_legacy.svg';
 
 return [
     'rte_module' => [
@@ -11,7 +17,7 @@ return [
     ],
     'ckeditor_module' => [
         'provider' => SvgIconProvider::class,
-        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/Extension.svg',
+        'source' => $ckeditorModuleIconSource,
     ],
     'ckeditor_module_logo' => [
         'provider' => SvgIconProvider::class,

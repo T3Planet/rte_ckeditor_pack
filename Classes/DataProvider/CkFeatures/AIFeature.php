@@ -27,16 +27,16 @@ class AIFeature implements FeatureInterface
                             ->setKey('type')
                             ->setType(FieldType::SELECT)
                             ->setValue([
-                                'Overlay' => 'overlay',
-                                'Sidebar' => 'sidebar'
+                                'Sidebar' => 'sidebar',
+                                'Overlay' => 'overlay'
                             ]),
                         (new Field())
                             ->setName('Side')
                             ->setKey('side')
                             ->setType(FieldType::SELECT)
                             ->setValue([
-                                'Left' => 'left',
-                                'Right' => 'right'
+                                'Right' => 'right',
+                                'Left' => 'left'
                             ]),
                     ]),
                 (new Field())

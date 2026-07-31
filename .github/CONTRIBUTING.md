@@ -6,17 +6,17 @@ email, or any other method with the owners of this repository before making a ch
 ## Getting Started
 
 * Make sure you have a [GitHub account](https://github.com/join)
-* Submit a ticket for your [issue](https://github.com/T3Planet/rte_ckeditor/issues), assuming one does not already exist.
+* Submit a ticket for your [issue](https://github.com/T3Planet/rte_ckeditor_pack/issues), assuming one does not already exist.
   * Clearly describe the issue including steps to reproduce when it is a bug.
 * Fork the repository on GitHub
 
 ## Making Changes
 
 * Create a topic branch from where you want to base your work.
-  * This is usually the master branch.
+  * This is usually the `main` branch.
   * Only target release branches if you are certain your fix must be on that
     branch.
-  * To quickly create a topic branch based on master; `git checkout -b
+  * To quickly create a topic branch based on main; `git checkout -b
     fix/main/my_contribution main`. Please avoid working directly on the
     `main` branch.
 * Make commits of logical units.
@@ -36,6 +36,11 @@ email, or any other method with the owners of this repository before making a ch
 * Make sure you have added the necessary tests for your changes.
 * Run _all_ the tests to assure nothing else was accidentally broken. However, GitHub Actions will do that for you as well.
 
+  ```
+  composer test
+  composer test:functional
+  ```
+
 ## Making Trivial Changes
 
 For changes of a trivial nature, it is not always necessary to create a new issue.
@@ -49,11 +54,15 @@ To render the documentation locally you can use the following `make` command:
 ```
 
 If `make` is not available on your machine you can also call the commands provided
-in the file `Makefile` manually.
+in the file `Makefile` manually, or use:
+
+```
+    composer doc-make
+```
 
 ## Additional resources
 
-* [Rendered documentation](https://docs.typo3.org/p/T3Planet/rte_ckeditor/main/en-us/)
+* [Rendered documentation](https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/)
 * [How to Write a Git Commit Message](https://cbea.ms/git-commit/)
 
 
@@ -74,7 +83,7 @@ Examples of unacceptable behavior by participants include:
 * Personal attacks
 * Trolling or insulting/derogatory comments
 * Public or private harassment
-* Publishing other's private information, such as physical or electronic addresses, without explicit
+* Publishing other's private information, such as personal or electronic addresses, without explicit
   permission
 * Other unethical or unprofessional conduct.
 

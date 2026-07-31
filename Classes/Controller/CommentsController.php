@@ -14,7 +14,7 @@ namespace T3Planet\RteCkeditorPack\Controller;
 use Psr\Http\Message\ServerRequestInterface;
 use T3Planet\RteCkeditorPack\Domain\Repository\CommentsRepository;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Http\JsonResponse;
 
 class CommentsController
 {
@@ -27,79 +27,111 @@ class CommentsController
         $this->commentRepository = $commentRepository;
     }
 
-    public function saveCommentsAction(ServerRequestInterface $request): Response
+    public function saveCommentsAction(ServerRequestInterface $request): JsonResponse
     {
-        $rteID = $request->getParsedBody()['rteId'];
-        $threadData = json_decode($request->getParsedBody()['commentsData'], true);
-        $userId = $this->context->getPropertyFromAspect('backend.user', 'id');
-        if ($threadData) {
-            foreach ($threadData as $thread) {
-                // Handle resolved status at thread level
-                $isResolved = isset($thread['resolvedAt']) || isset($thread['resolvedBy']);
-                $resolvedAt = null;
-                $resolvedBy = null;
-                
-                if ($isResolved) {
-                    $resolvedAt = isset($thread['resolvedAt']) 
-                        ? strtotime($thread['resolvedAt']) 
-                        : time();
-                    // Cast resolvedBy to int - it comes as string from JSON
-                    $resolvedBy = isset($thread['resolvedBy']) 
-                        ? (int)$thread['resolvedBy'] 
-                        : $userId;
+        $body = $request->getParsedBody();
+        if (!is_array($body)) {
+            return new JsonResponse(['status' => 'ERROR', 'message' => 'Invalid request body'], 400);
+        }
+
+        $rteID = (string)($body['rteId'] ?? '');
+        $rawComments = $body['commentsData'] ?? '[]';
+        $threadData = is_string($rawComments) ? json_decode($rawComments, true) : $rawComments;
+        if (!is_array($threadData)) {
+            return new JsonResponse(['status' => 'ERROR', 'message' => 'Invalid comments payload'], 400);
+        }
+
+        $userId = (int)$this->context->getPropertyFromAspect('backend.user', 'id');
+
+        foreach ($threadData as $thread) {
+            if (!is_array($thread) || empty($thread['threadId']) || empty($thread['comments']) || !is_array($thread['comments'])) {
+                continue;
+            }
+
+            $isResolved = isset($thread['resolvedAt']) || isset($thread['resolvedBy']);
+            $resolvedAt = null;
+            $resolvedBy = null;
+
+            if ($isResolved) {
+                $resolvedAt = $this->normalizeTimestamp($thread['resolvedAt'] ?? null) ?? time();
+                $resolvedBy = isset($thread['resolvedBy'])
+                    ? (int)$thread['resolvedBy']
+                    : $userId;
+            }
+
+            foreach ($thread['comments'] as $comment) {
+                if (!is_array($comment) || empty($comment['commentId'])) {
+                    continue;
                 }
-                
-                foreach ($thread['comments'] as $comment) {
-                    if ($this->commentRepository->checkExisting($comment['commentId'])) {
-                        // Update existing comment's resolved status
-                        if ($isResolved) {
-                            $this->commentRepository->markThreadAsResolved(
-                                $thread['threadId'],
-                                $resolvedAt,
-                                $resolvedBy
-                            );
-                        } else {
-                            // Comment was reopened from archive - mark as unresolved
-                            $this->commentRepository->markThreadAsUnresolved(
-                                $thread['threadId']
-                            );
-                        }
-                        continue;
+
+                if ($this->commentRepository->checkExisting($comment['commentId'])) {
+                    if ($isResolved) {
+                        $this->commentRepository->markThreadAsResolved(
+                            (string)$thread['threadId'],
+                            $resolvedAt,
+                            $resolvedBy
+                        );
+                    } else {
+                        $this->commentRepository->markThreadAsUnresolved(
+                            (string)$thread['threadId']
+                        );
                     }
-                    $data = [
-                        'rte_id' => $rteID,
-                        'user_id' => $userId,
-                        'thread_id' => $thread['threadId'],
-                        'id' => $comment['commentId'],
-                        'content' => $comment['content'],
-                        'created_at' => strtotime($comment['createdAt']),
-                        'resolved_at' => $resolvedAt ? (int)$resolvedAt : null,
-                        'resolved_by' => $resolvedBy ? (int)$resolvedBy : null,
-                    ];
-                    $this->commentRepository->saveComment($data);
+                    continue;
                 }
+
+                $contentId = 0;
+                if (preg_match('/data\[[^\]]+\]\[(\d+)\]\[[^\]]+\]/', $rteID, $matches)) {
+                    $contentId = (int)$matches[1];
+                }
+
+                $data = [
+                    'content_id' => $contentId,
+                    'rte_id' => $rteID,
+                    'user_id' => $userId,
+                    'thread_id' => (string)$thread['threadId'],
+                    'id' => (string)$comment['commentId'],
+                    'content' => (string)($comment['content'] ?? ''),
+                    'created_at' => $this->normalizeTimestamp($comment['createdAt'] ?? null) ?? time(),
+                    'resolved_at' => $resolvedAt,
+                    'resolved_by' => $resolvedBy,
+                ];
+                $this->commentRepository->saveComment($data);
             }
         }
-        $response = new Response();
-        $response->getBody()->write(
-            json_encode(['status' => 'OK'], JSON_THROW_ON_ERROR)
-        );
-        return $response;
+
+        return new JsonResponse(['status' => 'OK']);
     }
 
     /**
      * @throws \JsonException
      */
-    public function fetchCommentsAction(ServerRequestInterface $request): Response
+    public function fetchCommentsAction(ServerRequestInterface $request): JsonResponse
     {
-        $response = new Response();
-        $rteId = $request->getQueryParams()['threadId'];
-        $comments = $this->commentRepository->fetchCommentsByThreatId($rteId);
-        if ($comments) {
-            $response->getBody()->write(
-                json_encode($comments, JSON_THROW_ON_ERROR)
-            );
+        $rteId = (string)($request->getQueryParams()['threadId'] ?? '');
+        if ($rteId === '') {
+            return new JsonResponse([]);
         }
-        return $response;
+
+        $comments = $this->commentRepository->fetchCommentsByThreatId($rteId) ?: [];
+
+        return new JsonResponse($comments);
+    }
+
+    private function normalizeTimestamp(mixed $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        if (is_int($value) || (is_string($value) && ctype_digit($value))) {
+            $asInt = (int)$value;
+            // CKEditor sometimes sends ms
+            return $asInt > 9999999999 ? (int)floor($asInt / 1000) : $asInt;
+        }
+        if (is_string($value)) {
+            $parsed = strtotime($value);
+            return $parsed !== false ? $parsed : null;
+        }
+
+        return null;
     }
 }

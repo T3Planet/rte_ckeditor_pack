@@ -32,12 +32,43 @@ final class RteMarkupTransformationUtility
         'style',
     ];
 
-    public static function transform(string $content): string
+    public static function transform(string $content, bool $stripCollaborationMarkup = true): string
     {
-        $content = self::stripCollaborationMarkup($content);
+        if ($stripCollaborationMarkup) {
+            $content = self::stripCollaborationMarkup($content);
+        }
         $content = self::transformOembedTags($content);
 
         return self::transformIframeTags($content);
+    }
+
+    /**
+     * Convert entity-encoded collaboration markers back to real tags.
+     *
+     * When General HTML Support or HTML processing escapes <comment-start>… as text,
+     * Comments / Track Changes can no longer own the markers. Restore them before
+     * the RTE loads and before persistence so the plugins keep control.
+     */
+    public static function restoreEscapedCollaborationMarkers(string $content): string
+    {
+        if (
+            !str_contains($content, '&lt;comment-')
+            && !str_contains($content, '&lt;suggestion-')
+        ) {
+            return $content;
+        }
+
+        $tags = 'comment-start|comment-end|suggestion-start|suggestion-end';
+
+        return (string)preg_replace_callback(
+            '/&lt;(\/?)(' . $tags . ')((?:(?!&[gl]t;).)*?)&gt;/is',
+            static function (array $matches): string {
+                $attributes = html_entity_decode($matches[3], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+                return '<' . $matches[1] . $matches[2] . $attributes . '>';
+            },
+            $content
+        );
     }
 
     /**

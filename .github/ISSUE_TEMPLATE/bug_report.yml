@@ -1,0 +1,82 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug in CKEditor Pack (`rte_ckeditor_pack`)!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+      placeholder: Describe what happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Open the CKEditor Pack backend module
+        2. Enable feature '...' / switch preset '...'
+        3. Edit a content element with the RTE
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+    validations:
+      required: true
+
+  - type: input
+    id: pack-version
+    attributes:
+      label: rte_ckeditor_pack Version
+      placeholder: "3.2.0"
+    validations:
+      required: true
+
+  - type: input
+    id: typo3-version
+    attributes:
+      label: TYPO3 Version
+      placeholder: "13.4.0"
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP Version
+      placeholder: "8.2.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Toolbar & Presets
+        - Visual Editor / Dashboard
+        - CKEditor features (general)
+        - Media / Images
+        - Collaboration / Track Changes / Comments
+        - CKEditor AI
+        - Premium features (Word / PDF / etc.)
+        - Accessibility
+        - Middleware / content processing
+        - Backend module
+        - Documentation
+        - Other
+    validations:
+      required: false

@@ -17,6 +17,11 @@ use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 
 class YamlLoadrUtility
 {
+    public function hasRegisteredPreset(string $presetKey): bool
+    {
+        return $presetKey !== ''
+            && isset($GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets'][$presetKey]);
+    }
 
     public function fetchToolBarItems(string $presetName): string
     {

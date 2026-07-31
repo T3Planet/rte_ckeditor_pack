@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support
+    url: https://t3planet.de/en/ckeditor-pack
+    about: Product details and support from T3Planet
+  - name: Security Vulnerability
+    url: https://github.com/T3Planet/rte_ckeditor_pack/security/policy
+    about: Report security issues privately (see SECURITY.md / security@t3planet.de)
+  - name: Documentation
+    url: https://docs.typo3.org/p/t3planet/rte-ckeditor-pack/main/en-us/
+    about: Check the documentation before opening an issue

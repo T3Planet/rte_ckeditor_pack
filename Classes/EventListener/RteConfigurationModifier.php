@@ -78,7 +78,9 @@ class RteConfigurationModifier
             if ($this->hasEnabledCollaborationChannelFeature()) {
                 $configuration = $this->ensureCollaborationChannelConfiguration($configuration, $collaborationContext);
             }
-            if ($this->isEnableRealTimeCollaboration()) {
+            // Canonical FormEngine/VE field id for Non-RTC Comments / Track Changes storage.
+            $configuration = $this->ensureCollaborationRteIdConfiguration($configuration, $collaborationContext);
+            if ($this->needsCollaborationUserIdentity()) {
                 $configuration = $this->ensureCollaborationUserConfiguration($configuration);
             }
             
@@ -203,7 +205,10 @@ class RteConfigurationModifier
                     case 'HtmlSupport':
                         if (isset($fieldConfigArray['htmlSupport']) && is_array($fieldConfigArray['htmlSupport'])) {
                             $editorConfigBuilder = GeneralUtility::makeInstance(EditorConfigurationBuilder::class);
-                            $configuration = $editorConfigBuilder->addHtmlSupportSettings($configuration,$fieldConfigArray['htmlSupport']);
+                            $configuration = $editorConfigBuilder->addHtmlSupportSettings(
+                                $configuration,
+                                $fieldConfigArray['htmlSupport']
+                            );
                         }
                         break;
 
@@ -401,11 +406,14 @@ class RteConfigurationModifier
     }
 
     /**
-     * Whether any cloud collaboration feature is enabled for the active preset.
+     * Whether a stable collaboration.channelId is required for the active preset.
+     *
+     * Channel IDs are used by realtime collaboration stores and by CKEditor AI chat
+     * history (AI throws ai-chat-missing-channel-id without one).
      */
     private function hasEnabledCollaborationChannelFeature(): bool
     {
-        foreach (['RealTimeCollaboration', 'Comments', 'RevisionHistory', 'TrackChanges'] as $configKey) {
+        foreach (['RealTimeCollaboration', 'Comments', 'RevisionHistory', 'TrackChanges', 'ToggleAi'] as $configKey) {
             if ($this->isCollaborationFeatureEnabled($configKey)) {
                 return true;
             }
@@ -684,17 +692,62 @@ class RteConfigurationModifier
     }
 
     /**
-     * Provide stable collaboration user identity (required for presence list, especially in Visual Editor).
+     * Shared storage key for Non-RTC Comments (FormEngine + Visual Editor).
+     * Must match textarea name: data[table][uid][field].
+     *
+     * @param array<string, mixed> $configuration
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function ensureCollaborationRteIdConfiguration(array $configuration, array $data): array
+    {
+        $existing = $configuration['collaboration']['rteId'] ?? null;
+        if (is_string($existing) && $existing !== '' && str_starts_with($existing, 'data[')) {
+            return $configuration;
+        }
+
+        $table = (string)($data['tableName'] ?? $data['table'] ?? '');
+        $field = (string)($data['fieldName'] ?? $data['field'] ?? '');
+        $uid = (int)($data['recordUid']
+            ?? $data['databaseRow']['uid']
+            ?? $data['uid']
+            ?? 0);
+
+        if ($table === '' || $field === '' || $uid <= 0) {
+            return $configuration;
+        }
+
+        $configuration['collaboration']['rteId'] = sprintf('data[%s][%d][%s]', $table, $uid, $field);
+
+        return $configuration;
+    }
+
+    /**
+     * Whether Comments / Track Changes / Revision History / RTC need a local user identity.
+     *
+     * Non-RTC Comments require Users.me; without it CKEditor throws unexpected-error
+     * (can't access property "id", me is null) when adding a comment marker.
+     */
+    private function needsCollaborationUserIdentity(): bool
+    {
+        foreach (['RealTimeCollaboration', 'Comments', 'RevisionHistory', 'TrackChanges'] as $configKey) {
+            if ($this->isCollaborationFeatureEnabled($configKey)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Provide stable collaboration user identity (required for Non-RTC Comments/Track Changes
+     * and for presence list, especially in Visual Editor).
      *
      * @param array<string, mixed> $configuration
      * @return array<string, mixed>
      */
     private function ensureCollaborationUserConfiguration(array $configuration): array
     {
-        if (!$this->isEnableRealTimeCollaboration()) {
-            return $configuration;
-        }
-
         $backendUser = $GLOBALS['BE_USER'] ?? null;
         if (!$backendUser instanceof BackendUserAuthentication) {
             return $configuration;

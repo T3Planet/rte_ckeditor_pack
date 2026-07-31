@@ -207,6 +207,142 @@ class ConfigurationMergeUtility
         return implode(',', $mergedItems);
     }
 
+    /**
+     * Insert missing YAML toolbar items according to YAML order while preserving
+     * all existing DB items and their relative order.
+     *
+     * Repeated separators (for example "|") are handled by occurrence, but
+     * consecutive separators are never kept.
+     */
+    public function syncToolbarOrdered(array $yamlToolbarItems, string $presetToolbarItems): string
+    {
+        $yamlItems = $this->normalizeToolbarItems($yamlToolbarItems);
+        $mergedItems = $this->normalizeToolbarItems(explode(',', $presetToolbarItems));
+
+        foreach ($yamlItems as $yamlIndex => $item) {
+            $occurrence = $this->getOccurrenceNumber($yamlItems, $yamlIndex);
+            if ($this->findOccurrencePosition($mergedItems, $item, $occurrence) !== null) {
+                continue;
+            }
+
+            $insertAt = null;
+
+            // Prefer the next YAML neighbour so the missing item is inserted before it.
+            for ($nextIndex = $yamlIndex + 1, $count = count($yamlItems); $nextIndex < $count; $nextIndex++) {
+                $nextItem = $yamlItems[$nextIndex];
+                $nextOccurrence = $this->getOccurrenceNumber($yamlItems, $nextIndex);
+                $nextPosition = $this->findOccurrencePosition($mergedItems, $nextItem, $nextOccurrence);
+                if ($nextPosition !== null) {
+                    $insertAt = $nextPosition;
+                    break;
+                }
+            }
+
+            // If there is no next neighbour, place it after the nearest previous one.
+            if ($insertAt === null) {
+                for ($previousIndex = $yamlIndex - 1; $previousIndex >= 0; $previousIndex--) {
+                    $previousItem = $yamlItems[$previousIndex];
+                    $previousOccurrence = $this->getOccurrenceNumber($yamlItems, $previousIndex);
+                    $previousPosition = $this->findOccurrencePosition(
+                        $mergedItems,
+                        $previousItem,
+                        $previousOccurrence
+                    );
+                    if ($previousPosition !== null) {
+                        $insertAt = $previousPosition + 1;
+                        break;
+                    }
+                }
+            }
+
+            $target = $insertAt ?? count($mergedItems);
+            if ($item === '|' && $this->wouldCreateAdjacentSeparator($mergedItems, $target)) {
+                continue;
+            }
+
+            array_splice($mergedItems, $target, 0, [$item]);
+        }
+
+        return implode(',', $this->collapseAdjacentSeparators($mergedItems));
+    }
+
+    /**
+     * @param array<mixed> $items
+     * @return list<string>
+     */
+    private function normalizeToolbarItems(array $items): array
+    {
+        return array_values(array_filter(
+            array_map(
+                static fn(mixed $item): string => is_string($item) ? trim($item) : '',
+                $items
+            ),
+            static fn(string $item): bool => $item !== ''
+        ));
+    }
+
+    /**
+     * @param list<string> $items
+     */
+    private function wouldCreateAdjacentSeparator(array $items, int $target): bool
+    {
+        return ($target > 0 && ($items[$target - 1] ?? null) === '|')
+            || (($items[$target] ?? null) === '|');
+    }
+
+    /**
+     * @param list<string> $items
+     * @return list<string>
+     */
+    private function collapseAdjacentSeparators(array $items): array
+    {
+        $collapsed = [];
+        foreach ($items as $item) {
+            if ($item === '|' && $collapsed !== [] && end($collapsed) === '|') {
+                continue;
+            }
+            $collapsed[] = $item;
+        }
+
+        return $collapsed;
+    }
+
+    /**
+     * Return the one-based occurrence number for an item at a given array index.
+     *
+     * @param list<string> $items
+     */
+    private function getOccurrenceNumber(array $items, int $index): int
+    {
+        $occurrence = 0;
+        for ($position = 0; $position <= $index; $position++) {
+            if ($items[$position] === $items[$index]) {
+                $occurrence++;
+            }
+        }
+        return $occurrence;
+    }
+
+    /**
+     * Find the zero-based position of the requested one-based occurrence.
+     *
+     * @param list<string> $items
+     */
+    private function findOccurrencePosition(array $items, string $needle, int $occurrence): ?int
+    {
+        $seen = 0;
+        foreach ($items as $position => $item) {
+            if ($item !== $needle) {
+                continue;
+            }
+            $seen++;
+            if ($seen === $occurrence) {
+                return $position;
+            }
+        }
+        return null;
+    }
+
     public function parseOptions($options): array {
         if (is_array($options)) {
             return array_values($options); // REMOVE original keys

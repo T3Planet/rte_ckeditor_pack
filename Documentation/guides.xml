@@ -15,7 +15,7 @@
                typo3-core-preferred="13.4"
                interlink-shortcode="t3planet/rte_ckeditor_pack"
     />
-    <project title="CKEditor Pack" release="3.2.0" version="3.2.0"
+    <project title="CKEditor Pack" release="3.2.1" version="3.2.1"
              copyright="since 2025 by T3Planet // T3Planet"/>
 </guides>
 

@@ -19,15 +19,15 @@ use T3Planet\RteCkeditorPack\Domain\Model\Feature;
 use T3Planet\RteCkeditorPack\Utility\FlashUtility;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use T3Planet\RteCkeditorPack\DataProvider\BaseToolBar;
-use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
 use T3Planet\RteCkeditorPack\Service\ImportExportService;
+use T3Planet\RteCkeditorPack\Service\PresetSyncService;
+use T3Planet\RteCkeditorPack\Service\SyncMode;
 use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
 use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
@@ -73,6 +73,7 @@ class RteModuleController extends ActionController
         ToolbarGroupsRepository $groupsRepository,
         protected readonly ImportExportService $importExportService,
         protected readonly SyncFeaturesBeforeExportListener $syncFeaturesService,
+        protected readonly PresetSyncService $presetSyncService,
     ) {
         $this->featureRepository = $featureRepository;
         $this->presetRepository = $presetRepository;
@@ -748,102 +749,27 @@ class RteModuleController extends ActionController
     {
         $data = $request->getParsedBody();
         $presetUid = isset($data['presetUid']) && is_numeric($data['presetUid']) ? (int)$data['presetUid'] : 0;
-        $notification = [];
 
-        try {
-            if ($presetUid > 0) {
-                $preset = $this->presetRepository->findByUid($presetUid);
-
-                if (!$preset) {
-                    throw new \Exception('Preset not found');
-                }
-                // Get preset key to load YAML configuration
-                $presetKey = $preset->getPresetKey();
-                // Load YAML configuration
-                $yamlLoader = GeneralUtility::makeInstance(YamlLoadrUtility::class);
-                $yamlConfig = $yamlLoader->loadYamlConfiguration($presetKey);
-                if (empty($yamlConfig) && isset($yamlConfig['editor']['config'])) {
-                    throw new \Exception('YAML configuration not found for preset: ' . $presetKey);
-                }
-                $yamlConfiguration = $yamlConfig['editor']['config'];
-                $mergeUtility = GeneralUtility::makeInstance(ConfigurationMergeUtility::class);
-                $toolBariteams = $yamlConfiguration['toolbar']['items'];
-                $syncData = $mergeUtility->syncToolBar($toolBariteams,$preset->getToolbarItems());
-                $preset->setToolbarItems($syncData);
-                $this->presetRepository->update($preset);
-                
-                $features = $this->featureRepository->findByPresetUid($presetUid);
-                if (empty($features)) {
-                    return new JsonResponse([
-                        'notifications' => [[
-                            'title' => 'ckeditorKit.preset.sync.error.no_feature',
-                            'severity' => 3,
-                        ]]
-                    ]);
-                }
-
-                foreach ($features as $feature) {
-                    $yamlFeatureConfig = [];
-                    $configKey = $feature->getConfigKey();
-                    if($configKey == 'Mention'){
-                        $notification[] = [
-                            'title' => 'ckeditorKit.preset.sync.mention',
-                            'severity' => 3,
-                        ];
-                        continue;
-                    }
-                    
-                    $moduleConfiguration = $feature->getFields() ? json_decode($feature->getFields(), true) : [];
-                    if (empty($moduleConfiguration)) {
-                        continue;
-                    }
-                    
-                    $configKeyLower = strtolower($configKey);
-                    // Special handling for Font configKey - check 4 font items
-                    if ($configKey === 'Font') {
-                        $fontItems = ['fontFamily', 'fontSize'];
-                        $fontConfig = [];
-                        foreach ($fontItems as $item) {
-                            if (array_key_exists($item, $yamlConfiguration)) {
-                                $fontConfig[$item] = $yamlConfiguration[$item];
-                            }
-                        }
-                        $syncData = $mergeUtility->mergeOptionArrays($fontConfig, $moduleConfiguration);
-                    } else {
-                        if (!array_key_exists($configKeyLower, $yamlConfiguration)) {
-                            continue;
-                        }
-                        $yamlFeatureConfig[$configKeyLower] = $yamlConfiguration[$configKeyLower];
-                        $syncData = $mergeUtility->mergeRecursiveDistinct($yamlFeatureConfig, $moduleConfiguration);
-                    }
-                    if (empty($syncData)) {
-                        continue;
-                    }
-                    $feature->setFields(json_encode($syncData));
-                    $this->featureRepository->update($feature);
-                }
-
-                $this->persistenceManager->persistAll();
-                $this->cache->flush();
-
-                $notification[] = [
-                    'title' => 'ckeditorKit.operation.success',
-                    'message' => 'ckeditorKit.preset.sync.success.message',
-                    'severity' => 0,
-                ];
-            } else {
-                throw new \Exception('Invalid preset UID');
-            }
-        } catch (\Exception $e) {
-            $notification[] = [
-                'title' => 'ckeditorKit.operation.error',
-                'message' => 'ckeditorKit.preset.sync.error.message',
-                'severity' => 2,
-            ];
+        if ($presetUid <= 0) {
+            return new JsonResponse([
+                'notifications' => [[
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => 'ckeditorKit.preset.sync.error.message',
+                    'severity' => 2,
+                ]],
+            ]);
         }
 
+        $result = $this->presetSyncService->syncPreset($presetUid, SyncMode::Additive);
+
         return new JsonResponse([
-            'notifications' => $notification,
+            'notifications' => $result->notifications !== []
+                ? $result->notifications
+                : [[
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => 'ckeditorKit.preset.sync.error.message',
+                    'severity' => 2,
+                ]],
         ]);
     }
 
@@ -1111,44 +1037,27 @@ class RteModuleController extends ActionController
     {
         $data = $request->getParsedBody();
         $presetUid = isset($data['presetUid']) && is_numeric($data['presetUid']) ? (int)$data['presetUid'] : 0;
-        $notification = [];
-        try {
-            if ($presetUid > 0) {
-                $preset = $this->presetRepository->findByUid($presetUid);
 
-                if (!$preset) {
-                    throw new \Exception('Preset not found');
-                }
-                $preset->setToolbarItems('');
-                $this->presetRepository->update($preset);
-
-                if ($this->featureRepository->removeByPresetId($presetUid)) {
-                    $this->persistenceManager->persistAll();
-                    $this->cache->flush();
-                    $notification[] = [
-                        'title' => 'ckeditorKit.operation.success',
-                        'message' => 'ckeditorKit.preset.reset.success.message',
-                        'severity' => 0,
-                    ];
-                } else {
-                    $notification[] = [
-                        'title' => 'ckeditorKit.operation.error',
-                        'message' => 'ckeditorKit.preset.reset.error.message',
-                        'severity' => 2,
-                    ];
-                }
-            } else {
-                throw new \Exception('Invalid preset UID');
-            }
-        } catch (\Exception $e) {
-            $notification[] = [
-                'title' => 'ckeditorKit.operation.error',
-                'message' => 'ckeditorKit.preset.reset.error.message',
-                'severity' => 2,
-            ];
+        if ($presetUid <= 0) {
+            return new JsonResponse([
+                'notifications' => [[
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => 'ckeditorKit.preset.reset.error.message',
+                    'severity' => 2,
+                ]],
+            ]);
         }
+
+        $result = $this->presetSyncService->syncPreset($presetUid, SyncMode::Reset);
+
         return new JsonResponse([
-            'notifications' => $notification,
+            'notifications' => $result->notifications !== []
+                ? $result->notifications
+                : [[
+                    'title' => 'ckeditorKit.operation.error',
+                    'message' => 'ckeditorKit.preset.reset.error.message',
+                    'severity' => 2,
+                ]],
         ]);
     }
 

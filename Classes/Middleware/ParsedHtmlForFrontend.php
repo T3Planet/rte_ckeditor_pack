@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Http\StreamFactory;
 
 class ParsedHtmlForFrontend implements MiddlewareInterface
@@ -30,7 +31,13 @@ class ParsedHtmlForFrontend implements MiddlewareInterface
             $stream = $response->getBody();
             $stream->rewind();
             $content = $stream->getContents();
-            $newBody = (new StreamFactory())->createStream(RteMarkupTransformationUtility::transform($content));
+            // Visual Editor editMode embeds raw field HTML in ve-editable-rich-text.
+            // Stripping comment markers there removes highlights for FormEngine parity.
+            // Only skip strip for authenticated backend users in edit mode (TYPO3 12–14).
+            $stripCollaborationMarkup = !$this->isVisualEditorEditMode($request);
+            $newBody = (new StreamFactory())->createStream(
+                RteMarkupTransformationUtility::transform($content, $stripCollaborationMarkup)
+            );
             $response = $response->withBody($newBody);
         }
         return $response;
@@ -42,7 +49,23 @@ class ParsedHtmlForFrontend implements MiddlewareInterface
      */
     protected function isTypeNumSet(ServerRequestInterface $request): bool
     {
-        return $request->getAttribute('routing')->getPageType() > 0;
+        $routing = $request->getAttribute('routing');
+        if ($routing === null || !is_object($routing) || !method_exists($routing, 'getPageType')) {
+            return false;
+        }
+
+        return (int)$routing->getPageType() > 0;
     }
 
+    private function isVisualEditorEditMode(ServerRequestInterface $request): bool
+    {
+        if (!isset($request->getQueryParams()['editMode'])) {
+            return false;
+        }
+
+        $backendUser = $GLOBALS['BE_USER'] ?? null;
+
+        return $backendUser instanceof BackendUserAuthentication
+            && (int)($backendUser->user['uid'] ?? 0) > 0;
+    }
 }
