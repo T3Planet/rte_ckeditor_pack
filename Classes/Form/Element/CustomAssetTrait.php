@@ -21,6 +21,9 @@ trait CustomAssetTrait
     protected function addCustomStylesheets(array $resultArray): array
     {
         $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor.css';
+        // Load separately: mid-file @import in editor.css is ignored by browsers.
+        // Visual Editor already loads this via VisualEditorStylesMiddleware.
+        $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/revision-viewer.css';
         
         if ($this->isEditoria11yEnabled()) {
             $extPath = 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.css';
