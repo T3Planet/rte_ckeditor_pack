@@ -120,10 +120,18 @@ class EditorConfigurationBuilder
             unset($normalizedHtmlSupport['allow']);
         }
 
+        $blockedMarkerNames = ['comment-start', 'comment-end', 'suggestion-start', 'suggestion-end'];
         if (isset($normalizedHtmlSupport['allowEmpty']) && is_string($normalizedHtmlSupport['allowEmpty'])) {
             $normalizedHtmlSupport['allowEmpty'] = array_values(array_filter(
                 array_map('trim', explode(',', $normalizedHtmlSupport['allowEmpty'])),
-                static fn (string $name): bool => $name !== ''
+                static fn (string $name): bool => $name !== '' && !in_array($name, $blockedMarkerNames, true)
+            ));
+        } elseif (isset($normalizedHtmlSupport['allowEmpty']) && is_array($normalizedHtmlSupport['allowEmpty'])) {
+            $normalizedHtmlSupport['allowEmpty'] = array_values(array_filter(
+                $normalizedHtmlSupport['allowEmpty'],
+                static fn ($name): bool => is_string($name)
+                    && $name !== ''
+                    && !in_array($name, $blockedMarkerNames, true)
             ));
         }
 

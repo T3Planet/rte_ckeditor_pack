@@ -5,13 +5,53 @@ declare(strict_types=1);
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use T3Planet\RteCkeditorPack\EventListener\ProcessingConfigurationModifier;
+use T3Planet\RteCkeditorPack\EventListener\RestoreCollaborationMarkersListener;
 use T3Planet\RteCkeditorPack\EventListener\StripCollaborationMarkupFromPreviewListener;
 use TYPO3\CMS\Backend\View\Event\AfterPageContentPreviewRenderedEvent;
 use TYPO3\CMS\Core\Configuration\Event\AfterRichtextConfigurationPreparedEvent;
+use TYPO3\CMS\Core\Html\Event\AfterTransformTextForPersistenceEvent;
+use TYPO3\CMS\Core\Html\Event\AfterTransformTextForRichTextEditorEvent;
+use TYPO3\CMS\Core\Html\Event\BeforeTransformTextForPersistenceEvent;
+use TYPO3\CMS\Core\Html\Event\BeforeTransformTextForRichTextEditorEvent;
 use TYPO3\CMS\Core\Information\Typo3Version;
 
 return static function (ContainerConfigurator $container, ContainerBuilder $containerBuilder): void {
-    if ((new Typo3Version())->getMajorVersion() < 14) {
+    $majorVersion = (new Typo3Version())->getMajorVersion();
+
+    // Transform-text events exist since TYPO3 v13. On v12, RteHtmlParser XCLASS handles restore.
+    if (
+        class_exists(BeforeTransformTextForRichTextEditorEvent::class)
+        && class_exists(AfterTransformTextForRichTextEditorEvent::class)
+        && class_exists(BeforeTransformTextForPersistenceEvent::class)
+        && class_exists(AfterTransformTextForPersistenceEvent::class)
+    ) {
+        $container->services()
+            ->set(RestoreCollaborationMarkersListener::class)
+            ->autowire()
+            ->autoconfigure()
+            ->tag('event.listener', [
+                'identifier' => 'rte-ckeditor-pack/restore-collaboration-markers-for-editor',
+                'method' => 'restoreForEditor',
+                'event' => BeforeTransformTextForRichTextEditorEvent::class,
+            ])
+            ->tag('event.listener', [
+                'identifier' => 'rte-ckeditor-pack/restore-collaboration-markers-for-editor-after',
+                'method' => 'restoreForEditorAfter',
+                'event' => AfterTransformTextForRichTextEditorEvent::class,
+            ])
+            ->tag('event.listener', [
+                'identifier' => 'rte-ckeditor-pack/restore-collaboration-markers-for-persistence',
+                'method' => 'restoreForPersistence',
+                'event' => BeforeTransformTextForPersistenceEvent::class,
+            ])
+            ->tag('event.listener', [
+                'identifier' => 'rte-ckeditor-pack/restore-collaboration-markers-for-persistence-after',
+                'method' => 'restoreForPersistenceAfter',
+                'event' => AfterTransformTextForPersistenceEvent::class,
+            ]);
+    }
+
+    if ($majorVersion < 14) {
         return;
     }
 
