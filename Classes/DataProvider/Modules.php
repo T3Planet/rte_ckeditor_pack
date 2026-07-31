@@ -283,7 +283,7 @@ class Modules
                         ],
                         [
                             'library' => '@ckeditor/ckeditor5-comments',
-                            'exports' => 'Comments',
+                            'exports' => 'Comments,CommentsRepository',
                         ],
                     ],
                     'toolBarItems' => 'comment,commentsArchive',
@@ -359,7 +359,7 @@ class Modules
                         ],
                         [
                             'library' => '@ckeditor/ckeditor5-comments',
-                            'exports' => 'Comments',
+                            'exports' => 'Comments,CommentsRepository',
                         ],
                         [
                             'library' => '@ckeditor/ckeditor5-track-changes',

@@ -32,35 +32,84 @@ class CommentTread implements MiddlewareInterface
     {
         $this->responseFactory = $responseFactory;
         $this->commentRepository = GeneralUtility::makeInstance(CommentsRepository::class);
-
-        //Get Current Backend user..
-        $context = GeneralUtility::makeInstance(Context::class);
-        $this->currentUser = $context->getPropertyFromAspect('backend.user', 'id');
-
+        $this->currentUser = 0;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = null;
-        if (str_contains($request->getRequestTarget(), '/comments/thread/')) {
-            $response = $this->fetchAllComments($request);
+        // Resolve BE user per request — never in the constructor.
+        // FE Visual Editor authenticates after middleware construction; shared DI
+        // would otherwise keep currentUser=0 and reject all /comments writes.
+        $this->currentUser = $this->resolveBackendUserId();
+
+        $target = $request->getRequestTarget();
+        $path = parse_url($target, PHP_URL_PATH) ?: $target;
+        $isCommentsRoute = str_contains($target, '/comments/thread/')
+            || str_contains($target, '/comments/update/')
+            || str_contains($target, '/comments/delete/')
+            || str_contains($target, '/comments/archive/')
+            || $path === '/comments'
+            || $path === '/comments/';
+
+        if (!$isCommentsRoute) {
+            return $handler->handle($request);
         }
-        if (str_contains($request->getRequestTarget(), '/comments/update/')) {
-            $response = $this->updateComment($request);
+
+        // Non-RTC Comments are editorial data — require a logged-in backend user (FormEngine + VE).
+        if (!$this->hasBackendUser()) {
+            return $this->jsonErrorResponse('Backend authentication required', 401);
         }
-        if (str_contains($request->getRequestTarget(), '/comments/delete/')) {
-            $response = $this->deleteComment($request);
+
+        if (str_contains($target, '/comments/thread/')) {
+            return $this->fetchAllComments($request);
         }
-        if (str_contains($request->getRequestTarget(), '/comments/archive/')) {
-            $response = $this->archiveResolvedComments($request);
+        if (str_contains($target, '/comments/update/')) {
+            return $this->updateComment($request);
         }
-        if ($request->getRequestTarget() === '/comments') {
-            $response = $this->addComment($request);
+        if (str_contains($target, '/comments/delete/')) {
+            return $this->deleteComment($request);
         }
-        if ($response instanceof ResponseInterface) {
-            return $response;
+        if (str_contains($target, '/comments/archive/')) {
+            return $this->archiveResolvedComments($request);
         }
+        if ($path === '/comments' || $path === '/comments/') {
+            return $this->addComment($request);
+        }
+
         return $handler->handle($request);
+    }
+
+    private function resolveBackendUserId(): int
+    {
+        try {
+            $context = GeneralUtility::makeInstance(Context::class);
+            $userId = (int)$context->getPropertyFromAspect('backend.user', 'id');
+            if ($userId > 0) {
+                return $userId;
+            }
+        } catch (AspectNotFoundException) {
+            // Fall through to $GLOBALS['BE_USER']
+        }
+
+        return (int)($GLOBALS['BE_USER']->user['uid'] ?? 0);
+    }
+
+    private function hasBackendUser(): bool
+    {
+        return (int)$this->currentUser > 0;
+    }
+
+    private function jsonErrorResponse(string $message, int $status = 400): ResponseInterface
+    {
+        $response = $this->responseFactory->createResponse($status)
+            ->withHeader('Content-Type', 'application/json; charset=utf-8');
+        $response->getBody()->write(json_encode([
+            'error' => true,
+            'status' => 'error',
+            'message' => $message,
+        ], JSON_THROW_ON_ERROR));
+
+        return $response;
     }
 
     /**
@@ -69,8 +118,12 @@ class CommentTread implements MiddlewareInterface
      */
     private function fetchAllComments($request)
     {
-        $threadId = $request->getQueryParams()['threadId'];
-        $data = $this->commentRepository->fetchCommentsByThreatId($threadId);
+        $threadId = (string)($request->getQueryParams()['threadId'] ?? '');
+        if ($threadId === '') {
+            return $this->jsonErrorResponse('threadId is required', 400);
+        }
+
+        $data = $this->commentRepository->fetchCommentsByThreatId($threadId) ?: [];
         $response = $this->responseFactory->createResponse()
             ->withHeader('Content-Type', 'application/json; charset=utf-8');
         $response->getBody()->write(json_encode($data));
@@ -99,7 +152,7 @@ class CommentTread implements MiddlewareInterface
             ));
             return $response;
         }
-        if ($comment['user_id'] !== $this->currentUser) {
+        if ((int)$comment['user_id'] !== (int)$this->currentUser) {
             $response->getBody()->write(json_encode([
                 'status' => 'error',
                 'message' => 'Could not update comment - comment can be updated only by its author',
@@ -139,7 +192,7 @@ class CommentTread implements MiddlewareInterface
             ));
             return $response;
         }
-        if ($comment['user_id'] !== $this->currentUser) {
+        if ((int)$comment['user_id'] !== (int)$this->currentUser) {
             $response->getBody()->write(json_encode([
                 'status' => 'error',
                 'message' => 'Could not update comment - comment can be updated only by its author',
@@ -165,34 +218,27 @@ class CommentTread implements MiddlewareInterface
             // Handle multipart/form-data (FormData from JavaScript)
             $contentType = $request->getHeaderLine('Content-Type');
             if (str_contains($contentType, 'multipart/form-data') && empty($parsedBody)) {
-                // For multipart/form-data, TYPO3 should parse it, but if not, we'll handle it
-                // The parsed body should be available, but let's check uploads too
-                $uploads = $request->getUploadedFiles();
-                $parsedBody = array_merge($parsedBody, $request->getQueryParams());
+                $parsedBody = array_merge(
+                    is_array($parsedBody) ? $parsedBody : [],
+                    $request->getQueryParams()
+                );
             }
 
             // If still empty, try to parse manually (fallback)
             if (empty($parsedBody) || !isset($parsedBody['rteId'])) {
-                // This shouldn't happen in TYPO3, but as a fallback
                 $body = $request->getBody()->getContents();
                 if (!empty($body)) {
                     parse_str($body, $manualParsed);
-                    $parsedBody = array_merge($parsedBody ?? [], $manualParsed);
+                    $parsedBody = array_merge(is_array($parsedBody) ? $parsedBody : [], $manualParsed);
                 }
             }
 
-            if (empty($parsedBody['rteId'])) {
-                $response = $this->responseFactory->createResponse(400)
-                    ->withHeader('Content-Type', 'application/json; charset=utf-8');
-                $response->getBody()->write(json_encode(
-                    [
-                        'error' => true,
-                        'message' => 'rteId is required',
-                        'received' => array_keys($parsedBody ?? []),
-                    ],
-                    JSON_THROW_ON_ERROR
-                ));
-                return $response;
+            if (!is_array($parsedBody) || empty($parsedBody['rteId'])) {
+                return $this->jsonErrorResponse('rteId is required', 400);
+            }
+
+            if (!str_starts_with((string)$parsedBody['rteId'], 'data[')) {
+                return $this->jsonErrorResponse('Invalid rteId format', 400);
             }
 
             $createdAt = time();
@@ -204,10 +250,9 @@ class CommentTread implements MiddlewareInterface
             // Try to extract content_id from rteId, but don't fail if it doesn't match
             $contentId = null;
             if (preg_match('/data\[tt_content\]\[(\d+)\]\[bodytext\]/', $rteID, $matches)) {
-                $contentId = $matches[1];
-            } elseif (preg_match('/data\[([^\]]+)\]\[([^\]]+)\]\[([^\]]+)\]/', $rteID, $matches)) {
-                // Try alternative format
-                $contentId = $matches[1] ?? null;
+                $contentId = (int)$matches[1];
+            } elseif (preg_match('/data\[([^\]]+)\]\[(\d+)\]\[([^\]]+)\]/', $rteID, $matches)) {
+                $contentId = (int)$matches[2];
             }
 
             $response = $this->responseFactory->createResponse()
@@ -216,14 +261,19 @@ class CommentTread implements MiddlewareInterface
             $data = [
                 'content_id' => $contentId ?? 0,
                 'rte_id' => $rteID,
-                'user_id' => $this->currentUser,
+                'user_id' => (int)$this->currentUser,
                 'thread_id' => $threadId,
                 'id' => $commentId,
                 'content' => $content,
                 'created_at' => $createdAt,
             ];
 
-            $this->commentRepository->saveComment($data);
+            // Idempotent for FormEngine + Visual Editor double-writes of the same comment.
+            if ($commentId && $this->commentRepository->checkExisting($commentId)) {
+                $this->commentRepository->updateComment((string)$commentId, (string)$threadId, (string)$content);
+            } else {
+                $this->commentRepository->saveComment($data);
+            }
 
             $response->getBody()->write(json_encode(
                 [

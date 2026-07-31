@@ -266,6 +266,22 @@ class RteConfigurationModifierTest extends BaseTestCase
     }
 
     #[Test]
+    public function ensureCollaborationRteIdConfigurationBuildsCanonicalFieldId(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+
+        $data = [
+            'tableName' => 'tt_content',
+            'fieldName' => 'bodytext',
+            'recordUid' => 141,
+        ];
+
+        $result = $this->invokePrivate($modifier, 'ensureCollaborationRteIdConfiguration', [[], $data]);
+
+        self::assertSame('data[tt_content][141][bodytext]', $result['collaboration']['rteId']);
+    }
+
+    #[Test]
     public function hasRealTimeOrNonRealTimeDetectsRealTime(): void
     {
         $modifier = $this->createAccessibleModifier();

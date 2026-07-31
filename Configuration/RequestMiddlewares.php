@@ -1,5 +1,6 @@
 <?php
 
+use T3Planet\RteCkeditorPack\Middleware\CommentTread;
 use T3Planet\RteCkeditorPack\Middleware\ParsedHtmlForFrontend;
 use T3Planet\RteCkeditorPack\Middleware\RevisionHistory;
 use T3Planet\RteCkeditorPack\Middleware\Suggestions;
@@ -8,6 +9,17 @@ use T3Planet\RteCkeditorPack\Middleware\VisualEditorStylesMiddleware;
 
 return [
     'frontend' => [
+        // Non-RTC Comments adapter calls /comments* on the site host (not /typo3/ajax).
+        // Must run after FE backend-user auth so Visual Editor sessions are recognized.
+        't3planet/threadcomment' => [
+            'target' => CommentTread::class,
+            'after' => [
+                'typo3/cms-frontend/backend-user-authentication',
+            ],
+            'before' => [
+                'typo3/cms-frontend/page-resolver',
+            ],
+        ],
         't3planet/parsedcommenthtml' => [
             'target' => ParsedHtmlForFrontend::class,
             'after' => [
@@ -39,5 +51,12 @@ return [
             ],
         ],
     ],
-    'backend' => [],
+    'backend' => [
+        't3planet/threadcomment' => [
+            'target' => CommentTread::class,
+            'after' => [
+                'typo3/cms-backend/authentication',
+            ],
+        ],
+    ],
 ];

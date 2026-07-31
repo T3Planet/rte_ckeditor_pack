@@ -89,6 +89,9 @@ class ProcessingConfigurationUtility
     {
         $configuration = self::applyProcessingConfig($configuration);
         $configuration = self::applyHtmlSupportConfig($configuration);
+        // Marker allowTags + GHS disallow only (no editor height/CSS defaults).
+        $configuration = GeneralUtility::makeInstance(EditorConfigurationBuilder::class)
+            ->ensureCollaborationMarkerProcessing($configuration);
 
         return self::ensureEditorConfigurationStructure($configuration);
     }

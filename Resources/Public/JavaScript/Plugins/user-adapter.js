@@ -20,9 +20,15 @@ class UserAdapter extends Core.Plugin {
         return 'UserAdapter';
     }
 
+    static get requires() {
+        return ['Users'];
+    }
+
     _shouldDeferToCloudCollaboration() {
-        return this._isRealtimeCollaborationEnabled()
-            || Boolean(this.editor.config.get('cloudServices')?.tokenUrl);
+        // Only defer when Real-time Collaboration plugins are actually loaded.
+        // cloudServices.tokenUrl is also used by other premium features (e.g. Import
+        // from Word) and must not skip local Users.me for Non-RTC Comments.
+        return this._isRealtimeCollaborationEnabled();
     }
 
     init() {
@@ -44,8 +50,9 @@ class UserAdapter extends Core.Plugin {
                     usersPlugin.addUser(user);
                 }
             });
-            if (appData.userId) {
-                usersPlugin.defineMe(String(appData.userId));
+            const meId = appData.userId || appData.users[0]?.id;
+            if (meId) {
+                usersPlugin.defineMe(String(meId));
             }
             return;
         }
@@ -62,8 +69,13 @@ class UserAdapter extends Core.Plugin {
             return;
         }
 
-        if (collaborationUsers.length === 0 && collaboration.userName) {
-            const fallbackId = collaboration.userId || 'typo3-user';
+        if (collaborationUsers.length > 0 && collaborationUsers[0]?.id) {
+            usersPlugin.defineMe(String(collaborationUsers[0].id));
+            return;
+        }
+
+        if (collaboration.userName) {
+            const fallbackId = 'typo3-user';
             usersPlugin.addUser({
                 id: fallbackId,
                 name: collaboration.userName,

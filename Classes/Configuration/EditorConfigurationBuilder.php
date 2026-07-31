@@ -28,11 +28,25 @@ class EditorConfigurationBuilder
      */
     public function addImportantSettings(array $configuration): array
     {
-        $configuration = $this->addProcessingSettings($configuration);
+        $configuration = $this->ensureCollaborationMarkerProcessing($configuration);
         $configuration = $this->addCommentsEditorConfig($configuration);
         $configuration = $this->addDefaultSettings($configuration);
 
         return $configuration;
+    }
+
+    /**
+     * Ensure comment/suggestion markers survive DataHandler processing and are not
+     * owned by General HTML Support. Safe to call from richtext applyAll (no editor defaults).
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public function ensureCollaborationMarkerProcessing(array $configuration): array
+    {
+        $configuration = $this->addProcessingSettings($configuration);
+
+        return $this->disallowCollaborationMarkersInHtmlSupport($configuration);
     }
 
     /**
@@ -44,11 +58,22 @@ class EditorConfigurationBuilder
     private function addProcessingSettings(array $configuration): array
     {
         $allowTags = ['comment-start', 'comment-end', 'suggestion-start', 'suggestion-end', 'wbr'];
+        // `name` links comment/suggestion markers to stored threads (required for Non-RTC).
+        $allowAttributes = ['name'];
 
         if (isset($configuration['processing']['allowTags'])) {
             $configuration['processing']['allowTags'] = array_merge($allowTags, $configuration['processing']['allowTags']);
         } else {
             $configuration['processing']['allowTags'] = $allowTags;
+        }
+
+        if (isset($configuration['processing']['allowAttributes'])) {
+            $configuration['processing']['allowAttributes'] = array_values(array_unique(array_merge(
+                $allowAttributes,
+                (array)$configuration['processing']['allowAttributes']
+            )));
+        } else {
+            $configuration['processing']['allowAttributes'] = $allowAttributes;
         }
 
         if (isset($configuration['processing']['allowTagsOutside'])) {
@@ -71,15 +96,35 @@ class EditorConfigurationBuilder
         $htmlAllow = [];
         if (isset($htmlConfiguration['allow']) && is_array($htmlConfiguration['allow'])) {
             foreach ($htmlConfiguration['allow'] as $item) {
-                if (is_array($item)) {
-                    $htmlAllow[] = $this->normalizeBooleanStrings($item);
+                if (!is_array($item)) {
+                    continue;
                 }
+                $normalized = $this->normalizeBooleanStrings($item);
+                $name = $normalized['name'] ?? null;
+                // Skip empty / invalid names and collaboration markers (owned by Comments/TC).
+                if ($name === null || $name === '' || $name === false) {
+                    continue;
+                }
+                if (is_string($name) && in_array($name, ['comment-start', 'comment-end', 'suggestion-start', 'suggestion-end'], true)) {
+                    continue;
+                }
+                $htmlAllow[] = $normalized;
             }
         }
 
         $normalizedHtmlSupport = $htmlConfiguration;
         if ($htmlAllow !== []) {
             $normalizedHtmlSupport['allow'] = $htmlAllow;
+        } elseif (isset($normalizedHtmlSupport['allow'])) {
+            // Drop empty/invalid allow entries (including collaboration markers).
+            unset($normalizedHtmlSupport['allow']);
+        }
+
+        if (isset($normalizedHtmlSupport['allowEmpty']) && is_string($normalizedHtmlSupport['allowEmpty'])) {
+            $normalizedHtmlSupport['allowEmpty'] = array_values(array_filter(
+                array_map('trim', explode(',', $normalizedHtmlSupport['allowEmpty'])),
+                static fn (string $name): bool => $name !== ''
+            ));
         }
 
         return $this->mergeHtmlSupportIntoConfiguration($configuration, $normalizedHtmlSupport);
@@ -146,6 +191,84 @@ class EditorConfigurationBuilder
         if (!isset($configuration['comments']['editorConfig'])) {
             $configuration['comments']['editorConfig']['extraPlugins'] = [];
         }
+
+        return $configuration;
+    }
+
+    /**
+     * Keep comment/suggestion markers owned by Comments / Track Changes plugins.
+     * If General HTML Support is allowed to handle these tags, CKEditor stores them as
+     * generic HTML and the field value shows raw <comment-start>/<comment-end> markup.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public function disallowCollaborationMarkersInHtmlSupport(array $configuration): array
+    {
+        $disallow = [
+            ['name' => 'comment-start'],
+            ['name' => 'comment-end'],
+            ['name' => 'suggestion-start'],
+            ['name' => 'suggestion-end'],
+        ];
+        $blockedNames = array_column($disallow, 'name');
+
+        if (!isset($configuration['htmlSupport']) || !is_array($configuration['htmlSupport'])) {
+            $configuration['htmlSupport'] = [];
+        }
+        if (!isset($configuration['editor']['config']) || !is_array($configuration['editor']['config'])) {
+            $configuration['editor']['config'] = [];
+        }
+        if (
+            !isset($configuration['editor']['config']['htmlSupport'])
+            || !is_array($configuration['editor']['config']['htmlSupport'])
+        ) {
+            $configuration['editor']['config']['htmlSupport'] = [];
+        }
+
+        $targets = [
+            &$configuration['htmlSupport'],
+            &$configuration['editor']['config']['htmlSupport'],
+        ];
+
+        foreach ($targets as &$htmlSupport) {
+            $existing = [];
+            if (isset($htmlSupport['disallow']) && is_array($htmlSupport['disallow'])) {
+                $existing = $htmlSupport['disallow'];
+            }
+            $names = [];
+            foreach ($existing as $rule) {
+                if (is_array($rule) && isset($rule['name'])) {
+                    $names[(string)$rule['name']] = true;
+                }
+            }
+            foreach ($disallow as $rule) {
+                if (!isset($names[$rule['name']])) {
+                    $existing[] = $rule;
+                }
+            }
+            $htmlSupport['disallow'] = $existing;
+
+            if (isset($htmlSupport['allow']) && is_array($htmlSupport['allow'])) {
+                $htmlSupport['allow'] = array_values(array_filter(
+                    $htmlSupport['allow'],
+                    static function ($rule) use ($blockedNames): bool {
+                        if (!is_array($rule) || !isset($rule['name'])) {
+                            return true;
+                        }
+
+                        return !in_array((string)$rule['name'], $blockedNames, true);
+                    }
+                ));
+            }
+            if (isset($htmlSupport['allowEmpty']) && is_array($htmlSupport['allowEmpty'])) {
+                $htmlSupport['allowEmpty'] = array_values(array_filter(
+                    $htmlSupport['allowEmpty'],
+                    static fn ($name): bool => !in_array((string)$name, $blockedNames, true)
+                ));
+            }
+        }
+        unset($htmlSupport);
 
         return $configuration;
     }
