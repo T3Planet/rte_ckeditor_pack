@@ -109,7 +109,6 @@ class RteConfigurationModifierTest extends BaseTestCase
     private function invokePrivate(object $instance, string $method, array $args = [])
     {
         $reflection = new \ReflectionMethod($instance, $method);
-        $reflection->setAccessible(true);
         return $reflection->invokeArgs($instance, $args);
     }
 

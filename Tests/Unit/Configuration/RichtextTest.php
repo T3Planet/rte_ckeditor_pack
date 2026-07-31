@@ -48,7 +48,7 @@ class RichtextTest extends BaseTestCase
     }
 
     #[Test]
-    public function getConfigurationReturnsParentResultUntouchedWhenNoPresetFound(): void
+    public function getConfigurationInjectsCollaborationMarkersWhenNoPresetFound(): void
     {
         /** @var Richtext|AccessibleObjectInterface|MockObject $richtext */
         $richtext = $this->getAccessibleMock(
@@ -70,9 +70,12 @@ class RichtextTest extends BaseTestCase
         $result = $richtext->getConfiguration('tt_content', 'bodytext', 1, 'textmedia', []);
 
         self::assertIsArray($result);
-        // Our override must NOT inject any custom processing keys when no preset is found
-        self::assertArrayNotHasKey('allowTags', $result['processing'] ?? []);
-        self::assertArrayNotHasKey('allowAttributes', $result['processing'] ?? []);
+        // No preset processing config, but applyAll always injects collaboration markers.
+        self::assertSame(
+            ['comment-start', 'comment-end', 'suggestion-start', 'suggestion-end', 'wbr'],
+            $result['processing']['allowTags'] ?? null
+        );
+        self::assertSame(['name'], $result['processing']['allowAttributes'] ?? null);
     }
 
     #[Test]
@@ -102,8 +105,12 @@ class RichtextTest extends BaseTestCase
 
         self::assertArrayHasKey('processing', $result);
         self::assertArrayHasKey('allowTags', $result['processing']);
-        self::assertSame(['p', 'div', 'span'], $result['processing']['allowTags']);
-        self::assertSame(['class', 'id'], $result['processing']['allowAttributes']);
+        // Collaboration markers are prepended before preset allowTags.
+        self::assertSame(
+            ['comment-start', 'comment-end', 'suggestion-start', 'suggestion-end', 'wbr', 'p', 'div', 'span'],
+            $result['processing']['allowTags']
+        );
+        self::assertSame(['name', 'class', 'id'], $result['processing']['allowAttributes']);
         self::assertArrayHasKey('proc.', $result);
         self::assertSame('default', $result['processing']['mode']);
     }
