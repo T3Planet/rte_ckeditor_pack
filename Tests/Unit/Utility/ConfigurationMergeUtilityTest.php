@@ -61,4 +61,39 @@ final class ConfigurationMergeUtilityTest extends BaseTestCase
 
         self::assertSame('bold,customButton,italic,horizontalLine,sourceEditing', $result);
     }
+
+    #[Test]
+    public function orderedSyncDoesNotCreateAdjacentSeparatorsWhenDbOrderDiffers(): void
+    {
+        $result = $this->subject->syncToolbarOrdered(
+            ['code', 'highlight', '|', 'bold', 'italic', '|', 'clipboard', 'undo', 'redo'],
+            'bold,italic,|,clipboard,undo,redo,code,highlight'
+        );
+
+        self::assertSame('bold,italic,|,clipboard,undo,redo,code,highlight', $result);
+        self::assertStringNotContainsString('|,|', $result);
+    }
+
+    #[Test]
+    public function orderedSyncDoesNotCreateAdjacentSeparatorsWhenInsertingMissingItems(): void
+    {
+        $result = $this->subject->syncToolbarOrdered(
+            ['code', 'highlight', '|', 'bold', 'italic', '|', 'clipboard', 'undo', 'redo'],
+            'bold,italic,|,clipboard,undo,redo'
+        );
+
+        self::assertSame('bold,italic,code,highlight,|,clipboard,undo,redo', $result);
+        self::assertStringNotContainsString('|,|', $result);
+    }
+
+    #[Test]
+    public function orderedSyncCollapsesExistingAdjacentSeparators(): void
+    {
+        $result = $this->subject->syncToolbarOrdered(
+            ['bold', '|', 'italic'],
+            'bold,|,|,italic'
+        );
+
+        self::assertSame('bold,|,italic', $result);
+    }
 }

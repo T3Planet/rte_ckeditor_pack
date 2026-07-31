@@ -211,7 +211,8 @@ class ConfigurationMergeUtility
      * Insert missing YAML toolbar items according to YAML order while preserving
      * all existing DB items and their relative order.
      *
-     * Repeated separators (for example "|") are handled by occurrence.
+     * Repeated separators (for example "|") are handled by occurrence, but
+     * consecutive separators are never kept.
      */
     public function syncToolbarOrdered(array $yamlToolbarItems, string $presetToolbarItems): string
     {
@@ -254,10 +255,15 @@ class ConfigurationMergeUtility
                 }
             }
 
-            array_splice($mergedItems, $insertAt ?? count($mergedItems), 0, [$item]);
+            $target = $insertAt ?? count($mergedItems);
+            if ($item === '|' && $this->wouldCreateAdjacentSeparator($mergedItems, $target)) {
+                continue;
+            }
+
+            array_splice($mergedItems, $target, 0, [$item]);
         }
 
-        return implode(',', $mergedItems);
+        return implode(',', $this->collapseAdjacentSeparators($mergedItems));
     }
 
     /**
@@ -273,6 +279,32 @@ class ConfigurationMergeUtility
             ),
             static fn(string $item): bool => $item !== ''
         ));
+    }
+
+    /**
+     * @param list<string> $items
+     */
+    private function wouldCreateAdjacentSeparator(array $items, int $target): bool
+    {
+        return ($target > 0 && ($items[$target - 1] ?? null) === '|')
+            || (($items[$target] ?? null) === '|');
+    }
+
+    /**
+     * @param list<string> $items
+     * @return list<string>
+     */
+    private function collapseAdjacentSeparators(array $items): array
+    {
+        $collapsed = [];
+        foreach ($items as $item) {
+            if ($item === '|' && $collapsed !== [] && end($collapsed) === '|') {
+                continue;
+            }
+            $collapsed[] = $item;
+        }
+
+        return $collapsed;
     }
 
     /**

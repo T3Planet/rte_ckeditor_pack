@@ -136,26 +136,9 @@ class RealtimeAdapter extends Core.Plugin {
             editor.plugins.get('SourceEditing').forceDisabled('SourceEditing');
         }
 
-        // Revision History containers (FormEngine: inside .form-wizards-wrap for AI flex CSS)
-        if (editor.plugins.has('RevisionHistory')) {
-            const container = this._resolveMountContainer();
-            if (container) {
-                const { channelId } = this;
-                const viewerContainerId = `${channelId}revision_viewer_container`;
-                if (!document.getElementById(viewerContainerId)) {
-                    const formWizardsWrap = container.querySelector?.('.form-wizards-wrap');
-                    const target = formWizardsWrap || container;
-                    target.insertAdjacentHTML('beforeend', `
-                        <div id="${viewerContainerId}" class="revision_viewer_container">
-                            <div class="revision_viewer_editor-container">
-                                <div id="${channelId}revision_viewer_editor" class="revision_viewer_editor"></div>
-                                <div id="${channelId}revision_viewer_sidebar" class="revision_viewer_sidebar sidebar-container"></div>
-                            </div>
-                        </div>
-                    `);
-                }
-            }
-        }
+        // Revision History containers — must be siblings of editorContainer.
+        // Nesting the viewer inside editorContainer hides it when RH opens.
+        this._applyRevisionHistoryContainers();
 
         // RTC connection events
         if (hasRTC) {
@@ -178,22 +161,8 @@ class RealtimeAdapter extends Core.Plugin {
         editor.on('error', () => this._hideLoader());
         editor.on('destroy', () => this._hideLoader());
 
-        // Revision History viewer wiring
-        if (editor.plugins.has('RevisionHistory')) {
-            const editorContainer = this._resolveMountContainer();
-            const containers = {
-                editorContainer,
-                viewerContainer: document.getElementById(`${channelId}revision_viewer_container`),
-                viewerEditorElement: document.getElementById(`${channelId}revision_viewer_editor`),
-                viewerSidebarContainer: document.getElementById(`${channelId}revision_viewer_sidebar`),
-            };
-
-            Object.entries(containers).forEach(([key, value]) => {
-                if (value) {
-                    editor.config.set(`revisionHistory.${key}`, value);
-                }
-            });
-        }
+        // Revision History viewer wiring (sibling of editorContainer, never nested)
+        this._applyRevisionHistoryContainers();
 
         this._configureCommentMentionFeeds();
 
@@ -296,6 +265,77 @@ class RealtimeAdapter extends Core.Plugin {
                     dataHandlerStore.setInitialData(host.table, host.uid, host.field, value);
                 })
                 .catch(() => {});
+        });
+    }
+
+    /**
+     * Element CKEditor hides when Revision History opens.
+     * Prefer the editor item itself (not .form-control-wrap) so the viewer
+     * can sit as a sibling and remain visible.
+     */
+    _resolveRevisionEditorContainer() {
+        const veHost = this.editor.sourceElement?.closest?.('ve-editable-rich-text')
+            || this.editor.ui?.element?.closest?.('ve-editable-rich-text')
+            || this.channelElement?.closest?.('ve-editable-rich-text');
+        if (veHost) {
+            return veHost;
+        }
+
+        const anchors = [
+            this.editor.ui?.element,
+            this.editor.sourceElement,
+            this.channelElement,
+        ].filter(Boolean);
+
+        for (const anchor of anchors) {
+            const item = anchor.closest?.('.form-wizards-item-element');
+            if (item) {
+                return item;
+            }
+        }
+
+        return this._resolveMountContainer();
+    }
+
+    /**
+     * Create + wire revisionHistory.* containers.
+     * Viewer must never be a descendant of editorContainer.
+     */
+    _applyRevisionHistoryContainers() {
+        const editor = this.editor;
+        if (!editor.plugins.has('RevisionHistory')) {
+            return;
+        }
+
+        const editorContainer = this._resolveRevisionEditorContainer();
+        if (!editorContainer) {
+            return;
+        }
+
+        const { channelId } = this;
+        const viewerContainerId = `${channelId}revision_viewer_container`;
+        if (!document.getElementById(viewerContainerId)) {
+            editorContainer.insertAdjacentHTML('afterend', `
+                <div id="${viewerContainerId}" class="revision_viewer_container">
+                    <div class="revision_viewer_editor-container">
+                        <div id="${channelId}revision_viewer_editor" class="revision_viewer_editor"></div>
+                        <div id="${channelId}revision_viewer_sidebar" class="revision_viewer_sidebar sidebar-container"></div>
+                    </div>
+                </div>
+            `);
+        }
+
+        const containers = {
+            editorContainer,
+            viewerContainer: document.getElementById(viewerContainerId),
+            viewerEditorElement: document.getElementById(`${channelId}revision_viewer_editor`),
+            viewerSidebarContainer: document.getElementById(`${channelId}revision_viewer_sidebar`),
+        };
+
+        Object.entries(containers).forEach(([key, value]) => {
+            if (value) {
+                editor.config.set(`revisionHistory.${key}`, value);
+            }
         });
     }
 
