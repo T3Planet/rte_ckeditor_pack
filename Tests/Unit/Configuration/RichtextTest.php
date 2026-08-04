@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use T3Planet\RteCkeditorPack\Configuration\Richtext;
 use T3Planet\RteCkeditorPack\Domain\Model\Preset;
+use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use TYPO3\CMS\Core\Configuration\Richtext as CoreRichtext;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -33,6 +34,11 @@ class RichtextTest extends BaseTestCase
     {
         $this->mockedPresetRepository = $this->createMock(PresetRepository::class);
         GeneralUtility::setSingletonInstance(PresetRepository::class, $this->mockedPresetRepository);
+
+        $mockedFeatureRepository = $this->createMock(FeatureRepository::class);
+        $mockedFeatureRepository->method('findByPresetUidAndConfigKey')->willReturn(null);
+        $mockedFeatureRepository->method('findByConfigKey')->willReturn([]);
+        GeneralUtility::setSingletonInstance(FeatureRepository::class, $mockedFeatureRepository);
     }
 
     protected function tearDown(): void

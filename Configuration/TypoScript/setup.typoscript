@@ -26,4 +26,8 @@ lib.parseFunc_RTE {
     }
 }
 
-lib.parseFunc_RTE.nonTypoTagStdWrap.encapsLines.encapsTagList := addToList(img)
+lib.parseFunc_RTE.nonTypoTagStdWrap.encapsLines.encapsTagList := addToList(img,math)
+
+# Keep MathML intact for MathType formulas (frontend MathJax is injected via ParsedHtmlForFrontend)
+lib.parseFunc_RTE.allowTags := addToList(math,semantics,annotation,annotation-xml,mrow,mi,mn,mo,ms,mtext,mspace,mfrac,msqrt,mroot,msub,msup,msubsup,munder,mover,munderover,mtable,mtr,mtd,menclose,mstyle,mpadded,mphantom,mfenced,mmultiscripts,mprescripts,none,merror,mglyph,mlabeledtr)
+lib.parseFunc.allowTags := addToList(math,semantics,annotation,annotation-xml,mrow,mi,mn,mo,ms,mtext,mspace,mfrac,msqrt,mroot,msub,msup,msubsup,munder,mover,munderover,mtable,mtr,mtd,menclose,mstyle,mpadded,mphantom,mfenced,mmultiscripts,mprescripts,none,merror,mglyph,mlabeledtr)

@@ -175,6 +175,14 @@ return [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/insertFootnote.svg',
     ],
+    'rte_MathType' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/MathType.svg',
+    ],
+    'rte_ChemType' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/ChemType.svg',
+    ],
     'rte_footnotesStyle' => [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/footnotesStyle.svg',

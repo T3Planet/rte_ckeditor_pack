@@ -13,4 +13,5 @@
 .idea/
 .fleet/
 /var/
+/typo3temp/
 /rector.php

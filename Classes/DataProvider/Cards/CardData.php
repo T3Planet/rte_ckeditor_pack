@@ -99,6 +99,15 @@ class CardData
                 'modalSize' => 'small',
                 'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/footnotes.html',
             ],
+            'MathEquations' => [
+                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.math_equations', 'rte_ckeditor_pack'),
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.math_equations', 'rte_ckeditor_pack'),
+                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.math_equations.description', 'rte_ckeditor_pack'),
+                'icon' => 'rte_MathType',
+                'buttonTitle' => $this->btnTitle,
+                'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/math-equations.html',
+            ],
             'WProofreader' => [
                 'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.spell_and_grammar_check', 'rte_ckeditor_pack'),
                 'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.premium.spell_and_grammar_check', 'rte_ckeditor_pack'),
@@ -486,15 +495,6 @@ class CardData
             //     'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
             //     'modalSize' => 'medium',
             //     'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/image.html',
-            // ],
-            // 'MathEquations' => [
-            //     'title' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.premium.math_equations', 'rte_ckeditor_pack'),
-            //     'subtitle' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.premium.math_equations', 'rte_ckeditor_pack'),
-            //     'description' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.premium.math_equations.description', 'rte_ckeditor_pack'),
-            //     'icon' => 'apps-toolbar-menu-systeminformation',
-            //     'buttonTitle' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.card.coming-soon', 'rte_ckeditor_pack'),
-            //     'coming_soon' => true,
-            //     'modalSize' => 'small',
             // ],
             // 'CkBox' => [
             //     'title' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.file_management.ckbox', 'rte_ckeditor_pack'),

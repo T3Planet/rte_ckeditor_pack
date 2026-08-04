@@ -33,6 +33,10 @@ final readonly class VisualEditorStylesMiddleware implements MiddlewareInterface
                 'rte-ckeditor-pack-revision-viewer',
                 'EXT:rte_ckeditor_pack/Resources/Public/Css/revision-viewer.css'
             );
+            $this->assetCollector->addStyleSheet(
+                'rte-ckeditor-pack-mathtype',
+                'EXT:rte_ckeditor_pack/Resources/Public/Css/mathtype.css'
+            );
         }
 
         return $handler->handle($request);

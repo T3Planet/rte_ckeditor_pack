@@ -92,8 +92,124 @@ class ProcessingConfigurationUtility
         // Marker allowTags + GHS disallow only (no editor height/CSS defaults).
         $configuration = GeneralUtility::makeInstance(EditorConfigurationBuilder::class)
             ->ensureCollaborationMarkerProcessing($configuration);
+        $configuration = self::applyMathEquationsProcessing($configuration);
 
         return self::ensureEditorConfigurationStructure($configuration);
+    }
+
+    /**
+     * Allow MathML tags/attributes when Math Equations is enabled so formulas survive RTE processing.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function applyMathEquationsProcessing(array $configuration): array
+    {
+        if (!self::isMathEquationsEnabled($configuration)) {
+            return $configuration;
+        }
+
+        $mathTags = [
+            'math', 'semantics', 'annotation', 'annotation-xml', 'mrow', 'mi', 'mn', 'mo', 'ms', 'mtext',
+            'mspace', 'mfrac', 'msqrt', 'mroot', 'msub', 'msup', 'msubsup', 'munder', 'mover', 'munderover',
+            'mtable', 'mtr', 'mtd', 'menclose', 'mstyle', 'mpadded', 'mphantom', 'mfenced', 'mmultiscripts',
+            'mprescripts', 'none', 'merror', 'mglyph', 'mlabeledtr',
+        ];
+        $mathAttributes = [
+            'xmlns', 'encoding', 'displaystyle', 'mathvariant', 'mathsize', 'mathcolor', 'mathbackground',
+            'linebreak', 'stretchy', 'fence', 'separator', 'lspace', 'rspace', 'maxsize', 'minsize',
+            'movablelimits', 'accent', 'accentunder', 'columnspan', 'rowspan', 'class', 'style', 'id',
+            'data-mathml', 'alt', 'role', 'aria-label',
+        ];
+
+        if (!isset($configuration['processing']) || !is_array($configuration['processing'])) {
+            $configuration['processing'] = [];
+        }
+
+        $configuration['processing']['allowTags'] = array_values(array_unique(array_merge(
+            $mathTags,
+            (array)($configuration['processing']['allowTags'] ?? [])
+        )));
+        $configuration['processing']['allowAttributes'] = array_values(array_unique(array_merge(
+            $mathAttributes,
+            (array)($configuration['processing']['allowAttributes'] ?? [])
+        )));
+        $configuration['processing']['allowTagsOutside'] = array_values(array_unique(array_merge(
+            ['math', 'img'],
+            (array)($configuration['processing']['allowTagsOutside'] ?? [])
+        )));
+
+        $configuration = self::ensureDefaultProcessingMode($configuration);
+
+        return self::rebuildProcFromProcessing($configuration);
+    }
+
+    /**
+     * @param array<string, mixed> $configuration
+     */
+    private static function isMathEquationsEnabled(array $configuration): bool
+    {
+        // Prefer active editor config (works in unit tests / no Extbase context).
+        if (self::configurationDeclaresMathType($configuration)) {
+            return true;
+        }
+
+        try {
+            $presetRepository = GeneralUtility::makeInstance(PresetRepository::class);
+            $featureRepository = GeneralUtility::makeInstance(FeatureRepository::class);
+
+            $presetName = self::detectPresetName($configuration);
+            $preset = null;
+            if ($presetName) {
+                $preset = $presetRepository->findByPresetKey($presetName) ?? $presetRepository->findByUsage($presetName);
+            }
+
+            $presetUid = $preset?->getUid();
+            if ($presetUid !== null) {
+                $feature = $featureRepository->findByPresetUidAndConfigKey((int)$presetUid, 'MathEquations');
+                if ($feature !== null) {
+                    return $feature->isEnable();
+                }
+            }
+
+            $features = $featureRepository->findByConfigKey('MathEquations');
+            foreach ($features as $feature) {
+                if ($feature->isEnable()) {
+                    return true;
+                }
+            }
+        } catch (\Throwable) {
+            // Unit tests and early boot may lack Extbase persistence.
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array<string, mixed> $configuration
+     */
+    private static function configurationDeclaresMathType(array $configuration): bool
+    {
+        if (!empty($configuration['mathTypeParameters']) || !empty($configuration['editor']['config']['mathTypeParameters'])) {
+            return true;
+        }
+
+        $toolbar = $configuration['editor']['config']['toolbar']
+            ?? $configuration['toolbar']
+            ?? null;
+        if (!is_array($toolbar)) {
+            return false;
+        }
+
+        $flatItems = [];
+        array_walk_recursive($toolbar, static function ($value) use (&$flatItems): void {
+            if (is_string($value)) {
+                $flatItems[] = $value;
+            }
+        });
+
+        return in_array('MathType', $flatItems, true) || in_array('ChemType', $flatItems, true);
     }
 
     /**

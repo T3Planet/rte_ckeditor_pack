@@ -609,8 +609,44 @@ class RteConfigurationModifier
                 $configuration = $this->addImportModules($configuration, $moduleConfiguration);
             }
         }
-        return $configuration;
 
+        if ($recordConfigKey === 'MathEquations') {
+            $configuration = $this->ensureMathEquationsDefaults($configuration);
+        }
+
+        return $configuration;
+    }
+
+    /**
+     * Ensure MathType saves/renders reliably in TYPO3 by defaulting to image mode
+     * while keeping MathML service defaults available.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    private function ensureMathEquationsDefaults(array $configuration): array
+    {
+        if (!isset($configuration['mathTypeParameters']) || !is_array($configuration['mathTypeParameters'])) {
+            $configuration['mathTypeParameters'] = [];
+        }
+        if (!isset($configuration['mathTypeParameters']['editorParameters']) || !is_array($configuration['mathTypeParameters']['editorParameters'])) {
+            $configuration['mathTypeParameters']['editorParameters'] = [];
+        }
+        if (!isset($configuration['mathTypeParameters']['editorParameters']['language'])) {
+            $configuration['mathTypeParameters']['editorParameters']['language'] = 'en';
+        }
+        // Prefer image output for TYPO3 FE; MathML remains editable via data-mathml.
+        if (!isset($configuration['mathTypeParameters']['editorParameters']['wiriseditorsavemode'])) {
+            $configuration['mathTypeParameters']['editorParameters']['wiriseditorsavemode'] = 'image';
+        }
+        if (!isset($configuration['mathTypeParameters']['serviceProviderProperties']) || !is_array($configuration['mathTypeParameters']['serviceProviderProperties'])) {
+            $configuration['mathTypeParameters']['serviceProviderProperties'] = [
+                'URI' => 'https://www.wiris.net/demo/plugins/app',
+                'server' => 'https://www.wiris.net',
+            ];
+        }
+
+        return $configuration;
     }
 
     private function processFieldConfiguration($fieldValues, array $fieldConfigArray, array $configuration, string $recordConfigKey): array

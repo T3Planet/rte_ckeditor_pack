@@ -30,6 +30,7 @@ use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CodeBlockFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportPdfFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FeatureInterface;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FootnotesFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MathEquationsFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\HighlightFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WordCountFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CaseChangeFeature;
@@ -202,10 +203,15 @@ class Modules
             [
                 'tab' => Tabs::STANDALONE,
                 'details' => $cardDetails->getDetailsByKey('MathEquations'),
+                'is_toggle' => 1,
                 'configuration' => [
                     'default' => false,
+                    'is_premium' => true,
                     'config_key' => 'MathEquations',
+                    'module' => $this->getModulesFromFeature(MathEquationsFeature::class),
+                    'toolBarItems' => 'MathType,ChemType',
                 ],
+                'fields' => $this->getFieldsFromFeature(MathEquationsFeature::class),
             ],
             [
                 'tab' => Tabs::STANDALONE,
