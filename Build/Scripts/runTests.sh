@@ -567,7 +567,11 @@ case ${TEST_SUITE} in
         SUITE_EXIT_CODE=$?
         ;;
     functional)
-        COMMAND=(.Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml --exclude-group not-${DBMS} ${EXTRA_TEST_OPTIONS} "$@")
+        PHPUNIT_EXCLUDE_GROUPS="not-${DBMS}"
+        if [ "${TYPO3_VERSION}" -lt 14 ]; then
+            PHPUNIT_EXCLUDE_GROUPS="${PHPUNIT_EXCLUDE_GROUPS},typo3-v14"
+        fi
+        COMMAND=(.Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml --exclude-group ${PHPUNIT_EXCLUDE_GROUPS} ${EXTRA_TEST_OPTIONS} "$@")
         case ${DBMS} in
             mariadb)
                 echo "Using driver: ${DATABASE_DRIVER}"
@@ -624,7 +628,11 @@ case ${TEST_SUITE} in
         SUITE_EXIT_CODE=$?
         ;;
     unit)
-        COMMAND=(.Build/bin/phpunit -c Build/phpunit/UnitTests.xml --exclude-group not-${DBMS} ${EXTRA_TEST_OPTIONS} "$@")
+        PHPUNIT_EXCLUDE_GROUPS="not-${DBMS}"
+        if [ "${TYPO3_VERSION}" -lt 14 ]; then
+            PHPUNIT_EXCLUDE_GROUPS="${PHPUNIT_EXCLUDE_GROUPS},typo3-v14"
+        fi
+        COMMAND=(.Build/bin/phpunit -c Build/phpunit/UnitTests.xml --exclude-group ${PHPUNIT_EXCLUDE_GROUPS} ${EXTRA_TEST_OPTIONS} "$@")
         ${CONTAINER_BIN} run "${CONTAINER_COMMON_PARAMS[@]}" --name unit-${SUFFIX} ${XDEBUG_MODE} -e XDEBUG_CONFIG="${XDEBUG_CONFIG}" ${IMAGE_PHP} "${COMMAND[@]}"
         SUITE_EXIT_CODE=$?
         ;;

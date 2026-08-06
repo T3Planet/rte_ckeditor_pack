@@ -26,8 +26,12 @@ return [
                 'typo3/cms-frontend/prepare-tsfe-rendering',
             ],
         ],
+        // After FE backend-user auth so Visual Editor sessions are recognized (v13+).
         't3planet/visual-editor-styles' => [
             'target' => VisualEditorStylesMiddleware::class,
+            'after' => [
+                'typo3/cms-frontend/backend-user-authentication',
+            ],
             'before' => [
                 'typo3/cms-frontend/prepare-tsfe-rendering',
             ],

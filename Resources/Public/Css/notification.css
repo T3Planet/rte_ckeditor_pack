@@ -1,4 +1,6 @@
-/* Optimized CKEditor Notification Styles */
+/* Pack error notifications — FormEngine (BE stylesheets) + Visual Editor (middleware).
+ * position:fixed avoids overflow:hidden clipping; JS updates bottom/right so the
+ * banner floats with the active editable (one banner for multi-CE). */
 :root {
   --ck-notification-bg: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   --ck-notification-border: #dc3545;
@@ -7,13 +9,16 @@
   --ck-notification-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.ck-notification {
+.ck.ck-notification,
+.ck-notification[data-ck-pack-notification] {
+  position: fixed;
+  /* Above VE/AI shells (revision-viewer uses ~20100) and CK balloon panels (~10050). */
+  z-index: 50000 !important;
   min-width: 320px;
-  max-width: 480px;
-  position: relative;
+  max-width: min(480px, calc(100vw - 2rem));
   display: flex;
   flex-direction: column;
-  margin: 0 0 1rem 0;
+  margin: 0;
   padding: 1.25rem;
   border: 1px solid var(--ck-notification-border);
   border-left: 4px solid var(--ck-notification-border);
@@ -24,8 +29,14 @@
   font-size: 14px;
   line-height: 1.5;
   box-shadow: var(--ck-notification-shadow);
-  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: ck-pack-notification-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: right center;
+  pointer-events: auto;
+  box-sizing: border-box;
+  /* JS may refine these to follow the editable; keep sensible defaults. */
+  bottom: 20px;
+  right: 15px;
+  transition: bottom 0.15s ease-out, right 0.15s ease-out;
 }
 
 .ck-notification__error::before {
@@ -72,11 +83,13 @@
   color: var(--ck-notification-text);
   background: transparent;
   border: none;
+  padding: 0;
   cursor: pointer;
   border-radius: 50%;
   transition: var(--ck-notification-transition);
   font-weight: 600;
   z-index: 2;
+  line-height: 1;
 }
 
 .ck-notification__close:hover {
@@ -95,26 +108,33 @@
 }
 
 .ck-notification.ck-hidden {
-  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: ck-pack-notification-slide-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
 }
 
-@keyframes slideIn {
+@keyframes ck-pack-notification-slide-in {
   from { transform: translateX(100%) scale(0.95); opacity: 0; }
   to { transform: translateX(0) scale(1); opacity: 1; }
 }
 
-@keyframes slideOut {
+@keyframes ck-pack-notification-slide-out {
   from { transform: translateX(0) scale(1); opacity: 1; }
   to { transform: translateX(100%) scale(0.95); opacity: 0; }
 }
 
 /* Responsive */
 @media (max-width: 480px) {
-  .ck-notification {
-    min-width: 280px;
-    max-width: calc(100vw - 2rem);
-    margin: 0 1rem 1rem 1rem;
+  .ck.ck-notification,
+  .ck-notification[data-ck-pack-notification] {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    min-width: 0;
+    max-width: none;
+    width: auto;
     padding: 1rem;
+    /* Mobile: stay full-bleed; ignore per-editable right offset from JS. */
+    transition: none;
   }
   .ck-notification__header,
   .ck-notification__description {
@@ -138,6 +158,8 @@
   .ck-notification,
   .ck-notification.ck-hidden { animation: none; }
   .ck-notification__close { transition: none; }
+  .ck.ck-notification,
+  .ck-notification[data-ck-pack-notification] { transition: none; }
 }
 
 @media (prefers-color-scheme: dark) {
