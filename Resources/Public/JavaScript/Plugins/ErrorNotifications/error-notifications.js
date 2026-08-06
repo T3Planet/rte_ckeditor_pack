@@ -18,7 +18,7 @@ const FALLBACK_LABELS = {
     'You have reached the usage limit of your trial license key. Restart the editor - you can reload the page or save edited content.',
   'errorNotifications.header.usageLimit': 'Usage limit reached',
   'errorNotifications.description.usageLimit':
-    'You have reached the usage limit of your license key. Please contact our customer support to extend the limit at https://ckeditor.com/contact/.',
+    'You have reached the usage limit of your license key. Premium features (such as AI, export, and collaboration) will stop working until the limit is extended. Please contact support at https://ckeditor.com/contact/ or ask your administrator to update the license in CKEditor Pack settings.',
   'errorNotifications.header.wproofreaderAuth': 'WProofreader Authorization Error',
   'errorNotifications.description.wproofreaderAuth':
     'Some problems occurred during WProofreader initialization. Check the WProofreader plugin configuration.',
