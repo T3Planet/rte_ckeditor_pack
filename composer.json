@@ -66,10 +66,18 @@
         ],
         "test": "@test:unit",
         "test:unit": "Build/Scripts/runTests.sh -t 13 -p 8.4 -s unit",
+        "test:unit:v12": "Build/Scripts/runTests.sh -t 12 -p 8.2 -s unit",
+        "test:unit:v13": "Build/Scripts/runTests.sh -t 13 -p 8.4 -s unit",
+        "test:unit:v14": "Build/Scripts/runTests.sh -t 14 -p 8.4 -s unit",
         "test:functional": "Build/Scripts/runTests.sh -t 13 -p 8.4 -d sqlite -s functional",
         "test:all": [
             "@test:unit",
             "@test:functional"
+        ],
+        "test:unit:matrix": [
+            "@test:unit:v12",
+            "@test:unit:v13",
+            "@test:unit:v14"
         ],
         "doc-init": "docker run --rm --pull always -v $(pwd):/project -it ghcr.io/typo3-documentation/render-guides:latest --config=Documentation",
         "doc-make": "make docs",

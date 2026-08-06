@@ -246,8 +246,17 @@ class EditorConfigurationBuilder
             }
             $names = [];
             foreach ($existing as $rule) {
-                if (is_array($rule) && isset($rule['name'])) {
-                    $names[(string)$rule['name']] = true;
+                if (!is_array($rule) || !isset($rule['name'])) {
+                    continue;
+                }
+                if (is_string($rule['name'])) {
+                    $names[$rule['name']] = true;
+                } elseif (is_array($rule['name'])) {
+                    foreach ($rule['name'] as $ruleName) {
+                        if (is_string($ruleName) || is_int($ruleName)) {
+                            $names[(string)$ruleName] = true;
+                        }
+                    }
                 }
             }
             foreach ($disallow as $rule) {
@@ -265,14 +274,26 @@ class EditorConfigurationBuilder
                             return true;
                         }
 
-                        return !in_array((string)$rule['name'], $blockedNames, true);
+                        $name = $rule['name'];
+                        if (is_string($name)) {
+                            return !in_array($name, $blockedNames, true);
+                        }
+                        if (is_array($name)) {
+                            foreach ($name as $ruleName) {
+                                if (is_string($ruleName) && in_array($ruleName, $blockedNames, true)) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        return true;
                     }
                 ));
             }
             if (isset($htmlSupport['allowEmpty']) && is_array($htmlSupport['allowEmpty'])) {
                 $htmlSupport['allowEmpty'] = array_values(array_filter(
                     $htmlSupport['allowEmpty'],
-                    static fn ($name): bool => !in_array((string)$name, $blockedNames, true)
+                    static fn ($name): bool => is_string($name) && !in_array($name, $blockedNames, true)
                 ));
             }
         }

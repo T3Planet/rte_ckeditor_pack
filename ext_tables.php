@@ -29,6 +29,7 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['customPermOptions'] = [
             'Pagination' => ['Pagination', 'actions-pagetree'],
             'MergeFields' => ['MergeFields', 'actions-variable-add'],
             'Footnotes' => ['Footnotes', 'rte_footnotes'],
+            'RestrictedEditingMode' => ['RestrictedEditingMode', 'rte_restrictedEditing'],
         ],
     ],
 ];

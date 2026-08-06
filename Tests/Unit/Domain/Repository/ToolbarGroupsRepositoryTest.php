@@ -117,8 +117,14 @@ class ToolbarGroupsRepositoryTest extends BaseTestCase
     #[Test]
     public function updateToolBarItemsReturnsFalseWhenInsertToolBarPresetThrowsDbalException(): void
     {
-        // Doctrine\DBAL\Exception became an interface in DBAL 3.x; instantiate a class that implements it.
-        $dbalException = new class ('boom') extends \RuntimeException implements DBALException {};
+        // DBAL 4 (TYPO3 13+): Exception is an interface.
+        // DBAL 3 (TYPO3 12): Exception is a concrete class.
+        $dbalExceptionClass = new \ReflectionClass(DBALException::class);
+        if ($dbalExceptionClass->isInterface()) {
+            $dbalException = new class ('boom') extends \RuntimeException implements DBALException {};
+        } else {
+            $dbalException = $dbalExceptionClass->newInstance('boom');
+        }
 
         $repository = $this->createRepositoryWithInsertMocked();
         $repository->method('insertToolBarPreset')

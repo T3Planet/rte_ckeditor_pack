@@ -89,7 +89,10 @@ class BaseToolBar
 
         if ($activeFeaturesToolbarItems) {
             foreach ($activeFeaturesToolbarItems as $value) {
-                $label = LocalizationUtility::translate('toolbar.item.' . $value, 'rte_ckeditor_pack') ?? $value;
+                $label = LocalizationUtility::translate(
+                    'toolbar.item.' . str_replace(':', '_', $value),
+                    'rte_ckeditor_pack'
+                ) ?? $value;
                 $icon = $toolbar->getIconByName($value);
                 $activeItemArray[] = [
                     'icon' => $icon,
@@ -110,6 +113,7 @@ class BaseToolBar
             if ($preset && $preset->getToolbarItems()) {
                 // Get toolbar items from preset table
                 $toolBarItems = GeneralUtility::trimExplode(',', $preset->getToolbarItems(), true);
+                $toolBarItems = $this->collapseRestrictedEditingToolbarItems($toolBarItems);
                 
                 foreach ($toolBarItems as $value) {
                     if (str_starts_with($value, 'Group-')) {
@@ -124,7 +128,10 @@ class BaseToolBar
                             ];
                         }
                     } else {
-                        $label = LocalizationUtility::translate('toolbar.item.' . $value, 'rte_ckeditor_pack') ?? $value;
+                        $label = LocalizationUtility::translate(
+                            'toolbar.item.' . str_replace(':', '_', $value),
+                            'rte_ckeditor_pack'
+                        ) ?? $value;
                         $icon = $toolbar->getIconByName($value);
                         $toolBarItemArray[] = [
                             'icon' => $icon,
@@ -163,7 +170,10 @@ class BaseToolBar
         if ($defaultToolBar) {
             foreach ($defaultToolBar as $dftItem) {
 
-                $label = LocalizationUtility::translate('toolbar.item.' . $dftItem, 'rte_ckeditor_pack') ?? $dftItem;
+                $label = LocalizationUtility::translate(
+                    'toolbar.item.' . str_replace(':', '_', $dftItem),
+                    'rte_ckeditor_pack'
+                ) ?? $dftItem;
                 $icon = $toolbar->getIconByName($dftItem);
                 $activeItemArray[] = [
                     'icon' => $icon,
@@ -206,16 +216,23 @@ class BaseToolBar
             $preset = $this->presetRepository->findBy(['uid' => $presetUid])->getFirst();
             if ($preset) {
                 $toolBarItems = explode(',', $preset->getToolbarItems());
-                $matchingIndices = [];
-                foreach ($moduleToolBarItems as $childValue) {
-                    $index = array_search($childValue, $toolBarItems, true);
-                    if ($index !== false) {
-                        $matchingIndices[] = $index;
+                if ($configKey === 'RestrictedEditingMode') {
+                    $toolBarItems = array_values(array_filter(
+                        $toolBarItems,
+                        static fn(string $item): bool => !str_starts_with(trim($item), 'restrictedEditing')
+                    ));
+                } else {
+                    $matchingIndices = [];
+                    foreach ($moduleToolBarItems as $childValue) {
+                        $index = array_search($childValue, $toolBarItems, true);
+                        if ($index !== false) {
+                            $matchingIndices[] = $index;
+                        }
                     }
-                }
-                if ($matchingIndices) {
-                    foreach ($matchingIndices as $value) {
-                        unset($toolBarItems[$value]);
+                    if ($matchingIndices) {
+                        foreach ($matchingIndices as $value) {
+                            unset($toolBarItems[$value]);
+                        }
                     }
                 }
                 $toolBar = implode(',', $toolBarItems);
@@ -224,6 +241,30 @@ class BaseToolBar
                 $this->persistenceManager->persistAll();
             }
         }
+    }
+
+    /**
+     * Pack exposes one Restricted editing toolbar item; collapse legacy variants in the UI.
+     *
+     * @param list<string> $items
+     * @return list<string>
+     */
+    private function collapseRestrictedEditingToolbarItems(array $items): array
+    {
+        $replaced = false;
+        $result = [];
+        foreach ($items as $item) {
+            if (str_starts_with($item, 'restrictedEditing')) {
+                if (!$replaced) {
+                    $result[] = 'restrictedEditing';
+                    $replaced = true;
+                }
+                continue;
+            }
+            $result[] = $item;
+        }
+
+        return $result;
     }
 
     public function findAvailablePresets(): array

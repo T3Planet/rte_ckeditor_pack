@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Tests\Unit\Configuration;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use T3Planet\RteCkeditorPack\Configuration\Richtext;
@@ -16,15 +17,12 @@ use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 /**
- * Unit test for Configuration\Richtext
+ * Unit test for Configuration\Richtext (TYPO3 v12/v13 only).
  *
- * This class is a thin wrapper around TYPO3\CMS\Core\Configuration\Richtext.
- * It overrides getConfiguration() to additionally run the
- * ProcessingConfigurationUtility on the parent's result. The tests below
- * stub out the parent's only DB-touching method (getRtePageTsConfigOfPid)
- * and use a singleton-mocked PresetRepository to control the utility's
- * behavior.
+ * On TYPO3 v14, core Richtext is readonly — this subclass must not be autoloaded.
+ * Use RichtextV14Test instead. Excluded via --exclude-group typo3-v12-v13 on v14 runs.
  */
+#[Group('typo3-v12-v13')]
 class RichtextTest extends BaseTestCase
 {
     /** @var PresetRepository|MockObject */

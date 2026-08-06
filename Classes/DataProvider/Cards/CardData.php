@@ -595,15 +595,15 @@ class CardData
             //     'modalSize' => 'small',
             //     'coming_soon' => true
             // ],
-            // 'RestrictedEditingMode' =>[
-            //     'title' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.ckeditor5Plugins.restrictedEditing', 'rte_ckeditor_pack'),
-            //     'subtitle' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.ckeditor5Plugins.restrictedEditing', 'rte_ckeditor_pack'),
-            //     'description' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description', 'rte_ckeditor_pack'),
-            //     'icon' => 'overlay-restricted',
-            //     'buttonTitle' => LocalizationUtility::translate($this->localLanguage.'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
-            //     'modalSize' => 'small',
-            //     'coming_soon' => true,
-            // ],
+            'RestrictedEditingMode' => [
+                'title' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.restrictedEditing', 'rte_ckeditor_pack'),
+                'subtitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.restrictedEditing', 'rte_ckeditor_pack'),
+                'description' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description', 'rte_ckeditor_pack'),
+                'icon' => 'rte_restrictedEditing',
+                'buttonTitle' => LocalizationUtility::translate($this->localLanguage . 'ckeditorKit.tab.card.btn_title', 'rte_ckeditor_pack'),
+                'modalSize' => 'medium',
+                'docs' => 'https://ckeditor.com/docs/ckeditor5/latest/features/restricted-editing.html',
+            ],
 
         ];
 

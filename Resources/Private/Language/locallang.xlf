@@ -435,11 +435,18 @@
             </trans-unit>
             
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing">
-                <source>Restricted Editing</source>
+                <source>Restricted editing</source>
             </trans-unit>
             
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description">
-                <source>Control which parts of the document users can edit by locking sections.</source>
+                <source>Mark editable regions (Standard) or lock everything outside them (Restricted). Choose Mode in the feature settings, then drag the Restricted editing toolbar item into the active toolbar. Use a separate RTE preset per mode. Do not enable together with Real-time Collaboration on the same preset.</source>
+            </trans-unit>
+
+            <trans-unit id="toolbar.item.restrictedEditing">
+                <source>Restricted editing</source>
+            </trans-unit>
+            <trans-unit id="toolbar.item.restrictedEditingException">
+                <source>Restricted editing</source>
             </trans-unit>
             
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.markdown">

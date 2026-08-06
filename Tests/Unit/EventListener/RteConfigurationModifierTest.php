@@ -373,4 +373,164 @@ class RteConfigurationModifierTest extends BaseTestCase
         self::assertArrayHasKey('fontFamily', $result);
         self::assertSame(['bold', 'italic', 'underline'], $result['fontFamily']);
     }
+
+    #[Test]
+    public function resolveRestrictedEditingToolbarItemMapsStandardModeToExceptionItem(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $configuration = [
+            'toolbar' => [
+                'items' => ['bold', 'restrictedEditing', 'italic'],
+            ],
+        ];
+
+        $result = $this->invokePrivate(
+            $modifier,
+            'resolveRestrictedEditingToolbarItem',
+            [$configuration, 'standard']
+        );
+
+        self::assertSame(['bold', 'restrictedEditingException', 'italic'], $result['toolbar']['items']);
+    }
+
+    #[Test]
+    public function resolveRestrictedEditingToolbarItemMapsRestrictedModeToNavigationItem(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $configuration = [
+            'toolbar' => [
+                'items' => ['bold', 'restrictedEditingException', 'italic'],
+            ],
+        ];
+
+        $result = $this->invokePrivate(
+            $modifier,
+            'resolveRestrictedEditingToolbarItem',
+            [$configuration, 'restricted']
+        );
+
+        self::assertSame(['bold', 'restrictedEditing', 'italic'], $result['toolbar']['items']);
+    }
+
+    #[Test]
+    public function rewriteRestrictedEditingToolbarItemsCollapsesLegacyVariantsToSingleItem(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $configuration = [
+            'toolbar' => [
+                'items' => [
+                    'bold',
+                    'restrictedEditing',
+                    'restrictedEditingException',
+                    'restrictedEditing:dropdown',
+                    '|',
+                    'italic',
+                ],
+            ],
+        ];
+
+        $result = $this->invokePrivate(
+            $modifier,
+            'rewriteRestrictedEditingToolbarItems',
+            [$configuration, 'restrictedEditing']
+        );
+
+        self::assertSame(['bold', 'restrictedEditing', '|', 'italic'], $result['toolbar']['items']);
+    }
+
+    #[Test]
+    public function ensureRestrictedEditingDefaultsStripsPackOnlyModeKey(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $configuration = [
+            'restrictedEditing' => [
+                'mode' => 'restricted',
+                'allowedCommands' => ['bold'],
+            ],
+        ];
+
+        $result = $this->invokePrivate($modifier, 'ensureRestrictedEditingDefaults', [$configuration]);
+
+        self::assertArrayNotHasKey('mode', $result['restrictedEditing']);
+        self::assertSame(['bold'], $result['restrictedEditing']['allowedCommands']);
+    }
+
+    #[Test]
+    public function ensureRestrictedEditingDefaultsRemovesEmptyRestrictedEditingNode(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $configuration = [
+            'restrictedEditing' => [
+                'mode' => 'standard',
+            ],
+        ];
+
+        $result = $this->invokePrivate($modifier, 'ensureRestrictedEditingDefaults', [$configuration]);
+
+        self::assertArrayNotHasKey('restrictedEditing', $result);
+    }
+
+    #[Test]
+    public function addRestrictedEditingModulesLoadsStandardEditingModeByDefault(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $feature = new class () {
+            public function getFields(): string
+            {
+                return '';
+            }
+        };
+
+        $configuration = [
+            'toolbar' => ['items' => ['restrictedEditing']],
+            'importModules' => [],
+        ];
+
+        $result = $this->invokePrivate(
+            $modifier,
+            'addRestrictedEditingModules',
+            [$configuration, ['module' => []], $feature]
+        );
+
+        self::assertSame('restrictedEditingException', $result['toolbar']['items'][0]);
+        self::assertContains(
+            [
+                'module' => '@ckeditor/ckeditor5-restricted-editing',
+                'exports' => ['StandardEditingMode'],
+            ],
+            $result['importModules']
+        );
+    }
+
+    #[Test]
+    public function addRestrictedEditingModulesLoadsRestrictedEditingModeWhenConfigured(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $feature = new class () {
+            public function getFields(): string
+            {
+                return json_encode(['restrictedEditing' => ['mode' => 'restricted']], JSON_THROW_ON_ERROR);
+            }
+        };
+
+        $configuration = [
+            'toolbar' => ['items' => ['restrictedEditing']],
+            'importModules' => [],
+        ];
+
+        $result = $this->invokePrivate(
+            $modifier,
+            'addRestrictedEditingModules',
+            [$configuration, ['module' => []], $feature]
+        );
+
+        self::assertSame('restrictedEditing', $result['toolbar']['items'][0]);
+        self::assertContains(
+            [
+                'module' => '@ckeditor/ckeditor5-restricted-editing',
+                'exports' => ['RestrictedEditingMode'],
+            ],
+            $result['importModules']
+        );
+    }
 }

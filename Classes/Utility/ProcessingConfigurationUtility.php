@@ -93,8 +93,76 @@ class ProcessingConfigurationUtility
         $configuration = GeneralUtility::makeInstance(EditorConfigurationBuilder::class)
             ->ensureCollaborationMarkerProcessing($configuration);
         $configuration = self::applyMathEquationsProcessing($configuration);
+        $configuration = self::applyRestrictedEditingProcessing($configuration);
 
         return self::ensureEditorConfigurationStructure($configuration);
+    }
+
+    /**
+     * Keep restricted-editing exception markup through TYPO3 RTE processing.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    public static function applyRestrictedEditingProcessing(array $configuration): array
+    {
+        if (!self::isRestrictedEditingEnabled($configuration)) {
+            return $configuration;
+        }
+
+        if (!isset($configuration['processing']) || !is_array($configuration['processing'])) {
+            $configuration['processing'] = [];
+        }
+
+        $configuration['processing']['allowTags'] = array_values(array_unique(array_merge(
+            ['span', 'div'],
+            (array)($configuration['processing']['allowTags'] ?? [])
+        )));
+        $configuration['processing']['allowAttributes'] = array_values(array_unique(array_merge(
+            ['class'],
+            (array)($configuration['processing']['allowAttributes'] ?? [])
+        )));
+
+        $configuration = self::ensureDefaultProcessingMode($configuration);
+
+        return self::rebuildProcFromProcessing($configuration);
+    }
+
+    /**
+     * @param array<string, mixed> $configuration
+     */
+    private static function isRestrictedEditingEnabled(array $configuration): bool
+    {
+        if (isset($configuration['restrictedEditing']) && is_array($configuration['restrictedEditing'])) {
+            return true;
+        }
+
+        foreach ($configuration['importModules'] ?? [] as $import) {
+            $exports = $import['exports'] ?? [];
+            if (is_string($exports)) {
+                $exports = GeneralUtility::trimExplode(',', $exports, true);
+            }
+            foreach ((array)$exports as $export) {
+                if (
+                    str_contains((string)$export, 'RestrictedEditing')
+                    || str_contains((string)$export, 'StandardEditingMode')
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        $toolbarItems = $configuration['toolbar']['items'] ?? [];
+        foreach ((array)$toolbarItems as $item) {
+            if (!is_string($item)) {
+                continue;
+            }
+            if (str_starts_with($item, 'restrictedEditing')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

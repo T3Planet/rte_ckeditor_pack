@@ -224,11 +224,12 @@ Options:
             - 15    maintained until 2027-11-11
             - 16    maintained until 2028-11-09
 
-    -t <12|13>
+    -t <12|13|14>
         Only with -s composerInstall|composerInstallMin|composerInstallMax
         Specifies the TYPO3 CORE Version to be used
             - 12: use TYPO3 v12 (default)
             - 13: use TYPO3 v13
+            - 14: use TYPO3 v14
 
     -p <8.1|8.2|8.3|8.4>
         Specifies the PHP minor version to be used
@@ -369,7 +370,7 @@ while getopts "a:b:s:d:i:p:e:t:xy:nhu" OPT; do
             ;;
         t)
             TYPO3_VERSION=${OPTARG}
-            if ! [[ ${TYPO3_VERSION} =~ ^(12|13)$ ]]; then
+            if ! [[ ${TYPO3_VERSION} =~ ^(12|13|14)$ ]]; then
                 INVALID_OPTIONS+=("-t ${OPTARG}")
             fi
             ;;
@@ -522,6 +523,11 @@ case ${TEST_SUITE} in
         cleanComposer
         stashComposerFiles
         ${CONTAINER_BIN} run "${CONTAINER_COMMON_PARAMS[@]}" --name composer-install-highest-${SUFFIX} -e COMPOSER_CACHE_DIR=.cache/composer -e COMPOSER_ROOT_VERSION=${COMPOSER_ROOT_VERSION} ${IMAGE_PHP} /bin/bash -c "
+            # Local/CI test installs may need packages still listed in Packagist advisories.
+            composer config --no-interaction --no-plugins allow-plugins.typo3/cms-composer-installers true >/dev/null 2>&1 || true
+            composer config --no-interaction --no-plugins allow-plugins.typo3/class-alias-loader true >/dev/null 2>&1 || true
+            composer config --no-interaction audit.block-insecure false >/dev/null 2>&1 || true
+            composer config --no-interaction policy.advisories.block false >/dev/null 2>&1 || true
             if [ ${TYPO3_VERSION} -eq 12 ]; then
               composer require --no-ansi --no-interaction --no-progress --no-install \
                 typo3/cms-core:^12.4.37 || exit 1
@@ -529,6 +535,12 @@ case ${TEST_SUITE} in
             if [ ${TYPO3_VERSION} -eq 13 ]; then
               composer require --no-ansi --no-interaction --no-progress --no-install \
                 typo3/cms-core:^13.1 || exit 1
+            fi
+            if [ ${TYPO3_VERSION} -eq 14 ]; then
+              composer require --no-ansi --no-interaction --no-progress --no-install \
+                typo3/cms-core:^14.3 \
+                typo3/testing-framework:^9.5 \
+                phpunit/phpunit:^11.2 || exit 1
             fi
             composer update --no-progress --no-interaction  || exit 1
             composer show || exit 1
@@ -540,6 +552,10 @@ case ${TEST_SUITE} in
         cleanComposer
         stashComposerFiles
         ${CONTAINER_BIN} run "${CONTAINER_COMMON_PARAMS[@]}" --name composer-install-lowest-${SUFFIX} -e COMPOSER_CACHE_DIR=.cache/composer -e COMPOSER_ROOT_VERSION=${COMPOSER_ROOT_VERSION} ${IMAGE_PHP} /bin/bash -c "
+            composer config --no-interaction --no-plugins allow-plugins.typo3/cms-composer-installers true >/dev/null 2>&1 || true
+            composer config --no-interaction --no-plugins allow-plugins.typo3/class-alias-loader true >/dev/null 2>&1 || true
+            composer config --no-interaction audit.block-insecure false >/dev/null 2>&1 || true
+            composer config --no-interaction policy.advisories.block false >/dev/null 2>&1 || true
             if [ ${TYPO3_VERSION} -eq 12 ]; then
               composer require --no-ansi --no-interaction --no-progress --no-install \
                 typo3/cms-core:^12.4.37 || exit 1
@@ -547,6 +563,12 @@ case ${TEST_SUITE} in
             if [ ${TYPO3_VERSION} -eq 13 ]; then
               composer require --no-ansi --no-interaction --no-progress --no-install \
                 typo3/cms-core:^13.4.15 || exit 1
+            fi
+            if [ ${TYPO3_VERSION} -eq 14 ]; then
+              composer require --no-ansi --no-interaction --no-progress --no-install \
+                typo3/cms-core:^14.3 \
+                typo3/testing-framework:^9.5 \
+                phpunit/phpunit:^11.2 || exit 1
             fi
             composer update --no-ansi --no-interaction --no-progress --with-dependencies --prefer-lowest || exit 1
             composer show || exit 1
@@ -624,7 +646,16 @@ case ${TEST_SUITE} in
         SUITE_EXIT_CODE=$?
         ;;
     unit)
-        COMMAND=(.Build/bin/phpunit -c Build/phpunit/UnitTests.xml --exclude-group not-${DBMS} ${EXTRA_TEST_OPTIONS} "$@")
+        # Richtext (v12/v13) vs RichtextV14 must not both run: core Richtext is readonly only on v14.
+        # PHPUnit 10: comma-separated --exclude-group (multiple flags not allowed).
+        # PHPUnit 11+: multiple --exclude-group (comma form is deprecated / fails CI).
+        VERSION_EXCLUDE_GROUP="typo3-v14"
+        if [ "${TYPO3_VERSION}" -ge 14 ]; then
+            VERSION_EXCLUDE_GROUP="typo3-v12-v13"
+            COMMAND=(.Build/bin/phpunit -c Build/phpunit/UnitTests.xml --exclude-group "not-${DBMS}" --exclude-group "${VERSION_EXCLUDE_GROUP}" ${EXTRA_TEST_OPTIONS} "$@")
+        else
+            COMMAND=(.Build/bin/phpunit -c Build/phpunit/UnitTests.xml --exclude-group "not-${DBMS},${VERSION_EXCLUDE_GROUP}" ${EXTRA_TEST_OPTIONS} "$@")
+        fi
         ${CONTAINER_BIN} run "${CONTAINER_COMMON_PARAMS[@]}" --name unit-${SUFFIX} ${XDEBUG_MODE} -e XDEBUG_CONFIG="${XDEBUG_CONFIG}" ${IMAGE_PHP} "${COMMAND[@]}"
         SUITE_EXIT_CODE=$?
         ;;

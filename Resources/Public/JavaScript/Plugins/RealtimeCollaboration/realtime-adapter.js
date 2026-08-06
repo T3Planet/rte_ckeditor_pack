@@ -385,20 +385,36 @@ class RealtimeAdapter extends Core.Plugin {
     /* ----------------------- Channel ID Helpers ----------------------- */
 
     /**
-     * RTC requires initial document content at create time (setData is forbidden after init).
-     * Visual Editor stores HTML on the wrapper element before CKEditor starts.
+     * RTC initial document seed.
+     *
+     * Visual Editor embeds theme markup into the editable host. Feeding that as
+     * config.initialData while reconnecting to an existing Cloud document causes
+     * mapping-model-position-view-parent-not-found during RTC init.
+     * For VE, ClassicEditor reads the element; Cloud remains source of truth when
+     * the document already exists. FormEngine keeps the previous seed behaviour.
      */
     _ensureInitialDataForRtc(config) {
-        if (config.initialData) {
-            return;
-        }
-
         const hasRtc = (config.importModules || []).some((entry) => {
             const moduleName = typeof entry === 'string' ? entry : entry?.module;
             return typeof moduleName === 'string' && moduleName.includes('real-time-collaboration');
         });
 
         if (!hasRtc) {
+            return;
+        }
+
+        const isVisualEditor = !!(
+            this.channelElement?.closest?.('ve-editable-rich-text')
+            || this.editor?.sourceElement?.closest?.('ve-editable-rich-text')
+        );
+
+        if (isVisualEditor) {
+            // Do not seed conflicting initialData over themed FE HTML.
+            delete config.initialData;
+            return;
+        }
+
+        if (config.initialData) {
             return;
         }
 

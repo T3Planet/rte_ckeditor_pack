@@ -94,6 +94,9 @@ class RteConfigurationModifier
             if ($presetUid > 0) {
                 $enabledFeatures = $this->featureRepository->findEnabledByPresetUid($presetUid);
                 $configuration = $this->addToolbarItems($configuration,$preset->getToolbarItems());
+                if ($this->isCollaborationFeatureEnabled('RestrictedEditingMode')) {
+                    $configuration = $this->normalizeRestrictedEditingToolbarPlaceholder($configuration);
+                }
             }
 
             if ($enabledFeatures) {
@@ -132,6 +135,12 @@ class RteConfigurationModifier
 
         $availbleItems = $configuration['toolbar']['items'] ?? [];
         $recordConfigKey = $feature->getConfigKey();
+
+        // Restricted editing and Real-time Collaboration cannot share one editor schema.
+        // Prefer Restricted editing when both are enabled so its toolbar/plugin actually load.
+        if ($recordConfigKey === 'RealTimeCollaboration' && $this->isCollaborationFeatureEnabled('RestrictedEditingMode')) {
+            return $configuration;
+        }
 
         if ($recordConfigKey) {
             $rec = $this->modules->getItemByConfigKey($recordConfigKey);
@@ -218,6 +227,10 @@ class RteConfigurationModifier
                         $recordConfigKey);
                         break;
                 }
+            }
+
+            if ($recordConfigKey === 'RestrictedEditingMode') {
+                $configuration = $this->ensureRestrictedEditingDefaults($configuration);
             }
         }
         
@@ -329,6 +342,18 @@ class RteConfigurationModifier
             }
         }
 
+        // Source editing cannot run with RTC (also remove Restricted Editing exports if present).
+        $removePlugins = $configuration['removePlugins'] ?? [];
+        if (!is_array($removePlugins)) {
+            $removePlugins = GeneralUtility::trimExplode(',', (string)$removePlugins, true);
+        }
+        foreach (['SourceEditing', 'SourceEditingEnhanced'] as $pluginName) {
+            if (!in_array($pluginName, $removePlugins, true)) {
+                $removePlugins[] = $pluginName;
+            }
+        }
+        $configuration['removePlugins'] = $removePlugins;
+
         return $configuration;
 
     }
@@ -398,10 +423,16 @@ class RteConfigurationModifier
     }
 
     /**
-     * Check Collaboration Mode
+     * Check Collaboration Mode.
+     * Restricted editing changes the editor schema and cannot load with RTC plugins.
+     * When both Pack features are enabled, prefer Restricted editing.
      */
     private function isEnableRealTimeCollaboration(): bool
     {
+        if ($this->isCollaborationFeatureEnabled('RestrictedEditingMode')) {
+            return false;
+        }
+
         return $this->isCollaborationFeatureEnabled('RealTimeCollaboration');
     }
 
@@ -599,6 +630,8 @@ class RteConfigurationModifier
             $configuration = $this->addRealTimeModules($configuration, $moduleConfiguration, $record);
         } elseif ($recordConfigKey === 'Images') {
             $configuration = $this->addImageModules($configuration, $moduleConfiguration, $record);
+        } elseif ($recordConfigKey === 'RestrictedEditingMode') {
+            $configuration = $this->addRestrictedEditingModules($configuration, $moduleConfiguration, $record);
         } else {
             if (isset($moduleConfiguration['hidden_premium']) && $moduleConfiguration['hidden_premium']) {
                 if ($this->checkPermission($recordConfigKey)) {
@@ -612,6 +645,119 @@ class RteConfigurationModifier
 
         if ($recordConfigKey === 'MathEquations') {
             $configuration = $this->ensureMathEquationsDefaults($configuration);
+        }
+
+        return $configuration;
+    }
+
+    /**
+     * Load StandardEditingMode or RestrictedEditingMode from the feature Mode dropdown.
+     * CKEditor cannot load both plugins in the same editor instance.
+     *
+     * @param array<string, mixed> $configuration
+     * @param array<string, mixed> $moduleConfiguration
+     * @param object $record
+     * @return array<string, mixed>
+     */
+    private function addRestrictedEditingModules(array $configuration, array $moduleConfiguration, $record): array
+    {
+        $mode = 'standard';
+        $fieldsJson = method_exists($record, 'getFields') ? $record->getFields() : null;
+        if (is_string($fieldsJson) && $fieldsJson !== '') {
+            $fields = json_decode($fieldsJson, true);
+            if (is_array($fields)) {
+                $modeRaw = $fields['restrictedEditing']['mode'] ?? 'standard';
+                // SELECT may initially store the options map; only a string value is a real choice.
+                $mode = is_string($modeRaw) && $modeRaw !== '' ? $modeRaw : 'standard';
+            }
+        }
+
+        $exports = $mode === 'restricted' ? 'RestrictedEditingMode' : 'StandardEditingMode';
+        $moduleConfiguration['module'] = [
+            [
+                'library' => '@ckeditor/ckeditor5-restricted-editing',
+                'exports' => $exports,
+            ],
+        ];
+
+        $configuration = $this->resolveRestrictedEditingToolbarItem($configuration, $mode);
+
+        return $this->addImportModules($configuration, $moduleConfiguration);
+    }
+
+    /**
+     * Collapse any legacy restrictedEditing* toolbar variants to the single Pack placeholder.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    private function normalizeRestrictedEditingToolbarPlaceholder(array $configuration): array
+    {
+        return $this->rewriteRestrictedEditingToolbarItems($configuration, 'restrictedEditing');
+    }
+
+    /**
+     * Map the Pack placeholder to the CKEditor toolbar component for the selected mode.
+     * Standard → mark regions; Restricted → navigate regions.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    private function resolveRestrictedEditingToolbarItem(array $configuration, string $mode): array
+    {
+        $ckItem = $mode === 'restricted' ? 'restrictedEditing' : 'restrictedEditingException';
+
+        return $this->rewriteRestrictedEditingToolbarItems($configuration, $ckItem);
+    }
+
+    /**
+     * Replace all restrictedEditing* string toolbar entries with a single target item.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    private function rewriteRestrictedEditingToolbarItems(array $configuration, string $targetItem): array
+    {
+        $items = $configuration['toolbar']['items'] ?? null;
+        if (!is_array($items)) {
+            return $configuration;
+        }
+
+        $replaced = false;
+        $newItems = [];
+        foreach ($items as $item) {
+            if (is_string($item) && str_starts_with($item, 'restrictedEditing')) {
+                if (!$replaced) {
+                    $newItems[] = $targetItem;
+                    $replaced = true;
+                }
+                continue;
+            }
+            $newItems[] = $item;
+        }
+
+        $configuration['toolbar']['items'] = $newItems;
+
+        return $configuration;
+    }
+
+    /**
+     * Strip pack-only "mode" from editor config (not a CKEditor RestrictedEditing option).
+     * allowedCommands / allowedAttributes use CKEditor defaults unless set via YAML/TS.
+     *
+     * @param array<string, mixed> $configuration
+     * @return array<string, mixed>
+     */
+    private function ensureRestrictedEditingDefaults(array $configuration): array
+    {
+        if (!isset($configuration['restrictedEditing']) || !is_array($configuration['restrictedEditing'])) {
+            return $configuration;
+        }
+
+        unset($configuration['restrictedEditing']['mode']);
+
+        if ($configuration['restrictedEditing'] === []) {
+            unset($configuration['restrictedEditing']);
         }
 
         return $configuration;
@@ -714,17 +860,59 @@ class RteConfigurationModifier
 
     private function ensureCollaborationChannelConfiguration(array $configuration, array $data): array
     {
-        $channelId = $configuration['collaboration']['channelId'] ?? null;
-        if (!$channelId) {
-            $channelId = ChannelIdUtility::buildChannelIdFromData($data);
-            $configuration['collaboration']['channelId'] = $channelId;
+        $hasChannel = isset($configuration['collaboration']['channelId'])
+            && is_string($configuration['collaboration']['channelId'])
+            && $configuration['collaboration']['channelId'] !== '';
+        $hasDocument = isset($configuration['cloudServices']['documentId'])
+            && is_string($configuration['cloudServices']['documentId'])
+            && $configuration['cloudServices']['documentId'] !== '';
+
+        // Preserve explicitly configured IDs (tests / custom YAML).
+        if ($hasChannel && $hasDocument) {
+            return $configuration;
         }
 
-        if (!isset($configuration['cloudServices']['documentId'])) {
+        $baseChannelId = $hasChannel
+            ? $configuration['collaboration']['channelId']
+            : ChannelIdUtility::buildChannelIdFromData($data);
+
+        // Fingerprint forces a fresh Cloud document when the editor schema changes
+        // (e.g. Restricted editing / Comments). Prevents:
+        // realtimecollaborationclient-init-connection-failed /
+        // mapping-model-position-view-parent-not-found against stale RTC docs.
+        $fingerprint = $this->buildCollaborationSchemaFingerprint();
+        $channelId = 'ckdoc-' . substr(hash('sha1', $baseChannelId . '|' . $fingerprint), 0, 40);
+
+        $configuration['collaboration']['channelId'] = $channelId;
+        if (!$hasDocument) {
             $configuration['cloudServices']['documentId'] = $channelId;
         }
 
         return $configuration;
+    }
+
+    /**
+     * Schema-affecting features that must invalidate RTC cloud document identity.
+     */
+    private function buildCollaborationSchemaFingerprint(): string
+    {
+        $parts = ['rtc-map-v1'];
+        foreach (
+            [
+                'RestrictedEditingMode',
+                'MathEquations',
+                'TrackChanges',
+                'Comments',
+                'RevisionHistory',
+                'RealTimeCollaboration',
+            ] as $configKey
+        ) {
+            if ($this->isCollaborationFeatureEnabled($configKey)) {
+                $parts[] = $configKey;
+            }
+        }
+
+        return implode('+', $parts);
     }
 
     /**

@@ -31,6 +31,7 @@ use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\ExportPdfFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FeatureInterface;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\FootnotesFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\MathEquationsFeature;
+use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\RestrictedEditingFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\HighlightFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\WordCountFeature;
 use T3Planet\RteCkeditorPack\DataProvider\CkFeatures\CaseChangeFeature;
@@ -813,13 +814,18 @@ class Modules
                 ],
             ],
             [
-                'tab' => Tabs::CORE,
+                'tab' => Tabs::STANDALONE,
                 'details' => $cardDetails->getDetailsByKey('RestrictedEditingMode'),
-                // 'is_toggle' => 1,
+                'is_toggle' => 0,
                 'configuration' => [
                     'default' => false,
+                    'is_premium' => true,
                     'config_key' => 'RestrictedEditingMode',
+                    'module' => $this->getModulesFromFeature(RestrictedEditingFeature::class),
+                    // Single Pack item; RteConfigurationModifier maps it from Mode (Standard/Restricted).
+                    'toolBarItems' => 'restrictedEditing',
                 ],
+                'fields' => $this->getFieldsFromFeature(RestrictedEditingFeature::class),
             ],
             [
                 'tab' => Tabs::CORE,

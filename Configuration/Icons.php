@@ -183,6 +183,14 @@ return [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/ChemType.svg',
     ],
+    'rte_restrictedEditing' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/restrictedEditing.svg',
+    ],
+    'rte_restrictedEditingException' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/restrictedEditingException.svg',
+    ],
     'rte_footnotesStyle' => [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/ToolbarItems/footnotesStyle.svg',
