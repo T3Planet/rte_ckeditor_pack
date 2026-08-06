@@ -10,14 +10,25 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # TYPO3 12 — PHP 8.2–8.4
           - typo3: "12"
             php: "8.2"
+          - typo3: "12"
+            php: "8.3"
+          - typo3: "12"
+            php: "8.4"
+          # TYPO3 13 — PHP 8.2–8.4
           - typo3: "13"
             php: "8.2"
           - typo3: "13"
             php: "8.3"
           - typo3: "13"
             php: "8.4"
+          # TYPO3 14 — PHP 8.2–8.4
+          - typo3: "14"
+            php: "8.2"
+          - typo3: "14"
+            php: "8.3"
           - typo3: "14"
             php: "8.4"
     steps:
