@@ -1,10 +1,40 @@
-name: core 13
+name: Tests
 
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  tests:
-    name: v13 / php${{ matrix.php }}
+  unit:
+    name: unit / v${{ matrix.typo3 }} / php${{ matrix.php }}
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - typo3: "12"
+            php: "8.2"
+          - typo3: "13"
+            php: "8.2"
+          - typo3: "13"
+            php: "8.3"
+          - typo3: "13"
+            php: "8.4"
+          - typo3: "14"
+            php: "8.4"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Ensure test runner is executable
+        run: chmod +x Build/Scripts/runTests.sh
+
+      - name: Install testing system
+        run: Build/Scripts/runTests.sh -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -s composerInstallHighest
+
+      - name: Unit Tests
+        run: Build/Scripts/runTests.sh -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -s unit
+
+  functional:
+    name: functional / v13 / php${{ matrix.php }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -19,9 +49,6 @@ jobs:
 
       - name: Install testing system
         run: Build/Scripts/runTests.sh -t 13 -p ${{ matrix.php }} -s composerInstallHighest
-
-      - name: Unit Tests
-        run: Build/Scripts/runTests.sh -t 13 -p ${{ matrix.php }} -s unit
 
       - name: Functional Tests
         run: Build/Scripts/runTests.sh -t 13 -p ${{ matrix.php }} -d sqlite -s functional
