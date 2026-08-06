@@ -5,12 +5,20 @@
  * per editor. Without coordination, each instance opens its own Wiris modal at
  * the same fixed viewport position, so dialogs stack on top of each other.
  * This wrapper keeps a registry and closes other open modals before opening.
+ *
+ * Demo/trial Wiris builds also inject a license notice that needs a taller modal
+ * than Wiris' default 338px stack height — otherwise the notice sits outside
+ * the dialog box in TYPO3 backend.
  */
 import MathTypePlugin, {
     CKEditor5Integration,
     MathTypeCommand,
     ChemTypeCommand,
 } from '@t3planet/RteCkeditorPack/mathtype-ckeditor5.js';
+
+/** Minimum stack-modal size so the trial/license banner stays inside the dialog. */
+const MATHTYPE_MODAL_MIN_HEIGHT = 560;
+const MATHTYPE_MODAL_MIN_WIDTH = 640;
 
 /** @type {Set<object>} */
 const mathTypeIntegrationRegistry = new Set();
@@ -79,6 +87,55 @@ function closeOtherMathTypeModals(activeIntegration) {
 }
 
 /**
+ * Enlarge Wiris stack modal so trial/license text fits inside the dialog.
+ *
+ * @param {object} integration
+ */
+function ensureMathTypeModalFitsContent(integration) {
+    const modal = integration?.core?.modalDialog;
+    const container = modal?.container;
+    if (!modal || !container || container.classList.contains('wrs_closed')) {
+        return;
+    }
+
+    // Do not fight fullscreen maximize mode.
+    if (container.classList.contains('wrs_maximized')) {
+        return;
+    }
+
+    const currentHeight = parseInt(container.style.height, 10) || container.clientHeight || 0;
+    const currentWidth = parseInt(container.style.width, 10) || container.clientWidth || 0;
+    const nextHeight = Math.max(currentHeight, MATHTYPE_MODAL_MIN_HEIGHT);
+    const nextWidth = Math.max(currentWidth, MATHTYPE_MODAL_MIN_WIDTH);
+
+    if (typeof modal.setSize === 'function') {
+        modal.setSize(nextHeight, nextWidth);
+    } else {
+        container.style.height = `${nextHeight}px`;
+        container.style.width = `${nextWidth}px`;
+    }
+
+    if (modal.properties?.size) {
+        modal.properties.size.height = nextHeight;
+        modal.properties.size.width = nextWidth;
+    }
+
+    // Keep the dialog on-screen after growing.
+    const maxBottom = Math.max(8, window.innerHeight - nextHeight - 8);
+    const maxRight = Math.max(8, window.innerWidth - nextWidth - 8);
+    const bottom = Math.min(parseInt(container.style.bottom, 10) || 0, maxBottom);
+    const right = Math.min(parseInt(container.style.right, 10) || 10, maxRight);
+    if (typeof modal.setPosition === 'function') {
+        modal.setPosition(bottom, right);
+    } else {
+        container.style.bottom = `${bottom}px`;
+        container.style.right = `${right}px`;
+    }
+
+    container.classList.add('wrs_pack_modal_fitted');
+}
+
+/**
  * @param {object} integration
  * @param {(...args: unknown[]) => unknown} original
  * @param {unknown[]} args
@@ -90,10 +147,14 @@ function openMathTypeEditor(integration, original, args) {
         window.WirisPlugin.currentInstance = integration;
     }
     const result = original.apply(integration, args);
-    // After open/create, keep only this instance's modal visible.
+    // After open/create, keep only this instance's modal visible and sized for trial UI.
     queueMicrotask(() => {
         hideInactiveMathTypeModals(integration?.core?.modalDialog?.container ?? null);
+        ensureMathTypeModalFitsContent(integration);
     });
+    // Editor iframe / trial banner can load slightly later.
+    setTimeout(() => ensureMathTypeModalFitsContent(integration), 250);
+    setTimeout(() => ensureMathTypeModalFitsContent(integration), 800);
     return result;
 }
 

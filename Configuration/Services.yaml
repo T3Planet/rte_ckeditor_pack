@@ -110,6 +110,12 @@ services:
         arguments:
           - '@T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler'
 
+  T3Planet\RteCkeditorPack\EventListener\AddInlineLanguageLabelsListener:
+    tags:
+      - name: event.listener
+        identifier: 'rte-ckeditor-pack/add-inline-language-labels'
+        event: TYPO3\CMS\Core\Core\Event\BootCompletedEvent
+
   T3Planet\RteCkeditorPack\Controller\SelectImageController:
     tags: ['backend.controller']
 

@@ -8,8 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewFactoryData;
-use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -96,21 +95,38 @@ class ArrayToStringViewHelperTest extends FunctionalTestCase
     }
 
     /**
-     * Render a ViewHelper template
+     * Render a ViewHelper template (ViewFactory on v13+, StandaloneView on v12).
      */
     protected function renderViewHelper(array $variables): string
     {
-        $viewFactoryData = new ViewFactoryData(
-            templatePathAndFilename: 'EXT:rte_ckeditor_pack/Tests/Functional/Fixtures/ArrayToStringViewHelperFixture.html'
-        );
+        $template = 'EXT:rte_ckeditor_pack/Tests/Functional/Fixtures/ArrayToStringViewHelperFixture.html';
+        $view = $this->createView($template);
 
-        $standaloneView = GeneralUtility::makeInstance(ViewFactoryInterface::class)->create($viewFactoryData);
-        
         foreach ($variables as $key => $value) {
-            $standaloneView->assign($key, $value);
+            $view->assign($key, $value);
         }
 
-        return $standaloneView->render();
+        return $view->render();
+    }
+
+    /**
+     * @return object{assign: callable, render: callable}
+     */
+    protected function createView(string $template): object
+    {
+        if (class_exists(\TYPO3\CMS\Core\View\ViewFactoryData::class)) {
+            $viewFactoryData = new \TYPO3\CMS\Core\View\ViewFactoryData(
+                templatePathAndFilename: $template
+            );
+
+            return GeneralUtility::makeInstance(\TYPO3\CMS\Core\View\ViewFactoryInterface::class)
+                ->create($viewFactoryData);
+        }
+
+        /** @var StandaloneView $view */
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($template));
+
+        return $view;
     }
 }
-

@@ -14,7 +14,6 @@ return [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
-        'searchFields' => 'preset_key',
         'iconfile' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/tx_rteckeditorpack_domain_model_preset.gif',
     ],
     'types' => [
@@ -85,6 +84,7 @@ return [
                 'rows' => 5,
                 'eval' => 'trim',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'processing_config' => [
@@ -97,6 +97,7 @@ return [
                 'eval' => 'trim',
                 'default' => '',
                 'enableRichtext' => false,
+                'searchable' => false,
             ],
         ],
     ],

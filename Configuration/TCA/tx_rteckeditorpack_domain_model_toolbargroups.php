@@ -13,7 +13,6 @@ return [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
-        'searchFields' => 'label',
         'iconfile' => 'EXT:rte_ckeditor_pack/Resources/Public/Icons/tx_rteckeditorpack_domain_model_toolbar_groups.gif',
     ],
     'types' => [
@@ -45,6 +44,7 @@ return [
                 'size' => 30,
                 'eval' => 'trim',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'icon' => [
@@ -55,6 +55,7 @@ return [
                 'size' => 30,
                 'eval' => 'trim',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'items' => [
@@ -65,6 +66,7 @@ return [
                 'size' => 30,
                 'eval' => 'trim',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'custom_icon' => [
@@ -75,6 +77,7 @@ return [
                 'size' => 30,
                 'eval' => 'trim',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
     ],
