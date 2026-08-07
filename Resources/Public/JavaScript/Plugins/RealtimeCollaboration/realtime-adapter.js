@@ -1,4 +1,5 @@
 import * as Core from "@ckeditor/ckeditor5-core";
+import { getDataFromElement } from '@ckeditor/ckeditor5-utils';
 import {
     LoaderOwner,
     showSharedLoader,
@@ -49,6 +50,7 @@ class RealtimeAdapter extends Core.Plugin {
             config.cloudServices.documentId = channelId;
         }
 
+        this._rtcLocalFallbackHtml = this._resolveRtcSourceHtml(this.channelElement);
         this._ensureInitialDataForRtc(config);
 
         this._loaderCopy = {
@@ -167,7 +169,7 @@ class RealtimeAdapter extends Core.Plugin {
         this._configureCommentMentionFeeds();
 
         if (editor.plugins.has('RealTimeCollaborativeEditing')) {
-            this._applyRtcSetDataGuard(editor);
+            this._setupRtcLocalContentFallback(editor);
         }
     }
 
@@ -247,25 +249,58 @@ class RealtimeAdapter extends Core.Plugin {
 
     /**
      * Real-time collaboration forbids editor.setData() after init.
-     * On Visual Editor (v13+), sync initial data via dataHandlerStore instead.
+     * Seed empty cloud sessions from the local field value first, then block setData().
      */
-    _applyRtcSetDataGuard(editor) {
-        editor.setData = () => Promise.resolve();
+    _setupRtcLocalContentFallback(editor) {
+        const localHtml = this._rtcLocalFallbackHtml || '';
+        let seeded = false;
 
-        editor.once('ready', () => {
-            const host = editor.sourceElement?.closest('ve-editable-rich-text');
-            if (!host?.table) {
+        const trySeedFromLocal = () => {
+            if (seeded || !localHtml) {
                 return;
             }
 
-            // Visual Editor is TYPO3 v13+ only; dynamic import keeps v12 backend unaffected.
-            import('@typo3/visual-editor/Frontend/stores/data-handler-store.js')
-                .then(({ dataHandlerStore }) => {
-                    const value = editor.getData({ skipListItemIds: true });
-                    dataHandlerStore.setInitialData(host.table, host.uid, host.field, value);
-                })
-                .catch(() => {});
-        });
+            const currentData = editor.getData({ skipListItemIds: true });
+            if (!this._isRtcEditorContentEmpty(currentData)) {
+                return;
+            }
+
+            seeded = true;
+            editor.data.set(localHtml, { suppressErrorInCollaboration: true });
+        };
+
+        const finalizeRtcGuards = () => {
+            trySeedFromLocal();
+            this._applyRtcSetDataGuard(editor);
+            this._syncVisualEditorInitialData(editor);
+        };
+
+        editor.once('ready', finalizeRtcGuards);
+        editor.on('cs-connection-connected', trySeedFromLocal, { priority: 'low' });
+    }
+
+    _applyRtcSetDataGuard(editor) {
+        editor.setData = () => Promise.resolve();
+    }
+
+    _syncVisualEditorInitialData(editor) {
+        const host = editor.sourceElement?.closest('ve-editable-rich-text');
+        if (!host?.table) {
+            return;
+        }
+
+        // Visual Editor is TYPO3 v13+ only; dynamic import keeps v12 backend unaffected.
+        import('@typo3/visual-editor/Frontend/stores/data-handler-store.js')
+            .then(({ dataHandlerStore }) => {
+                const value = editor.getData({ skipListItemIds: true });
+                dataHandlerStore.setInitialData(host.table, host.uid, host.field, value);
+            })
+            .catch(() => {});
+    }
+
+    _isRtcEditorContentEmpty(data) {
+        const trimmed = (data || '').trim();
+        return trimmed === '' || trimmed === '<p></p>' || trimmed === '<p>&nbsp;</p>';
     }
 
     /**
@@ -389,24 +424,48 @@ class RealtimeAdapter extends Core.Plugin {
      * Visual Editor stores HTML on the wrapper element before CKEditor starts.
      */
     _ensureInitialDataForRtc(config) {
-        if (config.initialData) {
+        if (!this._hasRtcModules(config)) {
             return;
         }
 
-        const hasRtc = (config.importModules || []).some((entry) => {
+        const existing = typeof config.initialData === 'string' ? config.initialData.trim() : '';
+        if (existing) {
+            return;
+        }
+
+        const html = this._rtcLocalFallbackHtml || this._resolveRtcSourceHtml(this.channelElement);
+        if (!html) {
+            return;
+        }
+
+        config.initialData = html;
+        if (typeof this.editor.config.set === 'function') {
+            this.editor.config.set('initialData', html);
+        }
+    }
+
+    _hasRtcModules(config) {
+        return (config.importModules || []).some((entry) => {
             const moduleName = typeof entry === 'string' ? entry : entry?.module;
             return typeof moduleName === 'string' && moduleName.includes('real-time-collaboration');
         });
+    }
 
-        if (!hasRtc) {
-            return;
+    /**
+     * Read HTML the same way ClassicEditor does (textarea value, div innerHTML, VE value).
+     */
+    _resolveRtcSourceHtml(source) {
+        if (!source) {
+            return '';
         }
 
-        const source = this.channelElement;
-        const html = source?.innerHTML?.trim();
-        if (html) {
-            config.initialData = source.innerHTML;
+        const fromElement = getDataFromElement(source)?.trim() || '';
+        if (fromElement) {
+            return fromElement;
         }
+
+        const veHost = source.closest?.('ve-editable-rich-text');
+        return veHost?.value?.trim() || '';
     }
 
     _ensureChannelId(element) {
