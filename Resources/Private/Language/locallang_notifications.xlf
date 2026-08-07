@@ -22,7 +22,7 @@
                 <source>Usage limit reached</source>
             </trans-unit>
             <trans-unit id="errorNotifications.description.usageLimit">
-                <source>You have reached the usage limit of your license key. Please contact our customer support to extend the limit at https://ckeditor.com/contact/.</source>
+                <source>You have reached the usage limit of your license key. Premium features will stop working until the limit is extended. Please contact support at https://ckeditor.com/contact/ or ask your administrator to update the license in CKEditor Pack settings.</source>
             </trans-unit>
 
             <trans-unit id="errorNotifications.header.wproofreaderAuth">

@@ -633,15 +633,25 @@ a.ck.ck-button:not(.ck-disabled):hover {
   color: inherit;
 }
 
-/* Review / Chat primary actions (Submit, Accept all, send): white on purple in light + dark. */
+/* Review / Chat / Quick Actions Apply (balloon): white on purple in light + dark. */
 .ck.ck-ai-review .ck-ai-button-primary,
 .ck.ck-ai-review .ck-ai-form__submit,
 .ck.ck-ai-review .ck-button-action,
 .ck.ck-ai-tabs .ck-ai-button-primary,
 .ck.ck-ai-tabs .ck-ai-form__submit,
 .ck.ck-ai-tabs .ck-button-action,
-.ck.ck-ai-chat__prompt-submit-button {
+.ck.ck-ai-chat__prompt-submit-button,
+.ck.ck-ai-actions-balloon .ck-ai-button-primary,
+.ck.ck-ai-actions-balloon .ck-ai-form__submit,
+.ck.ck-ai-actions-balloon .ck-button-action,
+.ck.ck-ai-balloon__toolbar .ck-ai-button-primary,
+.ck-body-wrapper .ck.ck-ai-actions-balloon .ck-ai-button-primary,
+.ck-body-wrapper .ck.ck-ai-balloon__toolbar .ck-ai-button-primary {
   color: #fff;
+  --ck-ai-button-primary-color: #fff;
+  --ck-ai-button-primary-background-color: #743ccd;
+  --ck-ai-button-primary-hover-background-color: #582aa2;
+  --ck-ai-button-primary-active-background-color: #582aa2;
 }
 
 .ck.ck-ai-review .ck-ai-button-primary .ck-button__label,
@@ -649,6 +659,30 @@ a.ck.ck-button:not(.ck-disabled):hover {
 .ck.ck-ai-review .ck-button-action .ck-button__label,
 .ck.ck-ai-tabs .ck-ai-button-primary .ck-button__label,
 .ck.ck-ai-tabs .ck-ai-form__submit .ck-button__label,
-.ck.ck-ai-tabs .ck-button-action .ck-button__label {
+.ck.ck-ai-tabs .ck-button-action .ck-button__label,
+.ck.ck-ai-actions-balloon .ck-ai-button-primary .ck-button__label,
+.ck.ck-ai-actions-balloon .ck-ai-form__submit .ck-button__label,
+.ck.ck-ai-actions-balloon .ck-button-action .ck-button__label,
+.ck.ck-ai-balloon__toolbar .ck-ai-button-primary .ck-button__label,
+.ck-body-wrapper .ck.ck-ai-actions-balloon .ck-ai-button-primary .ck-button__label,
+.ck-body-wrapper .ck.ck-ai-balloon__toolbar .ck-ai-button-primary .ck-button__label {
+  color: #fff;
+}
+
+/* Quick Actions balloon Apply: keep label white on darker purple hover (v12–v14) */
+.ck.ck-ai-actions-balloon .ck-ai-button-primary:hover:not(.ck-disabled),
+.ck.ck-ai-actions-balloon .ck-button-action:hover:not(.ck-disabled),
+.ck.ck-ai-balloon__toolbar .ck-ai-button-primary:hover:not(.ck-disabled),
+.ck-body-wrapper .ck.ck-ai-actions-balloon .ck-ai-button-primary:hover:not(.ck-disabled),
+.ck-body-wrapper .ck.ck-ai-balloon__toolbar .ck-ai-button-primary:hover:not(.ck-disabled) {
+  color: #fff;
+  background-color: #582aa2;
+}
+
+.ck.ck-ai-actions-balloon .ck-ai-button-primary:hover:not(.ck-disabled) .ck-button__label,
+.ck.ck-ai-actions-balloon .ck-button-action:hover:not(.ck-disabled) .ck-button__label,
+.ck.ck-ai-balloon__toolbar .ck-ai-button-primary:hover:not(.ck-disabled) .ck-button__label,
+.ck-body-wrapper .ck.ck-ai-actions-balloon .ck-ai-button-primary:hover:not(.ck-disabled) .ck-button__label,
+.ck-body-wrapper .ck.ck-ai-balloon__toolbar .ck-ai-button-primary:hover:not(.ck-disabled) .ck-button__label {
   color: #fff;
 }

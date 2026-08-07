@@ -589,7 +589,11 @@ case ${TEST_SUITE} in
         SUITE_EXIT_CODE=$?
         ;;
     functional)
-        COMMAND=(.Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml --exclude-group not-${DBMS} ${EXTRA_TEST_OPTIONS} "$@")
+        PHPUNIT_EXCLUDE_GROUPS="not-${DBMS}"
+        if [ "${TYPO3_VERSION}" -lt 14 ]; then
+            PHPUNIT_EXCLUDE_GROUPS="${PHPUNIT_EXCLUDE_GROUPS},typo3-v14"
+        fi
+        COMMAND=(.Build/bin/phpunit -c Build/phpunit/FunctionalTests.xml --exclude-group ${PHPUNIT_EXCLUDE_GROUPS} ${EXTRA_TEST_OPTIONS} "$@")
         case ${DBMS} in
             mariadb)
                 echo "Using driver: ${DATABASE_DRIVER}"

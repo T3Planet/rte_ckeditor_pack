@@ -14,7 +14,7 @@ use TYPO3\CMS\Core\Type\Map;
 
 /**
  * CSP for CKEditor Cloud Services (token, WebSocket, API), export/import converters,
- * license proxy, WebSpellChecker, MathType (Wiris), and MathJax (frontend).
+ * license proxy, emoji CDN definitions, WebSpellChecker, MathType (Wiris), and MathJax (frontend).
  */
 return Map::fromEntries([
     Scope::backend(),
@@ -29,6 +29,7 @@ return Map::fromEntries([
             new UriValue('https://*.cke-cs.com'),
             new UriValue('wss://*.cke-cs.com'),
             new UriValue('https://proxy-event.ckeditor.com'),
+            new UriValue('https://cdn.ckeditor.com'),
             new UriValue('https://pdf-converter.cke-cs.com/'),
             new UriValue('https://docx-converter.cke-cs.com/'),
             new UriValue('https://docx-converter.cke-cs.com/v2/convert/docx-html'),
@@ -106,6 +107,7 @@ return Map::fromEntries([
             new UriValue('https://*.cke-cs.com'),
             new UriValue('wss://*.cke-cs.com'),
             new UriValue('https://proxy-event.ckeditor.com'),
+            new UriValue('https://cdn.ckeditor.com'),
             new UriValue('https://pdf-converter.cke-cs.com/'),
             new UriValue('https://docx-converter.cke-cs.com/'),
             new UriValue('https://docx-converter.cke-cs.com/v2/convert/docx-html'),
