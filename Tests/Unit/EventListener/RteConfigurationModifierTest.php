@@ -9,6 +9,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use T3Planet\RteCkeditorPack\Configuration\MentionConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler;
 use T3Planet\RteCkeditorPack\DataProvider\Modules;
+use T3Planet\RteCkeditorPack\Domain\Model\Feature;
+use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
@@ -537,20 +539,23 @@ class RteConfigurationModifierTest extends BaseTestCase
     #[Test]
     public function isEnableRealTimeCollaborationDoesNotBlockWhenRestrictedEditingIsEnabled(): void
     {
-        $modifier = $this->getAccessibleMock(
-            RteConfigurationModifier::class,
-            ['isCollaborationFeatureEnabled'],
-            [
-                $this->mockedSettingsConfigHandler,
-                $this->mockedFeatureRepository,
-                $this->mockedPresetRepository,
-                $this->mockedToolbarGroupsRepository,
-                $this->mockedModules,
-            ]
-        );
-        $modifier->method('isCollaborationFeatureEnabled')->willReturnCallback(
-            static fn(string $key): bool => in_array($key, ['RealTimeCollaboration', 'RestrictedEditingMode'], true)
-        );
+        $preset = $this->createMock(Preset::class);
+        $preset->method('getUid')->willReturn(1);
+        $this->mockedPresetRepository->method('findByUsage')->willReturn($preset);
+
+        $enabledFeature = $this->createMock(Feature::class);
+        $enabledFeature->method('isEnable')->willReturn(true);
+
+        $this->mockedFeatureRepository->method('findByPresetUidAndConfigKey')
+            ->willReturnCallback(
+                static fn(int $uid, string $key): ?Feature => in_array(
+                    $key,
+                    ['RealTimeCollaboration', 'RestrictedEditingMode'],
+                    true
+                ) ? $enabledFeature : null
+            );
+
+        $modifier = $this->createAccessibleModifier();
 
         self::assertTrue($this->invokePrivate($modifier, 'isEnableRealTimeCollaboration'));
     }
@@ -558,22 +563,31 @@ class RteConfigurationModifierTest extends BaseTestCase
     #[Test]
     public function buildCollaborationSchemaFingerprintIncludesRestrictedEditingMode(): void
     {
-        $modifier = $this->getAccessibleMock(
-            RteConfigurationModifier::class,
-            ['isCollaborationFeatureEnabled', 'resolveRestrictedEditingMode'],
-            [
-                $this->mockedSettingsConfigHandler,
-                $this->mockedFeatureRepository,
-                $this->mockedPresetRepository,
-                $this->mockedToolbarGroupsRepository,
-                $this->mockedModules,
-            ]
-        );
-        $modifier->method('isCollaborationFeatureEnabled')->willReturnCallback(
-            static fn(string $key): bool => in_array($key, ['RealTimeCollaboration', 'RestrictedEditingMode'], true)
-        );
-        $modifier->method('resolveRestrictedEditingMode')->willReturn('restricted');
+        $preset = $this->createMock(Preset::class);
+        $preset->method('getUid')->willReturn(1);
+        $this->mockedPresetRepository->method('findByUsage')->willReturn($preset);
 
+        $rtc = $this->createMock(Feature::class);
+        $rtc->method('isEnable')->willReturn(true);
+
+        $restricted = $this->createMock(Feature::class);
+        $restricted->method('isEnable')->willReturn(true);
+        $restricted->method('getFields')->willReturn(
+            json_encode(['restrictedEditing' => ['mode' => 'restricted']], JSON_THROW_ON_ERROR)
+        );
+
+        $this->mockedFeatureRepository->method('findByPresetUidAndConfigKey')
+            ->willReturnCallback(
+                static function (int $uid, string $key) use ($rtc, $restricted): ?Feature {
+                    return match ($key) {
+                        'RealTimeCollaboration' => $rtc,
+                        'RestrictedEditingMode' => $restricted,
+                        default => null,
+                    };
+                }
+            );
+
+        $modifier = $this->createAccessibleModifier();
         $fingerprint = $this->invokePrivate($modifier, 'buildCollaborationSchemaFingerprint');
 
         self::assertStringContainsString('RealTimeCollaboration', $fingerprint);

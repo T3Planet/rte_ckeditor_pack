@@ -78,7 +78,7 @@ final class MathMlFrontendRenderer
 
     public function containsMathMarkup(string $content): bool
     {
-        return (bool)preg_match('/<math\b|&lt;math\b|«math\b/i', $content);
+        return (bool)preg_match('/<math\b|&lt;math\b|«math\b/iu', $content);
     }
 
     public function normalizeMathMarkup(string $content): string
@@ -92,9 +92,9 @@ final class MathMlFrontendRenderer
             $content
         ) ?? $content;
 
-        if (str_contains($content, '«math')) {
+        if (str_contains($content, '«math') || str_contains($content, '«MATH')) {
             $content = preg_replace_callback(
-                '/«math\b[^»]*».*?«\/math»/is',
+                '/«math\b[^»]*».*?«\/math»/isu',
                 static function (array $matches): string {
                     return str_replace(
                         ['«', '»', '¨', '§', '`'],
