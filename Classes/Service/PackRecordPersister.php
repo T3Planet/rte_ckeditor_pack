@@ -65,7 +65,7 @@ class PackRecordPersister
 
         $dataHandler = $this->createDataHandler();
         $newId = 'NEW' . bin2hex(random_bytes(4));
-        $dataHandler->start([$table => [$newId => $fields]], []);
+        $dataHandler->start([$table => [$newId => $fields]], [], $this->resolveBackendUser());
         $dataHandler->process_datamap();
         $this->collectErrors($dataHandler);
 
@@ -85,7 +85,7 @@ class PackRecordPersister
 
         unset($fields['uid'], $fields['pid']);
         $dataHandler = $this->createDataHandler();
-        $dataHandler->start([$table => [$uid => $fields]], []);
+        $dataHandler->start([$table => [$uid => $fields]], [], $this->resolveBackendUser());
         $dataHandler->process_datamap();
         $this->collectErrors($dataHandler);
 
@@ -100,7 +100,7 @@ class PackRecordPersister
         }
 
         $dataHandler = $this->createDataHandler();
-        $dataHandler->start([], [$table => [$uid => ['delete' => 1]]]);
+        $dataHandler->start([], [$table => [$uid => ['delete' => 1]]], $this->resolveBackendUser());
         $dataHandler->process_cmdmap();
         $this->collectErrors($dataHandler);
 
@@ -249,10 +249,20 @@ class PackRecordPersister
         $this->errors = [];
         /** @var DataHandler $dataHandler */
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        if (($GLOBALS['BE_USER'] ?? null) instanceof BackendUserAuthentication) {
-            $dataHandler->BE_USER = $GLOBALS['BE_USER'];
-        }
         return $dataHandler;
+    }
+
+    private function resolveBackendUser(): BackendUserAuthentication
+    {
+        $backendUser = $GLOBALS['BE_USER'] ?? null;
+        if (!$backendUser instanceof BackendUserAuthentication) {
+            throw new \RuntimeException(
+                'A backend user is required to persist Pack records via DataHandler.',
+                1754900000
+            );
+        }
+
+        return $backendUser;
     }
 
     private function collectErrors(DataHandler $dataHandler): void

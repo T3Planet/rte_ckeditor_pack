@@ -26,6 +26,10 @@ class FeatureRepositoryTest extends FunctionalTestCase
         $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest())
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
+        // DataHandler requires an authenticated backend user.
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/be_users.csv');
+        $this->setUpBackendUser(1);
+
         $this->featureRepository = $this->getContainer()->get(FeatureRepository::class);
 
         $this->importCSVDataSet(__DIR__ . '/FeatureRepositoryTest/Fixtures/tx_rte_ckeditor_pack_domain_model_feature.csv');
@@ -118,4 +122,3 @@ class FeatureRepositoryTest extends FunctionalTestCase
         self::assertCount(0, $featuresAfter);
     }
 }
-
