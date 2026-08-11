@@ -180,3 +180,23 @@ You can select a preset and export it, then import the same file into another TY
    - Paste Office Enhanced
    - Editoria11y
    - Markdown
+
+5. Workspaces (draft presets)
+=============================
+
+CKEditor Pack can keep preset and feature configuration in a TYPO3 **draft workspace**
+separately from Live. Changes made while a draft workspace is selected are not live until
+they are published with the core Workspaces module.
+
+In a draft workspace, Pack marks anything that differs from Live:
+
+* A colored ``*`` on toolbar tools, Hidden Features, and feature cards
+* A workspace-colored border on cards that have unpublished changes
+* A short legend: *Not live yet — this change exists only in the current workspace until published.*
+
+Those markers mean enable/disable state, feature settings (for example Style), or toolbar
+membership is different from Live for the current preset. The highlight color follows the
+active workspace color when available.
+
+This depends on ``typo3/cms-workspaces`` when installed. Without Workspaces, Pack only
+edits Live configuration and does not show draft markers.

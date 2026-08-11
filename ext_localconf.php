@@ -12,6 +12,7 @@ defined('TYPO3') or die();
 
 $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_pack'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor.css';
 $GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_notification'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/notification.css';
+$GLOBALS['TYPO3_CONF_VARS']['BE']['stylesheets']['rte_ckeditor_pack_preview'] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/page-module-preview.css';
 
 // Premium feature permission options shown in BE group access lists
 $GLOBALS['TYPO3_CONF_VARS']['BE']['customPermOptions'] = [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use T3Planet\RteCkeditorPack\EventListener\FlushPackCacheOnWorkspacePublishListener;
 use T3Planet\RteCkeditorPack\EventListener\ProcessingConfigurationModifier;
 use T3Planet\RteCkeditorPack\EventListener\RestoreCollaborationMarkersListener;
 use T3Planet\RteCkeditorPack\EventListener\StripCollaborationMarkupFromPreviewListener;
@@ -14,9 +15,22 @@ use TYPO3\CMS\Core\Html\Event\AfterTransformTextForRichTextEditorEvent;
 use TYPO3\CMS\Core\Html\Event\BeforeTransformTextForPersistenceEvent;
 use TYPO3\CMS\Core\Html\Event\BeforeTransformTextForRichTextEditorEvent;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Workspaces\Event\AfterRecordPublishedEvent;
 
 return static function (ContainerConfigurator $container, ContainerBuilder $containerBuilder): void {
     $majorVersion = (new Typo3Version())->getMajorVersion();
+
+    // Soft Workspaces publish hook (event class exists only when workspaces is installed).
+    if (class_exists(AfterRecordPublishedEvent::class)) {
+        $container->services()
+            ->set(FlushPackCacheOnWorkspacePublishListener::class)
+            ->autowire()
+            ->autoconfigure()
+            ->tag('event.listener', [
+                'identifier' => 'rte-ckeditor-pack/flush-cache-on-workspace-publish',
+                'event' => AfterRecordPublishedEvent::class,
+            ]);
+    }
 
     // Transform-text events exist since TYPO3 v13. On v12, RteHtmlParser XCLASS handles restore.
     if (

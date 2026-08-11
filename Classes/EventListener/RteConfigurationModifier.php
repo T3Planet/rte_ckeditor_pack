@@ -136,12 +136,6 @@ class RteConfigurationModifier
         $availbleItems = $configuration['toolbar']['items'] ?? [];
         $recordConfigKey = $feature->getConfigKey();
 
-        // Restricted editing and Real-time Collaboration cannot share one editor schema.
-        // Prefer Restricted editing when both are enabled so its toolbar/plugin actually load.
-        if ($recordConfigKey === 'RealTimeCollaboration' && $this->isCollaborationFeatureEnabled('RestrictedEditingMode')) {
-            return $configuration;
-        }
-
         if ($recordConfigKey) {
             $rec = $this->modules->getItemByConfigKey($recordConfigKey);
             $moduleConfiguration = isset($rec['configuration']) ? $rec['configuration'] : $rec;
@@ -422,17 +416,8 @@ class RteConfigurationModifier
         }
     }
 
-    /**
-     * Check Collaboration Mode.
-     * Restricted editing changes the editor schema and cannot load with RTC plugins.
-     * When both Pack features are enabled, prefer Restricted editing.
-     */
     private function isEnableRealTimeCollaboration(): bool
     {
-        if ($this->isCollaborationFeatureEnabled('RestrictedEditingMode')) {
-            return false;
-        }
-
         return $this->isCollaborationFeatureEnabled('RealTimeCollaboration');
     }
 
@@ -896,7 +881,7 @@ class RteConfigurationModifier
      */
     private function buildCollaborationSchemaFingerprint(): string
     {
-        $parts = ['rtc-map-v1'];
+        $parts = ['rtc-map-v2'];
         foreach (
             [
                 'RestrictedEditingMode',
@@ -912,7 +897,41 @@ class RteConfigurationModifier
             }
         }
 
+        $restrictedMode = $this->resolveRestrictedEditingMode();
+        if ($restrictedMode !== null) {
+            $parts[] = 'RestrictedEditingMode:' . $restrictedMode;
+        }
+
         return implode('+', $parts);
+    }
+
+    private function resolveRestrictedEditingMode(): ?string
+    {
+        $preset = $this->resolveActivePreset();
+        if (!$preset) {
+            return null;
+        }
+
+        $feature = $this->featureRepository->findByPresetUidAndConfigKey(
+            $preset->getUid(),
+            'RestrictedEditingMode'
+        );
+        if ($feature === null || !$feature->isEnable()) {
+            return null;
+        }
+
+        $fieldsJson = $feature->getFields();
+        if (!is_string($fieldsJson) || $fieldsJson === '') {
+            return 'standard';
+        }
+
+        $fields = json_decode($fieldsJson, true);
+        if (!is_array($fields)) {
+            return 'standard';
+        }
+
+        $modeRaw = $fields['restrictedEditing']['mode'] ?? 'standard';
+        return is_string($modeRaw) && $modeRaw === 'restricted' ? 'restricted' : 'standard';
     }
 
     /**

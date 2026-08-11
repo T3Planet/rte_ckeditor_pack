@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace T3Planet\RteCkeditorPack\Domain\Repository;
 
 use T3Planet\RteCkeditorPack\Domain\Model\Feature;
+use T3Planet\RteCkeditorPack\Service\PackRecordPersister;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -20,9 +22,16 @@ class FeatureRepository extends Repository
 {
     protected ?QuerySettingsInterface $querySettings = null;
 
+    protected ?PackRecordPersister $packRecordPersister = null;
+
     public function injectQuerySettings(QuerySettingsInterface $querySettings): void
     {
         $this->querySettings = $querySettings;
+    }
+
+    public function injectPackRecordPersister(PackRecordPersister $packRecordPersister): void
+    {
+        $this->packRecordPersister = $packRecordPersister;
     }
 
     public function initializeObject(): void
@@ -111,21 +120,12 @@ class FeatureRepository extends Repository
     }
 
     /**
-     * Remove all features by preset UID
-     *
-     * @param int $presetUid
-     * @return bool
+     * Remove all features for a preset (workspace-aware via DataHandler).
      */
     public function removeByPresetId(int $presetUid): bool
     {
-        $features = $this->findByPresetUid($presetUid);
-        if (empty($features)) {
-            return false;
-        }
-        foreach ($features as $feature) {
-            $this->remove($feature);
-        }
-        $this->persistenceManager->persistAll();
-        return true;
+        $persister = $this->packRecordPersister
+            ?? GeneralUtility::makeInstance(PackRecordPersister::class);
+        return $persister->deleteFeaturesByPresetUid($presetUid);
     }
 }

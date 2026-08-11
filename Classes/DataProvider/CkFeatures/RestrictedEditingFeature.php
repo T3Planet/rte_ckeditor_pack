@@ -33,7 +33,7 @@ class RestrictedEditingFeature implements FeatureInterface
                         'Standard' => 'standard',
                         'Restricted' => 'restricted',
                     ])
-                    ->setNote('Standard: mark editable regions. Restricted: lock content outside those regions. Use a separate RTE preset per mode.'),
+                    ->setNote('Standard: mark editable regions. Restricted: lock content outside those regions. Use one Mode per preset.'),
             ],
         ];
     }

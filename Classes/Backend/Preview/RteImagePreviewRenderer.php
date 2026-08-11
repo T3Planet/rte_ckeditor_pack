@@ -11,11 +11,12 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Backend\Preview;
 
+use T3Planet\RteCkeditorPack\Utility\MathMlFrontendRenderer;
 use T3Planet\RteCkeditorPack\Utility\RteMarkupTransformationUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RteImagePreviewRenderer extends StandardContentPreviewRenderer
 {
@@ -36,16 +37,9 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
-       
-        if(self::getTypo3MajorVersion() > 13){
-            $row  = $item->getRow();
-        }else{
-            $row  = $item->getRecord();
-        }
+        $html = $this->resolveBodytextFromItem($item);
 
-        $html = $row['bodytext'] ?? '';
-
-        // Sanitize HTML (replaces invalid chars with U+FFFD)<.
+        // Sanitize HTML (replaces invalid chars with U+FFFD).
         // - Invalid control chars: [\x00-\x08\x0B\x0C\x0E-\x1F]
         // - UTF-16 surrogates: \xED[\xA0-\xBF].
         // - Non-characters U+FFFE and U+FFFF: \xEF\xBF[\xBE\xBF]
@@ -53,14 +47,16 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
             '/[\x00-\x08\x0B\x0C\x0E-\x1F]|\xED[\xA0-\xBF].|\xEF\xBF[\xBE\xBF]/',
             "\xEF\xBF\xBD",
             $html
-        );
+        ) ?? $html;
 
-        return $this
-            ->linkEditContent(
-                $this->renderTextWithHtml($html),
-                $item->getRecord()
-            )
-            . '<br />';
+        $rendered = $this->renderTextWithHtml($html);
+
+        return $this->linkPreviewContent($rendered, $item) . '<br />';
+    }
+
+    public function buildPreviewHtmlFromBodytext(string $input): string
+    {
+        return $this->renderTextWithHtml($input);
     }
 
     /**
@@ -72,11 +68,66 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
     protected function renderTextWithHtml(string $input): string
     {
         $input = RteMarkupTransformationUtility::stripCollaborationMarkup($input);
+        $input = GeneralUtility::makeInstance(MathMlFrontendRenderer::class)
+            ->prepareForBackendPreview($input);
 
-        // Allow only <img> and <p>-tags in preview, to prevent possible HTML mismatch
-        $input = strip_tags($input, '<img><p>');
+        // Allow only safe tags in preview, to prevent possible HTML mismatch
+        $input = strip_tags($input, '<img><p><br><span>');
 
         return $this->truncate($input, 1500);
+    }
+
+    private function linkPreviewContent(string $rendered, GridColumnItem $item): string
+    {
+        if ($this->getTypo3MajorVersion() >= 14) {
+            return $this->linkEditContent($rendered, $item->getRecord());
+        }
+
+        $row = $this->resolveRowArray($item);
+
+        return $this->linkEditContent($rendered, $row, 'tt_content');
+    }
+
+    private function resolveBodytextFromItem(GridColumnItem $item): string
+    {
+        if ($this->getTypo3MajorVersion() >= 14) {
+            $record = $item->getRecord();
+            if (is_object($record) && method_exists($record, 'has') && method_exists($record, 'get')) {
+                if ($record->has('bodytext')) {
+                    $value = $record->get('bodytext');
+                    return is_string($value) ? $value : '';
+                }
+            }
+
+            return (string)($this->resolveRowArray($item)['bodytext'] ?? '');
+        }
+
+        return (string)($this->resolveRowArray($item)['bodytext'] ?? '');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function resolveRowArray(GridColumnItem $item): array
+    {
+        if (method_exists($item, 'getRow')) {
+            $row = $item->getRow();
+            if (is_array($row) && $row !== []) {
+                return $row;
+            }
+        }
+
+        $record = $item->getRecord();
+        if (is_array($record)) {
+            return $record;
+        }
+
+        if (is_object($record) && method_exists($record, 'toArray')) {
+            $row = $record->toArray();
+            return is_array($row) ? $row : [];
+        }
+
+        return [];
     }
 
     /**
@@ -91,6 +142,10 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
      */
     private function truncate(string $html, int $length): string
     {
+        $this->reachedLimit = false;
+        $this->totalLength = 0;
+        $this->toRemove = [];
+
         // Set error level
         $internalErrors = libxml_use_internal_errors(true);
 
@@ -107,7 +162,9 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
 
         // Remove any nodes that exceed limit
         foreach ($toRemove as $child) {
-            $child->parentNode?->removeChild($child);
+            if ($child->parentNode !== null) {
+                $child->parentNode->removeChild($child);
+            }
         }
 
         $result = $dom->saveHTML();
@@ -116,11 +173,6 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
     }
 
     /**
-     * Walk the DOM tree and collect the length of all text nodes.
-     *
-     * @param \DOMNode $node
-     * @param int     $maxLength
-     *
      * @return \DOMNode[]
      */
     private function walk(\DOMNode $node, int $maxLength): array
@@ -143,8 +195,6 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
                 }
             }
 
-            // We need to explizitly check hasChildNodes() to circumvent a bug in PHP < 7.4.4
-            // which results in childNodes being NULL https://bugs.php.net/bug.php?id=79271
             if ($node->hasChildNodes()) {
                 foreach ($node->childNodes as $child) {
                     $this->walk($child, $maxLength);
@@ -155,13 +205,12 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
         return $this->toRemove;
     }
 
-
     /**
      * Get TYPO3 major version
      *
      * @return int
      */
-    public static function getTypo3MajorVersion(): int
+    private function getTypo3MajorVersion(): int
     {
         return GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion();
     }

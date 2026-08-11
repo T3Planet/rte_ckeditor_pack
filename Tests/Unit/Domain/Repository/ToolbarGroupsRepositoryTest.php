@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Tests\Unit\Domain\Repository;
 
-use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Result as DBALResult;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
-use TYPO3\CMS\Core\Database\Connection;
+use T3Planet\RteCkeditorPack\Service\PackRecordPersister;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionContainerInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\BaseTestCase;
@@ -25,31 +25,24 @@ class ToolbarGroupsRepositoryTest extends BaseTestCase
 {
     private const TABLE_NAME = 'tx_rteckeditorpack_domain_model_preset';
 
-    /** @var ConnectionPool|MockObject */
-    protected $mockedConnectionPool;
-
-    /** @var Connection|MockObject */
-    protected $mockedConnection;
-
     /** @var QueryBuilder|MockObject */
     protected $mockedQueryBuilder;
 
     /** @var ExpressionBuilder|MockObject */
     protected $mockedExpressionBuilder;
 
+    /** @var QueryRestrictionContainerInterface|MockObject */
+    protected $mockedRestrictions;
+
     protected function setUp(): void
     {
-        $this->mockedConnectionPool = $this->createMock(ConnectionPool::class);
-        $this->mockedConnection = $this->createMock(Connection::class);
         $this->mockedQueryBuilder = $this->createMock(QueryBuilder::class);
         $this->mockedExpressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $this->mockedRestrictions = $this->createMock(QueryRestrictionContainerInterface::class);
 
         $this->mockedQueryBuilder->method('expr')->willReturn($this->mockedExpressionBuilder);
-
-        $this->mockedConnectionPool->method('getQueryBuilderForTable')
-            ->willReturn($this->mockedQueryBuilder);
-        $this->mockedConnectionPool->method('getConnectionForTable')
-            ->willReturn($this->mockedConnection);
+        $this->mockedQueryBuilder->method('getRestrictions')->willReturn($this->mockedRestrictions);
+        $this->mockedRestrictions->method('add')->willReturnSelf();
     }
 
     protected function tearDown(): void
@@ -115,20 +108,10 @@ class ToolbarGroupsRepositoryTest extends BaseTestCase
     }
 
     #[Test]
-    public function updateToolBarItemsReturnsFalseWhenInsertToolBarPresetThrowsDbalException(): void
+    public function updateToolBarItemsReturnsFalseWhenInsertToolBarPresetFails(): void
     {
-        // DBAL 4 (TYPO3 13+): Exception is an interface.
-        // DBAL 3 (TYPO3 12): Exception is a concrete class.
-        $dbalExceptionClass = new \ReflectionClass(DBALException::class);
-        if ($dbalExceptionClass->isInterface()) {
-            $dbalException = new class ('boom') extends \RuntimeException implements DBALException {};
-        } else {
-            $dbalException = $dbalExceptionClass->newInstance('boom');
-        }
-
         $repository = $this->createRepositoryWithInsertMocked();
-        $repository->method('insertToolBarPreset')
-            ->willThrowException($dbalException);
+        $repository->method('insertToolBarPreset')->willReturn(false);
 
         $result = $repository->updateToolBarItems('bold,italic', 'default');
         self::assertFalse($result);
@@ -208,78 +191,32 @@ class ToolbarGroupsRepositoryTest extends BaseTestCase
     }
 
     #[Test]
-    public function insertToolBarPresetUpdatesWhenRecordExists(): void
+    public function insertToolBarPresetDelegatesToPackRecordPersister(): void
     {
         $activePreset = 'default';
         $fieldData = ['preset_key' => $activePreset, 'toolbar_items' => 'bold,italic'];
 
-        GeneralUtility::addInstance(ConnectionPool::class, $this->mockedConnectionPool);
+        $persister = $this->createMock(PackRecordPersister::class);
+        $persister->expects(self::once())
+            ->method('upsertPresetByKey')
+            ->with($activePreset, $fieldData)
+            ->willReturn(42);
 
-        $resultMock = $this->createMock(DBALResult::class);
-        $resultMock->method('fetchOne')->willReturn(99);
+        $repository = new ToolbarGroupsRepository();
+        $repository->injectPackRecordPersister($persister);
 
-        $this->mockedQueryBuilder->expects(self::once())
-            ->method('select')
-            ->with('uid')
-            ->willReturnSelf();
-        $this->mockedQueryBuilder->expects(self::once())
-            ->method('from')
-            ->with(self::TABLE_NAME)
-            ->willReturnSelf();
-        $this->mockedQueryBuilder->expects(self::once())
-            ->method('createNamedParameter')
-            ->with($activePreset)
-            ->willReturn(':' . $activePreset);
-        $this->mockedExpressionBuilder->expects(self::once())
-            ->method('eq')
-            ->with('preset_key', ':' . $activePreset)
-            ->willReturn('eqExpr');
-        $this->mockedQueryBuilder->expects(self::once())
-            ->method('where')
-            ->with('eqExpr')
-            ->willReturnSelf();
-        $this->mockedQueryBuilder->expects(self::once())
-            ->method('executeQuery')
-            ->willReturn($resultMock);
-
-        $this->mockedConnection->expects(self::once())
-            ->method('update')
-            ->with(self::TABLE_NAME, $fieldData, ['preset_key' => $activePreset]);
-        $this->mockedConnection->expects(self::never())
-            ->method('insert');
-
-        $repository = $this->createRepositoryWithQueryBuilderOverride();
-        $result = $repository->insertToolBarPreset($activePreset, $fieldData);
-        self::assertTrue($result);
+        self::assertTrue($repository->insertToolBarPreset($activePreset, $fieldData));
     }
 
     #[Test]
-    public function insertToolBarPresetInsertsWhenRecordDoesNotExist(): void
+    public function insertToolBarPresetReturnsFalseWhenPersisterReturnsZero(): void
     {
-        $activePreset = 'fresh-preset';
-        $fieldData = ['preset_key' => $activePreset, 'toolbar_items' => 'bold'];
+        $persister = $this->createMock(PackRecordPersister::class);
+        $persister->method('upsertPresetByKey')->willReturn(0);
 
-        GeneralUtility::addInstance(ConnectionPool::class, $this->mockedConnectionPool);
+        $repository = new ToolbarGroupsRepository();
+        $repository->injectPackRecordPersister($persister);
 
-        $resultMock = $this->createMock(DBALResult::class);
-        $resultMock->method('fetchOne')->willReturn(false);
-
-        $this->mockedQueryBuilder->method('select')->willReturnSelf();
-        $this->mockedQueryBuilder->method('from')->willReturnSelf();
-        $this->mockedQueryBuilder->method('where')->willReturnSelf();
-        $this->mockedQueryBuilder->method('createNamedParameter')
-            ->willReturn(':' . $activePreset);
-        $this->mockedExpressionBuilder->method('eq')->willReturn('eqExpr');
-        $this->mockedQueryBuilder->method('executeQuery')->willReturn($resultMock);
-
-        $this->mockedConnection->expects(self::once())
-            ->method('insert')
-            ->with(self::TABLE_NAME, $fieldData);
-        $this->mockedConnection->expects(self::never())
-            ->method('update');
-
-        $repository = $this->createRepositoryWithQueryBuilderOverride();
-        $result = $repository->insertToolBarPreset($activePreset, $fieldData);
-        self::assertTrue($result);
+        self::assertFalse($repository->insertToolBarPreset('default', ['preset_key' => 'default']));
     }
 }

@@ -15,14 +15,16 @@
                     <f:if condition="{module.cards}">
                         <f:for each="{module.cards}" as="card" iteration="j">
                             <f:if condition="{card.details}">
-                               <f:variable name="isActive">{f:if(condition: '{ckit:module(key: card.configuration.config_key, preset:activePreset)}', then: 'card--active')}</f:variable>
-                                <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: 'disabled')} {isActive}">
+                               <f:variable name="featureConfigKey" value="{card.configuration.config_key}" />
+                               <f:variable name="isActive">{f:if(condition: '{ckit:module(key: featureConfigKey, preset:activePreset)}', then: 'card--active')}</f:variable>
+                               <f:variable name="isDraftChanged" value="{draftChangedFeatures.{featureConfigKey}}" />
+                                <div class="card card-size-small widget favorites-teaser {module.key}-favorites{f:if(condition: '{card.details.coming_soon}', then: 'disabled')} {isActive}{f:if(condition: isDraftChanged, then: ' is-draft-changed')}"{f:if(condition: isDraftChanged, then: ' style="--pack-workspace-accent: {workspaceAccentCss};"')}>
                                     <div class="card-header">
                                         <div class="card-icon">
                                             <core:icon identifier="{card.details.icon}" size="medium" alternativeMarkupIdentifier="inline" />
                                         </div>
                                         <div class="card-header-body">
-                                            <h2 class="card-title padding-right-lg">{card.details.title}</h2>
+                                            <h2 class="card-title padding-right-lg">{card.details.title}<f:if condition="{isDraftChanged}"><span class="is-draft-badge" title="{f:translate(key: 'features.workspace.legend')}">*</span></f:if></h2>
                                             <span class="card-subtitle">{card.details.subtitle}</span>
                                         </div>
                                     </div>
@@ -54,6 +56,10 @@
                         </f:for>
                     </f:if>
                 </div>
+                <f:variable name="moduleTabKey" value="{module.key}" />
+                <f:if condition="{draftLegendModules.{moduleTabKey}}">
+                    <f:render partial="Dashboard/DraftLegend" />
+                </f:if>
                 <div id="dataNotFound" class="d-none">
                     <div class="typo3-messages">
                         <div class="alert alert-info">

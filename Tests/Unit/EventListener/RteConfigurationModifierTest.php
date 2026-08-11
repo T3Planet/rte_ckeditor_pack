@@ -533,4 +533,51 @@ class RteConfigurationModifierTest extends BaseTestCase
             $result['importModules']
         );
     }
+
+    #[Test]
+    public function isEnableRealTimeCollaborationDoesNotBlockWhenRestrictedEditingIsEnabled(): void
+    {
+        $modifier = $this->getAccessibleMock(
+            RteConfigurationModifier::class,
+            ['isCollaborationFeatureEnabled'],
+            [
+                $this->mockedSettingsConfigHandler,
+                $this->mockedFeatureRepository,
+                $this->mockedPresetRepository,
+                $this->mockedToolbarGroupsRepository,
+                $this->mockedModules,
+            ]
+        );
+        $modifier->method('isCollaborationFeatureEnabled')->willReturnCallback(
+            static fn(string $key): bool => in_array($key, ['RealTimeCollaboration', 'RestrictedEditingMode'], true)
+        );
+
+        self::assertTrue($this->invokePrivate($modifier, 'isEnableRealTimeCollaboration'));
+    }
+
+    #[Test]
+    public function buildCollaborationSchemaFingerprintIncludesRestrictedEditingMode(): void
+    {
+        $modifier = $this->getAccessibleMock(
+            RteConfigurationModifier::class,
+            ['isCollaborationFeatureEnabled', 'resolveRestrictedEditingMode'],
+            [
+                $this->mockedSettingsConfigHandler,
+                $this->mockedFeatureRepository,
+                $this->mockedPresetRepository,
+                $this->mockedToolbarGroupsRepository,
+                $this->mockedModules,
+            ]
+        );
+        $modifier->method('isCollaborationFeatureEnabled')->willReturnCallback(
+            static fn(string $key): bool => in_array($key, ['RealTimeCollaboration', 'RestrictedEditingMode'], true)
+        );
+        $modifier->method('resolveRestrictedEditingMode')->willReturn('restricted');
+
+        $fingerprint = $this->invokePrivate($modifier, 'buildCollaborationSchemaFingerprint');
+
+        self::assertStringContainsString('RealTimeCollaboration', $fingerprint);
+        self::assertStringContainsString('RestrictedEditingMode:restricted', $fingerprint);
+        self::assertStringStartsWith('rtc-map-v2', $fingerprint);
+    }
 }

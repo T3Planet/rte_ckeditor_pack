@@ -10,13 +10,13 @@ use T3Planet\RteCkeditorPack\Domain\Model\Feature;
 use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
+use T3Planet\RteCkeditorPack\Service\PackRecordPersister;
 use T3Planet\RteCkeditorPack\Service\PresetSyncService;
 use T3Planet\RteCkeditorPack\Service\SyncMode;
 use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
 use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 final class PresetSyncServiceTest extends BaseTestCase
@@ -27,8 +27,8 @@ final class PresetSyncServiceTest extends BaseTestCase
     /** @var FeatureRepository&MockObject */
     private FeatureRepository $featureRepository;
 
-    /** @var PersistenceManager&MockObject */
-    private PersistenceManager $persistenceManager;
+    /** @var PackRecordPersister&MockObject */
+    private PackRecordPersister $packRecordPersister;
 
     /** @var YamlLoadrUtility&MockObject */
     private YamlLoadrUtility $yamlLoader;
@@ -47,7 +47,7 @@ final class PresetSyncServiceTest extends BaseTestCase
 
         $this->presetRepository = $this->createMock(PresetRepository::class);
         $this->featureRepository = $this->createMock(FeatureRepository::class);
-        $this->persistenceManager = $this->createMock(PersistenceManager::class);
+        $this->packRecordPersister = $this->createMock(PackRecordPersister::class);
         $this->yamlLoader = $this->createMock(YamlLoadrUtility::class);
         $this->mergeUtility = $this->createMock(ConfigurationMergeUtility::class);
         $this->cache = $this->createMock(FrontendInterface::class);
@@ -58,7 +58,7 @@ final class PresetSyncServiceTest extends BaseTestCase
         $this->subject = new PresetSyncService(
             $this->presetRepository,
             $this->featureRepository,
-            $this->persistenceManager,
+            $this->packRecordPersister,
             $this->yamlLoader,
             $this->mergeUtility,
             $cacheManager,
@@ -97,8 +97,10 @@ final class PresetSyncServiceTest extends BaseTestCase
             ->willReturn('bold,italic');
 
         $this->featureRepository->method('findByPresetUid')->with(5)->willReturn([]);
-        $this->presetRepository->expects(self::once())->method('update')->with($preset);
-        $this->persistenceManager->expects(self::once())->method('persistAll');
+        $this->packRecordPersister->expects(self::once())
+            ->method('update')
+            ->with(PackRecordPersister::TABLE_PRESET, 5, ['toolbar_items' => 'bold,italic'])
+            ->willReturn(true);
         $this->cache->expects(self::once())->method('flush');
 
         $result = $this->subject->syncPreset(5, SyncMode::Additive);
@@ -160,9 +162,9 @@ final class PresetSyncServiceTest extends BaseTestCase
             ->with(['bold', 'sourceEditing'], 'bold,sourceEditing')
             ->willReturn('bold,sourceEditing');
 
-        $this->presetRepository->expects(self::never())->method('update');
+        $this->packRecordPersister->expects(self::never())->method('update');
         $this->featureRepository->method('findByPresetUid')->with(6)->willReturn([]);
-        $this->persistenceManager->expects(self::never())->method('persistAll');
+        
         $this->cache->expects(self::never())->method('flush');
 
         $result = $this->subject->syncPreset(6, SyncMode::Ordered);
@@ -192,7 +194,19 @@ final class PresetSyncServiceTest extends BaseTestCase
 
         $feature = $this->createFeature('WordCount', '{"wordcount":{"displayWords":false}}');
         $this->featureRepository->method('findByPresetUid')->with(7)->willReturn([$feature]);
-        $this->featureRepository->expects(self::once())->method('update')->with($feature);
+        $this->packRecordPersister->expects(self::exactly(2))
+            ->method('update')
+            ->willReturnCallback(function (string $table, int $uid, array $fields) use ($feature): bool {
+                if ($table === PackRecordPersister::TABLE_PRESET) {
+                    self::assertSame(7, $uid);
+                    self::assertSame('heading,bold,link', $fields['toolbar_items']);
+                    return true;
+                }
+                self::assertSame(PackRecordPersister::TABLE_FEATURE, $table);
+                self::assertSame((int)$feature->getUid(), $uid);
+                self::assertSame('{"wordcount":{"displayWords":true}}', $fields['fields']);
+                return true;
+            });
         $this->cache->expects(self::once())->method('flush');
 
         $result = $this->subject->syncPreset('editing', SyncMode::Strict);
@@ -211,6 +225,10 @@ final class PresetSyncServiceTest extends BaseTestCase
     {
         $preset = $this->createPreset(3, 'camino', 'a,b,c');
         $this->presetRepository->method('findByUid')->with(3)->willReturn($preset);
+        $this->packRecordPersister->expects(self::once())
+            ->method('update')
+            ->with(PackRecordPersister::TABLE_PRESET, 3, ['toolbar_items' => ''])
+            ->willReturn(true);
         $this->featureRepository->expects(self::once())
             ->method('removeByPresetId')
             ->with(3)
@@ -220,7 +238,6 @@ final class PresetSyncServiceTest extends BaseTestCase
         $result = $this->subject->syncPreset(3, SyncMode::Reset);
 
         self::assertTrue($result->success);
-        self::assertSame('', $preset->getToolbarItems());
         self::assertSame(SyncMode::Reset, $result->mode);
     }
 
@@ -250,9 +267,9 @@ final class PresetSyncServiceTest extends BaseTestCase
         $preset->setIsCustom(true);
         $this->presetRepository->method('findByUid')->with(8)->willReturn($preset);
 
-        $this->presetRepository->expects(self::never())->method('update');
+        $this->packRecordPersister->expects(self::never())->method('update');
         $this->featureRepository->expects(self::never())->method('removeByPresetId');
-        $this->persistenceManager->expects(self::never())->method('persistAll');
+        
         $this->cache->expects(self::never())->method('flush');
 
         $result = $this->subject->syncPreset(8, SyncMode::Reset);
@@ -380,6 +397,7 @@ final class PresetSyncServiceTest extends BaseTestCase
     private function createFeature(string $configKey, string $fields): Feature
     {
         $feature = new Feature();
+        $feature->_setProperty('uid', 99);
         $feature->setConfigKey($configKey);
         $feature->setFields($fields);
         return $feature;

@@ -11,8 +11,11 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\EventListener;
 
+use T3Planet\RteCkeditorPack\Backend\Preview\RteImagePreviewRenderer;
+use T3Planet\RteCkeditorPack\Utility\MathMlFrontendRenderer;
 use T3Planet\RteCkeditorPack\Utility\RteMarkupTransformationUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Strips CKEditor comment/suggestion markers from bodytext before page-module preview.
@@ -21,7 +24,7 @@ use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
  * On TYPO3 14+ the record is a RecordInterface; stripping is handled after render by
  * StripCollaborationMarkupFromPreviewListener (AfterPageContentPreviewRenderedEvent).
  */
-final readonly class StripCollaborationMarkupBeforePreviewListener
+class StripCollaborationMarkupBeforePreviewListener
 {
     public function __invoke(PageContentPreviewRenderingEvent $event): void
     {
@@ -35,11 +38,29 @@ final readonly class StripCollaborationMarkupBeforePreviewListener
         }
 
         $bodytext = $record['bodytext'] ?? null;
-        if (!is_string($bodytext) || $bodytext === '' || !$this->containsCollaborationMarkup($bodytext)) {
+        if (!is_string($bodytext) || $bodytext === '') {
             return;
         }
 
-        $record['bodytext'] = RteMarkupTransformationUtility::stripCollaborationMarkup($bodytext);
+        $mathRenderer = GeneralUtility::makeInstance(MathMlFrontendRenderer::class);
+        $changed = false;
+
+        if ($this->containsCollaborationMarkup($bodytext)) {
+            $bodytext = RteMarkupTransformationUtility::stripCollaborationMarkup($bodytext);
+            $changed = true;
+        }
+
+        if ($mathRenderer->containsMathMarkup($bodytext)) {
+            $bodytext = GeneralUtility::makeInstance(RteImagePreviewRenderer::class)
+                ->buildPreviewHtmlFromBodytext($bodytext);
+            $changed = true;
+        }
+
+        if (!$changed) {
+            return;
+        }
+
+        $record['bodytext'] = $bodytext;
         $event->setRecord($record);
     }
 

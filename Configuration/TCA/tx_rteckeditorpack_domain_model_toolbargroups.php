@@ -8,6 +8,11 @@ return [
         'crdate' => 'crdate',
         'versioningWS' => true,
         'rootLevel' => 1,
+        'security' => [
+            'ignoreRootLevelRestriction' => true,
+            'ignoreWebMountRestriction' => true,
+            'ignorePageTypeRestriction' => true,
+        ],
         'delete' => 'deleted',
         'hideTable' => true,
         'enablecolumns' => [

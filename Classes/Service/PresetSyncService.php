@@ -12,7 +12,6 @@ use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
 use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 /**
  * Reusable YAML ↔ DB preset sync used by the backend module, export, and CLI.
@@ -24,7 +23,7 @@ class PresetSyncService
     public function __construct(
         protected readonly PresetRepository $presetRepository,
         protected readonly FeatureRepository $featureRepository,
-        protected readonly PersistenceManager $persistenceManager,
+        protected readonly PackRecordPersister $packRecordPersister,
         protected readonly YamlLoadrUtility $yamlLoader,
         protected readonly ConfigurationMergeUtility $mergeUtility,
         CacheManager $cacheManager,
@@ -173,12 +172,13 @@ class PresetSyncService
         $presetUid = (int)$preset->getUid();
         $presetKey = $preset->getPresetKey();
 
-        $preset->setToolbarItems('');
-        $this->presetRepository->update($preset);
+        $this->packRecordPersister->update(
+            PackRecordPersister::TABLE_PRESET,
+            $presetUid,
+            ['toolbar_items' => '']
+        );
 
         $this->featureRepository->removeByPresetId($presetUid);
-        // removeByPresetId already persists when features exist; always persist toolbar clear.
-        $this->persistenceManager->persistAll();
         $this->cache->flush();
 
         return SyncResult::success(
@@ -221,8 +221,12 @@ class PresetSyncService
         };
         $changed = $toolbarString !== $preset->getToolbarItems();
         if ($changed) {
+            $this->packRecordPersister->update(
+                PackRecordPersister::TABLE_PRESET,
+                $presetUid,
+                ['toolbar_items' => $toolbarString]
+            );
             $preset->setToolbarItems($toolbarString);
-            $this->presetRepository->update($preset);
         }
 
         $successMessage = match ($mode) {
@@ -253,7 +257,6 @@ class PresetSyncService
             );
         }
 
-        $this->persistenceManager->persistAll();
         $this->cache->flush();
 
         $notifications[] = [
@@ -335,7 +338,11 @@ class PresetSyncService
         }
 
         $feature->setFields(json_encode($syncData));
-        $this->featureRepository->update($feature);
+        $this->packRecordPersister->update(
+            PackRecordPersister::TABLE_FEATURE,
+            (int)$feature->getUid(),
+            ['fields' => (string)$feature->getFields()]
+        );
         return true;
     }
 }

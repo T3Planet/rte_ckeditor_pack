@@ -50,7 +50,6 @@ class RealtimeAdapter extends Core.Plugin {
             config.cloudServices.documentId = channelId;
         }
 
-        this._rtcLocalFallbackHtml = this._resolveRtcSourceHtml(this.channelElement);
         this._ensureInitialDataForRtc(config);
 
         this._loaderCopy = {
@@ -169,8 +168,9 @@ class RealtimeAdapter extends Core.Plugin {
         this._configureCommentMentionFeeds();
 
         if (editor.plugins.has('RealTimeCollaborativeEditing')) {
-            this._setupRtcLocalContentFallback(editor);
+            this._applyRtcPostInitGuards(editor);
         }
+        this._enableCollaborationCommandsInRestrictedEditing(editor);
     }
 
     /**
@@ -248,39 +248,55 @@ class RealtimeAdapter extends Core.Plugin {
     }
 
     /**
-     * Real-time collaboration forbids editor.setData() after init.
-     * Seed empty cloud sessions from the local field value first, then block setData().
+     * Real-time collaboration forbids editor.setData() after the editor is ready.
+     *
+     * Do NOT call editor.data.set() while CloudServices is connecting/hydrating —
+     * that corrupts the CRDT session. Seed empty FormEngine docs via
+     * config.initialData in _ensureInitialDataForRtc (constructor-time) instead.
      */
-    _setupRtcLocalContentFallback(editor) {
-        const localHtml = this._rtcLocalFallbackHtml || '';
-        let seeded = false;
-
-        const trySeedFromLocal = () => {
-            if (seeded || !localHtml) {
-                return;
-            }
-
-            const currentData = editor.getData({ skipListItemIds: true });
-            if (!this._isRtcEditorContentEmpty(currentData)) {
-                return;
-            }
-
-            seeded = true;
-            editor.data.set(localHtml, { suppressErrorInCollaboration: true });
-        };
-
-        const finalizeRtcGuards = () => {
-            trySeedFromLocal();
-            this._applyRtcSetDataGuard(editor);
+    _applyRtcPostInitGuards(editor) {
+        editor.once('ready', () => {
+            editor.setData = () => Promise.resolve();
             this._syncVisualEditorInitialData(editor);
-        };
-
-        editor.once('ready', finalizeRtcGuards);
-        editor.on('cs-connection-connected', trySeedFromLocal, { priority: 'low' });
+        });
     }
 
-    _applyRtcSetDataGuard(editor) {
-        editor.setData = () => Promise.resolve();
+    /**
+     * Restricted editing disables most commands outside exception regions.
+     * Collaboration UX (comments / track changes) must stay available with RTC.
+     *
+     * @see https://ckeditor.com/docs/ckeditor5/latest/features/restricted-editing.html
+     */
+    _enableCollaborationCommandsInRestrictedEditing(editor) {
+        if (!editor.plugins.has('RestrictedEditingModeEditing')) {
+            return;
+        }
+
+        const restrictedEditing = editor.plugins.get('RestrictedEditingModeEditing');
+        if (typeof restrictedEditing.enableCommand !== 'function') {
+            return;
+        }
+
+        // Commands that must work for commenting / suggestions while content is locked.
+        const collaborationCommands = [
+            'addCommentThread',
+            'removeCommentThread',
+            'updateCommentThread',
+            'addComment',
+            'updateComment',
+            'removeComment',
+            'trackChanges',
+            'acceptSuggestion',
+            'discardSuggestion',
+            'acceptAllSuggestions',
+            'discardAllSuggestions',
+        ];
+
+        collaborationCommands.forEach((commandName) => {
+            if (editor.commands.get(commandName)) {
+                restrictedEditing.enableCommand(commandName);
+            }
+        });
     }
 
     _syncVisualEditorInitialData(editor) {
@@ -292,15 +308,13 @@ class RealtimeAdapter extends Core.Plugin {
         // Visual Editor is TYPO3 v13+ only; dynamic import keeps v12 backend unaffected.
         import('@typo3/visual-editor/Frontend/stores/data-handler-store.js')
             .then(({ dataHandlerStore }) => {
+                if (editor.state === 'destroyed') {
+                    return;
+                }
                 const value = editor.getData({ skipListItemIds: true });
                 dataHandlerStore.setInitialData(host.table, host.uid, host.field, value);
             })
             .catch(() => {});
-    }
-
-    _isRtcEditorContentEmpty(data) {
-        const trimmed = (data || '').trim();
-        return trimmed === '' || trimmed === '<p></p>' || trimmed === '<p>&nbsp;</p>';
     }
 
     /**
@@ -449,7 +463,7 @@ class RealtimeAdapter extends Core.Plugin {
             return;
         }
 
-        const html = this._rtcLocalFallbackHtml || this._resolveRtcSourceHtml(this.channelElement);
+        const html = this._resolveRtcSourceHtml(this.channelElement);
         if (!html) {
             return;
         }

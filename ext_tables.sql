@@ -47,12 +47,25 @@ CREATE TABLE tx_rteckeditorpack_domain_model_revisionhistory
 CREATE TABLE tx_rteckeditorpack_domain_model_toolbargroups
 (
     uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
     label varchar(255) DEFAULT NULL,
     tooltip varchar(255) DEFAULT NULL,
     icon varchar(255) DEFAULT NULL,
     custom_icon text DEFAULT NULL,
     items text NOT NULL DEFAULT '',
+    deleted smallint(1) unsigned DEFAULT '0' NOT NULL,
+    hidden smallint(1) unsigned DEFAULT '0' NOT NULL,
+    tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+    crdate int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_oid int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_wsid int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_state smallint(6) DEFAULT '0' NOT NULL,
+    t3ver_stage int(11) DEFAULT '0' NOT NULL,
     PRIMARY KEY (uid),
+    KEY parent (pid),
+    KEY deleted (deleted),
+    KEY hidden (hidden),
+    KEY t3ver_oid (t3ver_oid, t3ver_wsid)
 );
 
 CREATE TABLE tx_rteckeditorpack_domain_model_preset (
@@ -68,10 +81,15 @@ CREATE TABLE tx_rteckeditorpack_domain_model_preset (
     cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
     is_custom smallint(1) unsigned NOT NULL DEFAULT '0',
     usage_source smallint(1) unsigned NOT NULL DEFAULT '0',
+    t3ver_oid int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_wsid int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_state smallint(6) DEFAULT '0' NOT NULL,
+    t3ver_stage int(11) DEFAULT '0' NOT NULL,
     PRIMARY KEY (uid),
     KEY parent (pid),
     KEY deleted (deleted),
-    KEY hidden (hidden)
+    KEY hidden (hidden),
+    KEY t3ver_oid (t3ver_oid, t3ver_wsid)
 );
 
 CREATE TABLE tx_rteckeditorpack_domain_model_feature (
@@ -88,10 +106,15 @@ CREATE TABLE tx_rteckeditorpack_domain_model_feature (
     tstamp int(11) unsigned DEFAULT '0' NOT NULL,
     crdate int(11) unsigned DEFAULT '0' NOT NULL,
     cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_oid int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_wsid int(11) unsigned DEFAULT '0' NOT NULL,
+    t3ver_state smallint(6) DEFAULT '0' NOT NULL,
+    t3ver_stage int(11) DEFAULT '0' NOT NULL,
     PRIMARY KEY (uid),
     KEY parent (pid),
     KEY deleted (deleted),
     KEY hidden (hidden),
     KEY enable (enable),
-    KEY preset_uid (preset_uid)
+    KEY preset_uid (preset_uid),
+    KEY t3ver_oid (t3ver_oid, t3ver_wsid)
 );

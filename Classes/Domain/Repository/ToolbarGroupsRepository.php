@@ -11,63 +11,80 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Domain\Repository;
 
-use Doctrine\DBAL\Exception as DBALException;
+use T3Planet\RteCkeditorPack\Service\PackRecordPersister;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\WorkspaceRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class ToolbarGroupsRepository extends Repository
 {
-    private const TOOLBAR_TABLE_NAME = 'tx_rteckeditorpack_domain_model_preset';
+    private const TOOLBAR_TABLE_NAME = PackRecordPersister::TABLE_PRESET;
+
+    protected ?PackRecordPersister $packRecordPersister = null;
+
+    protected ?Context $context = null;
+
+    public function injectPackRecordPersister(PackRecordPersister $packRecordPersister): void
+    {
+        $this->packRecordPersister = $packRecordPersister;
+    }
+
+    public function injectContext(Context $context): void
+    {
+        $this->context = $context;
+    }
 
     public function updateToolBarItems(string $items, string $activePreset): bool
     {
-        $itemsArray = array_map('trim', explode(',', $items));
-        $uniqueStrings = [];
-        $normalizedItemsArray = [];
-        foreach ($itemsArray as $item) {
+        $normalized = [];
+        $seen = [];
+        foreach (array_map('trim', explode(',', $items)) as $item) {
             if ($item === '|' || $item === '-') {
-                $normalizedItemsArray[] = $item;
-            } elseif (!in_array($item, $uniqueStrings, true)) {
-                $uniqueStrings[] = $item;
-                $normalizedItemsArray[] = $item;
+                $normalized[] = $item;
+                continue;
             }
+            if ($item === '' || isset($seen[$item])) {
+                continue;
+            }
+            $seen[$item] = true;
+            $normalized[] = $item;
         }
-        $normalizedItems = implode(',', $normalizedItemsArray);
 
-        try {
-
-            $data = [
-                'preset_key' => $activePreset,
-                'toolbar_items' => $normalizedItems,
-            ];
-            $this->insertToolBarPreset($activePreset, $data);
-
-        } catch (DBALException $e) {
-            return false;
-        }
-        return true;
-
+        return $this->insertToolBarPreset($activePreset, [
+            'preset_key' => $activePreset,
+            'toolbar_items' => implode(',', $normalized),
+        ]);
     }
 
     public function findPresets(array $toolBarItems = [], string $fields = '*'): array
     {
         $queryBuilder = $this->getQueryBuilder(self::TOOLBAR_TABLE_NAME);
-
-        $constraints = [];
-        if ($toolBarItems) {
-            foreach ($toolBarItems as $item) {
-                $constraints[] = $queryBuilder->expr()->inSet('toolbar_items', $queryBuilder->createNamedParameter($item));
-            }
+        $workspaceId = 0;
+        try {
+            $workspaceId = (int)($this->context ?? GeneralUtility::makeInstance(Context::class))
+                ->getPropertyFromAspect('workspace', 'id', 0);
+        } catch (AspectNotFoundException) {
+            // Live.
         }
+        $queryBuilder->getRestrictions()->add(
+            GeneralUtility::makeInstance(WorkspaceRestriction::class, $workspaceId)
+        );
 
         $queryBuilder->select($fields)->from(self::TOOLBAR_TABLE_NAME);
 
-        if ($constraints) {
-            $queryBuilder->where(
-                $queryBuilder->expr()->or(...$constraints)
-            );
+        if ($toolBarItems !== []) {
+            $constraints = [];
+            foreach ($toolBarItems as $item) {
+                $constraints[] = $queryBuilder->expr()->inSet(
+                    'toolbar_items',
+                    $queryBuilder->createNamedParameter($item)
+                );
+            }
+            $queryBuilder->where($queryBuilder->expr()->or(...$constraints));
         }
 
         return $queryBuilder->executeQuery()->fetchAllAssociative();
@@ -75,42 +92,18 @@ class ToolbarGroupsRepository extends Repository
 
     public function insertToolBarPreset(string $activePreset, array $fieldData): bool
     {
-
-        $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TOOLBAR_TABLE_NAME);
-        $queryBuilder = $this->getQueryBuilder(self::TOOLBAR_TABLE_NAME);
+        $persister = $this->packRecordPersister
+            ?? GeneralUtility::makeInstance(PackRecordPersister::class);
 
         try {
-            $existingRecord = $queryBuilder
-                ->select('uid')
-                    ->from(self::TOOLBAR_TABLE_NAME)
-                    ->where(
-                        $queryBuilder->expr()->eq('preset_key', $queryBuilder->createNamedParameter($activePreset))
-                    )
-                ->executeQuery()
-                ->fetchOne();
-
-            if ($existingRecord) {
-                $connection->update(
-                    self::TOOLBAR_TABLE_NAME,
-                    $fieldData,
-                    ['preset_key' => $activePreset]
-                );
-            } else {
-                $connection->insert(
-                    self::TOOLBAR_TABLE_NAME,
-                    $fieldData
-                );
-            }
-        } catch (DBALException $e) {
+            return $persister->upsertPresetByKey($activePreset, $fieldData) > 0;
+        } catch (\Throwable) {
             return false;
         }
-        return true;
-
     }
 
     protected function getQueryBuilder(string $tableName): QueryBuilder
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($tableName);
     }
-
 }

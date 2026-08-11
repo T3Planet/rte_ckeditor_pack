@@ -9,13 +9,12 @@
 
 namespace T3Planet\RteCkeditorPack\DataProvider;
 
-use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
+use T3Planet\RteCkeditorPack\Service\PackRecordPersister;
 use T3Planet\RteCkeditorPack\Utility\YamlLoadrUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class BaseToolBar
@@ -50,7 +49,7 @@ class BaseToolBar
         protected readonly PresetRepository $presetRepository,
         protected readonly FeatureRepository $featureRepository,
         protected readonly ToolbarGroupsRepository $toolBarRepository,
-        protected readonly PersistenceManager $persistenceManager
+        protected readonly PackRecordPersister $packRecordPersister,
     ) {}
 
     public function findEnableToolbarItems(int $activePresetUid = 0): array
@@ -63,32 +62,47 @@ class BaseToolBar
             $enabledFeatures = $this->featureRepository->findEnabledByPresetUid($activePresetUid);
             
             foreach ($enabledFeatures as $feature) {
+                $configKey = $feature->getConfigKey();
+                $featureToolbarItems = [];
+
                 // Get toolbar items from feature's toolbarItems field
-                $featureToolbarItems = $feature->getToolbarItems();
-                if ($featureToolbarItems) {
-                    $toolBarItemArrayRaw[] = GeneralUtility::trimExplode(',', $featureToolbarItems, true);
+                $storedToolbarItems = $feature->getToolbarItems();
+                if ($storedToolbarItems) {
+                    $featureToolbarItems = array_merge(
+                        $featureToolbarItems,
+                        GeneralUtility::trimExplode(',', $storedToolbarItems, true)
+                    );
                 }
                 
                 // Also get from Modules.php configuration
                 $moduleConfiguration = GeneralUtility::makeInstance(Modules::class)
-                    ->getItemByConfigKey($feature->getConfigKey());
+                    ->getItemByConfigKey($configKey);
                 if (isset($moduleConfiguration['configuration']['toolBarItems'])) {
-                    $toolBarItemArrayRaw[] = GeneralUtility::trimExplode(
-                        ',',
-                        $moduleConfiguration['configuration']['toolBarItems'],
-                        true
+                    $featureToolbarItems = array_merge(
+                        $featureToolbarItems,
+                        GeneralUtility::trimExplode(
+                            ',',
+                            $moduleConfiguration['configuration']['toolBarItems'],
+                            true
+                        )
                     );
+                }
+
+                foreach ($featureToolbarItems as $value) {
+                    $toolBarItemArrayRaw[] = [
+                        'toolBar' => $value,
+                        'configKey' => $configKey,
+                    ];
                 }
             }
         }
 
-        $activeFeaturesToolbarItems = !empty($toolBarItemArrayRaw) ? array_merge([], ...$toolBarItemArrayRaw) : [];
-        
         $activeItemArray = [];
         $toolbar = GeneralUtility::makeInstance(ToolbarIcons::class);
 
-        if ($activeFeaturesToolbarItems) {
-            foreach ($activeFeaturesToolbarItems as $value) {
+        if ($toolBarItemArrayRaw) {
+            foreach ($toolBarItemArrayRaw as $featureToolbarItem) {
+                $value = $featureToolbarItem['toolBar'];
                 $label = LocalizationUtility::translate(
                     'toolbar.item.' . str_replace(':', '_', $value),
                     'rte_ckeditor_pack'
@@ -98,7 +112,8 @@ class BaseToolBar
                     'icon' => $icon,
                     'toolBar' => $value,
                     'label' => $label,
-                    'is_premium' => $toolbar->isPremiumToolbarItem($value)
+                    'is_premium' => $toolbar->isPremiumToolbarItem($value),
+                    'configKey' => $featureToolbarItem['configKey'],
                 ];
             }
         }
@@ -236,9 +251,11 @@ class BaseToolBar
                     }
                 }
                 $toolBar = implode(',', $toolBarItems);
-                $preset->setToolbarItems($toolBar);
-                $this->presetRepository->update($preset);
-                $this->persistenceManager->persistAll();
+                $this->packRecordPersister->update(
+                    PackRecordPersister::TABLE_PRESET,
+                    (int)$preset->getUid(),
+                    ['toolbar_items' => $toolBar]
+                );
             }
         }
     }
@@ -296,17 +313,22 @@ class BaseToolBar
                 $toolBarItems = $yamlLoadr->fetchToolBarItems($presetKey);
                 
                 try {
-                    $preset = GeneralUtility::makeInstance(Preset::class);
-                    $preset->setPresetKey($presetKey);
-                    $preset->setIsCustom(false);
-                    $preset->setHidden(false);
-                    $preset->setToolbarItems($toolBarItems);
-                    $this->presetRepository->add($preset);
-                    $this->persistenceManager->persistAll();
-                    
+                    $uid = $this->packRecordPersister->create(
+                        PackRecordPersister::TABLE_PRESET,
+                        [
+                            'preset_key' => $presetKey,
+                            'is_custom' => 0,
+                            'hidden' => 0,
+                            'toolbar_items' => $toolBarItems,
+                        ]
+                    );
+                    if ($uid <= 0) {
+                        continue;
+                    }
+
                     // Add to core presets with new UID
                     $corePresets[$presetKey] = [
-                        'uid' => $preset->getUid(),
+                        'uid' => $uid,
                         'key' => $presetKey,
                         'is_custom' => false,
                         'hidden' => 1,

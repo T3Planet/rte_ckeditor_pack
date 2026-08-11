@@ -214,6 +214,7 @@ class EventHandlers {
     if (toggleBtn) this.updateButtonClasses(toggleBtn, targetGrid, dataId);
     this.state.updateFeatureFields();
     this.state.updateGridPositions(targetGrid);
+    this.updateDraftIndicator(evt.item, targetGrid);
     
     this.sendAjaxRequest({
       action: "handleAjaxRequest", 
@@ -233,6 +234,7 @@ class EventHandlers {
     if (!itemData?.dataId) return;
 
     const { dataId, dataItems } = itemData;
+    const targetGrid = evt.to ? this.state.getGridClass(evt.to) : "";
 
     // Update arrays based on source grid
     if (sourceGrid === "grid-2" || sourceGrid === "grid-5") {
@@ -244,6 +246,13 @@ class EventHandlers {
     
     this.state.updateFeatureFields();
     this.state.updateGridPositions(sourceGrid);
+    if (
+      targetGrid === "grid-1" ||
+      targetGrid === "grid-2" ||
+      sourceGrid === "grid-2"
+    ) {
+      this.updateDraftIndicator(evt.item, targetGrid || "grid-1");
+    }
 
     this.sendAjaxRequest({
       action: "handleAjaxRequest", 
@@ -251,7 +260,7 @@ class EventHandlers {
       itemId: dataId, 
       itemData: dataItems,
       sourceGrid, 
-      targetGrid: evt.to ? this.state.getGridClass(evt.to) : "",
+      targetGrid,
       newIndex: evt.newIndex, 
       oldIndex: evt.oldIndex
     });
@@ -276,6 +285,101 @@ class EventHandlers {
       this.state.addItemToArray(this.state.disabledItems, dataId);
       this.state.removeItemFromArray(this.state.enabledItems, dataId);
     }
+  }
+
+  /**
+   * Show/hide draft * for toolbar (grid-1/2) and Hidden Features (grid-4/5).
+   */
+  updateDraftIndicator(dragItem, targetGrid) {
+    const root = document.querySelector(".pack-workspace-theme");
+    if (!root || root.dataset.packDraftMode !== "1") {
+      return;
+    }
+
+    const isToolbarGrid = targetGrid === "grid-1" || targetGrid === "grid-2";
+    const isFeatureGrid = targetGrid === "grid-4" || targetGrid === "grid-5";
+    if (!isToolbarGrid && !isFeatureGrid) {
+      return;
+    }
+
+    const item = dragItem?.classList?.contains("drag-item")
+      ? dragItem
+      : dragItem?.closest?.(".drag-item");
+    if (!item || item.classList.contains("drag-separator-item")) {
+      return;
+    }
+
+    const itemData = this.extractItemData(item);
+    const btn = itemData?.toggleBtn || item.querySelector(".toggle-btn");
+    if (!btn) {
+      return;
+    }
+
+    let compareKey = "";
+    let inLive = false;
+    let inDraftActive = false;
+
+    if (isToolbarGrid) {
+      compareKey = (itemData?.dataItems || "").trim();
+      if (!compareKey || compareKey === "|" || compareKey === "-") {
+        return;
+      }
+      const liveToolbar = (root.dataset.packLiveToolbar || "")
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean);
+      inLive = liveToolbar.includes(compareKey);
+      inDraftActive = targetGrid === "grid-2";
+    } else {
+      compareKey = (itemData?.dataId || "").trim();
+      if (!compareKey) {
+        return;
+      }
+      const liveFeatures = (root.dataset.packLiveFeatures || "")
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean);
+      inLive = liveFeatures.includes(compareKey);
+      inDraftActive = targetGrid === "grid-5";
+    }
+
+    const enableDiff = inLive !== inDraftActive;
+    const changedFeatures = (root.dataset.packChangedFeatures || "")
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+    // Keep * for field-only (or other) draft diffs even when enable membership matches Live.
+    const needsStar = enableDiff
+      || (isFeatureGrid && changedFeatures.includes(compareKey));
+
+    if (needsStar) {
+      item.classList.add("is-draft-only", "is-draft-changed");
+      if (!btn.querySelector(".is-draft-badge")) {
+        const star = document.createElement("span");
+        star.className = "is-draft-badge";
+        star.title = root.dataset.packDraftLegend || "";
+        star.textContent = "*";
+        const label = btn.querySelector(".toggle-label");
+        if (label) {
+          label.insertAdjacentElement("afterend", star);
+        } else {
+          btn.appendChild(star);
+        }
+      }
+    } else {
+      item.classList.remove("is-draft-only", "is-draft-changed");
+      btn.querySelector(".is-draft-badge")?.remove();
+    }
+
+    this.syncDraftLegendVisibility(root);
+  }
+
+  syncDraftLegendVisibility(root) {
+    const legend = root.querySelector(".pack-workspace-draft-legend");
+    if (!legend) {
+      return;
+    }
+    legend.hidden = !root.querySelector(".is-draft-badge");
   }
 
   sendAjaxRequest(data) {

@@ -12,6 +12,7 @@ services:
       - '../Classes/Configuration/RichtextV14.php'
       - '../Classes/EventListener/ProcessingConfigurationModifier.php'
       - '../Classes/EventListener/StripCollaborationMarkupFromPreviewListener.php'
+      - '../Classes/EventListener/FlushPackCacheOnWorkspacePublishListener.php'
       - '../Classes/EventListener/RestoreCollaborationMarkersListener.php'
       - '../Classes/Html/RteHtmlParser.php'
       - '../Classes/Service/SyncMode.php'
@@ -52,6 +53,9 @@ services:
     public: true
 
   T3Planet\RteCkeditorPack\Service\PresetSyncService:
+    public: true
+
+  T3Planet\RteCkeditorPack\Service\PackRecordPersister:
     public: true
 
   T3Planet\RteCkeditorPack\Service\TokenUrlValidator:

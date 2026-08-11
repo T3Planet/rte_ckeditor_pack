@@ -23,11 +23,12 @@ use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use T3Planet\RteCkeditorPack\Service\TokenUrlValidator;
 use T3Planet\RteCkeditorPack\Service\ImportExportService;
+use T3Planet\RteCkeditorPack\Service\PackDraftIndicator;
+use T3Planet\RteCkeditorPack\Service\PackRecordPersister;
 use T3Planet\RteCkeditorPack\Service\PresetSyncService;
 use T3Planet\RteCkeditorPack\Service\SyncMode;
 use T3Planet\RteCkeditorPack\Utility\UriBuilderUtility;
 use T3Planet\RteCkeditorPack\Domain\Model\ToolbarGroups;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
@@ -57,7 +58,7 @@ class RteModuleController extends ActionController
 
     protected ToolbarGroupsRepository $groupsRepository;
 
-    protected PersistenceManager $persistenceManager;
+    protected PackRecordPersister $packRecordPersister;
 
     protected $cache;
 
@@ -69,15 +70,16 @@ class RteModuleController extends ActionController
         protected readonly BaseToolBar $baseToolBar,
         FeatureRepository $featureRepository,
         PresetRepository $presetRepository,
-        PersistenceManager $persistenceManager,
+        PackRecordPersister $packRecordPersister,
         ToolbarGroupsRepository $groupsRepository,
         protected readonly ImportExportService $importExportService,
         protected readonly SyncFeaturesBeforeExportListener $syncFeaturesService,
         protected readonly PresetSyncService $presetSyncService,
+        protected readonly PackDraftIndicator $packDraftIndicator,
     ) {
         $this->featureRepository = $featureRepository;
         $this->presetRepository = $presetRepository;
-        $this->persistenceManager = $persistenceManager;
+        $this->packRecordPersister = $packRecordPersister;
         $this->groupsRepository = $groupsRepository;
         $this->urlBuilder = GeneralUtility::makeInstance(UriBuilderUtility::class);
         $this->notification = GeneralUtility::makeInstance(FlashUtility::class);
@@ -135,15 +137,20 @@ class RteModuleController extends ActionController
             'yaml' => $corePresets,
             'custom' => $customPresets,
         ];
-        $this->moduleTemplate->assignMultiple([
+        $draftUiData = $this->packDraftIndicator->getUiData((int)$activePresetUid);
+        $draftUiData['draftLegendModules'] = $this->packDraftIndicator->modulesWithDraftChanges(
+            $availableModules,
+            $draftUiData['draftChangedFeatures']
+        );
+        $this->moduleTemplate->assignMultiple(array_merge([
             'availableModules' => $availableModules,
             'currentModule' => $currentModule ?? 'features',
             'toolBarConfiguration' => $this->baseToolBar->findEnableToolbarItems((int)$activePresetUid),
             'availablePresets' => $availablePresets, // Keep for backward compatibility
             'groupedPresets' => $groupedPresets, // New grouped structure
             'activePreset' => $activePresetUid,
-            'extSettings' =>  ExtensionConfigurationUtility::getAll()
-        ]);
+            'extSettings' =>  ExtensionConfigurationUtility::getAll(),
+        ], $draftUiData));
 
         $this->preparePageRenderer();
         return $this->moduleTemplate->renderResponse('RteModule/Index');
@@ -294,11 +301,11 @@ class RteModuleController extends ActionController
                 $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
 
                 if (!$feature) {
-                    $feature = GeneralUtility::makeInstance(Feature::class);
-                    $feature->setPresetUid($presetUid);
-                    $feature->setConfigKey($configKey);
-                    $this->featureRepository->add($feature);
-                    $this->persistenceManager->persistAll();
+                    $this->packRecordPersister->upsertFeature($presetUid, $configKey, [
+                        'enable' => 0,
+                        'fields' => '',
+                    ]);
+                    $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
                 }
 
                 if ($configKey === 'ImportWord'  || $configKey === 'ExportPdf' || $configKey === 'ExportWord') {
@@ -344,12 +351,28 @@ class RteModuleController extends ActionController
                     ];
                 }
 
-                // Update feature in new table
-                $feature->setEnable($enable);
-                $feature->setFields($fieldData);
-                $this->featureRepository->update($feature);
+                if ($feature) {
+                    $ok = $this->packRecordPersister->update(
+                        PackRecordPersister::TABLE_FEATURE,
+                        (int)$feature->getUid(),
+                        [
+                            'enable' => $enable ? 1 : 0,
+                            'fields' => (string)$fieldData,
+                        ]
+                    );
+                    if (!$ok) {
+                        $errors = $this->packRecordPersister->getErrors();
+                        $notification[] = [
+                            'title' => 'ckeditorKit.operation.error',
+                            'message' => $errors !== []
+                                ? implode(' ', $errors)
+                                : 'ckeditorKit.plugin.setting_save.error.message',
+                            'severity' => 2,
+                        ];
+                        return new JsonResponse(['notifications' => $notification]);
+                    }
+                }
                 $this->cache->flush();
-                $this->persistenceManager->persistAll();
             }
 
             // Remove Item from toolBar
@@ -380,12 +403,17 @@ class RteModuleController extends ActionController
         $selectedPresetUid = isset($data['activePreset']) && is_numeric($data['activePreset']) ? (int)$data['activePreset'] : 0;
 
         if ($toolBarItems && $selectedPresetUid > 0) {
-            // Update toolbar items in preset table
             $preset = $this->presetRepository->findByUid($selectedPresetUid);
             if ($preset) {
-                $preset->setToolbarItems($toolBarItems);
-                $this->presetRepository->update($preset);
-                $this->persistenceManager->persistAll();
+                $ok = $this->packRecordPersister->update(
+                    PackRecordPersister::TABLE_PRESET,
+                    $selectedPresetUid,
+                    ['toolbar_items' => $toolBarItems]
+                );
+                if (!$ok) {
+                    $this->flashPersisterErrors();
+                    return false;
+                }
             }
             $this->cache->flush();
         }
@@ -445,13 +473,11 @@ class RteModuleController extends ActionController
                         $feature = $this->featureRepository->findByPresetUidAndConfigKey($selectedPresetUid, $configKey);
                         if (!$feature) {
                             // Create new feature
-                            $feature = GeneralUtility::makeInstance(Feature::class);
-                            $feature->setPresetUid($selectedPresetUid);
-                            $feature->setConfigKey($configKey);
-                            $feature->setEnable($enable);
-                            $feature->setFields('');
-                            $this->featureRepository->add($feature);
-                            $this->persistenceManager->persistAll();
+                            $this->packRecordPersister->upsertFeature($selectedPresetUid, $configKey, [
+                                'enable' => $enable ? 1 : 0,
+                                'fields' => '',
+                            ]);
+                            $feature = $this->featureRepository->findByPresetUidAndConfigKey($selectedPresetUid, $configKey);
                         }
                     }
 
@@ -524,8 +550,18 @@ class RteModuleController extends ActionController
                             }
                         }
 
-                        $this->featureRepository->update($feature);
-                        $this->persistenceManager->persistAll();
+                        $ok = $this->packRecordPersister->update(
+                            PackRecordPersister::TABLE_FEATURE,
+                            (int)$feature->getUid(),
+                            [
+                                'enable' => $feature->isEnable() ? 1 : 0,
+                                'fields' => (string)$feature->getFields(),
+                            ]
+                        );
+                        if (!$ok) {
+                            $this->flashPersisterErrors();
+                            return false;
+                        }
                         $this->cache->flush();
                     }
                 }
@@ -550,6 +586,18 @@ class RteModuleController extends ActionController
         }
 
         return false;
+    }
+
+    private function flashPersisterErrors(): void
+    {
+        $errors = $this->packRecordPersister->getErrors();
+        $this->notification->addFlashNotification([
+            'title' => 'ckeditorKit.operation.error',
+            'message' => $errors !== []
+                ? implode(' ', $errors)
+                : 'ckeditorKit.module_update.error.message',
+            'severity' => 2,
+        ]);
     }
 
 
@@ -583,25 +631,22 @@ class RteModuleController extends ActionController
         if (isset($data['group']) && $data['group']) {
             try {
                 foreach ($data['group'] as $group) {
+                    $fields = [
+                        'label' => $group['label'],
+                        'icon' => $group['icon'] ?? '',
+                        'tooltip' => $group['tooltip'] ?? '',
+                        'custom_icon' => $group['customIcon'] ?? '',
+                        'items' => isset($group['items']) ? implode(',', $group['items']) : '',
+                    ];
                     if (!isset($group['uid'])) {
-
-                        $groupObject = GeneralUtility::makeInstance(ToolbarGroups::class);
-                        $groupObject->setLabel($group['label']);
-                        $groupObject->setIcon($group['icon'] ?? '');
-                        $groupObject->setTooltip($group['tooltip'] ?? '');
-                        $groupObject->setCustomIcon($group['customIcon'] ?? '');
-                        $groupObject->setItems(isset($group['items']) ? implode(',', $group['items']) : '');
-                        $this->groupsRepository->add($groupObject);
+                        $this->packRecordPersister->create(PackRecordPersister::TABLE_TOOLBARGROUPS, $fields);
                     } else {
-                        $originalRecord = $this->groupsRepository->findByUid((int)$group['uid']);
-                        $originalRecord->setLabel($group['label']);
-                        $originalRecord->setIcon($group['icon'] ?? '');
-                        $originalRecord->setTooltip($group['tooltip'] ?? '');
-                        $originalRecord->setCustomIcon($group['customIcon'] ?? '');
-                        $originalRecord->setItems(isset($group['items']) ? implode(',', $group['items']) : '');
-                        $this->groupsRepository->update($originalRecord);
+                        $this->packRecordPersister->update(
+                            PackRecordPersister::TABLE_TOOLBARGROUPS,
+                            (int)$group['uid'],
+                            $fields
+                        );
                     }
-                    $this->persistenceManager->persistAll();
                 }
                 $notification = [
                     'title' => 'ckeditorKit.operation.success',
@@ -640,12 +685,14 @@ class RteModuleController extends ActionController
                 if (!$existingPreset) {
                     // Create new preset in the new preset table
                     try {
-                        $preset = GeneralUtility::makeInstance(Preset::class);
-                        $preset->setPresetKey($presetName);
-                        $preset->setIsCustom(true);
-                        $this->presetRepository->add($preset);
-                        $this->persistenceManager->persistAll();
-                        $newPresetUid = $preset->getUid();
+                        $newPresetUid = $this->packRecordPersister->create(
+                            PackRecordPersister::TABLE_PRESET,
+                            [
+                                'preset_key' => $presetName,
+                                'is_custom' => 1,
+                                'toolbar_items' => '',
+                            ]
+                        );
                         $backendUser = $GLOBALS['BE_USER'] ?? null;
                         if ($backendUser && $newPresetUid) {
                             $sessionKey = 'rte_ckeditor_pack_activePreset';
@@ -901,13 +948,15 @@ class RteModuleController extends ActionController
                 if ($existingPreset) {
                     // Update existing preset
                     $preset = $existingPreset;
-                    $preset->setToolbarItems($toolbarItemsString);
-                    $this->presetRepository->update($preset);
-                    $presetUid = $preset->getUid();
+                    $presetUid = (int)$preset->getUid();
+                    $this->packRecordPersister->update(
+                        PackRecordPersister::TABLE_PRESET,
+                        $presetUid,
+                        ['toolbar_items' => $toolbarItemsString]
+                    );
                     $isUpdate = true;
                     // Remove existing features before importing new ones
                     $this->featureRepository->removeByPresetId($presetUid);
-                    $this->persistenceManager->persistAll();
                 } else {
                     // Check if preset exists in TYPO3 config (core preset)
                     $presetsData = $this->baseToolBar->findAvailablePresets();
@@ -918,13 +967,14 @@ class RteModuleController extends ActionController
                     }
                     
                     // Create new preset
-                    $preset = GeneralUtility::makeInstance(Preset::class);
-                    $preset->setPresetKey($presetKey);
-                    $preset->setIsCustom(true);
-                    $preset->setToolbarItems($toolbarItemsString);
-                    $this->presetRepository->add($preset);
-                    $this->persistenceManager->persistAll();
-                    $presetUid = $preset->getUid();
+                    $presetUid = $this->packRecordPersister->create(
+                        PackRecordPersister::TABLE_PRESET,
+                        [
+                            'preset_key' => $presetKey,
+                            'is_custom' => 1,
+                            'toolbar_items' => $toolbarItemsString,
+                        ]
+                    );
                 }
 
                 $toolbarItemArray = explode(',', $toolbarItemsString);
@@ -940,12 +990,10 @@ class RteModuleController extends ActionController
                             $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
                             if (!$feature) {
                                 // Create new feature
-                                $feature = GeneralUtility::makeInstance(Feature::class);
-                                $feature->setPresetUid($presetUid);
-                                $feature->setConfigKey($configKey);
-                                $feature->setEnable(true);
-                                $this->featureRepository->add($feature);
-                                $this->persistenceManager->persistAll();
+                                $this->packRecordPersister->upsertFeature($presetUid, $configKey, [
+                                    'enable' => 1,
+                                    'fields' => '',
+                                ]);
                             }
                         }
                     }
@@ -953,7 +1001,6 @@ class RteModuleController extends ActionController
             
                 // Process features from YAML config
                 $this->importExportService->importFeaturesFromYaml($presetUid, $editorConfig);
-                $this->persistenceManager->persistAll();
                 $this->cache->flush();
             
                 $notification[] = [
@@ -1083,9 +1130,12 @@ class RteModuleController extends ActionController
 
         $processing = $request->getParsedBody()['processing'] ?? [];
         if($processing){
+            $this->packRecordPersister->update(
+                PackRecordPersister::TABLE_PRESET,
+                $presetUid,
+                ['processing_config' => json_encode($processing)]
+            );
             $preset->setProcessingConfig(json_encode($processing));
-            $this->presetRepository->update($preset);
-            $this->persistenceManager->persistAll();
             $this->cache->flush();
             $this->notification->addFlashNotification([
                 'title' => 'ckeditorKit.operation.success',

@@ -369,6 +369,12 @@
             <trans-unit id="features.drag.active">
                 <source>Toolbar Active Items</source>
             </trans-unit>
+            <trans-unit id="features.workspace.draft.banner">
+                <source>You are editing in a draft workspace. Changes are not live until published in the Workspaces module.</source>
+            </trans-unit>
+            <trans-unit id="features.workspace.legend">
+                <source>Not live yet — this change exists only in the current workspace until published.</source>
+            </trans-unit>
             <trans-unit id="features.visible">
                 <source>Visible Feature</source>
             </trans-unit>
@@ -439,7 +445,7 @@
             </trans-unit>
             
             <trans-unit id="ckeditorKit.tab.ckeditor5Plugins.restrictedEditing.description">
-                <source>Mark editable regions (Standard) or lock everything outside them (Restricted). Choose Mode in the feature settings, then drag the Restricted editing toolbar item into the active toolbar. Use a separate RTE preset per mode. Do not enable together with Real-time Collaboration on the same preset.</source>
+                <source>Mark editable regions (Standard) or lock everything outside them (Restricted). Choose Mode in the feature settings, then drag the Restricted editing toolbar item into the active toolbar.</source>
             </trans-unit>
 
             <trans-unit id="toolbar.item.restrictedEditing">

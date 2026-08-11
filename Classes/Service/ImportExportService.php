@@ -8,7 +8,6 @@ use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use T3Planet\RteCkeditorPack\DataProvider\Modules;
-use T3Planet\RteCkeditorPack\Domain\Model\Feature;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use T3Planet\RteCkeditorPack\Utility\ConfigurationMergeUtility;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
@@ -42,7 +41,8 @@ class ImportExportService
         . "# For complete documentation see https://ckeditor.com/docs/ckeditor5/latest/features/index.html\n";
 
     public function __construct(
-        protected readonly FeatureRepository $featureRepository
+        protected readonly FeatureRepository $featureRepository,
+        protected readonly PackRecordPersister $packRecordPersister,
     ) {}
 
     /**
@@ -413,35 +413,18 @@ class ImportExportService
             }
 
             $wrapped = [$key => $value];
-            $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, $configKey);
-            if ($feature) {
-                $feature->setEnable(true);
-                $feature->setFields(json_encode($wrapped));
-                $this->featureRepository->update($feature);
-            } else {
-                $feature = GeneralUtility::makeInstance(Feature::class);
-                $feature->setPresetUid($presetUid);
-                $feature->setConfigKey($configKey);
-                $feature->setEnable(true);
-                $feature->setFields(json_encode($wrapped));
-                $this->featureRepository->add($feature);
-            }
+            $this->packRecordPersister->upsertFeature($presetUid, $configKey, [
+                'enable' => 1,
+                'fields' => json_encode($wrapped),
+            ]);
         }
 
         // Save Font once
         if (!empty($fontPayload)) {
-            $feature = $this->featureRepository->findByPresetUidAndConfigKey($presetUid, 'Font')
-                ?? GeneralUtility::makeInstance(Feature::class);
-
-            $feature->setPresetUid($presetUid);
-            $feature->setConfigKey('Font');
-            $feature->setEnable(true);
-            $feature->setFields(json_encode($fontPayload));
-            if ($feature->getUid() ?? null) {
-                $this->featureRepository->update($feature);
-            } else {
-                $this->featureRepository->add($feature);
-            }
+            $this->packRecordPersister->upsertFeature($presetUid, 'Font', [
+                'enable' => 1,
+                'fields' => json_encode($fontPayload),
+            ]);
         }
     }
 }
