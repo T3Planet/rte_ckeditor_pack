@@ -14,6 +14,7 @@ use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionContainerInterface;
+use TYPO3\CMS\Core\Database\Query\Restriction\WorkspaceRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\BaseTestCase;
@@ -81,6 +82,13 @@ class ToolbarGroupsRepositoryTest extends BaseTestCase
             false
         );
         $repository->method('getQueryBuilder')->willReturn($this->mockedQueryBuilder);
+
+        // TYPO3 v14 WorkspaceRestriction constructs TcaSchemaFactory via makeInstance;
+        // unit tests have no DI container, so provide a prebuilt restriction instance.
+        GeneralUtility::addInstance(
+            WorkspaceRestriction::class,
+            $this->createMock(WorkspaceRestriction::class)
+        );
 
         return $repository;
     }

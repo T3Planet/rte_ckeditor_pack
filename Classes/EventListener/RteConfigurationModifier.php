@@ -27,6 +27,8 @@ use T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Utility\ProcessingConfigurationUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\RteCKEditor\Form\Element\Event\BeforePrepareConfigurationForEditorEvent;
@@ -548,8 +550,27 @@ class RteConfigurationModifier
             'effectivePid' => $context['pid'],
             'recordTypeValue' => $context['recordType'],
             'recordUid' => $context['recordUid'],
+            // Keep Live cloud documents stable ('live'); isolate draft workspaces.
+            'workspaceId' => $this->resolveCollaborationWorkspaceId(),
             'databaseRow' => is_array($databaseRow) ? $databaseRow : ($data['databaseRow'] ?? []),
         ]);
+    }
+
+    /**
+     * Workspace segment for ChannelIdUtility so RTC rooms do not cross Live ↔ draft.
+     *
+     * @return int|string
+     */
+    private function resolveCollaborationWorkspaceId(): int|string
+    {
+        try {
+            $workspaceId = (int)GeneralUtility::makeInstance(Context::class)
+                ->getPropertyFromAspect('workspace', 'id', 0);
+        } catch (AspectNotFoundException) {
+            $workspaceId = 0;
+        }
+
+        return $workspaceId > 0 ? $workspaceId : 'live';
     }
 
     /**

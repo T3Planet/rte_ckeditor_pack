@@ -9,6 +9,7 @@ use T3Planet\RteCkeditorPack\Domain\Model\Feature;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -26,9 +27,12 @@ class FeatureRepositoryTest extends FunctionalTestCase
         $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest())
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
-        // DataHandler requires an authenticated backend user.
+        // DataHandler requires an authenticated backend user and LanguageService ($GLOBALS['LANG']).
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/be_users.csv');
         $this->setUpBackendUser(1);
+        $GLOBALS['LANG'] = $this->getContainer()
+            ->get(LanguageServiceFactory::class)
+            ->createFromUserPreferences($GLOBALS['BE_USER']);
 
         $this->featureRepository = $this->getContainer()->get(FeatureRepository::class);
 

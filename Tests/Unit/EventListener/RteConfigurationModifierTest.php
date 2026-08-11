@@ -16,8 +16,11 @@ use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\EventListener\RteConfigurationModifier;
+use T3Planet\RteCkeditorPack\Utility\ChannelIdUtility;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\WorkspaceAspect;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
@@ -247,6 +250,82 @@ class RteConfigurationModifierTest extends BaseTestCase
         self::assertSame(
             $result['collaboration']['channelId'],
             $result['cloudServices']['documentId']
+        );
+    }
+
+    #[Test]
+    public function buildCollaborationContextUsesLiveWorkspaceSegmentByDefault(): void
+    {
+        $context = new Context();
+        $context->setAspect('workspace', new WorkspaceAspect(0));
+        GeneralUtility::setSingletonInstance(Context::class, $context);
+
+        $modifier = $this->createAccessibleModifier();
+        $result = $this->invokePrivate($modifier, 'buildCollaborationContext', [
+            ['databaseRow' => ['uid' => 10]],
+            [
+                'table' => 'tt_content',
+                'field' => 'bodytext',
+                'pid' => 1,
+                'recordType' => 'text',
+                'recordUid' => 10,
+            ],
+        ]);
+
+        self::assertSame('live', $result['workspaceId']);
+    }
+
+    #[Test]
+    public function buildCollaborationContextInjectsDraftWorkspaceId(): void
+    {
+        $context = new Context();
+        $context->setAspect('workspace', new WorkspaceAspect(2));
+        GeneralUtility::setSingletonInstance(Context::class, $context);
+
+        $modifier = $this->createAccessibleModifier();
+        $result = $this->invokePrivate($modifier, 'buildCollaborationContext', [
+            ['databaseRow' => ['uid' => 10]],
+            [
+                'table' => 'tt_content',
+                'field' => 'bodytext',
+                'pid' => 1,
+                'recordType' => 'text',
+                'recordUid' => 10,
+            ],
+        ]);
+
+        self::assertSame(2, $result['workspaceId']);
+    }
+
+    #[Test]
+    public function ensureCollaborationChannelConfigurationDiffersBetweenLiveAndDraftWorkspace(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $base = [
+            'tableName' => 'tt_content',
+            'fieldName' => 'bodytext',
+            'effectivePid' => 0,
+            'databaseRow' => ['uid' => 42],
+        ];
+
+        $live = $this->invokePrivate(
+            $modifier,
+            'ensureCollaborationChannelConfiguration',
+            [[], array_merge($base, ['workspaceId' => 'live'])]
+        );
+        $draft = $this->invokePrivate(
+            $modifier,
+            'ensureCollaborationChannelConfiguration',
+            [[], array_merge($base, ['workspaceId' => 2])]
+        );
+
+        self::assertNotSame(
+            $live['collaboration']['channelId'],
+            $draft['collaboration']['channelId']
+        );
+        self::assertNotSame(
+            ChannelIdUtility::buildChannelIdFromData(array_merge($base, ['workspaceId' => 'live'])),
+            ChannelIdUtility::buildChannelIdFromData(array_merge($base, ['workspaceId' => 2]))
         );
     }
 
