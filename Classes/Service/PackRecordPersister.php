@@ -73,8 +73,7 @@ class PackRecordPersister
         }
         self::$rootLevelEnsured = true;
 
-        $registry = $this->resolveRegistry();
-        if ($registry !== null && (bool)$registry->get(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, false)) {
+        if ($this->isRootLevelMarkedDone()) {
             return 0;
         }
 
@@ -97,9 +96,29 @@ class PackRecordPersister
         }
 
         // Writes always force pid=0 afterwards, so this one-time heal stays done.
-        $registry?->set(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, true);
+        $this->markRootLevelDone();
 
         return $moved;
+    }
+
+    private function isRootLevelMarkedDone(): bool
+    {
+        try {
+            $registry = $this->resolveRegistry();
+            return $registry !== null
+                && (bool)$registry->get(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, false);
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    private function markRootLevelDone(): void
+    {
+        try {
+            $this->resolveRegistry()?->set(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, true);
+        } catch (\Throwable) {
+            // Ignore registry write failures (unit tests / missing DB connection).
+        }
     }
 
     private function resolveRegistry(): ?Registry
