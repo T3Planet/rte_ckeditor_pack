@@ -61,7 +61,7 @@ class PackRecordPersister
     /**
      * Move legacy Pack rows off page PIDs onto root so workspace changes apply site-wide.
      *
-     * Cheap after the first successful run: request-static skip + sys_registry flag.
+     * Cheap after the first successful run: request-static skip + optional sys_registry flag.
      * Not hooked on every backend request — only Pack module / Pack writes call this.
      *
      * @return int Number of rows updated across all Pack tables
@@ -73,8 +73,8 @@ class PackRecordPersister
         }
         self::$rootLevelEnsured = true;
 
-        $registry = GeneralUtility::makeInstance(Registry::class);
-        if ((bool)$registry->get(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, false)) {
+        $registry = $this->resolveRegistry();
+        if ($registry !== null && (bool)$registry->get(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, false)) {
             return 0;
         }
 
@@ -92,14 +92,25 @@ class PackRecordPersister
                     sprintf('UPDATE %s SET pid = %d WHERE pid <> %d', $table, self::ROOT_PID, self::ROOT_PID)
                 );
             } catch (\Throwable) {
-                // Table may not exist yet during early install.
+                // Table may not exist yet during early install / unit tests without DB.
             }
         }
 
         // Writes always force pid=0 afterwards, so this one-time heal stays done.
-        $registry->set(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, true);
+        $registry?->set(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, true);
 
         return $moved;
+    }
+
+    private function resolveRegistry(): ?Registry
+    {
+        try {
+            $registry = GeneralUtility::makeInstance(Registry::class);
+            return $registry instanceof Registry ? $registry : null;
+        } catch (\Throwable) {
+            // Unit tests / early boot may lack DI for Registry(ConnectionPool).
+            return null;
+        }
     }
 
     /**
