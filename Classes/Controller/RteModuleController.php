@@ -95,6 +95,9 @@ class RteModuleController extends ActionController
 
     public function mainAction(): ResponseInterface
     {
+        // Pack tables are rootLevel; heal legacy page-bound pids so workspace drafts are global.
+        $this->packRecordPersister->ensureRecordsOnRootLevel();
+
         $availableModules = GeneralUtility::makeInstance(Modules::class)->getGroupedModulesByTabs();
         if (isset($this->request->getQueryParams()['current_module'])) {
             $currentModule = $this->request->getQueryParams()['current_module'] ?? '';

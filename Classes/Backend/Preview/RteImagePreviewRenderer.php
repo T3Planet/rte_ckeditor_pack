@@ -149,16 +149,23 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
         // Set error level
         $internalErrors = libxml_use_internal_errors(true);
 
+        // Wrap in a container: LIBXML_HTML_NOIMPLIED with multiple roots is unreliable
+        // and "<?xml encoding>" prefixes break browser parsing of page-module previews.
         $dom = new \DOMDocument();
         $dom->loadHTML(
-            '<?xml encoding="UTF-8">' . $html,
-            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+            '<div id="rte-ckeditor-pack-preview-wrap">' . $html . '</div>',
+            LIBXML_HTML_NODEFDTD
         );
 
         // Restore error level
         libxml_use_internal_errors($internalErrors);
 
-        $toRemove = $this->walk($dom, $length);
+        $wrap = $dom->getElementById('rte-ckeditor-pack-preview-wrap');
+        if ($wrap === null) {
+            return $html;
+        }
+
+        $toRemove = $this->walk($wrap, $length);
 
         // Remove any nodes that exceed limit
         foreach ($toRemove as $child) {
@@ -167,9 +174,12 @@ class RteImagePreviewRenderer extends StandardContentPreviewRenderer
             }
         }
 
-        $result = $dom->saveHTML();
+        $result = '';
+        foreach ($wrap->childNodes as $child) {
+            $result .= $dom->saveHTML($child);
+        }
 
-        return $result === false ? '' : $result;
+        return $result;
     }
 
     /**

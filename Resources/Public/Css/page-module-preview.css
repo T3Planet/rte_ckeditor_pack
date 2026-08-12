@@ -1,5 +1,7 @@
 .element-preview-content .Wirisformula,
-.element-preview-content .rte-ckeditor-pack-formula .Wirisformula {
+.element-preview-content .rte-ckeditor-pack-formula .Wirisformula,
+.t3-page-ce-body-inner .Wirisformula,
+.t3-page-ce-body-inner .rte-ckeditor-pack-formula .Wirisformula {
   display: inline;
   vertical-align: middle;
   max-height: 2.5em;
@@ -7,7 +9,8 @@
   height: auto;
 }
 
-.element-preview-content .rte-ckeditor-pack-formula {
+.element-preview-content .rte-ckeditor-pack-formula,
+.t3-page-ce-body-inner .rte-ckeditor-pack-formula {
   display: inline;
   margin: 0 0.15em;
 }

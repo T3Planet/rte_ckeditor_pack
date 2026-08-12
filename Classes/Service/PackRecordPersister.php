@@ -12,16 +12,26 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\WorkspaceRestriction;
+use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Writes Pack records through DataHandler so core workspace versioning applies automatically.
+ *
+ * Pack config is site-global (TCA rootLevel=1). Records must live on pid=0 so workspace
+ * drafts are not bound to a single page (e.g. page 1) in the Workspaces module.
  */
 class PackRecordPersister
 {
     public const TABLE_PRESET = 'tx_rteckeditorpack_domain_model_preset';
     public const TABLE_FEATURE = 'tx_rteckeditorpack_domain_model_feature';
     public const TABLE_TOOLBARGROUPS = 'tx_rteckeditorpack_domain_model_toolbargroups';
+
+    /** Global root page for Pack tables (TCA rootLevel = 1). */
+    public const ROOT_PID = 0;
+
+    private const REGISTRY_NAMESPACE = 'rte_ckeditor_pack';
+    private const REGISTRY_ROOT_LEVEL_KEY = 'recordsOnRootLevel';
 
     /** @var list<string> */
     public const TABLES = [
@@ -32,6 +42,8 @@ class PackRecordPersister
 
     /** @var list<string> */
     private array $errors = [];
+
+    private static bool $rootLevelEnsured = false;
 
     public function __construct(
         private readonly Context $context,
@@ -47,12 +59,57 @@ class PackRecordPersister
     }
 
     /**
+     * Move legacy Pack rows off page PIDs onto root so workspace changes apply site-wide.
+     *
+     * Cheap after the first successful run: request-static skip + sys_registry flag.
+     * Not hooked on every backend request — only Pack module / Pack writes call this.
+     *
+     * @return int Number of rows updated across all Pack tables
+     */
+    public function ensureRecordsOnRootLevel(): int
+    {
+        if (self::$rootLevelEnsured) {
+            return 0;
+        }
+        self::$rootLevelEnsured = true;
+
+        $registry = GeneralUtility::makeInstance(Registry::class);
+        if ((bool)$registry->get(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, false)) {
+            return 0;
+        }
+
+        $moved = 0;
+        foreach (self::TABLES as $table) {
+            try {
+                $connection = $this->connectionPool->getConnectionForTable($table);
+                $offRoot = (int)$connection->fetchOne(
+                    sprintf('SELECT COUNT(*) FROM %s WHERE pid <> %d', $table, self::ROOT_PID)
+                );
+                if ($offRoot <= 0) {
+                    continue;
+                }
+                $moved += $connection->executeStatement(
+                    sprintf('UPDATE %s SET pid = %d WHERE pid <> %d', $table, self::ROOT_PID, self::ROOT_PID)
+                );
+            } catch (\Throwable) {
+                // Table may not exist yet during early install.
+            }
+        }
+
+        // Writes always force pid=0 afterwards, so this one-time heal stays done.
+        $registry->set(self::REGISTRY_NAMESPACE, self::REGISTRY_ROOT_LEVEL_KEY, true);
+
+        return $moved;
+    }
+
+    /**
      * @param array<string, mixed> $fields
      */
     public function create(string $table, array $fields): int
     {
         $this->assertPackTable($table);
-        $fields['pid'] = 0;
+        $this->ensureRecordsOnRootLevel();
+        $fields['pid'] = self::ROOT_PID;
 
         if (
             $table === self::TABLE_PRESET
@@ -83,7 +140,10 @@ class PackRecordPersister
             return false;
         }
 
-        unset($fields['uid'], $fields['pid']);
+        $this->ensureRecordsOnRootLevel();
+        unset($fields['uid']);
+        // Keep / force root pid so workspace versions stay global, not page-bound.
+        $fields['pid'] = self::ROOT_PID;
         $dataHandler = $this->createDataHandler();
         $dataHandler->start([$table => [$uid => $fields]], [], $this->resolveBackendUser());
         $dataHandler->process_datamap();

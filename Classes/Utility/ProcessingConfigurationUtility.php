@@ -207,9 +207,50 @@ class ProcessingConfigurationUtility
             (array)($configuration['processing']['allowTagsOutside'] ?? [])
         )));
 
+        // Core Processing.yaml denies img on the DB HTMLparser; MathType image mode needs it.
+        $configuration = self::removeDeniedTags($configuration, ['img']);
+
         $configuration = self::ensureDefaultProcessingMode($configuration);
 
         return self::rebuildProcFromProcessing($configuration);
+    }
+
+    /**
+     * Drop listed tags from processing denyTags / HTMLparser_db.denyTags (CSV or list).
+     *
+     * @param array<string, mixed> $configuration
+     * @param list<string> $tags
+     * @return array<string, mixed>
+     */
+    private static function removeDeniedTags(array $configuration, array $tags): array
+    {
+        $tags = array_map('strtolower', $tags);
+
+        $stripFromList = static function (mixed $value) use ($tags): mixed {
+            if (is_string($value)) {
+                $parts = GeneralUtility::trimExplode(',', strtolower($value), true);
+                $parts = array_values(array_diff($parts, $tags));
+                return implode(',', $parts);
+            }
+            if (is_array($value)) {
+                return array_values(array_filter(
+                    $value,
+                    static fn ($item): bool => !in_array(strtolower((string)$item), $tags, true)
+                ));
+            }
+            return $value;
+        };
+
+        if (isset($configuration['processing']['denyTags'])) {
+            $configuration['processing']['denyTags'] = $stripFromList($configuration['processing']['denyTags']);
+        }
+        if (isset($configuration['processing']['HTMLparser_db']['denyTags'])) {
+            $configuration['processing']['HTMLparser_db']['denyTags'] = $stripFromList(
+                $configuration['processing']['HTMLparser_db']['denyTags']
+            );
+        }
+
+        return $configuration;
     }
 
     /**

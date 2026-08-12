@@ -50,6 +50,12 @@ final class PackRecordPersisterTest extends BaseTestCase
     }
 
     #[Test]
+    public function rootPidConstantIsZero(): void
+    {
+        self::assertSame(0, PackRecordPersister::ROOT_PID);
+    }
+
+    #[Test]
     public function upsertFeatureRejectsInvalidKeys(): void
     {
         $subject = new PackRecordPersister(new Context(), $this->createMock(ConnectionPool::class));
