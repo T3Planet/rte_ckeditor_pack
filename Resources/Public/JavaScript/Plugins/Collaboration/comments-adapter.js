@@ -87,19 +87,19 @@ export class CommentsAdapter extends Core.Plugin {
     }
 
     /**
-     * Shared FormEngine + Visual Editor storage key: data[table][uid][field].
-     * Prefer PHP-injected collaboration.rteId so both contexts hit the same DB rows.
+     * Shared FormEngine + Visual Editor storage key: data[table][uid][field]
+     * plus ":ws:{id}" in draft workspaces. Prefer PHP-injected collaboration.rteId.
      */
     _resolveRteId() {
         const configured = this.editor.config.get('collaboration')?.rteId;
         if (typeof configured === 'string' && configured.startsWith('data[')) {
-            return configured;
+            return this._scopeRteIdToWorkspace(configured);
         }
 
         const source = this.editor.sourceElement;
         const formName = source?.getAttribute?.('name') || source?.name;
         if (typeof formName === 'string' && formName.startsWith('data[')) {
-            return formName;
+            return this._scopeRteIdToWorkspace(formName);
         }
 
         const veHost = source?.closest?.('ve-editable-rich-text')
@@ -111,12 +111,27 @@ export class CommentsAdapter extends Core.Plugin {
             const uid = veHost.uid ?? veHost.getAttribute?.('uid');
             const field = veHost.field || veHost.getAttribute?.('field');
             if (table != null && uid != null && field) {
-                return `data[${table}][${uid}][${field}]`;
+                return this._scopeRteIdToWorkspace(`data[${table}][${uid}][${field}]`);
             }
         }
 
         // Do not fall back to channelId (ckdoc-…) — that splits VE/FormEngine storage.
-        return formName || '';
+        return this._scopeRteIdToWorkspace(formName || '');
+    }
+
+    /**
+     * Keep Live keys stable; draft writes use ":ws:{id}".
+     * Reads overlay Live until this workspace owns the thread (PHP).
+     */
+    _scopeRteIdToWorkspace(rteId) {
+        if (!rteId || !String(rteId).startsWith('data[') || String(rteId).includes(':ws:')) {
+            return rteId;
+        }
+        const workspaceId = this.editor.config.get('collaboration')?.workspaceId;
+        if (workspaceId && workspaceId !== 'live' && Number(workspaceId) > 0) {
+            return `${rteId}:ws:${Number(workspaceId)}`;
+        }
+        return rteId;
     }
 
     /**

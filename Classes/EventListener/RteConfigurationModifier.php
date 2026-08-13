@@ -16,6 +16,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use T3Planet\RteCkeditorPack\DataProvider\Modules;
 use T3Planet\RteCkeditorPack\Utility\ChannelIdUtility;
+use T3Planet\RteCkeditorPack\Utility\RtcDocumentRevisionUtility;
+use T3Planet\RteCkeditorPack\Utility\WorkspaceScopeUtility;
 use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
@@ -27,8 +29,6 @@ use T3Planet\RteCkeditorPack\Configuration\SettingConfigurationHandler;
 use T3Planet\RteCkeditorPack\Domain\Repository\ToolbarGroupsRepository;
 use T3Planet\RteCkeditorPack\Utility\ProcessingConfigurationUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\RteCKEditor\Form\Element\Event\BeforePrepareConfigurationForEditorEvent;
@@ -514,12 +514,16 @@ class RteConfigurationModifier
             $editorContext = [];
         }
 
-        $recordUid = (int)(
-            $data['recordUid']
-            ?? $data['databaseRow']['uid']
-            ?? $data['uid']
-            ?? 0
-        );
+        $recordUid = WorkspaceScopeUtility::liveRecordUid([
+            'recordUid' => (int)(
+                $data['recordUid']
+                ?? $data['databaseRow']['uid']
+                ?? $data['uid']
+                ?? 0
+            ),
+            'uid' => $data['uid'] ?? null,
+            'databaseRow' => $data['databaseRow'] ?? $data,
+        ]);
 
         return [
             'table' => (string)($data['tableName'] ?? $data['table'] ?? $editorContext['table'] ?? ''),
@@ -563,14 +567,7 @@ class RteConfigurationModifier
      */
     private function resolveCollaborationWorkspaceId(): int|string
     {
-        try {
-            $workspaceId = (int)GeneralUtility::makeInstance(Context::class)
-                ->getPropertyFromAspect('workspace', 'id', 0);
-        } catch (AspectNotFoundException) {
-            $workspaceId = 0;
-        }
-
-        return $workspaceId > 0 ? $workspaceId : 'live';
+        return WorkspaceScopeUtility::collaborationSegment();
     }
 
     /**
@@ -882,14 +879,21 @@ class RteConfigurationModifier
             ? $configuration['collaboration']['channelId']
             : ChannelIdUtility::buildChannelIdFromData($data);
 
-        // Fingerprint forces a fresh Cloud document when the editor schema changes
-        // (e.g. Restricted editing / Comments). Prevents:
+        // Fingerprint forces a fresh Cloud document when the editor schema changes or
+        // after workspace publish (revision bump). Prevents:
         // realtimecollaborationclient-init-connection-failed /
-        // mapping-model-position-view-parent-not-found against stale RTC docs.
+        // mapping-model-offset-not-found when Live HTML no longer matches a Cloud
+        // room that was edited in another workspace.
         $fingerprint = $this->buildCollaborationSchemaFingerprint();
-        $channelId = 'ckdoc-' . substr(hash('sha1', $baseChannelId . '|' . $fingerprint), 0, 40);
+        $revision = $this->buildCollaborationPublishRevision($data);
+        $channelId = 'ckdoc-' . substr(
+            hash('sha1', $baseChannelId . '|' . $fingerprint . '|r' . $revision),
+            0,
+            40
+        );
 
         $configuration['collaboration']['channelId'] = $channelId;
+        $configuration['collaboration']['documentRevision'] = $revision;
         if (!$hasDocument) {
             $configuration['cloudServices']['documentId'] = $channelId;
         }
@@ -898,11 +902,23 @@ class RteConfigurationModifier
     }
 
     /**
+     * Publish-only generation for Live Cloud rooms (stable across normal saves).
+     */
+    private function buildCollaborationPublishRevision(array $data): int
+    {
+        $table = (string)($data['tableName'] ?? $data['table'] ?? '');
+        $liveUid = WorkspaceScopeUtility::liveRecordUid($data);
+
+        return RtcDocumentRevisionUtility::currentRevision($table, $liveUid);
+    }
+
+    /**
      * Schema-affecting features that must invalidate RTC cloud document identity.
      */
     private function buildCollaborationSchemaFingerprint(): string
     {
-        $parts = ['rtc-map-v2'];
+        // rtc-ws-v3: workspace-safe rooms + publish revision (invalidates polluted Live docs).
+        $parts = ['rtc-ws-v3'];
         foreach (
             [
                 'RestrictedEditingMode',
@@ -957,7 +973,7 @@ class RteConfigurationModifier
 
     /**
      * Shared storage key for Non-RTC Comments (FormEngine + Visual Editor).
-     * Must match textarea name: data[table][uid][field].
+     * Canonical field id is data[table][uid][field]; draft workspaces append :ws:{id}.
      *
      * @param array<string, mixed> $configuration
      * @param array<string, mixed> $data
@@ -965,23 +981,34 @@ class RteConfigurationModifier
      */
     private function ensureCollaborationRteIdConfiguration(array $configuration, array $data): array
     {
+        $workspaceSegment = $data['workspaceId'] ?? WorkspaceScopeUtility::collaborationSegment();
+        $workspaceId = is_int($workspaceSegment) ? $workspaceSegment : 0;
+        $configuration['collaboration']['workspaceId'] = $workspaceSegment;
+
         $existing = $configuration['collaboration']['rteId'] ?? null;
         if (is_string($existing) && $existing !== '' && str_starts_with($existing, 'data[')) {
+            $configuration['collaboration']['rteId'] = WorkspaceScopeUtility::scopeRteId($existing, $workspaceId);
             return $configuration;
         }
 
         $table = (string)($data['tableName'] ?? $data['table'] ?? '');
         $field = (string)($data['fieldName'] ?? $data['field'] ?? '');
-        $uid = (int)($data['recordUid']
-            ?? $data['databaseRow']['uid']
-            ?? $data['uid']
-            ?? 0);
+        $uid = WorkspaceScopeUtility::liveRecordUid($data);
+        if ($uid <= 0) {
+            $uid = (int)($data['recordUid']
+                ?? $data['databaseRow']['uid']
+                ?? $data['uid']
+                ?? 0);
+        }
 
         if ($table === '' || $field === '' || $uid <= 0) {
             return $configuration;
         }
 
-        $configuration['collaboration']['rteId'] = sprintf('data[%s][%d][%s]', $table, $uid, $field);
+        $configuration['collaboration']['rteId'] = WorkspaceScopeUtility::scopeRteId(
+            sprintf('data[%s][%d][%s]', $table, $uid, $field),
+            $workspaceId
+        );
 
         return $configuration;
     }

@@ -1,5 +1,4 @@
 import * as Core from "@ckeditor/ckeditor5-core";
-import { getDataFromElement } from '@ckeditor/ckeditor5-utils';
 import {
     LoaderOwner,
     showSharedLoader,
@@ -434,43 +433,29 @@ class RealtimeAdapter extends Core.Plugin {
     /* ----------------------- Channel ID Helpers ----------------------- */
 
     /**
-     * RTC initial document seed.
+     * RTC document seed.
      *
-     * Visual Editor embeds theme markup into the editable host. Feeding that as
-     * config.initialData while reconnecting to an existing Cloud document causes
-     * mapping-model-position-view-parent-not-found during RTC init.
-     * For VE, ClassicEditor reads the element; Cloud remains source of truth when
-     * the document already exists. FormEngine keeps the previous seed behaviour.
+     * Never set config.initialData when RTC is enabled. The editor already reads the
+     * source element / textarea (FormEngine + Visual Editor). Seeding initialData on
+     * top of an existing Cloud document — especially after editing the same field in
+     * another workspace — causes:
+     * realtimecollaborationclient-init-connection-failed /
+     * mapping-model-offset-not-found (often around Math / soft breaks).
+     * Cloud remains source of truth when the document already exists; a new documentId
+     * (workspace + content revision) is seeded from the element HTML on first open.
      */
     _ensureInitialDataForRtc(config) {
         if (!this._hasRtcModules(config)) {
             return;
         }
 
-        const isVisualEditor = !!(
-            this.channelElement?.closest?.('ve-editable-rich-text')
-            || this.editor?.sourceElement?.closest?.('ve-editable-rich-text')
-        );
-
-        if (isVisualEditor) {
-            // Do not seed conflicting initialData over themed FE HTML.
-            delete config.initialData;
-            return;
-        }
-
-        const existing = typeof config.initialData === 'string' ? config.initialData.trim() : '';
-        if (existing) {
-            return;
-        }
-
-        const html = this._resolveRtcSourceHtml(this.channelElement);
-        if (!html) {
-            return;
-        }
-
-        config.initialData = html;
+        delete config.initialData;
         if (typeof this.editor.config.set === 'function') {
-            this.editor.config.set('initialData', html);
+            try {
+                this.editor.config.set('initialData', undefined);
+            } catch (e) {
+                // Some CKEditor builds reject clearing; deleting from _config is enough.
+            }
         }
     }
 
@@ -479,23 +464,6 @@ class RealtimeAdapter extends Core.Plugin {
             const moduleName = typeof entry === 'string' ? entry : entry?.module;
             return typeof moduleName === 'string' && moduleName.includes('real-time-collaboration');
         });
-    }
-
-    /**
-     * Read HTML the same way ClassicEditor does (textarea value, div innerHTML, VE value).
-     */
-    _resolveRtcSourceHtml(source) {
-        if (!source) {
-            return '';
-        }
-
-        const fromElement = getDataFromElement(source)?.trim() || '';
-        if (fromElement) {
-            return fromElement;
-        }
-
-        const veHost = source.closest?.('ve-editable-rich-text');
-        return veHost?.value?.trim() || '';
     }
 
     _ensureChannelId(element) {

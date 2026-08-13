@@ -81,12 +81,13 @@ final class VisualEditorStylesMiddlewareTest extends BaseTestCase
         $GLOBALS['BE_USER'] = $this->createMock(BackendUserAuthentication::class);
 
         $collector = $this->createMock(AssetCollector::class);
-        $collector->expects(self::exactly(2))
+        $collector->expects(self::exactly(3))
             ->method('addStyleSheet')
             ->willReturnCallback(static function (string $identifier, string $source): void {
                 self::assertContains($identifier, [
                     'rte-ckeditor-pack-revision-viewer',
                     'rte-ckeditor-pack-notification',
+                    'rte-ckeditor-pack-mathtype',
                 ]);
                 self::assertStringContainsString('EXT:rte_ckeditor_pack/Resources/Public/Css/', $source);
             });

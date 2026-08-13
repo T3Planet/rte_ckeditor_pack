@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use T3Planet\RteCkeditorPack\Domain\Repository\CommentsRepository;
+use T3Planet\RteCkeditorPack\Utility\WorkspaceScopeUtility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -123,7 +124,10 @@ class CommentTread implements MiddlewareInterface
             return $this->jsonErrorResponse('threadId is required', 400);
         }
 
-        $data = $this->commentRepository->fetchCommentsByThreatId($threadId) ?: [];
+        $data = $this->commentRepository->fetchCommentsByThreatId(
+            $threadId,
+            WorkspaceScopeUtility::currentWorkspaceId()
+        ) ?: [];
         $response = $this->responseFactory->createResponse()
             ->withHeader('Content-Type', 'application/json; charset=utf-8');
         $response->getBody()->write(json_encode($data));
@@ -139,9 +143,10 @@ class CommentTread implements MiddlewareInterface
         $commentId = $request->getParsedBody()['commentId'] ?? null;
         $threadId = $request->getParsedBody()['threadId'] ?? null;
         $content = $request->getParsedBody()['content'] ?? null;
+        $workspaceId = WorkspaceScopeUtility::currentWorkspaceId();
         $response = $this->responseFactory->createResponse()
             ->withHeader('Content-Type', 'application/json; charset=utf-8');
-        $comment = $this->commentRepository->getComment($commentId, $threadId);
+        $comment = $this->commentRepository->getComment($commentId, $threadId, $workspaceId);
         if (empty($comment)) {
             $response->getBody()->write(json_encode(
                 [
@@ -159,7 +164,7 @@ class CommentTread implements MiddlewareInterface
             ], JSON_THROW_ON_ERROR));
             return $response;
         }
-        $this->commentRepository->updateComment($commentId, $threadId, $content);
+        $this->commentRepository->updateComment($commentId, $threadId, $content, $workspaceId);
         $response->getBody()->write(json_encode(
             [
                 'status' => 'success',
@@ -179,9 +184,10 @@ class CommentTread implements MiddlewareInterface
     {
         $commentId = $request->getQueryParams()['comment_id'] ?? null;
         $threadId = $request->getQueryParams()['thread_id'] ?? null;
+        $workspaceId = WorkspaceScopeUtility::currentWorkspaceId();
         $response = $this->responseFactory->createResponse()
             ->withHeader('Content-Type', 'application/json; charset=utf-8');
-        $comment = $this->commentRepository->getComment($commentId, $threadId);
+        $comment = $this->commentRepository->getComment($commentId, $threadId, $workspaceId);
         if (empty($comment)) {
             $response->getBody()->write(json_encode(
                 [
@@ -199,7 +205,7 @@ class CommentTread implements MiddlewareInterface
             ], JSON_THROW_ON_ERROR));
             return $response;
         }
-        $this->commentRepository->deleteComment($commentId, $threadId);
+        $this->commentRepository->deleteComment($commentId, $threadId, $workspaceId);
         $response->getBody()->write(json_encode(
             [
                 'status' => 'success',
@@ -242,7 +248,8 @@ class CommentTread implements MiddlewareInterface
             }
 
             $createdAt = time();
-            $rteID = $parsedBody['rteId'];
+            $workspaceId = WorkspaceScopeUtility::currentWorkspaceId();
+            $rteID = WorkspaceScopeUtility::scopeRteId((string)$parsedBody['rteId'], $workspaceId);
             $commentId = $parsedBody['id'] ?? null;
             $threadId = $parsedBody['thread_id'] ?? null;
             $content = $parsedBody['content'] ?? '';
@@ -258,6 +265,11 @@ class CommentTread implements MiddlewareInterface
             $response = $this->responseFactory->createResponse()
                 ->withHeader('Content-Type', 'application/json; charset=utf-8');
 
+            // Draft must own the thread before writes so Live rows are not mutated.
+            if ($workspaceId > 0 && $threadId) {
+                $this->commentRepository->ensureDraftThread((string)$threadId, $workspaceId, $rteID);
+            }
+
             $data = [
                 'content_id' => $contentId ?? 0,
                 'rte_id' => $rteID,
@@ -266,11 +278,12 @@ class CommentTread implements MiddlewareInterface
                 'id' => $commentId,
                 'content' => $content,
                 'created_at' => $createdAt,
+                'workspace_id' => $workspaceId,
             ];
 
             // Idempotent for FormEngine + Visual Editor double-writes of the same comment.
-            if ($commentId && $this->commentRepository->checkExisting($commentId)) {
-                $this->commentRepository->updateComment((string)$commentId, (string)$threadId, (string)$content);
+            if ($commentId && $this->commentRepository->checkExisting($commentId, $workspaceId)) {
+                $this->commentRepository->updateComment((string)$commentId, (string)$threadId, (string)$content, $workspaceId);
             } else {
                 $this->commentRepository->saveComment($data);
             }
@@ -311,7 +324,8 @@ class CommentTread implements MiddlewareInterface
     {
         try {
             $parsedBody = $request->getParsedBody();
-            $rteId = $parsedBody['rteId'] ?? null;
+            $workspaceId = WorkspaceScopeUtility::currentWorkspaceId();
+            $rteId = WorkspaceScopeUtility::scopeRteId((string)($parsedBody['rteId'] ?? ''), $workspaceId);
             $resolvedDataJson = $parsedBody['resolvedData'] ?? null;
 
             $response = $this->responseFactory->createResponse()
@@ -336,6 +350,7 @@ class CommentTread implements MiddlewareInterface
             }
 
             $archivedCount = 0;
+            $workspaceId = WorkspaceScopeUtility::currentWorkspaceId();
             foreach ($resolvedData as $threadData) {
                 $threadId = $threadData['threadId'] ?? null;
                 $resolvedAt = $threadData['resolvedAt'] ?? time();
@@ -345,7 +360,8 @@ class CommentTread implements MiddlewareInterface
                     $this->commentRepository->markThreadAsResolved(
                         $threadId,
                         (int)$resolvedAt,
-                        (int)$resolvedBy
+                        (int)$resolvedBy,
+                        $workspaceId
                     );
                     $archivedCount++;
                 }

@@ -305,7 +305,11 @@ class RteConfigurationModifierTest extends BaseTestCase
             'tableName' => 'tt_content',
             'fieldName' => 'bodytext',
             'effectivePid' => 0,
-            'databaseRow' => ['uid' => 42],
+            'databaseRow' => [
+                'uid' => 42,
+                'tstamp' => 100,
+                'bodytext' => '<p>Live</p>',
+            ],
         ];
 
         $live = $this->invokePrivate(
@@ -330,6 +334,38 @@ class RteConfigurationModifierTest extends BaseTestCase
     }
 
     #[Test]
+    public function ensureCollaborationChannelConfigurationDiffersWhenPublishRevisionChanges(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $base = [
+            'tableName' => 'tt_content',
+            'fieldName' => 'bodytext',
+            'effectivePid' => 0,
+            'workspaceId' => 'live',
+            'databaseRow' => [
+                'uid' => 42,
+                'bodytext' => '<p>Content</p>',
+            ],
+        ];
+
+        $before = $this->invokePrivate($modifier, 'ensureCollaborationChannelConfiguration', [[], $base]);
+
+        // Simulate workspace publish bumping the Live Cloud generation.
+        $registry = $this->createMock(\TYPO3\CMS\Core\Registry::class);
+        $registry->method('get')->willReturn(3);
+        GeneralUtility::setSingletonInstance(\TYPO3\CMS\Core\Registry::class, $registry);
+
+        $after = $this->invokePrivate($modifier, 'ensureCollaborationChannelConfiguration', [[], $base]);
+
+        self::assertNotSame(
+            $before['collaboration']['channelId'],
+            $after['collaboration']['channelId']
+        );
+        self::assertSame(0, $before['collaboration']['documentRevision']);
+        self::assertSame(3, $after['collaboration']['documentRevision']);
+    }
+
+    #[Test]
     public function ensureCollaborationChannelConfigurationPreservesExistingChannelId(): void
     {
         $modifier = $this->createAccessibleModifier();
@@ -348,6 +384,10 @@ class RteConfigurationModifierTest extends BaseTestCase
     #[Test]
     public function ensureCollaborationRteIdConfigurationBuildsCanonicalFieldId(): void
     {
+        $context = new Context();
+        $context->setAspect('workspace', new WorkspaceAspect(0));
+        GeneralUtility::setSingletonInstance(Context::class, $context);
+
         $modifier = $this->createAccessibleModifier();
 
         $data = [
@@ -359,6 +399,41 @@ class RteConfigurationModifierTest extends BaseTestCase
         $result = $this->invokePrivate($modifier, 'ensureCollaborationRteIdConfiguration', [[], $data]);
 
         self::assertSame('data[tt_content][141][bodytext]', $result['collaboration']['rteId']);
+        self::assertSame('live', $result['collaboration']['workspaceId']);
+    }
+
+    #[Test]
+    public function ensureCollaborationRteIdConfigurationScopesDraftWorkspace(): void
+    {
+        $context = new Context();
+        $context->setAspect('workspace', new WorkspaceAspect(2));
+        GeneralUtility::setSingletonInstance(Context::class, $context);
+
+        $modifier = $this->createAccessibleModifier();
+        $data = [
+            'tableName' => 'tt_content',
+            'fieldName' => 'bodytext',
+            'recordUid' => 141,
+            'workspaceId' => 2,
+        ];
+
+        $result = $this->invokePrivate($modifier, 'ensureCollaborationRteIdConfiguration', [[], $data]);
+
+        self::assertSame('data[tt_content][141][bodytext]:ws:2', $result['collaboration']['rteId']);
+        self::assertSame(2, $result['collaboration']['workspaceId']);
+    }
+
+    #[Test]
+    public function resolveEditorContextUsesLiveUidForWorkspaceVersions(): void
+    {
+        $modifier = $this->createAccessibleModifier();
+        $result = $this->invokePrivate($modifier, 'resolveEditorContext', [[
+            'tableName' => 'tt_content',
+            'fieldName' => 'bodytext',
+            'databaseRow' => ['uid' => 500, 't3ver_oid' => 141, 'pid' => 1],
+        ]]);
+
+        self::assertSame(141, $result['recordUid']);
     }
 
     #[Test]
@@ -671,6 +746,6 @@ class RteConfigurationModifierTest extends BaseTestCase
 
         self::assertStringContainsString('RealTimeCollaboration', $fingerprint);
         self::assertStringContainsString('RestrictedEditingMode:restricted', $fingerprint);
-        self::assertStringStartsWith('rtc-map-v2', $fingerprint);
+        self::assertStringStartsWith('rtc-ws-v3', $fingerprint);
     }
 }

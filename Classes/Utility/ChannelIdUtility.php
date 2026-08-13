@@ -58,6 +58,8 @@ class ChannelIdUtility
     private static function resolveRecordIdentifier(array $data): string
     {
         $candidates = [
+            $data['databaseRow']['t3ver_oid'] ?? null,
+            $data['t3ver_oid'] ?? null,
             $data['recordUid'] ?? null,
             $data['databaseRow']['uid'] ?? null,
             $data['uid'] ?? null,

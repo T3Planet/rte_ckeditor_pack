@@ -178,6 +178,45 @@ function isVisualEditorContext(editor = null) {
 }
 
 /**
+ * Critical styles when notification.css did not load (common on Visual Editor FE host).
+ * Full stylesheet still preferred via VisualEditorStylesMiddleware / BE stylesheets.
+ */
+const CRITICAL_NOTIFICATION_CSS = `
+.ck-notification[data-ck-pack-notification]{
+  position:fixed!important;z-index:50000!important;box-sizing:border-box;
+  min-width:320px;max-width:min(480px,calc(100vw - 2rem));
+  display:flex;flex-direction:column;margin:0;padding:1.25rem;
+  border:1px solid #dc3545;border-left:4px solid #dc3545;border-radius:12px;
+  background:linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%);color:#991b1b;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:14px;line-height:1.5;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+  pointer-events:auto;bottom:20px;right:15px;
+}
+.ck-notification[data-ck-pack-notification].ck-hidden{display:none!important}
+.ck-notification__header{font-weight:700;margin:0 2rem .75rem 2rem;font-size:1.125rem;color:#991b1b}
+.ck-notification__description{margin:0 2rem 0 2rem;font-size:.875rem;color:#991b1b;opacity:.9;overflow-wrap:anywhere;word-break:break-word}
+.ck-notification__error::before{content:"⚠";position:absolute;top:1.25rem;left:1.25rem;font-size:1.4em;color:#dc3545;font-weight:bold}
+.ck-notification__close{position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border:0;background:transparent;color:#991b1b;cursor:pointer;font-size:1.25rem;border-radius:50%;line-height:1}
+@media (max-width:480px){
+  .ck-notification[data-ck-pack-notification]{left:1rem;right:1rem;bottom:1rem;min-width:0;max-width:none;width:auto}
+}
+`;
+
+function ensurePackNotificationStyles() {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  if (document.getElementById('ck-pack-notification-critical-css')) {
+    return;
+  }
+  const style = document.createElement('style');
+  style.id = 'ck-pack-notification-critical-css';
+  style.textContent = CRITICAL_NOTIFICATION_CSS;
+  document.head.appendChild(style);
+}
+
+/**
  * Shared host for all RTE instances on the page (critical for Visual Editor multi-CE).
  * One window listener + at most one floating banner anchored to the focused editable.
  */
@@ -193,6 +232,8 @@ const notificationHost = {
   shownFingerprints: new Set(),
 
   acquire(editor) {
+    ensurePackNotificationStyles();
+
     if (!this.views) {
       this.views = buildDefinitions().map((definition) => {
         const view = new NotificationView(editor.locale, definition);
@@ -403,7 +444,6 @@ class NotificationView extends View {
     this.reactsTo = definition.reactsTo;
     this.eventType = definition.eventType || 'error';
     this.specificity = definition.specificity || 0;
-    this.header = definition.description;
     this.set('isVisible', false);
     this.set('positionBottom', '20px');
     this.set('positionRight', '15px');

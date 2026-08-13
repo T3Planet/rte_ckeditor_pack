@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use T3Planet\RteCkeditorPack\EventListener\FlushPackCacheOnWorkspacePublishListener;
+use T3Planet\RteCkeditorPack\EventListener\PromoteWorkspaceCommentsOnPublishListener;
 use T3Planet\RteCkeditorPack\EventListener\ProcessingConfigurationModifier;
 use T3Planet\RteCkeditorPack\EventListener\RestoreCollaborationMarkersListener;
 use T3Planet\RteCkeditorPack\EventListener\StripCollaborationMarkupFromPreviewListener;
@@ -28,6 +29,14 @@ return static function (ContainerConfigurator $container, ContainerBuilder $cont
             ->autoconfigure()
             ->tag('event.listener', [
                 'identifier' => 'rte-ckeditor-pack/flush-cache-on-workspace-publish',
+                'event' => AfterRecordPublishedEvent::class,
+            ]);
+        $container->services()
+            ->set(PromoteWorkspaceCommentsOnPublishListener::class)
+            ->autowire()
+            ->autoconfigure()
+            ->tag('event.listener', [
+                'identifier' => 'rte-ckeditor-pack/promote-comments-on-workspace-publish',
                 'event' => AfterRecordPublishedEvent::class,
             ]);
     }

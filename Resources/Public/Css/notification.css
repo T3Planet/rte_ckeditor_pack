@@ -68,6 +68,8 @@
   font-size: 0.875rem;
   line-height: 1.5;
   opacity: 0.9;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .ck-notification__close {

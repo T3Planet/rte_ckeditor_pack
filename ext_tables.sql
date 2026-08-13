@@ -11,8 +11,10 @@ CREATE TABLE tx_rteckeditorpack_domain_model_comment
     created_id bigint(20) DEFAULT '0' NOT NULL,
     resolved_at bigint(20) DEFAULT NULL,
     resolved_by int(11) DEFAULT NULL,
+    workspace_id int(11) DEFAULT '0' NOT NULL,
 
     PRIMARY KEY (uid),
+    KEY workspace_id (workspace_id),
 );
 
 CREATE TABLE tx_rteckeditorpack_domain_model_suggestions

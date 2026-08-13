@@ -13,6 +13,7 @@ namespace T3Planet\RteCkeditorPack\Controller;
 
 use Psr\Http\Message\ServerRequestInterface;
 use T3Planet\RteCkeditorPack\Domain\Repository\CommentsRepository;
+use T3Planet\RteCkeditorPack\Utility\WorkspaceScopeUtility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Http\JsonResponse;
 
@@ -34,7 +35,8 @@ class CommentsController
             return new JsonResponse(['status' => 'ERROR', 'message' => 'Invalid request body'], 400);
         }
 
-        $rteID = (string)($body['rteId'] ?? '');
+        $rteID = WorkspaceScopeUtility::scopeRteId((string)($body['rteId'] ?? ''));
+        $workspaceId = WorkspaceScopeUtility::currentWorkspaceId();
         $rawComments = $body['commentsData'] ?? '[]';
         $threadData = is_string($rawComments) ? json_decode($rawComments, true) : $rawComments;
         if (!is_array($threadData)) {
@@ -59,21 +61,28 @@ class CommentsController
                     : $userId;
             }
 
+            $threadId = (string)$thread['threadId'];
+            if ($workspaceId > 0) {
+                $this->commentRepository->ensureDraftThread($threadId, $workspaceId, $rteID);
+            }
+
             foreach ($thread['comments'] as $comment) {
                 if (!is_array($comment) || empty($comment['commentId'])) {
                     continue;
                 }
 
-                if ($this->commentRepository->checkExisting($comment['commentId'])) {
+                if ($this->commentRepository->checkExisting($comment['commentId'], $workspaceId)) {
                     if ($isResolved) {
                         $this->commentRepository->markThreadAsResolved(
-                            (string)$thread['threadId'],
+                            $threadId,
                             $resolvedAt,
-                            $resolvedBy
+                            $resolvedBy,
+                            $workspaceId
                         );
                     } else {
                         $this->commentRepository->markThreadAsUnresolved(
-                            (string)$thread['threadId']
+                            $threadId,
+                            $workspaceId
                         );
                     }
                     continue;
@@ -88,12 +97,13 @@ class CommentsController
                     'content_id' => $contentId,
                     'rte_id' => $rteID,
                     'user_id' => $userId,
-                    'thread_id' => (string)$thread['threadId'],
+                    'thread_id' => $threadId,
                     'id' => (string)$comment['commentId'],
                     'content' => (string)($comment['content'] ?? ''),
                     'created_at' => $this->normalizeTimestamp($comment['createdAt'] ?? null) ?? time(),
                     'resolved_at' => $resolvedAt,
                     'resolved_by' => $resolvedBy,
+                    'workspace_id' => $workspaceId,
                 ];
                 $this->commentRepository->saveComment($data);
             }
@@ -107,12 +117,15 @@ class CommentsController
      */
     public function fetchCommentsAction(ServerRequestInterface $request): JsonResponse
     {
-        $rteId = (string)($request->getQueryParams()['threadId'] ?? '');
-        if ($rteId === '') {
+        $threadId = (string)($request->getQueryParams()['threadId'] ?? '');
+        if ($threadId === '') {
             return new JsonResponse([]);
         }
 
-        $comments = $this->commentRepository->fetchCommentsByThreatId($rteId) ?: [];
+        $comments = $this->commentRepository->fetchCommentsByThreatId(
+            $threadId,
+            WorkspaceScopeUtility::currentWorkspaceId()
+        ) ?: [];
 
         return new JsonResponse($comments);
     }

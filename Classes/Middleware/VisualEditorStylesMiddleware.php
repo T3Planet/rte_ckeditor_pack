@@ -32,6 +32,11 @@ final class VisualEditorStylesMiddleware implements MiddlewareInterface
                 'rte-ckeditor-pack-revision-viewer',
                 'EXT:rte_ckeditor_pack/Resources/Public/Css/revision-viewer.css'
             );
+            // BE stylesheets are not applied on the VE frontend host — load explicitly.
+            $this->assetCollector->addStyleSheet(
+                'rte-ckeditor-pack-notification',
+                'EXT:rte_ckeditor_pack/Resources/Public/Css/notification.css'
+            );
             $this->assetCollector->addStyleSheet(
                 'rte-ckeditor-pack-mathtype',
                 'EXT:rte_ckeditor_pack/Resources/Public/Css/mathtype.css'

@@ -150,7 +150,7 @@ The Import / Export Presets feature allows you to easily manage and share CKEdit
 Import Presets
 ^^^^^^^^^^^^^^
 
-The Import Presets option lets you add CKEditor presets from a YAML file into your TYPO3 system.  
+The Import Presets option lets you add CKEditor presets from a YAML file into your TYPO3 system.
 This is useful when you receive a preset from another environment or project and want to reuse the same editor setup.
 
 Simply upload the YAML file, and the preset will be created automatically with all toolbar buttons, groups, and settings.
@@ -162,7 +162,7 @@ Simply upload the YAML file, and the preset will be created automatically with a
 Export Presets
 ^^^^^^^^^^^^^^
 
-The Export Presets option allows you to download existing or custom CKEditor presets as a YAML file.  
+The Export Presets option allows you to download existing or custom CKEditor presets as a YAML file.
 This makes it easy to share presets with other TYPO3 systems or team members.
 
 You can select a preset and export it, then import the same file into another TYPO3 installation to get the exact same configuration.
