@@ -186,7 +186,7 @@ class RichTextElement extends CoreElem
             $resultArray['javaScriptModules'][] = JavaScriptModuleInstruction::create('@typo3/ckeditor5/translations/' . $contentLanguage . '.js');
         }
 
-        $resultArray = $this->addCustomStylesheets($resultArray);
+        $resultArray = $this->addCustomStylesheets($resultArray, $ckeditorConfiguration);
 
         return $resultArray;
     }

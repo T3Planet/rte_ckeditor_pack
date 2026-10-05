@@ -16,16 +16,18 @@ trait CustomAssetTrait
      * Add custom stylesheet files to the result array
      *
      * @param array $resultArray
+     * @param array<string, mixed> $ckeditorConfiguration Final configuration of the rendered editor
      * @return array
      */
-    protected function addCustomStylesheets(array $resultArray): array
+    protected function addCustomStylesheets(array $resultArray, array $ckeditorConfiguration = []): array
     {
         $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor.css';
         // Load separately: mid-file @import in editor.css is ignored by browsers.
         // Visual Editor already loads this via VisualEditorStylesMiddleware.
         $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/revision-viewer.css';
 
-        if ($this->isFeatureEnabled('MathEquations')) {
+        // Decide per rendered editor: the first MathEquations row may belong to another preset.
+        if ($this->editorUsesMathType($ckeditorConfiguration)) {
             $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/mathtype.css';
         }
         
@@ -37,6 +39,36 @@ trait CustomAssetTrait
             $resultArray['javaScriptModules'][] = JavaScriptModuleInstruction::create('@t3planet/RteCkeditorPack/editoria11y-integration.js');
         }
         return $resultArray;
+    }
+
+    /**
+     * @param array<string, mixed> $ckeditorConfiguration
+     */
+    protected function editorUsesMathType(array $ckeditorConfiguration): bool
+    {
+        if (!empty($ckeditorConfiguration['mathTypeParameters'])) {
+            return true;
+        }
+
+        foreach ((array)($ckeditorConfiguration['importModules'] ?? []) as $importModule) {
+            $moduleName = is_array($importModule) ? ($importModule['module'] ?? '') : $importModule;
+            if (is_string($moduleName) && str_contains($moduleName, 'RteCkeditorPack/mathtype')) {
+                return true;
+            }
+        }
+
+        $toolbar = $ckeditorConfiguration['toolbar'] ?? [];
+        if (!is_array($toolbar)) {
+            return false;
+        }
+        $toolbarItems = [];
+        array_walk_recursive($toolbar, static function ($value) use (&$toolbarItems): void {
+            if (is_string($value)) {
+                $toolbarItems[] = $value;
+            }
+        });
+
+        return in_array('MathType', $toolbarItems, true) || in_array('ChemType', $toolbarItems, true);
     }
 
     /**

@@ -16,6 +16,43 @@ import MathTypePlugin, {
     ChemTypeCommand,
 } from '@t3planet/RteCkeditorPack/mathtype-ckeditor5.js';
 
+const MATHTYPE_STYLESHEET_ID = 'rte-ckeditor-pack-mathtype-css';
+const MATHTYPE_OFFLINE_GUARD_ID = 'rte-ckeditor-pack-mathtype-offline-guard';
+
+/**
+ * Wiris appends its "You are not online!" dialog to <body> on init and relies on
+ * mathtype.css to hide it. Load the stylesheet from the plugin itself so the dialog
+ * stays hidden however the editor was rendered (FormEngine, AJAX, Visual Editor,
+ * or a third-party RichTextElement override).
+ */
+function ensureMathTypeStyles() {
+    if (typeof document === 'undefined' || !document.head) {
+        return;
+    }
+
+    if (!document.getElementById(MATHTYPE_OFFLINE_GUARD_ID)) {
+        const guard = document.createElement('style');
+        guard.id = MATHTYPE_OFFLINE_GUARD_ID;
+        // Wiris shows the dialog via inline style.display, which still overrides this.
+        guard.textContent = '.wrs_modal_offline{display:none;}';
+        document.head.appendChild(guard);
+    }
+
+    const alreadyLoaded = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+        .some((link) => link.id === MATHTYPE_STYLESHEET_ID || (link.href || '').includes('/Css/mathtype.css'));
+    if (alreadyLoaded) {
+        return;
+    }
+
+    const link = document.createElement('link');
+    link.id = MATHTYPE_STYLESHEET_ID;
+    link.rel = 'stylesheet';
+    link.href = new URL('../../../Css/mathtype.css', import.meta.url).href;
+    document.head.appendChild(link);
+}
+
+ensureMathTypeStyles();
+
 /** Minimum stack-modal size so the trial/license banner stays inside the dialog. */
 const MATHTYPE_MODAL_MIN_HEIGHT = 560;
 const MATHTYPE_MODAL_MIN_WIDTH = 640;
