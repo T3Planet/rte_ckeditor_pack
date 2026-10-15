@@ -1,0 +1,151 @@
+<?php
+
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+
+$typo3VersionArray = VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
+
+$contrib = 'Contrib-12';
+if (version_compare($typo3VersionArray['version_main'], 12, '>')) {
+    $contrib = 'Contrib';
+}
+
+$imports = [
+    'dependencies' => ['backend'],
+    'tags' => [
+        'backend.form',
+    ],
+    'imports' => [
+        '@typo3/rte-ckeditor/' => [
+            'path' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/',
+            'exclude' => [
+                'EXT:core/Resources/Public/JavaScript/legacy/',
+            ],
+        ],
+        '@typo3/ckeditor5/translations/' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/translations/',
+        '@ckeditor/ckeditor5-alignment' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-alignment.js',
+        '@ckeditor/ckeditor5-autoformat' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-autoformat.js',
+        '@ckeditor/ckeditor5-basic-styles' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-basic-styles.js',
+        '@ckeditor/ckeditor5-block-quote' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-block-quote.js',
+        '@ckeditor/ckeditor5-clipboard' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-clipboard.js',
+        '@ckeditor/ckeditor5-code-block' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-code-block.js',
+        '@ckeditor/ckeditor5-minimap' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-minimap.js',
+        '@ckeditor/ckeditor5-markdown-gfm' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-markdown-gfm.js',
+        '@ckeditor/ckeditor5-media-embed' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-media-embed.js',
+        '@ckeditor/ckeditor5-core' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-core.js',
+        '@ckeditor/ckeditor5-restricted-editing' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-restricted-editing.js',
+        '@ckeditor/ckeditor5-editor-balloon' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-editor-balloon.js',
+        '@ckeditor/ckeditor5-editor-classic' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-editor-classic.js',
+        '@ckeditor/ckeditor5-engine' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-engine.js',
+        '@ckeditor/ckeditor5-enter' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-enter.js',
+        '@ckeditor/ckeditor5-essentials' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-essentials.js',
+        '@ckeditor/ckeditor5-find-and-replace' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-find-and-replace.js',
+        '@ckeditor/ckeditor5-html-embed' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-html-embed.js',
+        '@ckeditor/ckeditor5-font' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-font.js',
+        '@ckeditor/ckeditor5-heading' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-heading.js',
+        '@ckeditor/ckeditor5-highlight' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-highlight.js',
+        '@ckeditor/ckeditor5-horizontal-line' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-horizontal-line.js',
+        '@ckeditor/ckeditor5-html-support' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-html-support.js',
+        '@ckeditor/ckeditor5-icons' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-icons.js',
+        '@ckeditor/ckeditor5-indent' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-indent.js',
+        '@ckeditor/ckeditor5-inspector' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-inspector.js',
+        '@ckeditor/ckeditor5-language' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-language.js',
+        '@ckeditor/ckeditor5-link' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-link.js',
+        '@ckeditor/ckeditor5-list' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-list.js',
+        '@ckeditor/ckeditor5-mention' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-mention.js',
+        '@ckeditor/ckeditor5-emoji' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-emoji.js',
+        '@ckeditor/ckeditor5-paragraph' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-paragraph.js',
+        '@ckeditor/ckeditor5-paste-from-office' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-paste-from-office.js',
+        '@ckeditor/ckeditor5-remove-format' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-remove-format.js',
+        '@ckeditor/ckeditor5-select-all' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-select-all.js',
+        '@ckeditor/ckeditor5-show-blocks' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-show-blocks.js',
+        '@ckeditor/ckeditor5-source-editing' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-source-editing.js',
+        '@ckeditor/ckeditor5-source-editing-enhanced' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-source-editing-enhanced.js',
+        '@ckeditor/ckeditor5-special-characters' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-special-characters.js',
+        '@ckeditor/ckeditor5-style' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-style.js',
+        '@ckeditor/ckeditor5-table' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-table.js',
+        '@ckeditor/ckeditor5-typing' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-typing.js',
+        '@ckeditor/ckeditor5-ui' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-ui.js',
+        '@ckeditor/ckeditor5-undo' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-undo.js',
+        '@ckeditor/ckeditor5-upload' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-upload.js',
+        '@ckeditor/ckeditor5-editor-decoupled' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-editor-decoupled.js',
+        '@ckeditor/ckeditor5-utils' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-utils.js',
+        '@ckeditor/ckeditor5-watchdog' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-watchdog.js',
+        '@ckeditor/ckeditor5-widget' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-widget.js',
+        '@ckeditor/ckeditor5-word-count' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-word-count.js',
+        '@ckeditor/ckeditor5-case-change' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-case-change.js',
+        '@ckeditor/ckeditor5-format-painter' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-format-painter.js',
+        '@ckeditor/ckeditor5-slash-command' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-slash-command.js',
+        '@ckeditor/ckeditor5-template' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-template.js',
+        '@ckeditor/ckeditor5-paste-from-office-enhanced' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-paste-from-office-enhanced.js',
+        '@ckeditor/ckeditor5-document-outline' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-document-outline.js',
+        '@ckeditor/ckeditor5-export-pdf' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-export-pdf.js',
+        '@ckeditor/ckeditor5-export-word' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-export-word.js',
+        '@ckeditor/ckeditor5-import-word' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-import-word.js',
+        '@ckeditor/ckeditor5-image' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-image.js',
+        '@ckeditor/ckeditor5-pagination' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-pagination.js',
+        '@ckeditor/ckeditor5-page-break' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-page-break.js',
+        '@ckeditor/ckeditor5-list-multi-level' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-list-multi-level.js',
+        '@ckeditor/ckeditor5-merge-fields' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-merge-fields.js',
+        '@ckeditor/ckeditor5-fullscreen' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-fullscreen.js',
+        '@t3planet/RteCkeditorPack/spell-check' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/SpellCheck/spell-check.js',
+        '@t3planet/RteCkeditorPack/mathtype.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/MathType/mathtype.js',
+        '@t3planet/RteCkeditorPack/mathtype-ckeditor5.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/MathType/mathtype-ckeditor5.js',
+        'ckeditor5' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/MathType/ckeditor5-shim.js',
+        '@t3planet/RteCkeditorPack/typo3-image' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/Typo3Image/typo3-image.js',
+        '@t3planet/RteCkeditorPack/ai-sidebar' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ai-sidebar.js',
+        '@t3planet/RteCkeditorPack/ck-shared-loader.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ck-shared-loader.js',
+        '@t3planet/RteCkeditorPack/ck-presence-placement.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ck-presence-placement.js',
+        '@ckeditor/ckeditor5-ai' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-ai.js',
+        '@ckeditor/ckeditor5-cloud-services' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-cloud-services.js',
+        '@typo3/ckeditor5-inspector.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/legacy/ckeditor5-inspector.js',
+        '@ckeditor/ckeditor5-collaboration-core' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-collaboration-core.js',
+        '@ckeditor/ckeditor5-real-time-collaboration' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-real-time-collaboration.js',
+        '@ckeditor/ckeditor-cloud-services-collaboration' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor-cloud-services-collaboration.js',
+        '@ckeditor/ckeditor5-operations-compressor' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-operations-compressor.js',
+        '@ckeditor/ckeditor5-comments' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-comments.js',
+        '@t3planet/RteCkeditorPack/comments-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/Collaboration/comments-adapter.js',
+        '@ckeditor/ckeditor5-revision-history' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-revision-history.js',
+        '@ckeditor/ckeditor5-bookmark' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-bookmark.js',
+        '@ckeditor/ckeditor5-footnotes' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-footnotes.js',
+        '@ckeditor/ckeditor5-track-changes' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-track-changes.js',
+        '@t3planet/RteCkeditorPack/document-outline' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/document-outline.js',
+        '@t3planet/RteCkeditorPack/wizard-manipulation.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/wizard-manipulation.js',
+        '@t3planet/RteCkeditorPack/global-button.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/global-button.js',
+        '@t3planet/RteCkeditorPack/script.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/script.js',
+        '@t3planet/RteCkeditorPack/import-export.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/import-export.js',
+        '@t3planet/RteCkeditorPack/drag-and-drop.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/drag-and-drop.js',
+        '@t3planet/RteCkeditorPack/module-functionality.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/module-functionality.js',
+        '@t3planet/RteCkeditorPack/collaboration-storage.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/collaboration-storage.js',
+        '@t3planet/RteCkeditorPack/realtime-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/realtime-adapter.js',
+        '@t3planet/RteCkeditorPack/users-collaboration-guard.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/RealtimeCollaboration/users-collaboration-guard.js',
+        '@t3planet/RteCkeditorPack/user-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/user-adapter.js',
+        '@t3planet/RteCkeditorPack/common.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/common.js',
+        '@t3planet/RteCkeditorPack/track-changes-integration.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/Collaboration/track-changes-integration.js',
+        '@t3planet/RteCkeditorPack/revision-history-tracker-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/Collaboration/revision-history-tracker-adapter.js',
+        '@t3planet/RteCkeditorPack/line-height' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/line-height.js',
+        '@t3planet/RteCkeditorPack/line-height-command' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/line-height-command.js',
+        '@t3planet/RteCkeditorPack/line-height-editing' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/line-height-editing.js',
+        '@t3planet/RteCkeditorPack/line-height-ui' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/line-height-ui.js',
+        '@t3planet/RteCkeditorPack/line-height-utils' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/LineHeight/utils.js',
+        '@t3planet/RteCkeditorPack/ckeditor5-error' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/ErrorNotifications/error-notifications.js',
+        '@t3planet/RteCkeditorPack/export-download-adapter.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/export-download-adapter.js',
+        '@t3planet/RteCkeditorPack/editoria11y.min.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y/editoria11y.min.js',
+        '@t3planet/RteCkeditorPack/editoria11y-integration.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y-integration.js',
+    ],
+];
+
+// CKEditor 48 (TYPO3 v13/v14, Contrib/) has no theme-lark module any more (CSS ships as Contrib/ckeditor5.css).
+// TYPO3 v12 (Contrib-12, CKEditor 47) keeps it.
+if ($contrib === 'Contrib-12') {
+    $imports['imports']['@ckeditor/ckeditor5-theme-lark'] = 'EXT:rte_ckeditor_pack/Resources/Public/Contrib-12/@ckeditor/ckeditor5-theme-lark.js';
+}
+
+// Packages shipped only in the shared CKEditor 48 build (TYPO3 v13/v14) that were not mapped before;
+// e.g. ckeditor5-email imports ckeditor5-export-inline-styles.
+if ($contrib === 'Contrib') {
+    foreach (['autosave', 'editor-multi-root', 'email', 'export-inline-styles', 'line-height', 'uploadcare'] as $package) {
+        $imports['imports']['@ckeditor/ckeditor5-' . $package] ??= 'EXT:rte_ckeditor_pack/Resources/Public/Contrib/@ckeditor/ckeditor5-' . $package . '.js';
+    }
+}
+
+return $imports;

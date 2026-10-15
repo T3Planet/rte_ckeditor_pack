@@ -1,0 +1,4 @@
+{
+  "13.4": { "branch": "47.6.4", "release": "47.6.0", "releaseTag": "v13.4.35" },
+  "14.3": { "branch": "48.5.2", "release": "47.6.0", "releaseTag": "v14.3.7" }
+}

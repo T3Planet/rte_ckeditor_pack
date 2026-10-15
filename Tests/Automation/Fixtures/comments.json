@@ -1,0 +1,94 @@
+{
+  "request": {
+    "id": "CKE-48.5.2-20261101",
+    "targetVersion": "48.5.2",
+    "requestedAt": "2026-11-01T03:30:00.000Z",
+    "expiresAt": "2026-12-01T03:30:00.000Z",
+    "status": "awaiting"
+  },
+  "approvers": [
+    "94966947"
+  ],
+  "comments": {
+    "oldApprove": {
+      "id": "1",
+      "comment_text": "approve CKE-48.5.2-20261101",
+      "user": {
+        "id": 94966947,
+        "username": "Vivek"
+      },
+      "date": "1793500200000"
+    },
+    "strangerApprove": {
+      "id": "2",
+      "comment_text": "approve CKE-48.5.2-20261101",
+      "user": {
+        "id": 111,
+        "username": "Stranger"
+      },
+      "date": "1793504800000"
+    },
+    "wrongId": {
+      "id": "3",
+      "comment_text": "approve CKE-47.9.0-20261001",
+      "user": {
+        "id": 94966947,
+        "username": "Vivek"
+      },
+      "date": "1793505800000"
+    },
+    "chatter": {
+      "id": "4",
+      "comment_text": "Looks good, I will approve CKE-48.5.2-20261101 tomorrow",
+      "user": {
+        "id": 94966947,
+        "username": "Vivek"
+      },
+      "date": "1793506800000"
+    },
+    "approve": {
+      "id": "5",
+      "comment_text": "  Approve CKE-48.5.2-20261101 \n",
+      "user": {
+        "id": 94966947,
+        "username": "Vivek"
+      },
+      "date": "1793507800000"
+    },
+    "laterSkip": {
+      "id": "6",
+      "comment_text": "skip CKE-48.5.2-20261101",
+      "user": {
+        "id": 94966947,
+        "username": "Vivek"
+      },
+      "date": "1793508800000"
+    },
+    "skip": {
+      "id": "7",
+      "comment_text": "skip CKE-48.5.2-20261101",
+      "user": {
+        "id": 94966947,
+        "username": "Vivek"
+      },
+      "date": "1793509800000"
+    },
+    "richTextReply": {
+      "id": "8",
+      "comment": [
+        {
+          "text": "approve "
+        },
+        {
+          "text": "CKE-48.5.2-20261101"
+        }
+      ],
+      "user": {
+        "id": 94966947,
+        "username": "Vivek"
+      },
+      "date": "1793510800000",
+      "parentId": "900"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+name: CKEditor approval poller
+
+# Daily: read approve/skip replies for the open CKEditor update request on ClickUp.
+on:
+  schedule:
+    - cron: '0 4 * * *'     # 04:00 UTC = 09:30 IST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Evaluate only (no ClickUp reply, no dispatch, no state change)'
+        type: boolean
+        default: false
+
+# State lives on the per-version ClickUp task (description block), not in git.
+permissions:
+  contents: read
+  actions: write           # gh workflow run ckeditor-rebuild.yml
+
+concurrency:
+  group: ckeditor-automation
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Evaluate ClickUp replies
+        id: poll
+        run: node Build/Scripts/ckeditor-approval.mjs
+        env:
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID || '901609568667' }}
+          CLICKUP_APPROVER_IDS: ${{ vars.CLICKUP_APPROVER_IDS }}
+
+      - name: Start rebuild
+        id: dispatch
+        if: ${{ !inputs.dry_run && steps.poll.outputs.dispatch == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REQUEST_ID: ${{ steps.poll.outputs.request_id }}
+          TARGET_VERSION: ${{ steps.poll.outputs.target_version }}
+        run: |
+          gh workflow run ckeditor-rebuild.yml --ref "$GITHUB_REF_NAME" \
+            -f request_id="$REQUEST_ID" -f target_version="$TARGET_VERSION"
+
+      # gh workflow run is a separate step. If it fails, the task is already "approved"
+      # and the daily poller would never look at it again. Put the same approve comment back.
+      - name: Undo approval when the rebuild did not start
+        if: ${{ failure() && steps.poll.outputs.dispatch == 'true' && steps.dispatch.outcome == 'failure' }}
+        env:
+          REQUEST_ID: ${{ steps.poll.outputs.request_id }}
+          PREVIOUS_STATUS: ${{ steps.poll.outputs.previous_status }}
+          COMMENT_ID: ${{ steps.poll.outputs.comment_id }}
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID || '901609568667' }}
+        run: node Build/Scripts/ckeditor-approval.mjs --revert-dispatch

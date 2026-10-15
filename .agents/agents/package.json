@@ -1,0 +1,16 @@
+{
+  "name": "rte-ckeditor-pack-agents",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cursor SDK runner for the approved CKEditor rebuild (see .agents/skills/ckeditor-upgrade/SKILL.md).",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "upgrade": "node src/ckeditor-upgrade.mjs"
+  },
+  "dependencies": {
+    "@cursor/sdk": "^1.0.27"
+  }
+}

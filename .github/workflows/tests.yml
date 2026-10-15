@@ -49,3 +49,17 @@ jobs:
 
       - name: Functional Tests
         run: Build/Scripts/runTests.sh -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -d sqlite -s functional
+
+  automation:
+    name: CKEditor automation tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Automation tests
+        run: node --test Tests/Automation/*.test.mjs

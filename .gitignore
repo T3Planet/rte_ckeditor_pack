@@ -15,3 +15,7 @@
 /var/
 /typo3temp/
 /rector.php
+.cursor/git-author.md
+/Build/ckeditor/node_modules/
+/Build/ckeditor/.build-out/
+/.agents/agents/node_modules/
