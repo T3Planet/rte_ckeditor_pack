@@ -1,0 +1,307 @@
+name: CKEditor rebuild
+
+# Started by the approval poller (or manually) for an APPROVED request:
+#  1. rebuild  - Cursor agent (CURSOR_API_KEY, .agents/skills/ckeditor-upgrade/SKILL.md) or, without the key,
+#                the deterministic npm build; then hard gates (php -l, JavaScriptModules include check,
+#                validate-contrib), version bump + CHANGELOG, release-ready check
+#  2. smoke    - install the result into fresh TYPO3 13.4 and 14.3 (sqlite) and load the backend import map
+#  3. publish  - commit, open the PR, post the link on the request's ClickUp task
+# Any failure: no PR, failure comment on the ClickUp task, state "failed"; a new `approve` comment retries.
+# State is read/written on the request's ClickUp task (Build/Scripts/ckeditor-state.mjs); no state branch.
+# The only branch this workflow creates is the PR branch automation/ckeditor-<version>. Enable
+# "Automatically delete head branches" in the repo settings so it disappears after merge/close.
+on:
+  workflow_dispatch:
+    inputs:
+      request_id:
+        description: 'Approved request id (CKE-<version>-<yyyymmdd>)'
+        required: true
+        type: string
+      target_version:
+        description: 'CKEditor 5 version (x.y.z)'
+        required: true
+        type: string
+      base_branch:
+        description: 'Branch to open the PR against (default: CKEDITOR_AUTOMATION_BRANCH, else development)'
+        required: false
+        type: string
+
+permissions:
+  contents: write          # push the PR branch automation/ckeditor-<version> only
+  pull-requests: write
+
+concurrency:
+  group: ckeditor-automation
+  cancel-in-progress: false
+
+env:
+  REQUEST_ID: ${{ inputs.request_id }}
+  TARGET_VERSION: ${{ inputs.target_version }}
+  BASE: ${{ inputs.base_branch || vars.CKEDITOR_AUTOMATION_BRANCH || 'development' }}
+  CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+  CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID || '901609568667' }}
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    outputs:
+      guarded: ${{ steps.guard.outcome == 'success' && steps.guard.outputs.skip != 'true' }}
+      skip: ${{ steps.guard.outputs.skip }}
+      branch: ${{ steps.guard.outputs.branch }}
+      major: ${{ steps.step_docs.outputs.major }}
+      mode: ${{ steps.mode.outputs.mode }}
+      failed_step: ${{ steps.failed.outputs.step }}
+    steps:
+      - name: Validate inputs
+        run: |
+          [[ "$TARGET_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "invalid version"; exit 1; }
+          [[ "$REQUEST_ID" =~ ^CKE-[0-9]+\.[0-9]+\.[0-9]+-[0-9]{8}$ ]] || { echo "invalid request id"; exit 1; }
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASE }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: none
+
+      - name: Guard (approved or retry after failure, not built yet)
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node Build/Scripts/ckeditor-state.mjs require-status "$REQUEST_ID" approved,failed
+          BRANCH="automation/ckeditor-$TARGET_VERSION"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1 || \
+             [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')" ]; then
+            echo "Branch or PR for $BRANCH already exists - nothing to do."; echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Mark building
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          node Build/Scripts/ckeditor-state.mjs status "$REQUEST_ID" building "build={\"runUrl\":\"$RUN_URL\"}"
+
+      - name: Choose rebuild mode
+        id: mode
+        if: steps.guard.outputs.skip != 'true'
+        env:
+          HAS_KEY: ${{ secrets.CURSOR_API_KEY != '' }}
+        run: echo "mode=$([ "$HAS_KEY" = true ] && echo cursor || echo npm)" >> "$GITHUB_OUTPUT"
+
+      # Cursor SDK agent following .agents/skills/ckeditor-upgrade/SKILL.md (edits the working tree only).
+      - name: Rebuild with Cursor agent
+        id: step_agent
+        if: steps.guard.outputs.skip != 'true' && steps.mode.outputs.mode == 'cursor'
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          CURSOR_AGENT_MODEL: ${{ vars.CURSOR_AGENT_MODEL || 'composer-2.5' }}
+        run: |
+          FROM=$(node -e 'import("./Build/Scripts/ckeditor-lib.mjs").then(l=>console.log(l.versionFromJs(require("fs").readFileSync("Resources/Public/Contrib/@ckeditor/ckeditor5-utils.js","utf8"))||""))')
+          (cd .agents/agents && npm ci --no-audit --no-fund)
+          node .agents/agents/src/ckeditor-upgrade.mjs --target "$TARGET_VERSION" ${FROM:+--from "$FROM"} --request "$REQUEST_ID"
+
+      # The extension code changes CKEditor 48 needs are kept as a patch (idempotent; also after the agent).
+      - name: Apply CKEditor major migration patches
+        id: step_migrate
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          MAJOR_T=${TARGET_VERSION%%.*}
+          for p in Build/ckeditor/migrations/ckeditor*-adapt.patch; do
+            [ -f "$p" ] || continue
+            M=$(basename "$p" | sed -E 's/^ckeditor([0-9]+)-.*/\1/')
+            [ "$MAJOR_T" -ge "$M" ] || continue
+            if git apply --reverse --check "$p" 2>/dev/null; then echo "$p already applied"; else git apply "$p" && echo "applied $p"; fi
+          done
+
+      - name: Pin versions (npm fallback)
+        id: step_pin
+        if: steps.guard.outputs.skip != 'true' && steps.mode.outputs.mode == 'npm'
+        run: node Build/Scripts/ckeditor-pin.mjs "$TARGET_VERSION" --resolve-separate
+
+      - name: Install build dependencies
+        id: step_install
+        if: steps.guard.outputs.skip != 'true'
+        working-directory: Build/ckeditor
+        run: npm install --no-audit --no-fund
+
+      - name: Build Contrib/ (npm fallback)
+        id: step_build
+        if: steps.guard.outputs.skip != 'true' && steps.mode.outputs.mode == 'npm'
+        working-directory: Build/ckeditor
+        run: |
+          rm -rf ../../Resources/Public/Contrib/@ckeditor ../../Resources/Public/Contrib/translations ../../Resources/Public/Contrib/ckeditor5.css
+          npm run build
+
+      - name: Validate Contrib/
+        id: step_validate
+        if: steps.guard.outputs.skip != 'true'
+        run: node Build/Scripts/validate-contrib.mjs "$TARGET_VERSION"
+
+      - name: PHP lint
+        id: step_lint
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          rc=0
+          for f in $( { ls Configuration/*.php ext_localconf.php ext_tables.php ext_emconf.php 2>/dev/null; find Classes Configuration -name '*.php'; } | sort -u ); do
+            php -l "$f" >/dev/null || { echo "::error file=$f::php -l failed"; php -l "$f"; rc=1; }
+          done
+          exit $rc
+
+      - name: JavaScriptModules.php include check (TYPO3 13.4 + 14.3)
+        id: step_jsm
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          php Build/Scripts/check-javascript-modules.php --typo3=13.4.0
+          php Build/Scripts/check-javascript-modules.php --typo3=14.3.0
+
+      - name: Update README and PR body
+        id: step_docs
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          node Build/Scripts/update-readme-compat.mjs "$TARGET_VERSION"
+          node -e 'const r=JSON.parse(require("child_process").execFileSync("node",["Build/Scripts/ckeditor-state.mjs","get",process.env.REQUEST_ID]));console.log("major="+(!!r.major))' >> "$GITHUB_OUTPUT"
+
+      - name: Bump extension version and CHANGELOG
+        id: step_bump
+        if: steps.guard.outputs.skip != 'true'
+        run: node Build/Scripts/ckeditor-release.mjs bump "$TARGET_VERSION" --base HEAD
+
+      - name: Release-ready check
+        id: step_ready
+        if: steps.guard.outputs.skip != 'true'
+        run: node Build/Scripts/ckeditor-release.mjs assert-ready "$TARGET_VERSION" --base HEAD
+
+      - name: Package the change set
+        id: step_package
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          git add -A Resources/Public/Contrib Resources/Public/JavaScript Classes Configuration Build/ckeditor/package.json Build/ckeditor/package-lock.json Build/ckeditor/packages.json README.md ext_emconf.php CHANGELOG.md
+          git diff --cached --binary > "$RUNNER_TEMP/rebuild.patch"
+          ls -l "$RUNNER_TEMP/rebuild.patch"
+
+      - uses: actions/upload-artifact@v4
+        if: steps.guard.outputs.skip != 'true'
+        with:
+          name: rebuild-patch
+          path: ${{ runner.temp }}/rebuild.patch
+          retention-days: 7
+
+      - name: Name the failed step
+        id: failed
+        if: failure()
+        env:
+          S: ${{ steps.step_agent.outcome == 'failure' && 'Cursor agent' || steps.step_migrate.outcome == 'failure' && 'migration patch' || steps.step_pin.outcome == 'failure' && 'pin versions (new CKEditor major needs a Build/ckeditor config port, or packages missing on npm)' || steps.step_install.outcome == 'failure' && 'npm install' || steps.step_build.outcome == 'failure' && 'build' || steps.step_validate.outcome == 'failure' && 'Contrib validation' || steps.step_lint.outcome == 'failure' && 'PHP lint' || steps.step_jsm.outcome == 'failure' && 'JavaScriptModules.php include check' || steps.step_docs.outcome == 'failure' && 'README' || steps.step_bump.outcome == 'failure' && 'version bump' || steps.step_ready.outcome == 'failure' && 'release-ready check' || 'setup' }}
+        run: echo "step=$S" >> "$GITHUB_OUTPUT"
+
+  smoke:
+    needs: rebuild
+    if: needs.rebuild.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3: ['13.4', '14.3']
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASE }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: rebuild-patch
+          path: ${{ runner.temp }}
+      - name: Apply the rebuilt change set
+        run: '[ ! -s "$RUNNER_TEMP/rebuild.patch" ] || git apply --index "$RUNNER_TEMP/rebuild.patch"'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, pdo_sqlite, sqlite3, gd, zip
+          tools: composer
+      - name: TYPO3 ${{ matrix.typo3 }} smoke install (sqlite, backend import map)
+        run: Build/Scripts/typo3-smoke.sh "${{ matrix.typo3 }}" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/typo3"
+
+  publish:
+    needs: [rebuild, smoke]
+    if: needs.rebuild.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.step_pr.outputs.url }}
+    steps:
+      # Optional: a GitHub App token lets CI run on the PR without manual approval.
+      - name: GitHub App token
+        id: app
+        if: ${{ vars.AUTOMATION_APP_ID != '' }}
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASE }}
+          token: ${{ steps.app.outputs.token || secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: rebuild-patch
+          path: ${{ runner.temp }}
+      - name: Commit and open PR
+        id: step_pr
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token || secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ needs.rebuild.outputs.branch }}
+          MAJOR: ${{ needs.rebuild.outputs.major }}
+          MODE: ${{ needs.rebuild.outputs.mode }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898208+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git apply --index "$RUNNER_TEMP/rebuild.patch"
+          git commit -m "[TASK] Update CKEditor 5 to $TARGET_VERSION for TYPO3 13.4/14.3 (shared Contrib build)" -m "Request: $REQUEST_ID" -m "Rebuilt by: $MODE"
+          node Build/Scripts/ckeditor-pr-body.mjs "$REQUEST_ID" > "$RUNNER_TEMP/pr-body.md"
+          printf '\n### Pre-PR checks (passed)\n- php -l, JavaScriptModules.php include check (13.4/14.3), validate-contrib\n- version bump + CHANGELOG, release-ready check\n- TYPO3 13.4 and 14.3 smoke install (sqlite, backend import map)\n- Rebuilt by: %s\n' "$MODE" >> "$RUNNER_TEMP/pr-body.md"
+          git push origin "$BRANCH"
+          gh label create ckeditor-update --color 1d76db --description "Automated CKEditor update" 2>/dev/null || true
+          gh label create needs-manual-review --color d93f0b --description "Major update, review plugins" 2>/dev/null || true
+          ARGS=(--base "$BASE" --head "$BRANCH" --title "[TASK] Update CKEditor 5 to $TARGET_VERSION for TYPO3 13.4/14.3 (shared Contrib build)" --body-file "$RUNNER_TEMP/pr-body.md" --label ckeditor-update)
+          if [ "$MAJOR" = "true" ]; then ARGS+=(--draft --label needs-manual-review); fi
+          URL=$(gh pr create "${ARGS[@]}")
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+      - name: Report PR
+        env:
+          PR_URL: ${{ steps.step_pr.outputs.url }}
+          MAJOR: ${{ needs.rebuild.outputs.major }}
+        run: |
+          KIND=$([ "$MAJOR" = "true" ] && echo "draft, major" || echo "ready for review")
+          printf 'PR opened (%s) for %s, CKEditor %s: %s\nAll pre-PR checks passed (lint, import map, TYPO3 13.4/14.3 smoke install). Please review the checklist in the PR.\n' "$KIND" "$REQUEST_ID" "$TARGET_VERSION" "$PR_URL" > "$RUNNER_TEMP/msg.txt"
+          node Build/Scripts/ckeditor-clickup.mjs "$RUNNER_TEMP/msg.txt"
+          node Build/Scripts/ckeditor-state.mjs status "$REQUEST_ID" pr_open "prUrl=$PR_URL"
+
+  report-failure:
+    needs: [rebuild, smoke, publish]
+    if: always() && needs.rebuild.outputs.skip != 'true' && (needs.rebuild.result == 'failure' || needs.smoke.result == 'failure' || needs.publish.result == 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASE }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Report failure
+        env:
+          FAILED_STEP: ${{ needs.rebuild.result == 'failure' && (needs.rebuild.outputs.failed_step || 'setup') || needs.smoke.result == 'failure' && 'TYPO3 13.4/14.3 smoke install' || 'commit/PR' }}
+        run: |
+          printf 'Build for %s (%s) failed at step: %s\n%s\nNo PR created. Fix the cause (or the build config on %s), then comment "approve" on this task again to retry.\n' "$TARGET_VERSION" "$REQUEST_ID" "$FAILED_STEP" "$RUN_URL" "$BASE" > "$RUNNER_TEMP/msg.txt"
+          node Build/Scripts/ckeditor-clickup.mjs "$RUNNER_TEMP/msg.txt" || true
+          if node Build/Scripts/ckeditor-state.mjs get "$REQUEST_ID" >/dev/null 2>&1; then
+            node Build/Scripts/ckeditor-state.mjs status "$REQUEST_ID" failed "build={\"runUrl\":\"$RUN_URL\",\"failedStep\":\"$FAILED_STEP\"}" || true
+          fi

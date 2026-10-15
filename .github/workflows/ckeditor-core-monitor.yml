@@ -1,0 +1,57 @@
+name: CKEditor core monitor
+
+# Monthly: has TYPO3 core 13.4 / 14.3 changed its CKEditor 5 version? If the shared
+# Resources/Public/Contrib/ build should move, create a new ClickUp task (CKEditor list) for that
+# version, assigned to the approvers. Approve/skip is a comment on that task.
+on:
+  schedule:
+    - cron: '30 3 1 * *'   # 1st of every month, 03:30 UTC = 09:00 IST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Only print the result (no ClickUp post, no state change)'
+        type: boolean
+        default: false
+      trigger:
+        description: 'Which core version triggers a request'
+        type: choice
+        options: [branch, release]
+        default: branch
+
+# State lives in ClickUp (tasks tagged ckeditor-update in CLICKUP_LIST_ID); nothing is pushed to git.
+permissions:
+  contents: read
+
+concurrency:
+  group: ckeditor-automation
+  cancel-in-progress: false
+
+# Schedules start from the default branch; the automation itself always runs on this branch.
+env:
+  AUTOMATION_BRANCH: ${{ vars.CKEDITOR_AUTOMATION_BRANCH || 'development' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.AUTOMATION_BRANCH }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Compare core CKEditor versions and request approval
+        id: check
+        run: node Build/Scripts/check-core-ckeditor.mjs
+        env:
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          REQUEST_TRIGGER: ${{ inputs.trigger || vars.CKEDITOR_REQUEST_TRIGGER || 'branch' }}
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID || '901609568667' }}
+          CLICKUP_APPROVER_IDS: ${{ vars.CLICKUP_APPROVER_IDS }}
+          CLICKUP_ASSIGNEE_IDS: ${{ vars.CLICKUP_ASSIGNEE_IDS }}
+          CLICKUP_APPROVER_NAMES: ${{ vars.CLICKUP_APPROVER_NAMES }}
+          CLICKUP_TASK_ID: ${{ vars.CLICKUP_TASK_ID }}   # optional, only for warnings/info
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
