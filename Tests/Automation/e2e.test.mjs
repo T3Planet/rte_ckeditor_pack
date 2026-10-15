@@ -36,7 +36,7 @@ async function setup() {
     CLICKUP_API_BASE: cu.base, CLICKUP_API_TOKEN: cu.token, CLICKUP_TASK_ID: TASK,
     CLICKUP_APPROVER_IDS: String(VIVEK.id), CLICKUP_APPROVER_NAMES: 'Vivek',
     CORE_VERSIONS_FILE: path.join(FX, 'core-48.json'), DISPATCH_IN_SCRIPT: '1', GH_BIN: gh,
-    DRY_RUN: '0', GITHUB_OUTPUT: '', GITHUB_STEP_SUMMARY: '',
+    DRY_RUN: '0', GITHUB_OUTPUT: '', GITHUB_STEP_SUMMARY: '', GITHUB_REF_NAME: '',
   };
   const node = (script, extra = {}, args = []) => run(process.execPath, [path.join(ROOT, 'Build/Scripts', script), ...args], { env: { ...env, ...extra }, cwd: tmp });
   // the state as stored on ClickUp: one block per task
