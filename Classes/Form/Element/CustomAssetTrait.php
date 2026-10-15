@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace T3Planet\RteCkeditorPack\Form\Element;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -21,6 +22,13 @@ trait CustomAssetTrait
      */
     protected function addCustomStylesheets(array $resultArray, array $ckeditorConfiguration = []): array
     {
+        // TYPO3 v13/v14 (shared Contrib/ build, CKEditor 48+): CKEditor no longer injects its CSS from the
+        // JS modules. Load the stylesheet that matches the bundled JS (open-source + premium packages +
+        // TYPO3 core additions) instead of core's EXT:rte_ckeditor editor.css, which may be a different
+        // CKEditor version. TYPO3 v12 (Contrib-12, CKEditor 47) still injects CSS via JS.
+        if ((new Typo3Version())->getMajorVersion() >= 13) {
+            $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Contrib/ckeditor5.css';
+        }
         $resultArray['stylesheetFiles'][] = 'EXT:rte_ckeditor_pack/Resources/Public/Css/editor.css';
         // Load separately: mid-file @import in editor.css is ignored by browsers.
         // Visual Editor already loads this via VisualEditorStylesMiddleware.
