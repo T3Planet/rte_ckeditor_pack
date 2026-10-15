@@ -22,7 +22,7 @@ on:
         required: true
         type: string
       base_branch:
-        description: 'Branch to open the PR against (default: repository default branch)'
+        description: 'Branch to open the PR against (default: CKEDITOR_AUTOMATION_BRANCH, else development)'
         required: false
         type: string
 
@@ -37,7 +37,7 @@ concurrency:
 env:
   REQUEST_ID: ${{ inputs.request_id }}
   TARGET_VERSION: ${{ inputs.target_version }}
-  BASE: ${{ inputs.base_branch || 'development' }}
+  BASE: ${{ inputs.base_branch || vars.CKEDITOR_AUTOMATION_BRANCH || 'development' }}
   CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
   CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID || '901609568667' }}
   RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

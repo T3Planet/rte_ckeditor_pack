@@ -20,11 +20,17 @@ concurrency:
   group: ckeditor-automation
   cancel-in-progress: false
 
+# Schedules start from the default branch; the automation itself always runs on this branch.
+env:
+  AUTOMATION_BRANCH: ${{ vars.CKEDITOR_AUTOMATION_BRANCH || 'development' }}
+
 jobs:
   poll:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.AUTOMATION_BRANCH }}
 
       - uses: actions/setup-node@v4
         with:
@@ -47,7 +53,7 @@ jobs:
           REQUEST_ID: ${{ steps.poll.outputs.request_id }}
           TARGET_VERSION: ${{ steps.poll.outputs.target_version }}
         run: |
-          gh workflow run ckeditor-rebuild.yml --ref "$GITHUB_REF_NAME" \
+          gh workflow run ckeditor-rebuild.yml --ref "$AUTOMATION_BRANCH" \
             -f request_id="$REQUEST_ID" -f target_version="$TARGET_VERSION"
 
       # gh workflow run is a separate step. If it fails, the task is already "approved"

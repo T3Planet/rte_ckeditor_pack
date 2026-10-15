@@ -26,11 +26,17 @@ concurrency:
   group: ckeditor-automation
   cancel-in-progress: false
 
+# Schedules start from the default branch; the automation itself always runs on this branch.
+env:
+  AUTOMATION_BRANCH: ${{ vars.CKEDITOR_AUTOMATION_BRANCH || 'development' }}
+
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.AUTOMATION_BRANCH }}
 
       - uses: actions/setup-node@v4
         with:
