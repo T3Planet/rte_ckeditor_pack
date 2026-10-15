@@ -56,7 +56,7 @@ It includes these features:
 
 | CKEditor Pack Version | TYPO3 Compatibility | CKEditor Version | PHP Version | Support Level                         |
 |-----------------------|---------------------|------------------|-------------|---------------------------------------|
-| v3.x                  | 12.4.25 - 14.3.99   | 47.6.0           | 8.1 - 8.5   | Visual editor, Re-strcture, Upgrade, Bugfixes        |
+| v3.x                  | 12.4.25 - 14.3.99   | 48.5.2           | 8.1 - 8.5   | Visual editor, Re-strcture, Upgrade, Bugfixes        |
 | v2.x                  | 12.4.25 - 14.3.99   | 47.2.0           | 8.1 - 8.4   | Upgrade, Features, Bugfixes, Security |
 | v1.x                  | 12.4.25 - 13.4.20   | 47.2.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |
 | v1.x                  | 12.4.25 - 13.4.20   | 47.1.0           | 8.1 - 8.4   | Features, Bugfixes, Security Updates  |

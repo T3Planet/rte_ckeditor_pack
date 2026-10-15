@@ -2,6 +2,9 @@
 
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
+// TYPO3 includes this file inside its own scope (ImportMap), so keep every variable local:
+// a top-level $package would overwrite the core loop variable (getPackageKey() on string).
+return (static function (): array {
 $typo3VersionArray = VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
 
 $contrib = 'Contrib-12';
@@ -9,7 +12,7 @@ if (version_compare($typo3VersionArray['version_main'], 12, '>')) {
     $contrib = 'Contrib';
 }
 
-return [
+$imports = [
     'dependencies' => ['backend'],
     'tags' => [
         'backend.form',
@@ -63,7 +66,6 @@ return [
         '@ckeditor/ckeditor5-special-characters' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-special-characters.js',
         '@ckeditor/ckeditor5-style' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-style.js',
         '@ckeditor/ckeditor5-table' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-table.js',
-        '@ckeditor/ckeditor5-theme-lark' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-theme-lark.js',
         '@ckeditor/ckeditor5-typing' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-typing.js',
         '@ckeditor/ckeditor5-ui' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-ui.js',
         '@ckeditor/ckeditor5-undo' => 'EXT:rte_ckeditor_pack/Resources/Public/' . $contrib . '/@ckeditor/ckeditor5-undo.js',
@@ -134,3 +136,20 @@ return [
         '@t3planet/RteCkeditorPack/editoria11y-integration.js' => 'EXT:rte_ckeditor_pack/Resources/Public/JavaScript/Plugins/editoria11y-integration.js',
     ],
 ];
+
+// CKEditor 48 (TYPO3 v13/v14, Contrib/) has no theme-lark module any more (CSS ships as Contrib/ckeditor5.css).
+// TYPO3 v12 (Contrib-12, CKEditor 47) keeps it.
+if ($contrib === 'Contrib-12') {
+    $imports['imports']['@ckeditor/ckeditor5-theme-lark'] = 'EXT:rte_ckeditor_pack/Resources/Public/Contrib-12/@ckeditor/ckeditor5-theme-lark.js';
+}
+
+// Packages shipped only in the shared CKEditor 48 build (TYPO3 v13/v14) that were not mapped before;
+// e.g. ckeditor5-email imports ckeditor5-export-inline-styles.
+if ($contrib === 'Contrib') {
+    foreach (['autosave', 'editor-multi-root', 'email', 'export-inline-styles', 'line-height', 'uploadcare'] as $name) {
+        $imports['imports']['@ckeditor/ckeditor5-' . $name] ??= 'EXT:rte_ckeditor_pack/Resources/Public/Contrib/@ckeditor/ckeditor5-' . $name . '.js';
+    }
+}
+
+return $imports;
+})();
