@@ -41,7 +41,7 @@ class PresetRepository extends Repository
     {
         $query = $this->createQuery();
         $query->matching($query->equals('presetKey', $presetKey));
-        $query->setLimit(1);
+        $this->limitToNewest($query);
         return $query->execute()->getFirst();
     }
 
@@ -92,8 +92,20 @@ class PresetRepository extends Repository
                 $query->equals('usageSource', 0)
             )
         );
-        $query->setLimit(1);
+        $this->limitToNewest($query);
         return $query->execute()->getFirst();
+    }
+
+    /**
+     * Duplicate preset_key rows have no unique index. Always read the newest uid
+     * so the editor and the module bind to the same row.
+     */
+    private function limitToNewest(\TYPO3\CMS\Extbase\Persistence\QueryInterface $query): void
+    {
+        $query->setOrderings([
+            'uid' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING,
+        ]);
+        $query->setLimit(1);
     }
 }
 

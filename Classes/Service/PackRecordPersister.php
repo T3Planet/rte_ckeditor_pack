@@ -292,6 +292,7 @@ class PackRecordPersister
             ->select('uid')
             ->from($table)
             ->where(...$constraints)
+            ->orderBy('uid', 'DESC')
             ->setMaxResults(1)
             ->executeQuery()
             ->fetchOne();

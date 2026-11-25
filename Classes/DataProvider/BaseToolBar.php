@@ -284,6 +284,25 @@ class BaseToolBar
         return $result;
     }
 
+    /**
+     * When several rows share a preset key, keep the visible row, then the highest uid.
+     * That matches PresetRepository::findByUsage(), which also reads the newest visible row.
+     *
+     * @param array{uid: int, hidden: int} $current
+     * @param array{uid: int, hidden: int} $candidate
+     */
+    private function preferPresetCandidate(array $current, array $candidate): bool
+    {
+        if ((int)$current['hidden'] === 1 && (int)$candidate['hidden'] === 0) {
+            return true;
+        }
+        if ((int)$current['hidden'] === (int)$candidate['hidden'] && (int)$candidate['uid'] > (int)$current['uid']) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function findAvailablePresets(): array
     {
         // Get presets from TYPO3 config
@@ -294,13 +313,16 @@ class BaseToolBar
         $presetMap = [];
         foreach ($presets as $preset) {
             $presetKey = $preset->getPresetKey();
-            $presetMap[$presetKey] = [
-                'uid' => $preset->getUid(),
+            $candidate = [
+                'uid' => (int)$preset->getUid(),
                 'key' => $presetKey,
                 'is_custom' => $preset->getIsCustom(),
                 'hidden' => $preset->getHidden() ? 1 : 0,
                 'usage_source' => $preset->getUsageSource(),
             ];
+            if (!isset($presetMap[$presetKey]) || $this->preferPresetCandidate($presetMap[$presetKey], $candidate)) {
+                $presetMap[$presetKey] = $candidate;
+            }
         }
         
         $corePresets = [];

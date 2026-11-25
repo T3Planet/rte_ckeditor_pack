@@ -28,6 +28,11 @@ final class VisualEditorStylesMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->shouldInjectStyles($request)) {
+            // CKEditor 48 styles of the shared Contrib/ build (incl. premium plugins), see CustomAssetTrait
+            $this->assetCollector->addStyleSheet(
+                'rte-ckeditor-pack-ckeditor5',
+                'EXT:rte_ckeditor_pack/Resources/Public/Contrib/ckeditor5.css'
+            );
             $this->assetCollector->addStyleSheet(
                 'rte-ckeditor-pack-revision-viewer',
                 'EXT:rte_ckeditor_pack/Resources/Public/Css/revision-viewer.css'
