@@ -22,6 +22,8 @@ use T3Planet\RteCkeditorPack\Domain\Repository\PresetRepository;
 use T3Planet\RteCkeditorPack\Domain\Model\Preset;
 use T3Planet\RteCkeditorPack\Domain\Repository\FeatureRepository;
 use T3Planet\RteCkeditorPack\Utility\ExtensionConfigurationUtility;
+use T3Planet\RteCkeditorPack\Utility\MarkdownMathPreserve;
+use T3Planet\RteCkeditorPack\Utility\WProofreaderStartupGuard;
 use T3Planet\RteCkeditorPack\Configuration\EditorConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\MentionConfigurationBuilder;
 use T3Planet\RteCkeditorPack\Configuration\AIConfigurationBuilder;
@@ -113,6 +115,8 @@ class RteConfigurationModifier
             } else {
                 $this->addExtensionSettings($configuration);
             }
+            $configuration = WProofreaderStartupGuard::apply($configuration);
+            $configuration = MarkdownMathPreserve::apply($configuration);
             if ($this->isBackendRequest()) {
                 $this->pageRenderer->addInlineSetting(null, 'ckeditor5Premium', $configuration);
             }

@@ -104,6 +104,10 @@ class PresetRepositoryTest extends BaseTestCase
             ->with($comparison)
             ->willReturnSelf();
         $mockedQuery->expects(self::once())
+            ->method('setOrderings')
+            ->with(['uid' => QueryInterface::ORDER_DESCENDING])
+            ->willReturnSelf();
+        $mockedQuery->expects(self::once())
             ->method('setLimit')
             ->with(1)
             ->willReturnSelf();
@@ -257,6 +261,10 @@ class PresetRepositoryTest extends BaseTestCase
         $mockedQuery->expects(self::once())
             ->method('matching')
             ->with($logicalAnd)
+            ->willReturnSelf();
+        $mockedQuery->expects(self::once())
+            ->method('setOrderings')
+            ->with(['uid' => QueryInterface::ORDER_DESCENDING])
             ->willReturnSelf();
         $mockedQuery->expects(self::once())
             ->method('setLimit')

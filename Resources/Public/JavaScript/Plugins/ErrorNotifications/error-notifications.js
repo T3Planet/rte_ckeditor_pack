@@ -421,6 +421,22 @@ const notificationHost = {
       document.body.appendChild(el);
     }
   },
+
+  showMessage(message) {
+    if (!this.views || this.activeView || typeof message !== 'string' || message === '') {
+      return;
+    }
+    const source = { message, name: '' };
+    const matches = this.views.filter((view) => this._viewMatches(view, 'error', source));
+    if (!matches.length) {
+      return;
+    }
+    matches.sort((a, b) => (b.specificity || 0) - (a.specificity || 0));
+    this.activeView = matches[0];
+    this.activeView.show();
+    this._mount(this.activeView);
+    this.reposition();
+  },
 };
 
 export default class ErrorNotifications extends Plugin {
@@ -428,8 +444,19 @@ export default class ErrorNotifications extends Plugin {
     return 'ErrorNotifications';
   }
 
+  constructor(editor) {
+    super(editor);
+    // Defined here so a missing WProofreader service does not abort editor startup.
+    editor.config.define('packWproofreaderUnavailable', false);
+  }
+
   init() {
     notificationHost.acquire(this.editor);
+    if (this.editor.config.get('packWproofreaderUnavailable')) {
+      this.editor.ui.once('ready', () => {
+        notificationHost.showMessage('wproofreader-service-id-error');
+      });
+    }
   }
 
   destroy() {

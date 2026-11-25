@@ -25,10 +25,15 @@ final class MathMlFrontendRenderer
 
         $content = $this->normalizeMathMarkup($content);
 
-        // Ensure xmlns so MathJax/browsers treat the node as MathML.
-        $content = preg_replace_callback(
+        // Ensure xmlns so MathJax/browsers treat real MathML elements as MathML.
+        // Do not rewrite a <math> that only appears inside an attribute value.
+        return $this->replaceOutsideHtmlTags(
+            $content,
             '/<math\b([^>]*)>/i',
-            static function (array $matches): string {
+            static function (string $fragment): string {
+                if (!preg_match('/<math\b([^>]*)>/i', $fragment, $matches)) {
+                    return $fragment;
+                }
                 $attrs = $matches[1] ?? '';
                 if (stripos($attrs, 'xmlns=') === false) {
                     $attrs .= ' xmlns="http://www.w3.org/1998/Math/MathML"';
@@ -36,12 +41,10 @@ final class MathMlFrontendRenderer
                 if (stripos($attrs, 'display=') === false) {
                     $attrs .= ' display="inline"';
                 }
-                return '<math' . $attrs . '>';
-            },
-            $content
-        ) ?? $content;
 
-        return $content;
+                return '<math' . $attrs . '>';
+            }
+        );
     }
 
     public function prepareForBackendPreview(string $content): string
@@ -84,29 +87,63 @@ final class MathMlFrontendRenderer
     public function normalizeMathMarkup(string $content): string
     {
         // Restore MathML that was HTML-escaped into visible text.
-        $content = preg_replace_callback(
+        // Skip matches inside HTML tags so Wiris data-mathml attributes stay intact.
+        $content = $this->replaceOutsideHtmlTags(
+            $content,
             '/&lt;math\b[\s\S]*?&lt;\/math&gt;/i',
-            static function (array $matches): string {
-                return html_entity_decode($matches[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            },
-            $content
-        ) ?? $content;
+            static function (string $fragment): string {
+                return html_entity_decode($fragment, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            }
+        );
 
         if (str_contains($content, '«math') || str_contains($content, '«MATH')) {
-            $content = preg_replace_callback(
+            $content = $this->replaceOutsideHtmlTags(
+                $content,
                 '/«math\b[^»]*».*?«\/math»/isu',
-                static function (array $matches): string {
+                static function (string $fragment): string {
                     return str_replace(
                         ['«', '»', '¨', '§', '`'],
                         ['<', '>', '"', '&', "'"],
-                        $matches[0]
+                        $fragment
                     );
-                },
-                $content
-            ) ?? $content;
+                }
+            );
         }
 
         return $content;
+    }
+
+    /**
+     * @param callable(string): string $replacer
+     */
+    private function replaceOutsideHtmlTags(string $content, string $pattern, callable $replacer): string
+    {
+        if (!preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE)) {
+            return $content;
+        }
+
+        foreach (array_reverse($matches[0]) as $match) {
+            $fragment = (string)$match[0];
+            $offset = (int)$match[1];
+            if ($this->offsetIsInsideHtmlTag($content, $offset)) {
+                continue;
+            }
+            $content = substr_replace($content, $replacer($fragment), $offset, strlen($fragment));
+        }
+
+        return $content;
+    }
+
+    private function offsetIsInsideHtmlTag(string $content, int $offset): bool
+    {
+        $before = substr($content, 0, $offset);
+        $lastOpen = strrpos($before, '<');
+        if ($lastOpen === false) {
+            return false;
+        }
+        $lastClose = strrpos($before, '>');
+
+        return $lastClose === false || $lastOpen > $lastClose;
     }
 
     public function stripWirisEditorAnnotations(string $mathml): string

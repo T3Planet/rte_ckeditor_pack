@@ -65,4 +65,26 @@ final class MathMlFrontendRendererTest extends TestCase
         self::assertStringNotContainsString('language', $result);
         self::assertStringContainsString('<mi>a</mi>', $result);
     }
+
+    public function testProcessLeavesGuillemetDataMathmlAttributeIntact(): void
+    {
+        $html = '<p>Eq</p><img class="Wirisformula" data-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«mi»x«/mi»«/math»" alt="x" />';
+
+        $result = (new MathMlFrontendRenderer())->process($html);
+
+        self::assertStringContainsString('data-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«mi»x«/mi»«/math»"', $result);
+        self::assertStringNotContainsString('xmlns="http://www.w3.org/1998/Math/MathML" display="inline"', $result);
+        self::assertStringNotContainsString('data-mathml="<math', $result);
+    }
+
+    public function testProcessStillNormalizesBodyMathMl(): void
+    {
+        $html = '<p>Eq</p>«math»«mi»x«/mi»«/math»';
+
+        $result = (new MathMlFrontendRenderer())->process($html);
+
+        self::assertStringContainsString('<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">', $result);
+        self::assertStringContainsString('<mi>x</mi>', $result);
+        self::assertStringNotContainsString('«math', $result);
+    }
 }
